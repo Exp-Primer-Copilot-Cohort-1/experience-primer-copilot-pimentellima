@@ -18,7 +18,7 @@ class SyncPush {
             date: format(parseISO(data.data.date), 'dd/MM/yyyy'),
           },
           (message) => {
-            message.from('drperformancesystem@gmail.com');
+            message.from('ti@dpsystem.com.br');
             message.to(data.data.email);
             message.subject('Uma nova atividade');
           },
@@ -35,7 +35,7 @@ class SyncPush {
             activity: data.alertUser.activity._id,
           },
           (message) => {
-            message.from('drperformancesystem@gmail.com');
+            message.from('ti@dpsystem.com.br');
             message.to(data.alertUser.activity.client.email);
             message.subject('Confirme sua consulta');
           },

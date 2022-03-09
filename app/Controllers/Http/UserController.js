@@ -224,7 +224,7 @@ class UserController {
         'emails.create',
         { password: data.password },
         (message) => {
-          message.from('drperformancesystem@gmail.com');
+          message.from('ti@dpsystem.com.br');
           message.to(data.email);
           message.subject('A sua senha');
         },
@@ -239,7 +239,7 @@ class UserController {
     });
     if (data.type !== 'client' && data.type !== 'sec' && data.type !== 'prof') {
       await Mail.send('emails.confirm', { user_id: user._id }, (message) => {
-        message.from('drperformancesystem@gmail.com');
+        message.from('ti@dpsystem.com.br');
         message.to(user.email);
         message.subject('Ative sua conta');
       });
@@ -247,8 +247,8 @@ class UserController {
         'emails.new_account',
         { user_email: user.email },
         (message) => {
-          message.from('drperformancesystem@gmail.com');
-          message.to('drperformancesystem@gmail.com');
+          message.from('ti@dpsystem.com.br');
+          message.to('ti@dpsystem.com.br');
           message.subject('Um novo cadastro');
         },
       );

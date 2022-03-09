@@ -23,7 +23,7 @@ class RecoverController {
         password: randPassword,
       },
       (message) => {
-        message.from('drperformancesystem@gmail.com');
+        message.from('ti@dpsystem.com.br');
         message.to(user.email);
         message.subject(`Sua nova senha: ${randPassword}`);
       },
