@@ -232,7 +232,7 @@ class ActivityController {
             date: format(data.date ? new Date(data.date) : new Date(), 'dd/MM/yyyy'),
           },
           (message) => {
-            message.from('drperformancesystem@gmail.com');
+            message.from('ti@dpsystem.com.br');
             message.to(userData.email);
             message.subject('Uma nova atividade');
           },
