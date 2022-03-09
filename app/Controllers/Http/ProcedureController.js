@@ -60,7 +60,7 @@ class ProcedureController {
       ...data,
       active: false,
       unity_id: userLogged.unity_id,
-      prof_resp_id: mongoose.Types.ObjectId(data.prof_resp.value),
+      // prof_resp_id: mongoose.Types.ObjectId(data.prof_resp.value),
     });
 
     const obj = {
