@@ -468,12 +468,13 @@ class ActivityController {
       } catch (er) {
         console.log(er);
       }
-      if (format(parseISO(data.date), 'dd/MM/yyyy') !== format(parseISO(`${activy.date}`), 'dd/MM/yyyy')
+      console.log('aquiiiiii', data.hour_end, data.hour_start);
+      if (format(data.date, 'dd/MM/yyyy') !== format(activy.date, 'dd/MM/yyyy')
         || format(parseISO(data.hour_start), 'HH:mm') !== format(parseISO(`${activy.hour_start}`), 'HH:mm')
         || format(parseISO(data.hour_end), 'HH:mm') !== format(parseISO(`${activy.hour_end}`), 'HH:mm')) {
-        console.log('aquiiiiii');
         data.status = 'rescheduled';
       }
+      console.log(data.date);
       activy.merge({
         ...data,
       });
