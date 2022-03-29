@@ -426,6 +426,14 @@ class ActivityController {
         'finished_at',
         'scheduled',
       ]);
+
+      if (data.active === 'false' || data.active === false) {
+        activy.merge({
+          active: false,
+        });
+        await activy.save();
+        return activy;
+      }
       if (data.date) {
         const dateAc = format(parseISO(data.date), 'yyyy-MM-dd');
         data.date = new Date(

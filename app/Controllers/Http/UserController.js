@@ -57,14 +57,15 @@ class UserController {
     }
   }
 
-  async indexByType({ request }) {
+  async indexByType({ request, auth }) {
+    const unityId = auth.user.unity_id;
     try {
       const data = request.only(['name', 'type', 'unity']);
       if (data.type === 'prof') {
         const users = User.where({
           $or: [
-            { type: 'prof', unity_id: { $gte: data.unity } },
-            { type: 'admin_prof', unity_id: { $gte: data.unity } },
+            { type: 'prof', unity_id: { $gte: unityId } },
+            { type: 'admin_prof', unity_id: { $gte: unityId } },
           ],
         })
           .sort('-name')
@@ -78,7 +79,7 @@ class UserController {
         const users = User.where({
           type: { $regex: new RegExp(`.*${data.type}.*`) },
           name: { $regex: new RegExp(`.*${data.name}.*`) },
-          unity_id: data.unity,
+          unity_id: unityId,
         })
           .sort('-name')
           .with('unity')
@@ -90,7 +91,7 @@ class UserController {
       if (data.type && data.type === 'prof_sec') {
         const usersProf = await User.where({
           type: 'prof',
-          unity_id: data.unity,
+          unity_id: unityId,
         })
           .sort('-name')
           .with('unity')
@@ -99,7 +100,7 @@ class UserController {
           .fetch();
         const usersSec = await User.where({
           type: 'sec',
-          unity_id: data.unity,
+          unity_id: unityId,
         })
           .sort('-name')
           .with('unity')
@@ -108,7 +109,7 @@ class UserController {
           .fetch();
         const usersAdminProf = await User.where({
           type: 'admin_prof',
-          unity_id: data.unity,
+          unity_id: unityId,
         })
           .sort('-name')
           .with('unity')
@@ -121,7 +122,7 @@ class UserController {
       if (data.type) {
         const users = User.where({
           type: { $regex: new RegExp(`.*${data.type}.*`) },
-          unity_id: data.unity,
+          unity_id: unityId,
         })
           .sort('-name')
           .with('unity')
@@ -130,7 +131,10 @@ class UserController {
           .fetch();
         return users;
       }
-      const users = User.with('answer').with('activity').with('unity').fetch();
+      const users = User.where({
+        unity_id: unityId,
+      }).with('answer').with('activity').with('unity')
+        .fetch();
       return users;
     } catch (err) {
       console.log(err);
@@ -236,6 +240,7 @@ class UserController {
       avatar: '',
       active: data.type === 'client' ? true : data.active,
       due_date: null,
+      email: data.email.trim().toLowerCase(),
     });
     if (data.type !== 'client' && data.type !== 'sec' && data.type !== 'prof') {
       await Mail.send('emails.confirm', { user_id: user._id }, (message) => {
