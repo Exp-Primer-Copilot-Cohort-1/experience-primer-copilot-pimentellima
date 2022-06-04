@@ -9,15 +9,16 @@ class UnityController {
     try {
       const data = request.only(['name']);
       if (data.name) {
-        const unities = Unity.where({
+        const unities = await Unity.where({
           name: { $regex: new RegExp(`.*${data.name}.*`) },
         })
           .with('users')
           .sort('-name')
           .fetch();
+
         return unities;
       }
-      const unities = Unity.with('users').fetch();
+      const unities = await Unity.with('users').fetch();
       return unities;
     } catch (err) {
       return false;
@@ -43,12 +44,14 @@ class UnityController {
       'obs',
       'schedule_obs',
     ]);
+
     const unityData = await Unity.where({
       ...data,
       name: data.name,
       name_company: data.name,
       active: true,
     }).first();
+
     if (unityData) {
       return response.status(400).send({
         error: {
@@ -138,6 +141,7 @@ class UnityController {
       ...permission,
       unity_id: unity._id,
     });
+
     return unity;
   }
 

@@ -226,17 +226,21 @@ class ActivityController {
     } else {
       const userData = await User.where({ _id: data.prof.value }).first();
       if (userData) {
-        await Mail.send(
-          'emails.activity',
-          {
-            date: format(data.date ? new Date(data.date) : new Date(), 'dd/MM/yyyy'),
-          },
-          (message) => {
-            message.from('ti@dpsystem.com.br');
-            message.to(userData.email);
-            message.subject('Uma nova atividade');
-          },
-        );
+        try {
+          await Mail.send(
+            'emails.activity',
+            {
+              date: format(data.date ? new Date(data.date) : new Date(), 'dd/MM/yyyy'),
+            },
+            (message) => {
+              message.from('ti@dpsystem.com.br');
+              message.to(userData.email);
+              message.subject('Uma nova atividade');
+            },
+          );
+        } catch (error) {
+          console.log(error);
+        }
       }
       if (data.is_recorrent && !data.is_recorrent_now) {
         const dateAc = format(parseISO(data.date), 'yyyy-MM-dd');

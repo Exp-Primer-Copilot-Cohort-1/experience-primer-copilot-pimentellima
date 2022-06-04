@@ -196,6 +196,7 @@ class UserController {
       'partner',
     ]);
     const userData = await User.where({ email: data.email }).first();
+
     if (userData && userData.active) {
       return response.status(400).send({
         error: {
@@ -203,7 +204,9 @@ class UserController {
         },
       });
     }
+
     const unity = await Unity.where({ _id: data.unity_id }).first();
+
     if (!unity) {
       return response.status(400).send({
         error: {
@@ -211,6 +214,7 @@ class UserController {
         },
       });
     }
+
     if (
       (data.type === 'sec'
         || data.type === 'prof'
@@ -224,40 +228,51 @@ class UserController {
         .map((x) => x[Math.floor(Math.random() * x.length)])
         .join('');
       data.password = randPassword;
-      await Mail.send(
-        'emails.create',
-        { password: data.password },
-        (message) => {
-          message.from('ti@dpsystem.com.br');
-          message.to(data.email);
-          message.subject('A sua senha');
-        },
-      );
+      try {
+        await Mail.send(
+          'emails.create',
+          { password: data.password },
+          (message) => {
+            message.from('ti@dpsystem.com.br');
+            message.to(data.email);
+            message.subject('A sua senha');
+          },
+        );
+      } catch (error) {
+        console.log('Erro ao enviar email de criação de senha');
+      }
     }
+
     const user = await User.create({
       ...data,
-      unity_id: mongoose.Types.ObjectId(data.unity_id),
+      unity_id: mongoose.Types.ObjectId(data.unity_id.toString()),
       avatar: '',
       active: data.type === 'client' ? true : data.active,
       due_date: null,
       email: data.email.trim().toLowerCase(),
     });
+
     if (data.type !== 'client' && data.type !== 'sec' && data.type !== 'prof') {
-      await Mail.send('emails.confirm', { user_id: user._id }, (message) => {
-        message.from('ti@dpsystem.com.br');
-        message.to(user.email);
-        message.subject('Ative sua conta');
-      });
-      await Mail.send(
-        'emails.new_account',
-        { user_email: user.email },
-        (message) => {
+      try {
+        await Mail.send('emails.confirm', { user_id: user._id }, (message) => {
           message.from('ti@dpsystem.com.br');
-          message.to('ti@dpsystem.com.br');
-          message.subject('Um novo cadastro');
-        },
-      );
+          message.to(user.email);
+          message.subject('Ative sua conta');
+        });
+        await Mail.send(
+          'emails.new_account',
+          { user_email: user.email },
+          (message) => {
+            message.from('ti@dpsystem.com.br');
+            message.to('ti@dpsystem.com.br');
+            message.subject('Um novo cadastro');
+          },
+        );
+      } catch (error) {
+        console.log('erro no envio do email');
+      }
     }
+
     return user;
   }
 
