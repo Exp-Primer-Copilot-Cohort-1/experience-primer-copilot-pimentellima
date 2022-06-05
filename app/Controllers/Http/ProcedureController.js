@@ -46,6 +46,8 @@ class ProcedureController {
   async store({ request, auth }) {
     const userLogged = auth.user;
     const data = request.only([
+      'active',
+      'value',
       'color',
       'name',
       'minutes',
@@ -58,7 +60,6 @@ class ProcedureController {
     ]);
     const procedures = await Procedure.create({
       ...data,
-      active: false,
       unity_id: userLogged.unity_id,
       // prof_resp_id: mongoose.Types.ObjectId(data.prof_resp.value),
     });
