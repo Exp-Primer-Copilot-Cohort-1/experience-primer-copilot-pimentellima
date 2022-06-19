@@ -29,6 +29,7 @@ class ProcedureController {
       const procedures = Procedure.where({
         name: { $regex: new RegExp(`.*${data.name}.*`) },
         unity_id: userLogged.unity_id,
+        active: true,
       })
         .with('partner')
         .sort('-name')
@@ -37,6 +38,7 @@ class ProcedureController {
     }
     const procedures = Procedure.where({
       unity_id: userLogged.unity_id,
+      active: true,
     })
       .with('partner')
       .fetch();
