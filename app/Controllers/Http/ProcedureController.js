@@ -24,21 +24,24 @@ function customIsEquals(first, second) {
 class ProcedureController {
   async index({ request, auth }) {
     const userLogged = auth.user;
-    const data = request.only(['name']);
+    const data = request.only(['name', 'active']);
+    const active = !data.active ? {} : { active: data.active === 'true' };
+
     if (data.name) {
       const procedures = Procedure.where({
         name: { $regex: new RegExp(`.*${data.name}.*`) },
         unity_id: userLogged.unity_id,
-        active: true,
+        ...active,
       })
         .with('partner')
         .sort('-name')
         .fetch();
       return procedures;
     }
+
     const procedures = Procedure.where({
       unity_id: userLogged.unity_id,
-      active: true,
+      ...active,
     })
       .with('partner')
       .fetch();
