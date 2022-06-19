@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-plusplus */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-await-in-loop */
@@ -33,6 +34,7 @@ function customIsEquals(first, second) {
 
 const Mail = use('Mail');
 const { format, parseISO, subYears } = require('date-fns');
+const { rest } = require('lodash');
 
 class ActivityController {
   async index({ auth }) {
@@ -104,11 +106,14 @@ class ActivityController {
       'health_insurance',
     ]);
     if (data.all_day || data.schedule_block) {
-      delete data.dates;
-      delete data.is_recorrent;
-      delete data.is_recorrent_quantity;
-      delete data.is_recorrent_now;
-      delete data.is_recorrent_quantity_now;
+      const {
+        dates: elementDates,
+        is_recorrent,
+        is_recorrent_quantity,
+        is_recorrent_now,
+        is_recorrent_quantity_now,
+        ...newData
+      } = data;
       const dateAc = format(parseISO(data.date), 'yyyy-MM-dd');
       data.date = new Date(
         dateAc.split('-')[0],
@@ -118,7 +123,7 @@ class ActivityController {
         0,
       );
       const activity = await Activity.create({
-        ...data,
+        ...newData,
         date: new Date(
           dateAc.split('-')[0],
           parseInt(dateAc.split('-')[1], 10) - 1,

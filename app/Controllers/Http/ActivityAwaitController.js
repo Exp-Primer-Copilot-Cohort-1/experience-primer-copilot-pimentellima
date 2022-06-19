@@ -6,8 +6,9 @@ const Activity = use('App/Models/ActivityAwait');
 class ActivityAwaitController {
   async index({ auth, response }) {
     const userLogged = auth.user;
+    const typeUsersValid = ['admin', 'admin_prof', 'sec', 'prof'];
     try {
-      if (userLogged.type === 'admin' || userLogged.type === 'admin_prof') {
+      if (typeUsersValid.includes(userLogged.type)) {
         const activities = Activity.where({
           unity_id: userLogged.unity_id,
         })
@@ -16,24 +17,7 @@ class ActivityAwaitController {
           .fetch();
         return activities;
       }
-      if (userLogged.type === 'sec' || userLogged.type === 'sec') {
-        const activities = Activity.where({
-          unity_id: userLogged.unity_id,
-        })
-          .with('user')
-          .sort('+created_at')
-          .fetch();
-        return activities;
-      }
-      if (userLogged.type === 'prof' || userLogged.type === 'prof') {
-        const activities = Activity.where({
-          unity_id: userLogged.unity_id,
-        })
-          .with('user')
-          .sort('+created_at')
-          .fetch();
-        return activities;
-      }
+
       return [];
     } catch (err) {
       return response.status(400).send({
