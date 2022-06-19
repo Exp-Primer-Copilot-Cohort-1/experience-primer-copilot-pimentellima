@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-const Permission = use("App/Models/Permission");
+const Permission = use('App/Models/Permission');
 class PermissionController {
   async index() {
     try {

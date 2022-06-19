@@ -34,7 +34,6 @@ function customIsEquals(first, second) {
 
 const Mail = use('Mail');
 const { format, parseISO, subYears } = require('date-fns');
-const { rest } = require('lodash');
 
 class ActivityController {
   async index({ auth }) {
@@ -180,7 +179,6 @@ class ActivityController {
             activityFinded = act;
           }
         });
-        console.log('aquiiiiii ---**----', activityFinded);
         if (activityFinded) {
           const acStock = await ActivityStock.where({
             activity_id:
@@ -192,7 +190,6 @@ class ActivityController {
             <= 0 ? 0
             : acStock.quantity_atual - data.is_recorrent_quantity - data.is_recorrent_quantity_now;
 
-          console.log('aquiiiiii ---**----', quantity);
           if (quantity <= 0) {
             await acStock.delete();
           } else {
@@ -477,13 +474,12 @@ class ActivityController {
       } catch (er) {
         console.log(er);
       }
-      console.log('aquiiiiii', data.hour_end, data.hour_start);
+
       if (format(data.date, 'dd/MM/yyyy') !== format(activy.date, 'dd/MM/yyyy')
         || format(parseISO(data.hour_start), 'HH:mm') !== format(parseISO(`${activy.hour_start}`), 'HH:mm')
         || format(parseISO(data.hour_end), 'HH:mm') !== format(parseISO(`${activy.hour_end}`), 'HH:mm')) {
         data.status = 'rescheduled';
       }
-      console.log(data.date);
       activy.merge({
         ...data,
       });
