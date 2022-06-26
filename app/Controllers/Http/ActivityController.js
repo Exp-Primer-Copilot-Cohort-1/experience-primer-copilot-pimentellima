@@ -22,6 +22,11 @@ const ActivityStock = use('App/Models/ActivityStock');
 
 const _ = require('lodash');
 
+const { format, parseISO, subYears } = require('date-fns');
+const ActivityEntity = require('../../Domain/Activity/activity-entity');
+const MapStatus = require('../../utils/map-status');
+const IsDateModified = require('../../utils/date-modified');
+
 function customIsEquals(first, second) {
   const val = [];
   _.forEach(second, (value, key) => {
@@ -33,8 +38,6 @@ function customIsEquals(first, second) {
 }
 
 const Mail = use('Mail');
-const { format, parseISO, subYears } = require('date-fns');
-
 class ActivityController {
   async index({ auth }) {
     const userLogged = auth.user;
@@ -67,7 +70,7 @@ class ActivityController {
       }
       return [];
     } catch (err) {
-      console.log(err);
+      console.log('linha 72');
       return false;
     }
   }
@@ -104,128 +107,94 @@ class ActivityController {
       'is_recorrent_quantity_now',
       'health_insurance',
     ]);
-    if (data.all_day || data.schedule_block) {
-      const {
-        dates: elementDates,
-        is_recorrent,
-        is_recorrent_quantity,
-        is_recorrent_now,
-        is_recorrent_quantity_now,
-        ...newData
-      } = data;
-      const dateAc = format(parseISO(data.date), 'yyyy-MM-dd');
-      data.date = new Date(
-        dateAc.split('-')[0],
-        parseInt(dateAc.split('-')[1], 10) - 1,
-        parseInt(dateAc.split('-')[2], 10),
-        0,
-        0,
-      );
-      const activity = await Activity.create({
-        ...newData,
-        date: new Date(
-          dateAc.split('-')[0],
-          parseInt(dateAc.split('-')[1], 10) - 1,
-          parseInt(dateAc.split('-')[2], 10),
-          0,
-          0,
-        ),
-        active: true,
-        unity_id: userLogged.unity_id,
-        scheduled: 'scheduled',
-        prof_id: mongoose.Types.ObjectId(data.prof.value),
-      });
-      return activity;
-    }
-
-    let activity = null;
-    if (
-      data.is_recorrent_now
+    try {
+      const isRecorrentANDdayMarked = data.is_recorrent_now
         && data.is_recorrent_quantity_now
         && data.dates
-        && data.dates.length
-    ) {
-      const activitiesArr = [];
-      const userData = await User.where({ _id: data.prof.value }).first();
-      for (const dat of data.dates) {
-        const dateAc = format(new Date(dat.date), 'yyyy-MM-dd');
-        const activitynew = await Activity.create({
-          ...data,
-          date: new Date(
-            dateAc.split('-')[0],
-            parseInt(dateAc.split('-')[1], 10) - 1,
-            parseInt(dateAc.split('-')[2], 10),
-            0,
-            0,
-          ),
-          active: true,
-          unity_id: userLogged.unity_id,
-          user_id: mongoose.Types.ObjectId(userData._id),
-          prof_id: mongoose.Types.ObjectId(data.prof.value),
-          scheduled: 'scheduled',
-        });
-        activitiesArr.push(activitynew);
-      }
-      activity = activitiesArr[0];
+        && data.dates.length;
+      if (isRecorrentANDdayMarked) {
+        const activitiesArr = [];
+        const userData = await User.where({ _id: data.prof.value }).first();
+        for (const dat of data.dates) {
+          const dateAc = format(new Date(dat.date), 'yyyy-MM-dd');
+          const activityNew = await Activity.create({
+            ...data,
+            date: new Date(
+              dateAc.split('-')[0],
+              parseInt(dateAc.split('-')[1], 10) - 1,
+              parseInt(dateAc.split('-')[2], 10),
+              0,
+              0,
+            ),
+            active: true,
+            unity_id: userLogged.unity_id,
+            user_id: mongoose.Types.ObjectId(userData._id),
+            prof_id: mongoose.Types.ObjectId(data.prof.value),
+            scheduled: 'scheduled',
+          });
+          activitiesArr.push(activityNew);
+        }
+        const activity = activitiesArr[0];
 
-      const actStock = await ActivityStock
-        .where({ user_id: mongoose.Types.ObjectId(data.prof.value) })
-        .with('activity').fetch();
-      const actStockJSON = actStock.toJSON();
-      if (actStockJSON && actStockJSON.length) {
-        let activityFinded = null;
-        actStockJSON.forEach((act) => {
-          if (act.activity.client.value === data.client.value) {
-            activityFinded = act;
-          }
-        });
-        if (activityFinded) {
-          const acStock = await ActivityStock.where({
-            activity_id:
-            mongoose.Types.ObjectId(activityFinded.activity_id),
-          })
-            .with('activity').first();
-          const quantity = acStock.quantity_atual - data.is_recorrent_quantity
-          - data.is_recorrent_quantity_now
-            <= 0 ? 0
-            : acStock.quantity_atual - data.is_recorrent_quantity - data.is_recorrent_quantity_now;
+        const actStock = await ActivityStock
+          .where({ user_id: mongoose.Types.ObjectId(data.prof.value) })
+          .with('activity').fetch();
+        const actStockJSON = actStock.toJSON();
+        if (actStockJSON && actStockJSON.length) {
+          let activityFinded = null;
+          actStockJSON.forEach((act) => {
+            if (act.activity.client.value === data.client.value) {
+              activityFinded = act;
+            }
+          });
+          if (activityFinded) {
+            const acStock = await ActivityStock.where({
+              activity_id:
+                mongoose.Types.ObjectId(activityFinded.activity_id),
+            })
+              .with('activity').first();
 
-          if (quantity <= 0) {
-            await acStock.delete();
+            const QUANTIFICATION_RECORRENT_NOW = acStock.quantity_atual - data.is_recorrent_quantity
+              - data.is_recorrent_quantity_now;
+
+            const quantity = QUANTIFICATION_RECORRENT_NOW <= 0 ? 0 : QUANTITY;
+
+            if (quantity <= 0) {
+              await acStock.delete();
+            } else {
+              acStock.merge({
+                unity_id: userLogged.unity_id,
+                user_id: mongoose.Types.ObjectId(userData._id),
+                activity_id: mongoose.Types.ObjectId(activityFinded.activity_id),
+                quantity,
+                quantity_total: acStock.quantity_total,
+                quantity_atual: quantity,
+              });
+              await acStock.save();
+            }
           } else {
-            acStock.merge({
+            await ActivityStock.create({
               unity_id: userLogged.unity_id,
               user_id: mongoose.Types.ObjectId(userData._id),
-              activity_id: mongoose.Types.ObjectId(activityFinded.activity_id),
-              quantity,
-              quantity_total: acStock.quantity_total,
-              quantity_atual: quantity,
+              activity_id: mongoose.Types.ObjectId(activitiesArr[0]._id),
+              quantity: data.is_recorrent_quantity - data.is_recorrent_quantity_now,
+              quantity_atual: data.is_recorrent_quantity - data.is_recorrent_quantity_now,
+              quantity_total: data.is_recorrent_quantity,
             });
-            await acStock.save();
           }
         } else {
           await ActivityStock.create({
             unity_id: userLogged.unity_id,
             user_id: mongoose.Types.ObjectId(userData._id),
             activity_id: mongoose.Types.ObjectId(activitiesArr[0]._id),
-            quantity: data.is_recorrent_quantity - data.is_recorrent_quantity_now,
-            quantity_atual: data.is_recorrent_quantity - data.is_recorrent_quantity_now,
+            quantity: parseInt(data.is_recorrent_quantity, 10)
+              - parseInt(data.is_recorrent_quantity_now, 10),
+            quantity_atual: parseInt(data.is_recorrent_quantity, 10)
+              - parseInt(data.is_recorrent_quantity_now, 10),
             quantity_total: data.is_recorrent_quantity,
           });
         }
-      } else {
-        await ActivityStock.create({
-          unity_id: userLogged.unity_id,
-          user_id: mongoose.Types.ObjectId(userData._id),
-          activity_id: mongoose.Types.ObjectId(activitiesArr[0]._id),
-          quantity: parseInt(data.is_recorrent_quantity, 10)
-            - parseInt(data.is_recorrent_quantity_now, 10),
-          quantity_atual: parseInt(data.is_recorrent_quantity, 10)
-            - parseInt(data.is_recorrent_quantity_now, 10),
-          quantity_total: data.is_recorrent_quantity,
-        });
       }
-    } else {
       const userData = await User.where({ _id: data.prof.value }).first();
       if (userData) {
         try {
@@ -241,7 +210,7 @@ class ActivityController {
             },
           );
         } catch (error) {
-          console.log(error);
+          console.log('linha 212');
         }
       }
       if (data.is_recorrent && !data.is_recorrent_now) {
@@ -253,7 +222,7 @@ class ActivityController {
           0,
           0,
         );
-        activity = await Activity.create({
+        const activity = await Activity.create({
           ...data,
           date: subYears(new Date(
             dateAc.split('-')[0],
@@ -330,12 +299,59 @@ class ActivityController {
         });
         return activity;
       }
-      delete data.dates;
-      delete data.is_recorrent;
-      delete data.is_recorrent_quantity;
-      delete data.is_recorrent_now;
-      delete data.is_recorrent_quantity_now;
 
+      const activityEntity = new ActivityEntity(data);
+      const activity = await Activity.create({
+        ...activityEntity.params(),
+        active: true,
+        unity_id: userLogged.unity_id,
+        user_id: mongoose.Types.ObjectId(userData._id),
+        scheduled: 'scheduled',
+        prof_id: mongoose.Types.ObjectId(data.prof.value),
+      });
+
+      return activity;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+  async update({ params, request }) {
+    const activity = await Activity.where({ _id: params.id }).firstOrFail();
+
+    if (!activity) return false;
+
+    const data = request.only([
+      'date',
+      'hour_start',
+      'hour_end',
+      'description',
+      'active',
+      'status',
+      'schedule_block',
+      'schedule',
+      'procedures',
+      'client',
+      'obs',
+      'prof',
+      'partner',
+      'phone',
+      'all_day',
+      'started_at',
+      'health_insurance',
+      'finished_at',
+      'scheduled',
+    ]);
+
+    if (data.active === 'false' || data.active === false) {
+      activity.merge({
+        active: false,
+      });
+      await activity.save();
+      return activity;
+    }
+    /*   if (data.date) {
       const dateAc = format(parseISO(data.date), 'yyyy-MM-dd');
       data.date = new Date(
         dateAc.split('-')[0],
@@ -344,217 +360,62 @@ class ActivityController {
         0,
         0,
       );
-      activity = await Activity.create({
-        ...data,
-        date: new Date(
-          dateAc.split('-')[0],
-          parseInt(dateAc.split('-')[1], 10) - 1,
-          parseInt(dateAc.split('-')[2], 10),
-          0,
-          0,
-        ),
-        active: true,
-        unity_id: userLogged.unity_id,
-        user_id: mongoose.Types.ObjectId(userData._id),
-        scheduled: 'scheduled',
-        prof_id: mongoose.Types.ObjectId(data.prof.value),
-      });
     }
-    if (!data.is_recorrent) {
-      const actStock = await ActivityStock
-        .where({ user_id: mongoose.Types.ObjectId(data.prof.value) })
-        .with('activity').fetch();
-      const userData = await User.where({ _id: data.prof.value }).first();
-      const actStockJSON = actStock.toJSON();
-      if (actStockJSON && actStockJSON.length) {
-        let activityFinded = null;
-        actStockJSON.forEach((act) => {
-          if (act.activity.client.value === data.client.value) {
-            activityFinded = act;
-          }
-        });
-        if (activityFinded) {
-          const acStock = await ActivityStock
-            .where({ activity_id: mongoose.Types.ObjectId(activityFinded.activity_id) }).first();
-          const quantity = acStock.quantity - 1 <= 0 ? 0
-            : acStock.quantity - 1;
-          if (quantity <= 0) {
-            await acStock.delete();
-          } else {
-            acStock.merge({
-              unity_id: userLogged.unity_id,
-              user_id: mongoose.Types.ObjectId(userData._id),
-              activity_id: mongoose.Types.ObjectId(activityFinded.activity_id),
-              quantity_total: acStock.quantity_total,
-              quantity_atual: quantity,
-              quantity,
-            });
-            await acStock.save();
-          }
-        }
-      }
-
-      const obj = {
-        title: 'Nova atividade',
-      };
-
-      await ActivityLog.create({
-        ...obj,
-        activity_id: mongoose.Types.ObjectId(activity._id),
-        admin: userLogged.toJSON(),
-      });
-      return activity;
-    }
-    return false;
-  }
-
-  async update({ params, request }) {
-    const activy = await Activity.where({ _id: params.id }).firstOrFail();
-    if (activy) {
-      const data = request.only([
-        'date',
-        'hour_start',
-        'hour_end',
-        'description',
-        'active',
-        'status',
-        'schedule_block',
-        'schedule',
-        'procedures',
-        'client',
-        'obs',
-        'prof',
-        'partner',
-        'phone',
-        'all_day',
-        'started_at',
-        'health_insurance',
-        'finished_at',
-        'scheduled',
-      ]);
-
-      if (data.active === 'false' || data.active === false) {
-        activy.merge({
-          active: false,
-        });
-        await activy.save();
-        return activy;
-      }
-      if (data.date) {
-        const dateAc = format(parseISO(data.date), 'yyyy-MM-dd');
-        data.date = new Date(
-          dateAc.split('-')[0],
-          parseInt(dateAc.split('-')[1], 10) - 1,
-          parseInt(dateAc.split('-')[2], 10),
-          0,
-          0,
-        );
-      }
-      try {
-        if (data.status && data.status === 'finished') {
-          if (activy.procedures && activy.procedures.length) {
-            for (const proc of activy.procedures) {
-              const procedure = await Procedure
-                .where({ _id: mongoose.Types.ObjectId(proc.value) }).first();
-              if (procedure && procedure.products) {
-                for (const produ of procedure.products) {
-                  const stocks = await Stock
-                    .where({ _id: mongoose.Types.ObjectId(produ.product.value) }).first();
-                  stocks
-                    .merge({
-                      quantity: parseInt(stocks.quantity, 10)
+    try {
+      if (data.status && data.status === 'finished') {
+        if (activity.procedures && activity.procedures.length) {
+          for (const proc of activity.procedures) {
+            const procedure = await Procedure
+              .where({ _id: mongoose.Types.ObjectId(proc.value) }).first();
+            if (procedure && procedure.products) {
+              for (const produ of procedure.products) {
+                const stocks = await Stock
+                  .where({ _id: mongoose.Types.ObjectId(produ.product.value) }).first();
+                stocks
+                  .merge({
+                    quantity: parseInt(stocks.quantity, 10)
                       - parseInt(produ.quantity, 10),
-                    });
-                  await stocks.save();
-                }
+                  });
+                await stocks.save();
               }
             }
           }
         }
-      } catch (er) {
-        console.log(er);
+      }
+    } catch (er) {
+      console.log('linha 477');
+    } */
+
+    try {
+      const activityEntity = new ActivityEntity(data);
+      const isDateBefore = new IsDateModified(activityEntity.params());
+
+      const isDateAfter = new IsDateModified(activity);
+      const isDateModified = IsDateModified.compare(isDateBefore, isDateAfter);
+
+      if (isDateModified) {
+        activityEntity.status = 'rescheduled';
       }
 
-      if (format(data.date, 'dd/MM/yyyy') !== format(activy.date, 'dd/MM/yyyy')
-        || format(parseISO(data.hour_start), 'HH:mm') !== format(parseISO(`${activy.hour_start}`), 'HH:mm')
-        || format(parseISO(data.hour_end), 'HH:mm') !== format(parseISO(`${activy.hour_end}`), 'HH:mm')) {
-        data.status = 'rescheduled';
-      }
-      activy.merge({
-        ...data,
-      });
-      await activy.save();
+      activity.merge({ ...activityEntity.params(), ...isDateBefore.transformThisDateStringObject()});
+      await activity.save();
 
-      const dataArr = customIsEquals(activy.toJSON(), data);
-      for (const dt of dataArr) {
-        let title = 'scheduled';
-        if (dt.key === '') {
-          title = 'Agendado';
-        }
-        if (dt.key === 'finished_at') {
-          title = 'Finalizado às';
-        }
-        if (dt.key === 'started_at') {
-          title = 'Iniciado às';
-        }
-        if (dt.key === 'all_day') {
-          title = 'Atividade o dia completo';
-        }
-        if (dt.key === 'partner') {
-          title = 'Parceiro';
-        }
-        if (dt.key === 'phone') {
-          title = 'Telefone';
-        }
-        if (dt.key === 'obs') {
-          title = 'Observação';
-        }
-        if (dt.key === 'prof') {
-          title = 'Profissional';
-        }
-        if (dt.key === 'client') {
-          title = 'Cliente';
-        }
-        if (dt.key === 'procedures') {
-          title = 'Procedimentos';
-        }
-        if (dt.key === 'active') {
-          title = 'Ativo';
-        }
-        if (dt.key === 'date') {
-          title = 'Data';
-        }
-        if (dt.key === 'hour_start') {
-          title = 'Hora de inicio';
-        }
-        if (dt.key === 'hour_end') {
-          title = 'Hora final';
-        }
-        if (dt.key === 'description') {
-          title = 'Descrição';
-        }
-        if (dt.key === 'status') {
-          title = 'Status';
-        }
-        if (dt.key === 'schedule_block') {
-          title = 'Bloquear agendamento';
-        }
-        if (dt.key === 'schedule') {
-          title = 'Agendar';
-        }
-        const obj = {
-          title,
-        };
-        await ActivityLog.create({
-          ...obj,
-          activity_id: mongoose.Types.ObjectId(activity._id),
-          admin: userLogged.toJSON(),
-        });
-      }
+      return activity;
+    } catch (error) {
+      console.log(error);
 
-      return activy;
+      return error;
     }
-    return false;
+
+    /*   const dataArr = customIsEquals(activity.toJSON(), data);
+    for (const dt of dataArr) {
+      const title = new MapStatus(dt.key).title;
+      await ActivityLog.create({
+        title,
+        activity_id: mongoose.Types.ObjectId(activity._id),
+        admin: userLogged.toJSON(),
+      });
+    } */
   }
 
   async updateStatus({ params, request }) {
@@ -626,7 +487,7 @@ class ActivityController {
         activityAlter.merge({procedures: proceduresNew});
         await activityAlter.save();
       } catch (er) {
-        console.log(er);
+        console.log('linha 631');
       }
     }
 

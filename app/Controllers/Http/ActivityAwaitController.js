@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const ActivityAwaitEntity = require('../../Domain/Activity/activity-await-entity');
 
 const Activity = use('App/Models/ActivityAwait');
 class ActivityAwaitController {
@@ -37,10 +38,14 @@ class ActivityAwaitController {
       'partner',
       'phone',
       'all_day',
+      'health_insurance',
+      'procedures',
     ]);
 
+    const activityAwait = new ActivityAwaitEntity(data);
+
     const activity = await Activity.create({
-      ...data,
+      ...activityAwait.params(),
       active: true,
       unity_id: userLogged.unity_id,
       client_id: mongoose.Types.ObjectId(data.client.value),
@@ -49,8 +54,8 @@ class ActivityAwaitController {
   }
 
   async update({ params, request, response }) {
-    const activy = await Activity.where({ _id: params.id }).firstOrFail();
-    if (activy) {
+    const activity = await Activity.where({ _id: params.id }).firstOrFail();
+    if (activity) {
       const data = request.only([
         'client',
         'obs',
@@ -59,13 +64,17 @@ class ActivityAwaitController {
         'phone',
         'all_day',
         'active',
+        'health_insurance',
+        'procedures',
       ]);
 
-      activy.merge({
-        ...data,
+      const activityAwait = new ActivityAwaitEntity(data);
+
+      activity.merge({
+        ...activityAwait.params(),
       });
-      await activy.save();
-      return activy;
+      await activity.save();
+      return activity;
     }
     return response.status(400).send({
       error: {
