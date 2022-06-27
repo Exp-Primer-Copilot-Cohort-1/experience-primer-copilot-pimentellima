@@ -25,17 +25,25 @@ class ActivityAwaitEntity {
     }
 
     if (activity.procedures !== undefined) {
-      this.map.set('procedures', {
-        value: mongoose.Types.ObjectId(activity.procedures._id),
-        label: activity.procedures.name,
-      });
+      this.map.set('procedures', activity.procedures?.map((procedure) => ({
+        value: procedure?.value || null,
+        label: procedure?.label || null,
+        minutes: procedure?.minutes || null,
+        color: procedure?.color || null,
+        val: procedure?.val || null,
+        health_insurance: {
+          value: procedure?.health_insurance?.value || null,
+          label: procedure?.health_insurance?.label || null,
+        },
+        status: procedure?.status || null,
+      })));
     }
 
     if (activity.health_insurance !== undefined) {
-      this.map.set('health_insurance', {
-        value: mongoose.Types.ObjectId(activity.health_insurance._id),
-        label: activity.health_insurance.name,
-      });
+      this.map.set('health_insurance', activity.health_insurance?.map((healthInsurance) => ({
+        value: healthInsurance?.value || null,
+        label: healthInsurance?.label || null,
+      })));
     }
   }
 

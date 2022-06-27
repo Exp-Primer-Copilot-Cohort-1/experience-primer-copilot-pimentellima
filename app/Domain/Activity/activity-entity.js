@@ -13,7 +13,7 @@ class ActivityEntity {
     this.generateDateDefault();
 
     if (activity.procedures !== undefined) {
-      this.map.set('procedures', activity.procedures.map((procedure) => ({
+      this.map.set('procedures', activity.procedures?.map((procedure) => ({
         value: procedure?.value || null,
         label: procedure?.label || null,
         minutes: procedure?.minutes || null,
