@@ -43,10 +43,19 @@ class ActivityEntity {
     }
 
     if (activity.health_insurance !== undefined) {
-      this.map.set('health_insurance', activity.health_insurance?.map((healthInsurance) => ({
-        value: healthInsurance?.value || null,
-        label: healthInsurance?.label || null,
-      })));
+      if (Array.isArray(activity.health_insurance)) {
+        this.map.set('health_insurance', activity.health_insurance?.map((healthInsurance) => ({
+          value: healthInsurance?.value || null,
+          label: healthInsurance?.label || null,
+          price: healthInsurance?.price || null,
+        })));
+      } else {
+        this.map.set('health_insurance', [{
+          value: activity.health_insurance?.value || null,
+          label: activity.health_insurance?.label || null,
+          price: activity.health_insurance?.price || null,
+        }]);
+      }
     }
 
     if (activity.all_day || activity.schedule_block) {
