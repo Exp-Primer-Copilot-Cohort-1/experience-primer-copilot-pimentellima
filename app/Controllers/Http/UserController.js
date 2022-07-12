@@ -224,7 +224,7 @@ class UserController {
         .map((x) => x[Math.floor(Math.random() * x.length)])
         .join('');
       data.password = randPassword;
-      await Mail.send(
+      /* await Mail.send(
         'emails.create',
         { password: data.password },
         (message) => {
@@ -232,7 +232,7 @@ class UserController {
           message.to(data.email);
           message.subject('A sua senha');
         },
-      );
+      ); */
     }
     const user = await User.create({
       ...data,
@@ -248,7 +248,7 @@ class UserController {
         message.to(user.email);
         message.subject('Ative sua conta');
       });
-      await Mail.send(
+    /*   await Mail.send(
         'emails.new_account',
         { user_email: user.email },
         (message) => {
@@ -256,7 +256,7 @@ class UserController {
           message.to('ti@dpsystem.com.br');
           message.subject('Um novo cadastro');
         },
-      );
+      ); */
     }
     return user;
   }
