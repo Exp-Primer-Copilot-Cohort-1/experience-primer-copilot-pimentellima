@@ -32,8 +32,9 @@ class ActivityAwaitEntity {
         color: procedure?.color || null,
         val: procedure?.val || null,
         health_insurance: {
-          value: procedure?.health_insurance?.value || null,
-          label: procedure?.health_insurance?.label || null,
+          value: procedure?.health_insurance?.value || procedure?.health_insurance_id || null,
+          label: procedure?.health_insurance?.label || procedure?.health_insurance_label || null,
+          price: procedure?.health_insurance?.price || procedure?.health_insurance_price || null,
         },
         status: procedure?.status || null,
       })));
