@@ -116,7 +116,6 @@ class ReportController {
     const usersMale = [];
     const usersFemale = [];
     for (const userId of activitiesAllJson) {
-      console.log('aqui', usersMale, usersFemale);
       if (userId.client && userId.client.value) {
         const user = await User.where({
           _id:

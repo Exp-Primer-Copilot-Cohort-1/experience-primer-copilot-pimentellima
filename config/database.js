@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
 /** @type {import('@adonisjs/framework/src/Env')} */
-const Env = use("Env");
+const Env = use('Env');
 
 /** @type {import('@adonisjs/ignitor/src/Helpers')} */
-const Helpers = use("Helpers");
+const Helpers = use('Helpers');
 
 module.exports = {
   /*
@@ -16,21 +16,21 @@ module.exports = {
   | interacting with SQL databases.
   |
   */
-  connection: Env.get("DB_CONNECTION", "mongodb"),
+  connection: Env.get('DB_CONNECTION', 'mongodb'),
 
   mongodb: {
-    client: "mongodb",
-    connectionString: Env.get("DB_CONNECTION_STRING", ""),
+    client: 'mongodb',
+    connectionString: Env.get('DB_CONNECTION_STRING', ''),
     connection: {
-      host: Env.get("DB_HOST", "localhost"),
-      port: Env.get("DB_PORT"),
-      username: Env.get("DB_USER"),
-      password: Env.get("DB_PASSWORD"),
-      database: Env.get("DB_DATABASE"),
+      host: Env.get('DB_HOST', 'localhost'),
+      port: Env.get('DB_PORT'),
+      username: Env.get('DB_USER'),
+      password: Env.get('DB_PASSWORD'),
+      database: Env.get('DB_DATABASE'),
       options: {
-        useUnifiedTopology: true,
         useFindAndModify: false,
         useCreateIndex: true,
+        useUnifiedTopology: true,
         // replicaSet: Env.get('DB_REPLICA_SET', '')
         // ssl: Env.get('DB_SSL, '')
         // connectTimeoutMS: Env.get('DB_CONNECT_TIMEOUT_MS', 15000),
@@ -55,15 +55,15 @@ module.exports = {
   |
   */
   mysql: {
-    client: "mysql",
+    client: 'mysql',
     connection: {
-      host: Env.get("DB_HOST", "localhost"),
-      port: Env.get("DB_PORT", ""),
-      user: Env.get("DB_USER", "root"),
-      password: Env.get("DB_PASSWORD", ""),
-      database: Env.get("DB_DATABASE", "adonis"),
+      host: Env.get('DB_HOST', 'localhost'),
+      port: Env.get('DB_PORT', ''),
+      user: Env.get('DB_USER', 'root'),
+      password: Env.get('DB_PASSWORD', ''),
+      database: Env.get('DB_DATABASE', 'adonis'),
     },
-    debug: Env.get("DB_DEBUG", false),
+    debug: Env.get('DB_DEBUG', false),
   },
 
   /*
@@ -77,14 +77,14 @@ module.exports = {
   |
   */
   pg: {
-    client: "pg",
+    client: 'pg',
     connection: {
-      host: Env.get("DB_HOST", "localhost"),
-      port: Env.get("DB_PORT", ""),
-      user: Env.get("DB_USER", "root"),
-      password: Env.get("DB_PASSWORD", ""),
-      database: Env.get("DB_DATABASE", "adonis"),
+      host: Env.get('DB_HOST', 'localhost'),
+      port: Env.get('DB_PORT', ''),
+      user: Env.get('DB_USER', 'root'),
+      password: Env.get('DB_PASSWORD', ''),
+      database: Env.get('DB_DATABASE', 'adonis'),
     },
-    debug: Env.get("DB_DEBUG", false),
+    debug: Env.get('DB_DEBUG', false),
   },
 };

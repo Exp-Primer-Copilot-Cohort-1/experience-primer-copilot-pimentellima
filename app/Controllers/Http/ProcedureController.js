@@ -24,19 +24,24 @@ function customIsEquals(first, second) {
 class ProcedureController {
   async index({ request, auth }) {
     const userLogged = auth.user;
-    const data = request.only(['name']);
+    const data = request.only(['name', 'active']);
+    const active = !data.active ? {} : { active: data.active === 'true' };
+
     if (data.name) {
       const procedures = Procedure.where({
         name: { $regex: new RegExp(`.*${data.name}.*`) },
         unity_id: userLogged.unity_id,
+        ...active,
       })
         .with('partner')
         .sort('-name')
         .fetch();
       return procedures;
     }
+
     const procedures = Procedure.where({
       unity_id: userLogged.unity_id,
+      ...active,
     })
       .with('partner')
       .fetch();
@@ -46,6 +51,8 @@ class ProcedureController {
   async store({ request, auth }) {
     const userLogged = auth.user;
     const data = request.only([
+      'active',
+      'value',
       'color',
       'name',
       'minutes',
@@ -58,7 +65,6 @@ class ProcedureController {
     ]);
     const procedures = await Procedure.create({
       ...data,
-      active: false,
       unity_id: userLogged.unity_id,
       // prof_resp_id: mongoose.Types.ObjectId(data.prof_resp.value),
     });

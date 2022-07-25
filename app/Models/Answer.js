@@ -1,23 +1,23 @@
-"use strict";
+'use strict';
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use("Model");
+const Model = use('Model');
 
 class Answer extends Model {
   static get objectIDs() {
-    return ["_id", "form_id"];
+    return ['_id', 'form_id'];
   }
 
   form() {
-    return this.belongsTo("App/Models/Form");
+    return this.belongsTo('App/Models/Form');
   }
 
   user() {
-    return this.belongsTo("App/Models/User");
+    return this.belongsTo('App/Models/User');
   }
 
   activity() {
-    return this.belongsTo("App/Models/Activity");
+    return this.belongsTo('App/Models/Activity');
   }
 }
 
