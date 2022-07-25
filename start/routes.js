@@ -53,8 +53,8 @@ Route.group(() => {
   Route.get('activity-stock', 'ActivityStockController.index');
 
   Route.get('activities-client/:id', 'ActivityController.indexByClient');
-  Route.get('activity', 'ActivityController.index');
   Route.put('activity/:id', 'ActivityController.update');
+  Route.get('activity', 'ActivityController.index');
   Route.delete('activity/:id', 'ActivityController.destroy');
   Route.post('activity', 'ActivityController.store');
   Route.post('activity-pay', 'ActivityController.payment');

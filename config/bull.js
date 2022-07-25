@@ -1,18 +1,18 @@
-"use strict";
+'use strict';
 
-const Env = use("Env");
+const Env = use('Env');
 
 module.exports = {
   // redis connection
-  connection: Env.get("BULL_CONNECTION", "bull"),
+  connection: Env.get('BULL_CONNECTION', 'bull'),
   bull: {
     redis: {
-      host: "127.0.0.1",
+      host: '127.0.0.1',
       port: 6379,
-      password: "",
+      password: '',
       db: 0,
-      keyPrefix: "",
+      keyPrefix: '',
     },
   },
-  remote: "redis://redis.example.com?password=correcthorsebatterystaple",
+  remote: 'redis://redis.example.com?password=correcthorsebatterystaple',
 };

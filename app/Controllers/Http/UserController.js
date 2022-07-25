@@ -7,12 +7,68 @@
 
 const mongoose = require('mongoose');
 
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const User = use('App/Models/User');
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Unity = use('App/Models/Unity');
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const UserLog = use('App/Models/UserLog');
+
 const Mail = use('Mail');
 
 const _ = require('lodash');
+
+const SELECTS = [
+  '_id',
+  'name',
+  'birth_date',
+  'genrer',
+  'document',
+  'number_id',
+  'celphone',
+  'phone',
+  'cep',
+  'address',
+  'neighbohood',
+  'complement',
+  'address_number',
+  'city',
+  'state',
+  'country',
+  'naturalness',
+  'nationality',
+  'profession',
+  'specialty',
+  'board',
+  'record',
+  'occupation_code',
+  'email',
+  'type',
+  'active',
+  'unity_id',
+  'avatar',
+  'due_date',
+  'created_at',
+  'updated_at',
+  'exib_minutes',
+  'hour_end',
+  'hour_start',
+  'hour_start_lunch',
+  'hour_end_lunch',
+  'is_friday',
+  'is_saturday',
+  'is_sunday',
+  'is_monday',
+  'is_tuesday',
+  'is_wednesday',
+  'is_thursday',
+  'lunch_time_active',
+  'shedule_obs',
+  'show_lack',
+  'sms_checked',
+  'mail_checked',
+  'partner',
+];
 
 function customIsEquals(first, second) {
   const val = [];
@@ -23,17 +79,18 @@ function customIsEquals(first, second) {
   });
   return val;
 }
-
 class UserController {
   async index({ request, auth }) {
     const userLogged = auth.user;
     try {
       const data = request.only(['name']);
+
       if (data.name) {
-        const users = User.where({
+        const users = await User.where({
           name: { $regex: new RegExp(`.*${data.name}.*`) },
           unity_id: userLogged.unity_id,
         })
+          .select(SELECTS)
           .sort('-name')
           .with('unity')
           .with('answer')
@@ -42,14 +99,17 @@ class UserController {
           .fetch();
         return users;
       }
-      const users = User.where({
+      const users = await User.where({
         unity_id: userLogged.unity_id,
       })
+        .select(SELECTS)
         .with('answer')
         .with('activity')
         .with('unity')
         .with('userLog')
         .fetch();
+      console.log(users.rows[0]);
+
       return users;
     } catch (err) {
       console.log(err);
@@ -68,6 +128,7 @@ class UserController {
             { type: 'admin_prof', unity_id: { $gte: unityId } },
           ],
         })
+          .select(SELECTS)
           .sort('-name')
           .with('unity')
           .with('answer')
@@ -81,6 +142,7 @@ class UserController {
           name: { $regex: new RegExp(`.*${data.name}.*`) },
           unity_id: unityId,
         })
+          .select(SELECTS)
           .sort('-name')
           .with('unity')
           .with('answer')
@@ -93,6 +155,7 @@ class UserController {
           type: 'prof',
           unity_id: unityId,
         })
+          .select(SELECTS)
           .sort('-name')
           .with('unity')
           .with('answer')
@@ -102,6 +165,7 @@ class UserController {
           type: 'sec',
           unity_id: unityId,
         })
+          .select(SELECTS)
           .sort('-name')
           .with('unity')
           .with('answer')
@@ -111,6 +175,7 @@ class UserController {
           type: 'admin_prof',
           unity_id: unityId,
         })
+          .select(SELECTS)
           .sort('-name')
           .with('unity')
           .with('answer')
@@ -124,6 +189,7 @@ class UserController {
           type: { $regex: new RegExp(`.*${data.type}.*`) },
           unity_id: unityId,
         })
+          .select(SELECTS)
           .sort('-name')
           .with('unity')
           .with('answer')
@@ -133,7 +199,11 @@ class UserController {
       }
       const users = User.where({
         unity_id: unityId,
-      }).with('answer').with('activity').with('unity')
+      })
+        .select(SELECTS)
+        .with('answer')
+        .with('activity')
+        .with('unity')
         .fetch();
       return users;
     } catch (err) {
@@ -196,6 +266,7 @@ class UserController {
       'partner',
     ]);
     const userData = await User.where({ email: data.email }).first();
+
     if (userData && userData.active) {
       return response.status(400).send({
         error: {
@@ -203,7 +274,9 @@ class UserController {
         },
       });
     }
+
     const unity = await Unity.where({ _id: data.unity_id }).first();
+
     if (!unity) {
       return response.status(400).send({
         error: {
@@ -211,6 +284,7 @@ class UserController {
         },
       });
     }
+
     if (
       (data.type === 'sec'
         || data.type === 'prof'
@@ -224,40 +298,51 @@ class UserController {
         .map((x) => x[Math.floor(Math.random() * x.length)])
         .join('');
       data.password = randPassword;
-      /* await Mail.send(
-        'emails.create',
-        { password: data.password },
-        (message) => {
-          message.from('ti@dpsystem.com.br');
-          message.to(data.email);
-          message.subject('A sua senha');
-        },
-      ); */
+      try {
+        await Mail.send(
+          'emails.create',
+          { password: data.password },
+          (message) => {
+            message.from('ti@dpsystem.com.br');
+            message.to(data.email);
+            message.subject('A sua senha');
+          },
+        );
+      } catch (error) {
+        console.log('Erro ao enviar email de criação de senha');
+      }
     }
+
     const user = await User.create({
       ...data,
-      unity_id: mongoose.Types.ObjectId(data.unity_id),
+      unity_id: mongoose.Types.ObjectId(data.unity_id.toString()),
       avatar: '',
       active: data.type === 'client' ? true : data.active,
       due_date: null,
       email: data.email.trim().toLowerCase(),
     });
+
     if (data.type !== 'client' && data.type !== 'sec' && data.type !== 'prof') {
-      await Mail.send('emails.confirm', { user_id: user._id }, (message) => {
-        message.from('ti@dpsystem.com.br');
-        message.to(user.email);
-        message.subject('Ative sua conta');
-      });
-    /*   await Mail.send(
-        'emails.new_account',
-        { user_email: user.email },
-        (message) => {
+      try {
+        await Mail.send('emails.confirm', { user_id: user._id }, (message) => {
           message.from('ti@dpsystem.com.br');
-          message.to('ti@dpsystem.com.br');
-          message.subject('Um novo cadastro');
-        },
-      ); */
+          message.to(user.email);
+          message.subject('Ative sua conta');
+        });
+        await Mail.send(
+          'emails.new_account',
+          { user_email: user.email },
+          (message) => {
+            message.from('ti@dpsystem.com.br');
+            message.to('ti@dpsystem.com.br');
+            message.subject('Um novo cadastro');
+          },
+        );
+      } catch (error) {
+        console.log('erro no envio do email');
+      }
     }
+
     return user;
   }
 
@@ -459,6 +544,7 @@ class UserController {
 
   async show({ params }) {
     const user = await User.where({ _id: params.id })
+      .select(SELECTS)
       .with('unity')
       .with('answer')
       .with('activity')
