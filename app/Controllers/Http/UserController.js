@@ -108,7 +108,6 @@ class UserController {
         .with('unity')
         .with('userLog')
         .fetch();
-      console.log(users.rows[0]);
 
       return users;
     } catch (err) {
