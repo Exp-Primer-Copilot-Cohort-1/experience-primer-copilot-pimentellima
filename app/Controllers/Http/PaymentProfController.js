@@ -32,6 +32,7 @@ class PaymentProfController {
       'value',
       'percent',
       'procedure',
+      'health_insurance',
       'prof',
     ]);
     const payments = await PaymentProf.create({

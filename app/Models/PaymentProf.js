@@ -4,6 +4,7 @@
 const Model = use('Model');
 
 class PaymentProf extends Model {
+
 }
 
 module.exports = PaymentProf;
