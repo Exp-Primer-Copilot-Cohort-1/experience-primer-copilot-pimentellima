@@ -18,12 +18,19 @@ class ActivityEntity {
         label: procedure?.label || null,
         minutes: procedure?.minutes || null,
         color: procedure?.color || null,
-        val: procedure?.health_insurance_price || procedure?.val || null,
+        val: procedure?.health_insurance_selected?.price || procedure?.val || null,
 
         health_insurance: {
-          value: procedure?.health_insurance?.value || procedure?.health_insurance_id || null,
-          label: procedure?.health_insurance?.label || procedure?.health_insurance_label || null,
-          price: procedure?.health_insurance?.price || procedure?.health_insurance_price || null,
+          value:
+            procedure?.health_insurance?.value
+            || procedure?.health_insurance_selected?.value
+            || null,
+          label: procedure?.health_insurance?.label
+            || procedure?.health_insurance_selected?.label
+            || null,
+          price: procedure?.health_insurance?.price
+            || procedure?.health_insurance_selected?.price
+            || null,
         },
         status: procedure?.status || null,
       })));
