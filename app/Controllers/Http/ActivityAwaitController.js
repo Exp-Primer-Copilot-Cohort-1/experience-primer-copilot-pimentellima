@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const ActivityAwaitEntity = require('../../Domain/Activity/activity-await-entity');
+const ActivityAwaitEntity = require('../../Domain/Entities/Activity/activity-await-entity');
 
 const Activity = use('App/Models/ActivityAwait');
 class ActivityAwaitController {

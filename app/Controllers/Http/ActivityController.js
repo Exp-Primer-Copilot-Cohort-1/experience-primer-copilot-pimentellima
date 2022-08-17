@@ -23,7 +23,7 @@ const ActivityStock = use('App/Models/ActivityStock');
 const _ = require('lodash');
 
 const { format, parseISO, subYears } = require('date-fns');
-const ActivityEntity = require('../../Domain/Activity/activity-entity');
+const ActivityEntity = require('../../Domain/Entities/Activity/activity-entity');
 const MapStatus = require('../../utils/map-status');
 const IsDateModified = require('../../utils/date-modified');
 
