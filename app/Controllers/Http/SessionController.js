@@ -30,7 +30,7 @@ class SessionController {
       });
     }
 
-    if (new Date(unity.date_expiration) < dateNow) {
+    if (unity.date_expiration && new Date(unity.date_expiration) < dateNow) {
       return response.status(401).send({
         error: 'Sua Unidade está expirada, entre em contato com os responsáveis',
       });
