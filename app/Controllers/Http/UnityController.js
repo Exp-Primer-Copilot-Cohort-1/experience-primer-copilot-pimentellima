@@ -43,6 +43,7 @@ class UnityController {
       'country',
       'obs',
       'schedule_obs',
+      'date_expiration',
     ]);
 
     const unityData = await Unity.where({
