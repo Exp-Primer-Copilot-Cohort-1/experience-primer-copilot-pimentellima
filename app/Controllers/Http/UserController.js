@@ -318,7 +318,7 @@ class UserController {
       avatar: '',
       active: data.type === 'client' ? true : data.active,
       due_date: null,
-      email: data.email.trim().toLowerCase(),
+      email: data.email?.trim().toLowerCase() || '',
     });
 
     if (data.type !== 'client' && data.type !== 'sec' && data.type !== 'prof') {
