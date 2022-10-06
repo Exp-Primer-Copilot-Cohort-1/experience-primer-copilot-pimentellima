@@ -19,6 +19,7 @@ class SessionController {
       .with('unity')
       .where('email', email)
       .firstOrFail('password', password);
+
     const unity = await Unity.query()
       .firstOrFail('_id', user.unity_id);
 
