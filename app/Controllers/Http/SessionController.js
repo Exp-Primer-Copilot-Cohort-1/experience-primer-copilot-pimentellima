@@ -14,12 +14,15 @@ class SessionController {
    */
   async store(/** @type Adonis.Http.Context */{ request, auth, response }) {
     const { email, password } = request.only(['email', 'password']);
-    console.log({email, password});
-
-    const user = await User.query()
-      .with('unity')
-      .where('email', email)
-      .firstOrFail('password', password);
+    let user;
+    try {
+      user = await User.query()
+        .with('unity')
+        .where('email', email)
+        .firstOrFail('password', password);
+    } catch (error) {
+      return response.status(401).send({ message: 'Usuário não encontrado, verifique seu email ou senha' });
+    }
 
     const unity = await Unity.query()
       .firstOrFail('_id', user.unity_id);
