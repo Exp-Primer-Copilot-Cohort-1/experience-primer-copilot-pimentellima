@@ -23,6 +23,8 @@ class SessionController {
     const unity = await Unity.query()
       .firstOrFail('_id', user.unity_id);
 
+    console.log(unity);
+
     const dateNow = new Date();
 
     if (user.active === false) {
