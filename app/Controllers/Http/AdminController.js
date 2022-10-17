@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+
 'use strict';
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
@@ -12,6 +14,16 @@ class AdminController {
     await user.save();
 
     return user;
+  }
+
+  async findAll() {
+    const users = await User.where({
+      active: false,
+    })
+      .select(['_id', 'email', 'active'])
+      .fetch();
+
+    return users;
   }
 }
 

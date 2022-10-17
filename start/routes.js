@@ -3,6 +3,8 @@
 const Route = use('Route');
 
 Route.put('admin/active/:email', 'AdminController.activeUser');
+Route.get('admin', 'AdminController.findAll');
+
 Route.post('sessions', 'SessionController.store');
 Route.post('users', 'UserController.store');
 Route.post('unity', 'UnityController.store');
