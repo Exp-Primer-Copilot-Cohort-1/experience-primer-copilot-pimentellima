@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-underscore-dangle */
 
 'use strict';
@@ -17,6 +18,13 @@ class AdminController {
   }
 
   async findAll() {
+    const users = await User.select(['_id', 'email', 'active', 'unity_id', 'name'])
+      .fetch();
+
+    return users;
+  }
+
+  async findAllInatives() {
     const users = await User.where({
       active: false,
     })
@@ -27,8 +35,22 @@ class AdminController {
   }
 
   async findAllByProfs() {
+    const { type } = request.only(['type']);
+
     const users = await User.where({
       type: { $regex: new RegExp(`.*${type}.*`) },
+    })
+      .select(['_id', 'email', 'active', 'unity_id', 'name'])
+      .fetch();
+
+    return users;
+  }
+
+  async findAllByUnity() {
+    const { unity_id } = request.only(['unity_id']);
+
+    const users = await User.where({
+      type: { $regex: new RegExp(`.*${unity_id}.*`) },
     })
       .select(['_id', 'email', 'active', 'unity_id', 'name'])
       .fetch();
