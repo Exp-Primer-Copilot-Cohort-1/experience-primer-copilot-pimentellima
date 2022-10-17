@@ -20,7 +20,17 @@ class AdminController {
     const users = await User.where({
       active: false,
     })
-      .select(['_id', 'email', 'active'])
+      .select(['_id', 'email', 'active', 'unity_id', 'name'])
+      .fetch();
+
+    return users;
+  }
+
+  async findAllByProfs() {
+    const users = await User.where({
+      type: { $regex: new RegExp(`.*${type}.*`) },
+    })
+      .select(['_id', 'email', 'active', 'unity_id', 'name'])
       .fetch();
 
     return users;

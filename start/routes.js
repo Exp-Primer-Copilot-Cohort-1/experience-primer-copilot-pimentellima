@@ -3,6 +3,7 @@
 const Route = use('Route');
 
 Route.put('admin/active/:_id', 'AdminController.activeUser');
+Route.get('admin/users', 'AdminController.findAllByProfs');
 Route.get('admin', 'AdminController.findAll');
 
 Route.post('sessions', 'SessionController.store');
