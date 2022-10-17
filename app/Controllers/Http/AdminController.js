@@ -7,7 +7,7 @@ const User = use('App/Models/User');
 
 class AdminController {
   async activeUser({ params }) {
-    const user = await User.where({ email: params.email }).firstOrFail();
+    const user = await User.where({ _id: params._id }).firstOrFail();
 
     user.active = true;
 
