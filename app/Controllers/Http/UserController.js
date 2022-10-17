@@ -116,97 +116,22 @@ class UserController {
     }
   }
 
-  async indexByType({ request, auth }) {
-    const unityId = auth.user.unity_id;
+  async indexByType({ request }) {
     try {
-      const data = request.only(['name', 'type', 'unity']);
-      if (data.type === 'prof') {
-        const users = User.where({
-          $or: [
-            { type: 'prof', unity_id: { $gte: unityId } },
-            { type: 'admin_prof', unity_id: { $gte: unityId } },
-          ],
-        })
-          .select(SELECTS)
-          .sort('-name')
-          .with('unity')
-          .with('answer')
-          .with('activity')
-          .fetch();
-        return users;
-      }
-      if (data.type && data.name) {
-        const users = User.where({
-          type: { $regex: new RegExp(`.*${data.type}.*`) },
-          name: { $regex: new RegExp(`.*${data.name}.*`) },
-          unity_id: unityId,
-        })
-          .select(SELECTS)
-          .sort('-name')
-          .with('unity')
-          .with('answer')
-          .with('activity')
-          .fetch();
-        return users;
-      }
-      if (data.type && data.type === 'prof_sec') {
-        const usersProf = await User.where({
-          type: 'prof',
-          unity_id: unityId,
-        })
-          .select(SELECTS)
-          .sort('-name')
-          .with('unity')
-          .with('answer')
-          .with('activity')
-          .fetch();
-        const usersSec = await User.where({
-          type: 'sec',
-          unity_id: unityId,
-        })
-          .select(SELECTS)
-          .sort('-name')
-          .with('unity')
-          .with('answer')
-          .with('activity')
-          .fetch();
-        const usersAdminProf = await User.where({
-          type: 'admin_prof',
-          unity_id: unityId,
-        })
-          .select(SELECTS)
-          .sort('-name')
-          .with('unity')
-          .with('answer')
-          .with('activity')
-          .fetch();
-        return [...usersProf.toJSON(), ...usersSec.toJSON(), ...usersAdminProf.toJSON()];
-      }
+      const { unity, type } = request.only(['name', 'type', 'unity']);
 
-      if (data.type) {
-        const users = User.where({
-          type: { $regex: new RegExp(`.*${data.type}.*`) },
-          unity_id: unityId,
-        })
-          .select(SELECTS)
-          .sort('-name')
-          .with('unity')
-          .with('answer')
-          .with('activity')
-          .fetch();
-        return users;
-      }
       const users = User.where({
-        unity_id: unityId,
+        unity_id: mongoose.Types.ObjectId(unity),
+        type: { $regex: new RegExp(`.*${type}.*`) },
       })
         .select(SELECTS)
+        .sort('-name')
+        .with('unity')
         .with('answer')
         .with('activity')
-        .with('unity')
         .fetch();
       return users;
     } catch (err) {
-      console.log(err);
       return false;
     }
   }
