@@ -6,6 +6,8 @@
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const User = use('App/Models/User');
 
+const SELECTS = ['_id', 'email', 'active', 'unity_id', 'name', 'type'];
+
 class AdminController {
   async activeUser({ params }) {
     const user = await User.where({ _id: params._id }).firstOrFail();
@@ -18,7 +20,7 @@ class AdminController {
   }
 
   async findAll() {
-    const users = await User.select(['_id', 'email', 'active', 'unity_id', 'name'])
+    const users = await User.select(SELECTS)
       .fetch();
 
     return users;
@@ -28,31 +30,31 @@ class AdminController {
     const users = await User.where({
       active: false,
     })
-      .select(['_id', 'email', 'active', 'unity_id', 'name'])
+      .select(SELECTS)
       .fetch();
 
     return users;
   }
 
-  async findAllByProfs() {
+  async findAllByProfs({ request }) {
     const { type } = request.only(['type']);
 
     const users = await User.where({
       type: { $regex: new RegExp(`.*${type}.*`) },
     })
-      .select(['_id', 'email', 'active', 'unity_id', 'name'])
+      .select(SELECTS)
       .fetch();
 
     return users;
   }
 
-  async findAllByUnity() {
+  async findAllByUnity({ request }) {
     const { unity_id } = request.only(['unity_id']);
 
     const users = await User.where({
       type: { $regex: new RegExp(`.*${unity_id}.*`) },
     })
-      .select(['_id', 'email', 'active', 'unity_id', 'name'])
+      .select(SELECTS)
       .fetch();
 
     return users;
