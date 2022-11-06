@@ -9,6 +9,26 @@ const Form = use('App/Models/Form');
 const Category = use('App/Models/Category');
 
 class FormController {
+  async findFormByProfID({ request, auth }) {
+    const userLogged = auth.user;
+
+    try {
+      const { id } = request.params;
+
+      const forms = Form
+        .where({
+          'prof.value': id,
+          unity_id: userLogged.unity_id,
+          active: true,
+        })
+        .sort('-name')
+        .fetch();
+      return forms;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async index({ request, auth }) {
     const userLogged = auth.user;
     try {

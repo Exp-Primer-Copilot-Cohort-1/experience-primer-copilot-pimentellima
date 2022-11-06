@@ -42,6 +42,7 @@ Route.group(() => {
   Route.delete('category/:id', 'CategoryController.destroy');
   Route.post('category', 'CategoryController.store');
 
+  Route.get('form/prof/:id', 'FormController.findFormByProfID');
   Route.get('form', 'FormController.index');
   Route.get('form/:id', 'FormController.show');
   Route.put('form/:id', 'FormController.update');
