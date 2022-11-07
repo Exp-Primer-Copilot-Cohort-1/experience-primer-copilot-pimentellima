@@ -6,7 +6,9 @@ Route.put('admin/active/:_id', 'AdminController.activeUser');
 Route.get('admin/prof/:type', 'AdminController.findAllByProfs');
 Route.get('admin/unity/:unity_id', 'AdminController.findAllByUnity');
 Route.get('admin/inatives', 'AdminController.findAllInatives');
-Route.get('admin', 'AdminController.findAll');
+Route.get('admin/users', 'AdminController.findAllUsers');
+Route.get('admin/unities', 'AdminController.findAllUnities');
+Route.put('admin/unity/:unity_id/:days', 'AdminController.addDateExpiration');
 
 Route.post('sessions', 'SessionController.store');
 Route.post('users', 'UserController.store');

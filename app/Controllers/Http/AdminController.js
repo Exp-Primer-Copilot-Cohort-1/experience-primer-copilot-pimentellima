@@ -5,8 +5,12 @@
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const User = use('App/Models/User');
+const Unity = use('App/Models/Unity');
 
-const SELECTS = ['_id', 'email', 'active', 'unity_id', 'name', 'type'];
+const { addDays, parseISO } = require('date-fns');
+
+const SELECTS_USER = ['_id', 'email', 'active', 'unity_id', 'name', 'type'];
+const SELECTS_UNITY = ['_id', 'name', 'active', 'date_expiration'];
 
 class AdminController {
   async activeUser({ params }) {
@@ -19,8 +23,29 @@ class AdminController {
     return user;
   }
 
-  async findAll() {
-    const users = await User.select(SELECTS)
+  async findAllUnities() {
+    const unities = await Unity.select(SELECTS_UNITY).fetch();
+
+    return unities;
+  }
+
+  async addDateExpiration({ params }) {
+    const { unity_id, days } = params;
+
+    const unity = await Unity.where({ _id: unity_id }).firstOrFail();
+    const new_date_expiration = parseISO(unity.date_expiration);
+    unity.date_expiration = addDays(
+      new_date_expiration,
+      parseInt(days.toString(), 10),
+    ).toISOString();
+
+    await unity.save();
+
+    return unity;
+  }
+
+  async findAllUsers() {
+    const users = await User.select(SELECTS_USER)
       .fetch();
 
     return users;
@@ -30,7 +55,7 @@ class AdminController {
     const users = await User.where({
       active: false,
     })
-      .select(SELECTS)
+      .select(SELECTS_USER)
       .fetch();
 
     return users;
@@ -42,7 +67,7 @@ class AdminController {
     const users = await User.where({
       type: { $regex: new RegExp(`.*${type}.*`) },
     })
-      .select(SELECTS)
+      .select(SELECTS_USER)
       .fetch();
 
     return users;
@@ -54,7 +79,7 @@ class AdminController {
     const users = await User.where({
       type: { $regex: new RegExp(`.*${unity_id}.*`) },
     })
-      .select(SELECTS)
+      .select(SELECTS_USER)
       .fetch();
 
     return users;
