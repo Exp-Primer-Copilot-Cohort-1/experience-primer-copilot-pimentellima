@@ -14,6 +14,9 @@ const Unity = use('App/Models/Unity');
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const UserLog = use('App/Models/UserLog');
 
+/** @type {typeof import('../../../config/log')} */
+const Log = use('App/Services/Log');
+
 const Mail = use('Mail');
 
 const _ = require('lodash');
@@ -250,12 +253,13 @@ class UserController {
       try {
         await Mail.send('emails.confirm', {
           site_activation: `${process.env.APP_URL}/users-confirm/${user._id}`,
-          label: user.label,
+          label: user.label || user.name,
         }, (message) => {
           message.from('ti@dpsystem.com.br');
           message.to(user.email);
           message.subject('Ative sua conta na DPSystem');
         });
+        Log.info(`Email de confirmação enviado para ${user.email}`);
 
         await Mail.send(
           'emails.new_account',
@@ -267,7 +271,7 @@ class UserController {
           },
         );
       } catch (error) {
-        console.log('erro no envio do email');
+        Log.error(error);
       }
     }
 
