@@ -10,35 +10,53 @@
 
 const mongoose = require('mongoose');
 const moment = require('moment');
+const { format, parseISO, subYears } = require('date-fns');
+
+const ActivityEntity = require('../../Domain/Entities/Activity/activity-entity');
+const IsDateModified = require('../../utils/date-modified');
 
 const Activity = use('App/Models/Activity');
 const ActivityLog = use('App/Models/ActivityLog');
 const User = use('App/Models/User');
-const Procedure = use('App/Models/Procedure');
-const Stock = use('App/Models/Stock');
 const PaymentActivity = use('App/Models/PaymentActivity');
 const ActivityPayMonth = use('App/Models/ActivityPayMonth');
 const ActivityStock = use('App/Models/ActivityStock');
 
-const _ = require('lodash');
-
-const { format, parseISO, subYears } = require('date-fns');
-const ActivityEntity = require('../../Domain/Entities/Activity/activity-entity');
-const MapStatus = require('../../utils/map-status');
-const IsDateModified = require('../../utils/date-modified');
-
-function customIsEquals(first, second) {
-  const val = [];
-  _.forEach(second, (value, key) => {
-    if (first[key] !== value) {
-      val.push({ value, key });
-    }
-  });
-  return val;
-}
+const PERMISSION_PROF = ['prof'];
 
 const Mail = use('Mail');
+
 class ActivityController {
+  async findAllActivitiesByUnity({ auth }) {
+    const userLogged = auth.user;
+
+    const WHERE_QUERY = (params) => ({
+      unity_id: userLogged.unity_id,
+      active: true,
+      status: {
+        $ne: ['not_count'],
+      },
+      scheduled: {
+        $ne: ['not_count'],
+      },
+      ...params,
+    });
+
+    if (PERMISSION_PROF.includes(userLogged.type)) {
+      const activities = await Activity
+        .where(WHERE_QUERY({ user_id: mongoose.Types.ObjectId(userLogged._id) }))
+        .fetch();
+
+      return activities;
+    }
+
+    const activities = await Activity
+      .where(WHERE_QUERY())
+      .fetch();
+
+    return activities;
+  }
+
   async index({ auth }) {
     const userLogged = auth.user;
     try {
@@ -397,7 +415,7 @@ class ActivityController {
         activityEntity.status = 'rescheduled';
       }
 
-      activity.merge({ ...activityEntity.params(), ...isDateBefore.transformThisDateStringObject()});
+      activity.merge({ ...activityEntity.params(), ...isDateBefore.transformThisDateStringObject() });
       await activity.save();
 
       return activity;
@@ -434,8 +452,8 @@ class ActivityController {
   async updateStatusUser({ params, request }) {
     const activy = await Activity.where({ _id: params.id }).firstOrFail();
     if (activy && (activy.status === 'finished'
-    || activy.status === 'canceled'
-    || activy.status === 'canceled_client')) {
+      || activy.status === 'canceled'
+      || activy.status === 'canceled_client')) {
       const data = request.only(['status']);
       activy.merge({
         ...data,
@@ -484,7 +502,7 @@ class ActivityController {
           };
           proceduresNew.push(newProc);
         }
-        activityAlter.merge({procedures: proceduresNew});
+        activityAlter.merge({ procedures: proceduresNew });
         await activityAlter.save();
       } catch (er) {
         console.log('linha 631');
