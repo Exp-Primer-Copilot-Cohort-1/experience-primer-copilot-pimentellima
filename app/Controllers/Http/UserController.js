@@ -236,8 +236,9 @@ class UserController {
             message.subject('A sua senha');
           },
         );
+        Log.info(`Senha enviada para o ${data.email}`);
       } catch (error) {
-        console.log('Erro ao enviar email de criação de senha');
+        Log.error(error.message);
       }
     }
 
