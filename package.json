@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "NODE_ENV=development nodemon --inspect server.js",
-    "dev:ts": "NODE_ENV=development nodemon --exec ts-node --transpile-only server.js",
+    "deploy": "node server.js",
     "test": "node ace test"
   },
   "keywords": [
