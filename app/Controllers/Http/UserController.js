@@ -254,7 +254,7 @@ class UserController {
     if (data.type !== 'client' && data.type !== 'sec' && data.type !== 'prof') {
       try {
         await Mail.send('emails.confirm', {
-          site_activation: `${process.env.APP_URL}/users-confirm/${user._id}`,
+          site_activation: `${process.env.APP_URL}/account-activation/${user._id}`,
           label: user.label || user.name,
         }, (message) => {
           message.from('ti@dpsystem.com.br');
