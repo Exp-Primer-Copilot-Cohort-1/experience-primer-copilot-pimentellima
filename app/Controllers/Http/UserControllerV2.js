@@ -100,6 +100,14 @@ class UserControllerV2 {
     return professionals || [];
   }
 
+  async findAllUsersSecs({ auth }) {
+    const userLogged = auth.user;
+
+    const secs = await fetchUserByType(['sec'], userLogged.unity_id);
+
+    return secs || [];
+  }
+
   async findAllUserClientByID({ params }) {
     const user = await User.where({ _id: params.id, type: 'client' })
       .select(SELECTS)

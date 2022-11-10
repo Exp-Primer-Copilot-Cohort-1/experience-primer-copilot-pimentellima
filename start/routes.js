@@ -34,6 +34,7 @@ Route.put('activity-user/:id', 'ActivityController.updateStatusUser');
 
 Route.group(() => {
   Route.get('users/professionals', 'UserControllerV2.findAllUsersProfs');
+  Route.get('users/sec', 'UserControllerV2.findAllUsersSecs');
   Route.get('users/clients', 'UserControllerV2.findAllUsersClients');
   Route.get('users', 'UserController.findAllUsers');
   Route.get('users/client/:id', 'UserControllerV2.findAllUserClientByID');
