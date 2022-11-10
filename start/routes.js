@@ -3,33 +3,42 @@
 const Route = use('Route');
 
 Route.group(() => {
-  Route.put('admin/active/:_id', 'AdminController.activeUser');
-  Route.get('admin/prof/:type', 'AdminController.findAllByProfs');
-  Route.get('admin/unity/:unity_id', 'AdminController.findAllByUnity');
-  Route.get('admin/inatives', 'AdminController.findAllInatives');
-  Route.get('admin/users', 'AdminController.findAllUsers');
-  Route.get('admin/unities', 'AdminController.findAllUnities');
-  Route.put('admin/unity/:unity_id/:days', 'AdminController.addDateExpiration');
+  Route.put('active/:_id', 'AdminController.activeUser');
+  Route.get('prof/:type', 'AdminController.findAllByProfs');
+  Route.get('unity/:unity_id', 'AdminController.findAllByUnity');
+  Route.get('inatives', 'AdminController.findAllInatives');
+  // Route.get('users', 'AdminController.findAllUsers');
+  Route.get('unities', 'AdminController.findAllUnities');
+  Route.put('unity/:unity_id/:days', 'AdminController.addDateExpiration');
+}).prefix('admin');
+
+Route.group(() => {
+  Route.post('existUnity', 'SingUpController.existUnity');
+  Route.post('existUser', 'SingUpController.existUser');
+  Route.post('unity', 'SingUpController.singUpUnity');
+  Route.post('user', 'SingUpController.singUpUserAdmin');
+  Route.put('users-confirm/:id', 'UserController.active');
 });
 
 Route.post('sessions', 'SessionController.store');
 Route.post('users', 'UserController.store');
-Route.post('unity', 'UnityController.store');
 Route.post('recover', 'RecoverController.store');
 Route.get('unity', 'UnityController.index');
 Route.get('unity/:id', 'UnityController.show');
 Route.delete('unity/:id', 'UnityController.destroy');
 Route.put('unity/:id', 'UnityController.update');
-Route.put('users-confirm/:id', 'UserController.active');
 
 Route.put('activity-stts/:id', 'ActivityController.updateStatus');
 Route.get('activity/:id', 'ActivityController.show');
 Route.put('activity-user/:id', 'ActivityController.updateStatusUser');
 
 Route.group(() => {
-  Route.get('users', 'UserController.index');
+  Route.get('users/professionals', 'UserControllerV2.findAllUsersProfs');
+  Route.get('users/clients', 'UserControllerV2.findAllUsersClients');
+  Route.get('users', 'UserController.findAllUsers');
+  Route.get('users/client/:id', 'UserControllerV2.findAllUserClientByID');
+
   Route.get('users-type', 'UserController.indexByType');
-  Route.get('users/:id', 'UserController.show');
   Route.put('users/:id', 'UserController.update');
   Route.delete('users/:id', 'UserController.destroy');
 

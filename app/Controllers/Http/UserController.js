@@ -82,6 +82,7 @@ function customIsEquals(first, second) {
   });
   return val;
 }
+
 class UserController {
   async index({ request, auth }) {
     const userLogged = auth.user;
