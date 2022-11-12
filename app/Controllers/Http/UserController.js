@@ -14,12 +14,10 @@ const Unity = use('App/Models/Unity');
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const UserLog = use('App/Models/UserLog');
 
-/** @type {typeof import('../../../config/log')} */
-const Log = use('App/Services/Log');
+const _ = require('lodash');
+const Log = require('../../../config/log');
 
 const Mail = use('Mail');
-
-const _ = require('lodash');
 
 const SELECTS = [
   '_id',

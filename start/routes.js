@@ -2,27 +2,11 @@
 
 const Route = use('Route');
 
-Route.group(() => {
-  Route.put('active/:_id', 'AdminController.activeUser');
-  Route.get('prof/:type', 'AdminController.findAllByProfs');
-  Route.get('unity/:unity_id', 'AdminController.findAllByUnity');
-  Route.get('inatives', 'AdminController.findAllInatives');
-  // Route.get('users', 'AdminController.findAllUsers');
-  Route.get('unities', 'AdminController.findAllUnities');
-  Route.put('unity/:unity_id/:days', 'AdminController.addDateExpiration');
-}).prefix('admin');
+Route.post('unity', 'SingUpController.storeUnity');
 
-Route.group(() => {
-  Route.post('existUnity', 'SingUpController.existUnity');
-  Route.post('existUser', 'SingUpController.existUser');
-  Route.post('unity', 'SingUpController.singUpUnity');
-  Route.post('user', 'SingUpController.singUpUserAdmin');
-  Route.put('users-confirm/:id', 'UserController.active');
-});
-
-Route.post('sessions', 'SessionController.store');
+Route.post('user', 'SingUpController.storeUserAdmin');
 Route.post('users', 'UserController.store');
-Route.post('recover', 'RecoverController.store');
+
 Route.get('unity', 'UnityController.index');
 Route.get('unity/:id', 'UnityController.show');
 Route.delete('unity/:id', 'UnityController.destroy');
@@ -31,6 +15,22 @@ Route.put('unity/:id', 'UnityController.update');
 Route.put('activity-stts/:id', 'ActivityController.updateStatus');
 Route.get('activity/:id', 'ActivityController.show');
 Route.put('activity-user/:id', 'ActivityController.updateStatusUser');
+
+Route.group(() => {
+  Route.put('active/:_id', 'AdminController.activeUser');
+  Route.get('prof/:type', 'AdminController.findAllByProfs');
+  Route.get('unity/:unity_id', 'AdminController.findAllByUnity');
+  Route.get('inatives', 'AdminController.findAllInatives');
+  Route.get('unities', 'AdminController.findAllUnities');
+  Route.put('unity/:unity_id/:days', 'AdminController.addDateExpiration');
+}).prefix('admin');
+
+Route.post('existUnity', 'SingUpController.existUnity');
+Route.post('existUser', 'SingUpController.existUser');
+Route.put('users-confirm/:id', 'UserController.active');
+
+Route.post('sessions', 'SessionController.store');
+Route.post('recover', 'RecoverController.store');
 
 Route.group(() => {
   Route.get('users', 'UserController.index');

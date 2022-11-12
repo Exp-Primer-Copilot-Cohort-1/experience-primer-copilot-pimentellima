@@ -1,12 +1,15 @@
 /* eslint-disable no-underscore-dangle */
+
+'use strict';
+
 const PermissionEntity = require('../../Domain/Entities/Permission/permission-entity');
+const Log = require('../../../config/log');
 
 const Unity = use('App/Models/Unity');
-const User = use('App/Models/Unity');
+const User = use('App/Models/User');
 const Permission = use('App/Models/Permission');
 
 const Mail = use('Mail');
-const Log = use('App/Services/Log');
 
 const SELECTS = [
   '_id',
@@ -61,7 +64,7 @@ const SELECTS = [
 ];
 
 const fetchByKeyAndValue = async (Model, key, value) => {
-  const item = Model.select(SELECTS).where(key, '=', value).fetch();
+  const item = await Model.select(SELECTS).where(key, '=', value).fetch();
   return item;
 };
 
@@ -71,8 +74,8 @@ class SingUpController {
 
     const unity = await fetchByKeyAndValue(Unity, 'email', email);
 
-    if (!unity && !unity.length) {
-      return response.status(401).json({ error: 'Unidade não encontrada.' });
+    if (unity?.rows?.length === 0) {
+      return response.status(404).json({ error: 'Unidade não encontrada.' });
     }
 
     return unity;
@@ -82,8 +85,8 @@ class SingUpController {
     const data = request.all();
     const userExist = await fetchByKeyAndValue(User, 'email', data.email);
 
-    if (userExist?.length > 0) {
-      return response.status(401).json({ error: 'Usuário Já Cadastrada.' });
+    if (userExist?.rows?.length === 0) {
+      return response.status(404).json({ error: 'Usuário Já Cadastrada.' });
     }
 
     const user = await User.create({ ...data, active: true });
@@ -91,73 +94,84 @@ class SingUpController {
     return user;
   }
 
-  async singUpUnity({ request, response }) {
-    const data = request.all();
-
-    const unityExist = await fetchByKeyAndValue(Unity, 'email', data.email);
-
-    if (unityExist?.length > 0) {
-      return response.status(401).json({ error: 'Unidade Já Cadastrada.' });
-    }
-
-    const unity = await Unity.create({ ...data, active: true });
-
-    const permissions = new PermissionEntity().defineAllPermissionByTrue();
-
-    await Permission.create({
-      ...permissions.params(),
-      unity_id: unity._id,
-    });
-
-    return unity;
-  }
-
-  async singUpUserAdmin({ request, response }) {
-    const data = request.all();
-
-    const userExist = await fetchUnityByEmail(data.email);
-
-    if (userExist?.length > 0) {
-      return response.status(401).json({ error: 'Usuário Já Cadastrada.' });
-    }
-
-    const user = await User.create({ ...data, active: false });
-
-    const unity = await Unity.where({ _id: data.unity_id }).first();
-
-    if (!unity) {
-      return response.status(400).send({
-        error: {
-          message: 'Unidade selecionada não existe.',
-        },
-      });
-    }
-
+  async storeUnity({ request, response }) {
     try {
-      await Mail.send('emails.confirm', {
-        site_activation: `${process.env.APP_URL}/users-confirm/${user._id}`,
-        label: user.label || user.name,
-      }, (message) => {
-        message.from('ti@dpsystem.com.br');
-        message.to(user.email);
-        message.subject('Ative sua conta na DPSystem');
-      });
-      Log.info(`Email de confirmação enviado para ${user.email}`);
+      const data = request.all();
 
-      await Mail.send(
-        'emails.new_account',
-        { user_email: user.email },
-        (message) => {
-          message.from('ti@dpsystem.com.br');
-          message.to('ti@dpsystem.com.br');
-          message.subject('Um novo cadastro');
-        },
-      );
+      const unityExist = await fetchByKeyAndValue(Unity, 'email', data.email);
+
+      if (unityExist?.rows?.length > 0) {
+        return response.status(404).json({ error: 'Unidade já criada.' });
+      }
+      const unity = await Unity.create({ ...data, active: true });
+
+      const permissions = new PermissionEntity()
+        .defineAllPermissionByTrue()
+        .params();
+
+      await Permission.create({
+        ...permissions,
+        unity_id: unity._id,
+      });
+
+      return unity;
     } catch (error) {
       Log.error(error);
-    }
 
-    return user;
+      return response.status(400).send({
+        error: {
+          message: 'Erro ao cadastrar unidade',
+        },
+      });
+    }
+  }
+
+  async storeUserAdmin({ request, response }) {
+    try {
+      const data = request.all();
+
+      const userExist = await fetchByKeyAndValue(User, 'email', data.email);
+
+      if (userExist?.rows?.length > 0) {
+        return response.status(404).json({ error: 'Usuário Já Cadastrada.' });
+      }
+
+      const user = await User.create({ ...data, active: false });
+
+      try {
+        await Mail.send('emails.confirm', {
+          site_activation: `${process.env.APP_URL}/users-confirm/${user._id}`,
+          label: user.label || user.name,
+        }, (message) => {
+          message.from('ti@dpsystem.com.br');
+          message.to(user.email);
+          message.subject('Ative sua conta na DPSystem');
+        });
+        Log.info(`Email de confirmação enviado para ${user.email}`);
+
+        await Mail.send(
+          'emails.new_account',
+          { user_email: user.email },
+          (message) => {
+            message.from('ti@dpsystem.com.br');
+            message.to('ti@dpsystem.com.br');
+            message.subject('Um novo cadastro');
+          },
+        );
+      } catch (error) {
+        Log.error(error);
+      }
+
+      return user;
+    } catch (error) {
+      Log.error(error);
+
+      return response.status(400).send({
+        error: {
+          message: 'Erro ao cadastrar usuário',
+        },
+      });
+    }
   }
 }
 
