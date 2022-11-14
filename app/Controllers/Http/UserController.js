@@ -15,7 +15,9 @@ const Unity = use('App/Models/Unity');
 const UserLog = use('App/Models/UserLog');
 
 const _ = require('lodash');
+const MailEntity = require('../../Domain/Entities/Mail/mail-entity');
 const Log = require('../../../config/log');
+const EDGE = require('../../utils/constants-edge');
 
 const Mail = use('Mail');
 
@@ -250,29 +252,23 @@ class UserController {
     });
 
     if (data.type !== 'client' && data.type !== 'sec' && data.type !== 'prof') {
-      try {
-        await Mail.send('emails.confirm', {
-          site_activation: `${process.env.APP_URL}/account-activation/${user._id}`,
-          label: user.label || user.name,
-        }, (message) => {
-          message.from('ti@dpsystem.com.br');
-          message.to(user.email);
-          message.subject('Ative sua conta na DPSystem');
-        });
-        Log.info(`Email de confirmação enviado para ${user.email}`);
-
-        await Mail.send(
-          'emails.new_account',
-          { user_email: user.email },
-          (message) => {
-            message.from('ti@dpsystem.com.br');
-            message.to('ti@dpsystem.com.br');
-            message.subject('Um novo cadastro');
+      await Promise.all([
+        MailEntity.sendMail({
+          email: user.email,
+          props: {
+            site_activation: `${process.env.APP_URL}/account-activation/${user._id}`,
+            label: user.label || user.name,
           },
-        );
-      } catch (error) {
-        Log.error(error);
-      }
+          edge: EDGE.confirm_user,
+          title: 'Ative sua conta na DPSystem',
+        }),
+        MailEntity.sendMail({
+          edge: EDGE.new_account,
+          props: { user_email: user.email },
+          title: 'Um novo cadastro',
+          email: process.env.MAIL_USERNAME,
+        }),
+      ]);
     }
 
     return user;
@@ -489,17 +485,6 @@ class UserController {
   async destroy({ params }) {
     const user = await User.where({ _id: params.id }).firstOrFail();
     await user.delete();
-  }
-
-  async active({ params, request }) {
-    const user = await User.where({ _id: params.id }).firstOrFail();
-    const data = request.only(['active']);
-
-    user.merge({
-      ...data,
-    });
-    await user.save();
-    return user;
   }
 }
 

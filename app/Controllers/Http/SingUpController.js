@@ -4,12 +4,13 @@
 
 const PermissionEntity = require('../../Domain/Entities/Permission/permission-entity');
 const Log = require('../../../config/log');
+const MailEntity = require('../../Domain/Entities/Mail/mail-entity');
+
+const EDGE = require('../../utils/constants-edge');
 
 const Unity = use('App/Models/Unity');
 const User = use('App/Models/User');
 const Permission = use('App/Models/Permission');
-
-const Mail = use('Mail');
 
 const SELECTS = [
   '_id',
@@ -127,51 +128,42 @@ class SingUpController {
   }
 
   async storeUserAdmin({ request, response }) {
-    try {
-      const data = request.all();
+    const data = request.all();
 
-      const userExist = await fetchByKeyAndValue(User, 'email', data.email);
+    const userExist = await fetchByKeyAndValue(User, 'email', data.email);
 
-      if (userExist?.rows?.length > 0) {
-        return response.status(404).json({ error: 'Usuário Já Cadastrada.' });
-      }
+    if (userExist?.rows?.length > 0) {
+      return response.status(404).json({ error: 'Usuário Já Cadastrada.' });
+    }
 
-      const user = await User.create({ ...data, active: false });
+    const user = await User.create({ ...data, active: false });
 
-      try {
-        await Mail.send('emails.confirm', {
+    await Promise.all([
+      MailEntity.sendMail({
+        email: user.email,
+        props: {
           site_activation: `${process.env.SITE_URL}/account-activation/${user._id}`,
           label: user.label || user.name,
-        }, (message) => {
-          message.from('ti@dpsystem.com.br');
-          message.to(user.email);
-          message.subject('Ative sua conta na DPSystem');
-        });
-        Log.info(`Email de confirmação enviado para ${user.email}`);
-
-        await Mail.send(
-          'emails.new_account',
-          { user_email: user.email },
-          (message) => {
-            message.from('ti@dpsystem.com.br');
-            message.to('ti@dpsystem.com.br');
-            message.subject('Um novo cadastro');
-          },
-        );
-      } catch (error) {
-        Log.error(error);
-      }
-
-      return user;
-    } catch (error) {
-      Log.error(error);
-
-      return response.status(400).send({
-        error: {
-          message: 'Erro ao cadastrar usuário',
         },
-      });
-    }
+        edge: EDGE.confirm_user,
+        title: 'Ative sua conta na DPSystem',
+      }),
+      MailEntity.sendMail({
+        edge: EDGE.new_account,
+        props: { user_email: user.email },
+        title: 'Um novo cadastro',
+        email: process.env.MAIL_USERNAME,
+      }),
+    ]);
+
+    return user;
+  }
+
+  async activeUser({ params }) {
+    const user = await User.where({ _id: params.id }).firstOrFail();
+    user.active = true;
+    await user.save();
+    return user;
   }
 }
 

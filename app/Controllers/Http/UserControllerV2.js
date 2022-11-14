@@ -73,17 +73,6 @@ const fetchUserByType = async (type, unityId) => await User.where({
   .fetch();
 
 class UserControllerV2 {
-  async active({ params, request }) {
-    const user = await User.where({ _id: params.id }).firstOrFail();
-    const data = request.only(['active']);
-
-    user.merge({
-      ...data,
-    });
-    await user.save();
-    return user;
-  }
-
   async findAllUsersClients({ auth }) {
     const userLogged = auth.user;
 

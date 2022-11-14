@@ -2,9 +2,6 @@
 
 const Route = use('Route');
 
-Route.post('unity', 'SingUpController.storeUnity');
-
-Route.post('user', 'SingUpController.storeUserAdmin');
 Route.post('users', 'UserController.store');
 
 Route.get('unity', 'UnityController.index');
@@ -16,6 +13,9 @@ Route.put('activity-stts/:id', 'ActivityController.updateStatus');
 Route.get('activity/:id', 'ActivityController.show');
 Route.put('activity-user/:id', 'ActivityController.updateStatusUser');
 
+Route.post('sessions', 'SessionController.store');
+Route.post('recover', 'RecoverController.store');
+
 Route.group(() => {
   Route.put('active/:_id', 'AdminController.activeUser');
   Route.get('prof/:type', 'AdminController.findAllByProfs');
@@ -23,14 +23,15 @@ Route.group(() => {
   Route.get('inatives', 'AdminController.findAllInatives');
   Route.get('unities', 'AdminController.findAllUnities');
   Route.put('unity/:unity_id/:days', 'AdminController.addDateExpiration');
-}).prefix('admin');
+}).prefix('admin').middleware('apiKey');
 
-Route.post('existUnity', 'SingUpController.existUnity');
-Route.post('existUser', 'SingUpController.existUser');
-Route.put('users-confirm/:id', 'UserController.active');
-
-Route.post('sessions', 'SessionController.store');
-Route.post('recover', 'RecoverController.store');
+Route.group(() => {
+  Route.post('unity', 'SingUpController.storeUnity');
+  Route.post('user', 'SingUpController.storeUserAdmin');
+  Route.post('existUnity', 'SingUpController.existUnity');
+  Route.post('existUser', 'SingUpController.existUser');
+  Route.put('users-confirm/:id', 'SingUpController.activeUser');
+});
 
 Route.group(() => {
   Route.get('users', 'UserController.index');
