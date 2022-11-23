@@ -34,15 +34,18 @@ Route.group(() => {
 });
 
 Route.group(() => {
-  Route.get('users', 'UserController.index');
-  Route.get('users/professionals', 'UserControllerV2.findAllUsersProfs');
-  Route.get('users/secs', 'UserControllerV2.findAllUsersSecs');
-  Route.get('users/clients', 'UserControllerV2.findAllUsersClients');
-  Route.get('users/client/:id', 'UserControllerV2.findAllUserClientByID');
+  Route.get('professionals', 'UserControllerV2.findAllUsersProfs');
+  Route.get('secs', 'UserControllerV2.findAllUsersSecs');
+  Route.get('clients', 'UserControllerV2.findAllUsersClients');
+  Route.get('clients/:id', 'UserControllerV2.findUserClientByID');
+  Route.get('professionals/:id', 'UserControllerV2.findUserProfsByID');
+  Route.put(':id', 'UserController.update');
+  Route.delete(':id', 'UserController.destroy');
+}).prefix('users').middleware('auth');
 
+Route.group(() => {
+  Route.get('users', 'UserController.index');
   Route.get('users-type', 'UserController.indexByType');
-  Route.put('users/:id', 'UserController.update');
-  Route.delete('users/:id', 'UserController.destroy');
 
   Route.get('stock', 'StockController.index');
   Route.get('stock/:id', 'StockController.show');
@@ -81,6 +84,7 @@ Route.group(() => {
   Route.post('activity', 'ActivityController.store');
   Route.post('activity-pay', 'ActivityController.payment');
   Route.get('activities', 'ActivityController.findAllActivitiesByUnity');
+  Route.get('activities/prof/:id', 'ActivityControllerV2.findAllActivitiesByUser');
 
   Route.get('activity-await', 'ActivityAwaitController.index');
   Route.get('activity-await/:id', 'ActivityAwaitController.show');

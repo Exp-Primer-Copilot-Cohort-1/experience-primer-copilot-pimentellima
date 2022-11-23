@@ -97,7 +97,24 @@ class UserControllerV2 {
     return secs || [];
   }
 
-  async findAllUserClientByID({ params }) {
+  async findUserProfsByID({ params }) {
+    const user = await User.where({
+      _id: params.id,
+      type: {
+        $in: ['prof', 'admin_prof'],
+      },
+    })
+      .select(SELECTS)
+      .with('unity')
+      .with('answer')
+      .with('activity')
+      .with('userLog')
+      .firstOrFail();
+
+    return user;
+  }
+
+  async findUserClientByID({ params }) {
     const user = await User.where({ _id: params.id, type: 'client' })
       .select(SELECTS)
       .with('unity')
