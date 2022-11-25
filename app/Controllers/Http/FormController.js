@@ -39,7 +39,6 @@ class FormController {
           unity_id: userLogged.unity_id,
         })
           .sort('-name')
-          .with('answers', (builder) => builder.with('activity'))
           .with('category')
           .with('logAnswers', (builder) => builder.with('activity'))
           .fetch();
@@ -51,7 +50,6 @@ class FormController {
           unity_id: userLogged.unity_id,
         })
           .sort('-name')
-          .with('answers', (builder) => builder.with('activity'))
           .with('category')
           .with('logAnswers', (builder) => builder.with('activity'))
           .fetch();
@@ -60,7 +58,6 @@ class FormController {
       const forms = Form.where({
         unity_id: userLogged.unity_id,
       })
-        .with('answers', (builder) => builder.with('activity'))
         .with('category')
         .with('logAnswers', (builder) => builder.with('activity'))
         .fetch();

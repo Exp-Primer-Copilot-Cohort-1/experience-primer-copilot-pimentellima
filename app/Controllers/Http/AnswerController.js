@@ -36,12 +36,14 @@ class AnswerController {
   }
 
   async store({ request }) {
-    const data = request.only(['answers', 'user_id', 'form_id', 'activity_id']);
+    const data = request.all();
 
     const answer = await Answer.create({
       ...data,
       form_id: mongoose.Types.ObjectId(data.form_id),
       user_id: mongoose.Types.ObjectId(data.user_id),
+      activity_id: mongoose.Types.ObjectId(data.activity_id),
+      category_id: mongoose.Types.ObjectId(data.category_id),
       active: true,
     });
     await LogAnswer.create({
