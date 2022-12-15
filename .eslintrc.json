@@ -11,11 +11,16 @@
         "ecmaVersion": 12
     },
     "rules": {
-      "class-methods-use-this": "off",
-      "no-undef": "off",
-      "no-param-reassign": "off",
-      "no-return-await": "off",
-      "strict": "off",
-      "object-curly-spacing": "off"
+        "indent": [
+            "off",
+            4
+        ],
+        "class-methods-use-this": "off",
+        "no-undef": "off",
+        "no-param-reassign": "off",
+        "no-return-await": "off",
+        "strict": "off",
+        "object-curly-spacing": "off",
+        "camelcase": "off",
     }
 }

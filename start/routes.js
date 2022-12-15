@@ -37,6 +37,7 @@ Route.group(() => {
   Route.get('professionals', 'UserControllerV2.findAllUsersProfs');
   Route.get('secs', 'UserControllerV2.findAllUsersSecs');
   Route.get('clients', 'UserControllerV2.findAllUsersClients');
+  Route.get('verify/client', 'ClientControllerV2.verifyExistenceClient');
   Route.get('clients/:id', 'UserControllerV2.findUserClientByID');
   Route.get('professionals/:id', 'UserControllerV2.findUserProfsByID');
   Route.put(':id', 'UserController.update');
@@ -46,6 +47,7 @@ Route.group(() => {
 Route.group(() => {
   Route.get('users', 'UserController.index');
   Route.get('users-type', 'UserController.indexByType');
+  Route.post('users/client', 'ClientControllerV2.create');
 
   Route.get('stock', 'StockController.index');
   Route.get('stock/:id', 'StockController.show');
