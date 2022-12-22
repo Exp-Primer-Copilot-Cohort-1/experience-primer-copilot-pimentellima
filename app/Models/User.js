@@ -54,6 +54,10 @@ class User extends Model {
   userLog() {
     return this.hasMany('App/Models/UserLog', '_id', 'user_id');
   }
+
+  static get hidden() {
+    return ['password']
+  }
 }
 
 module.exports = User;

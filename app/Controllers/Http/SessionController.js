@@ -15,15 +15,12 @@ class SessionController {
    */
   async store(/** @type Adonis.Http.Context */{ request, auth, response }) {
     const { email, password } = request.only(['email', 'password']);
-    let user;
-    try {
-      user = await User.query()
-        .with('unity')
-        .where('email', email)
-        .firstOrFail('password', password);
-    } catch (error) {
-      return response.status(401).send({ message: 'Usuário não encontrado, verifique seu email ou senha' });
-    }
+
+    const user = await User.query()
+      .with('unity')
+      .where('email', email)
+      .firstOrFail('password', password);
+
 
     const unity = await Unity.query()
       .firstOrFail('_id', user.unity_id);
@@ -31,14 +28,14 @@ class SessionController {
     const dateNow = new Date();
 
     if (user.active === false) {
-      return response.status(401).send({
-        error: 'Usuário não está ativo',
+      return response.status(403).send({
+        message: 'Usuário não está ativo',
       });
     }
 
     if (unity.date_expiration && new Date(unity.date_expiration) < dateNow) {
-      return response.status(401).send({
-        error: 'Sua Unidade está expirada, entre em contato com os responsáveis',
+      return response.status(402).send({
+        message: 'Sua Unidade está expirada, entre em contato com os responsáveis',
       });
     }
 
