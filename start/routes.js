@@ -45,6 +45,14 @@ Route.group(() => {
 }).prefix('users').middleware('auth');
 
 Route.group(() => {
+  Route.get('sessions/user', 'SessionController.getUser')
+  Route.post('sessions/refresh', 'SessionController.refreshToken')
+  Route.get('sessions/check', 'SessionController.checkToken')
+}).middleware('auth');
+
+Route.group(() => {
+
+
   Route.get('users', 'UserController.index');
   Route.get('users-type', 'UserController.indexByType');
   Route.post('users/client', 'ClientControllerV2.create');

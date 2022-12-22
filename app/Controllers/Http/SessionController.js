@@ -1,4 +1,5 @@
 'use strict';
+const SELECTS = require('../../SelectsQuery/user-select');
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const User = use('App/Models/User');
@@ -50,6 +51,30 @@ class SessionController {
     return await auth
       .newRefreshToken()
       .generateForRefreshToken(refreshTokenInput, true);
+  }
+
+  async getUser({ auth }) {
+    const authUser = await auth.getUser();
+
+    const user = await User.where({
+      _id: authUser._id
+    })
+      .select(SELECTS)
+      .with('unity')
+      .with('answer')
+      .with('activity')
+      .with('userLog')
+      .firstOrFail();
+
+    return user;
+  }
+
+  async checkToken({ auth }) {
+    try {
+      await auth.check()
+    } catch (error) {
+      response.send('Missing or invalid jwt token')
+    }
   }
 }
 
