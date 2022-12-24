@@ -1,6 +1,9 @@
 'use strict';
 const SELECTS = require('../../SelectsQuery/user-select');
 
+const promiseErrorHandler = require('../../utils/promise-err-handler');
+
+
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const User = use('App/Models/User');
 
@@ -16,11 +19,18 @@ class SessionController {
   async store(/** @type Adonis.Http.Context */{ request, auth, response }) {
     const { email, password } = request.only(['email', 'password']);
 
-    const user = await User.query()
-      .with('unity')
-      .where('email', email)
-      .firstOrFail('password', password);
+    const [error, user] = await promiseErrorHandler(
+      User.query()
+        .with('unity')
+        .where('email', email)
+        .firstOrFail('password', password)
+    )
 
+    if (error) {
+      return response.status(401).send({
+        message: 'Usuário e/ou senha inválidos',
+      });
+    }
 
     const unity = await Unity.query()
       .firstOrFail('_id', user.unity_id);
