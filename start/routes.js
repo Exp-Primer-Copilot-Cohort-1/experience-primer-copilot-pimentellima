@@ -37,6 +37,9 @@ Route.group(() => {
   Route.get('professionals', 'UserControllerV2.findAllUsersProfs');
   Route.get('secs', 'UserControllerV2.findAllUsersSecs');
   Route.get('clients', 'UserControllerV2.findAllUsersClients');
+  Route.get('professionals/inative', 'UserControllerV2.findAllUsersProfsInative');
+  Route.get('secs/inative', 'UserControllerV2.findAllUsersSecsInative');
+  Route.get('clients/inative', 'UserControllerV2.findAllUsersClientsInative');
   Route.get('verify/client', 'ClientControllerV2.verifyExistenceClient');
   Route.get('clients/:id', 'UserControllerV2.findUserClientByID');
   Route.get('professionals/:id', 'UserControllerV2.findUserProfsByID');
@@ -71,6 +74,7 @@ Route.group(() => {
   Route.post('category', 'CategoryController.store');
 
   Route.get('form/prof/:id', 'FormController.findFormByProfID');
+  Route.get('form/unity', 'FormController.findFormByUnityID');
   Route.get('form', 'FormController.index');
   Route.get('form/:id', 'FormController.show');
   Route.put('form/:id', 'FormController.update');

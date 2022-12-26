@@ -8,9 +8,9 @@ const mongoose = require('mongoose');
 const User = use('App/Models/User');
 
 
-const fetchUserByType = async (type, unityId) => await User.where({
+const fetchUserByType = async (type, unityId, active = true) => await User.where({
   unity_id: mongoose.Types.ObjectId(unityId),
-  active: true,
+  active,
   type: {
     $in: type,
   },
@@ -24,6 +24,14 @@ const fetchUserByType = async (type, unityId) => await User.where({
   .fetch();
 
 class UserControllerV2 {
+  async findAllUsersClientsInative({ auth }) {
+    const userLogged = auth.user;
+
+    const clients = await fetchUserByType(['client'], userLogged.unity_id, false);
+
+    return clients || [];
+  }
+
   async findAllUsersClients({ auth }) {
     const userLogged = auth.user;
 
@@ -40,10 +48,26 @@ class UserControllerV2 {
     return professionals || [];
   }
 
+  async findAllUsersProfsInative({ auth }) {
+    const userLogged = auth.user;
+
+    const professionals = await fetchUserByType(['prof', 'admin_prof'], userLogged.unity_id, false);
+
+    return professionals || [];
+  }
+
   async findAllUsersSecs({ auth }) {
     const userLogged = auth.user;
 
     const secs = await fetchUserByType(['sec'], userLogged.unity_id);
+
+    return secs || [];
+  }
+
+  async findAllUsersSecsInative({ auth }) {
+    const userLogged = auth.user;
+
+    const secs = await fetchUserByType(['sec'], userLogged.unity_id, false);
 
     return secs || [];
   }
