@@ -1,35 +1,20 @@
-/* eslint-disable no-console */
-
 'use strict';
 
 const mongoose = require('mongoose');
 
 const Category = use('App/Models/Category');
+
 class CategoryController {
-  async index({ request, auth }) {
-    const userLogged = auth.user;
-    try {
-      const data = request.only(['name']);
-      if (data.name) {
-        const categories = Category.where({
-          name: { $regex: new RegExp(`.*${data.name}.*`) },
-          unity_id: userLogged.unity_id,
-        })
-          .with('forms')
-          .sort('-name')
-          .fetch();
-        return categories;
-      }
-      const categories = Category.where({
-        unity_id: userLogged.unity_id,
-      })
-        .with('forms')
-        .fetch();
-      return categories;
-    } catch (err) {
-      console.log(err);
-      return false;
-    }
+  async index({ auth }) {
+    const { unity_id } = auth.user;
+
+    const categories = await Category.where({
+      unity_id,
+      active: true,
+    })
+      .fetch();
+
+    return categories;
   }
 
   async store({ request, response, auth }) {
