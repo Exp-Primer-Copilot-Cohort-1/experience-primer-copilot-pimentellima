@@ -16,6 +16,7 @@ class FormControllerV2 {
           unity_id: userLogged.unity_id,
           active: true,
         })
+        .with('category')
         .sort('-name')
         .fetch();
       return forms;
@@ -36,6 +37,7 @@ class FormControllerV2 {
           unity_id: userLogged.unity_id,
           active: true,
         })
+        .with('category')
         .sort('-name')
         .fetch();
       return forms;
