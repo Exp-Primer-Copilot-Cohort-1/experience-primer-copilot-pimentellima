@@ -30,7 +30,7 @@ class FormEntity {
   }
 
   defineForkedFrom(forked_from) {
-    this.map.set('forked_from', mongoose.Types.ObjectId(forked_from));
+    this.map.set('forked_from', forked_from);
     return this;
   }
 
