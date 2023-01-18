@@ -15,6 +15,7 @@ class FormEntity {
       shared,
       active,
       unity_id,
+      forked_from,
     } = data;
 
     return new FormEntity()
@@ -24,7 +25,13 @@ class FormEntity {
       .defineProf(prof)
       .defineShared(shared)
       .defineActive(active)
-      .defineUnityID(unity_id);
+      .defineUnityID(unity_id)
+      .defineForkedFrom(forked_from);
+  }
+
+  defineForkedFrom(forked_from) {
+    this.map.set('forked_from', mongoose.Types.ObjectId(forked_from));
+    return this;
   }
 
   defineName(name) {
