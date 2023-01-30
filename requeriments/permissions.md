@@ -1,0 +1,69 @@
+# Regras de Permissão
+<!-- ✅ emoji de confirmação -->
+
+O novo sistema deverá permitir gerenciar permissões de forma individual.
+
+- [] Checar antes de cada requisição se o usuário tem respectiva permissão
+- [] Apenas o criador(admin) terá permissões que possam alterar permissões de terceiros.
+- [] O Sistema terá os seguintes tópicos de permissão:  
+  - Consultas
+    - [] Adicionar Consultas
+    - [] Editar Consultas
+    - [] Desativar/Ativar Consultas
+  - Consultas em Espera
+    - [] Adicionar Consultas em Espera
+    - [] Editar Consultas em Espera
+    - [] Desativar/Ativar Consultas em Espera
+  - Respostas
+    - [] Adicionar Respostas
+    - [] Editar Respostas
+    - [] Desativar/Ativar Respostas
+  - Histórico de Respostas
+    - [] Adicionar Histórico de Respostas
+    - [] Editar Histórico de Respostas
+    - [] Desativar/Ativar Histórico de Respostas
+  - Pacientes
+    - [] Adicionar Pacientes
+    - [] Editar Pacientes
+    - [] Desativar/Ativar Pacientes
+    - [] Visualizar lista de Pacientes
+  - Profissionais
+    - [] Adicionar Profissionais
+    - [] Editar Profissionais
+    - [] Desativar/Ativar Profissionais
+    - [] Visualizar lista de Profissionais
+  - Secretários(as)
+    - [] Adicionar Secretários(as)
+    - [] Editar Secretários(as)
+    - [] Desativar/Ativar Secretários(as)
+    - [] Visualizar lista de Secretários(as)
+  - Parceiros(as)
+    - [] Adicionar Parceiros(as)
+    - [] Editar Parceiros(as)
+    - [] Desativar/Ativar Parceiros(as)
+    - [] Visualizar lista de Parceiros(as)
+  - Procedimentos(as)
+    - [] Adicionar Procedimentos(as)
+    - [] Editar Procedimentos(as)
+    - [] Desativar/Ativar Procedimentos(as)
+    - [] Visualizar lista de Procedimentos(as)
+  - Categorias
+    - [] Adicionar Categorias
+    - [] Editar Categorias
+    - [] Desativar/Ativar Categorias
+    - [] Visualizar lista de Categorias
+  - Dados da Empresa
+    - [] Visualizar Dados da Empresa
+    - [] Editar Dados da Empresa
+  - Prontuários
+    - [] Adicionar Prontuários
+    - [] Editar Prontuários
+    - [] Desativar/Ativar Prontuários
+  - Histórico de Prontuários
+    - [] Editar Histórico de Prontuários
+    - [] Desativar/Ativar Histórico de Prontuários
+  - Consultas
+    - [] Adicionar Consultas
+    - [] Editar Consultas
+    - [] Desativar/Ativar Consultas
+    - [] Visualizar lista de Consultas
