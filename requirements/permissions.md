@@ -4,66 +4,68 @@
 O novo sistema deverá permitir gerenciar permissões de forma individual.
 
 - [] Checar antes de cada requisição se o usuário tem respectiva permissão
-- [] Apenas o criador(admin) terá permissões que possam alterar permissões de terceiros.
+- [] Apenas o criador(admin, admin_prof) terá permissões que possam alterar permissões de terceiros.
 - [] O Sistema terá os seguintes tópicos de permissão:  
   - Consultas
-    - [] Adicionar Consultas
-    - [] Editar Consultas
-    - [] Desativar/Ativar Consultas
+    - [] Buscar Consultas (sec, admin, prof, admin_prof)
+    - [] Adicionar Consultas (sec, admin, prof, admin_prof)
+    - [] Editar Consultas (sec, admin, prof, admin_prof)
+    - [] Desativar/Ativar Consultas (sec, admin, prof, admin_prof)
   - Consultas em Espera
-    - [] Adicionar Consultas em Espera
-    - [] Editar Consultas em Espera
-    - [] Desativar/Ativar Consultas em Espera
+    - [] Buscar Consultas em Espera (sec, admin, prof, admin_prof)
+    - [] Adicionar Consultas em Espera (sec, admin, prof, admin_prof)
+    - [] Editar Consultas em Espera (sec, admin, prof, admin_prof)
+    - [] Desativar/Ativar Consultas em Espera (sec, admin, prof, admin_prof)
   - Respostas
-    - [] Adicionar Respostas
-    - [] Editar Respostas
-    - [] Desativar/Ativar Respostas
+    - [] Adicionar Respostas (admin, prof, admin_prof)
+    - [] Editar Respostas (admin, prof, admin_prof)
+    - [] Desativar/Ativar Respostas (admin, prof, admin_prof)
   - Histórico de Respostas
-    - [] Adicionar Histórico de Respostas
-    - [] Editar Histórico de Respostas
-    - [] Desativar/Ativar Histórico de Respostas
+    - [] Adicionar Histórico de Respostas (admin, prof, admin_prof)
+    - [] Editar Histórico de Respostas (admin, prof, admin_prof)
+    - [] Desativar/Ativar Histórico de Respostas (admin, prof, admin_prof)
   - Pacientes
-    - [] Adicionar Pacientes
-    - [] Editar Pacientes
-    - [] Desativar/Ativar Pacientes
-    - [] Visualizar lista de Pacientes
+    - [] Adicionar Pacientes (sec, admin, prof, admin_prof)
+    - [] Editar Pacientes (sec, admin, prof, admin_prof)
+    - [] Desativar/Ativar Pacientes (sec, admin, prof, admin_prof)
+    - [] Visualizar lista de Pacientes (sec, admin, prof, admin_prof)
   - Profissionais
-    - [] Adicionar Profissionais
-    - [] Editar Profissionais
-    - [] Desativar/Ativar Profissionais
-    - [] Visualizar lista de Profissionais
+    - [] Adicionar Profissionais (admin, admin_prof)
+    - [] Editar Profissionais (admin, admin_prof)
+    - [] Desativar/Ativar Profissionais (admin, admin_prof)
+    - [] Visualizar lista de Profissionais (admin, admin_prof)
   - Secretários(as)
-    - [] Adicionar Secretários(as)
-    - [] Editar Secretários(as)
-    - [] Desativar/Ativar Secretários(as)
-    - [] Visualizar lista de Secretários(as)
+    - [] Adicionar Secretários(as) (admin, admin_prof)
+    - [] Editar Secretários(as) (admin, admin_prof)
+    - [] Desativar/Ativar Secretários(as) (admin, admin_prof)
+    - [] Visualizar lista de Secretários(as) (admin, admin_prof)
   - Parceiros(as)
-    - [] Adicionar Parceiros(as)
-    - [] Editar Parceiros(as)
-    - [] Desativar/Ativar Parceiros(as)
-    - [] Visualizar lista de Parceiros(as)
+    - [] Adicionar Parceiros(as) (sec, admin, prof, admin_prof)
+    - [] Editar Parceiros(as) (sec, admin, prof, admin_prof)
+    - [] Desativar/Ativar Parceiros(as) (sec, admin, prof, admin_prof)
+    - [] Visualizar lista de Parceiros(as) (sec, admin, prof, admin_prof)
   - Procedimentos(as)
-    - [] Adicionar Procedimentos(as)
-    - [] Editar Procedimentos(as)
-    - [] Desativar/Ativar Procedimentos(as)
-    - [] Visualizar lista de Procedimentos(as)
+    - [] Adicionar Procedimentos(as) (admin, prof, admin_prof)
+    - [] Editar Procedimentos(as)  (admin, prof, admin_prof)
+    - [] Desativar/Ativar Procedimentos(as)  (admin, prof, admin_prof)
+    - [] Visualizar lista de Procedimentos(as)  (admin, prof, admin_prof)
   - Categorias
-    - [] Adicionar Categorias
-    - [] Editar Categorias
-    - [] Desativar/Ativar Categorias
-    - [] Visualizar lista de Categorias
+    - [] Adicionar Categorias  (admin, prof, admin_prof)
+    - [] Editar Categorias  (admin, prof, admin_prof)
+    - [] Desativar/Ativar Categorias  (admin, prof, admin_prof)
+    - [] Visualizar lista de Categorias  (admin, prof, admin_prof)
   - Dados da Empresa
-    - [] Visualizar Dados da Empresa
-    - [] Editar Dados da Empresa
+    - [] Visualizar Dados da Empresa (admin, admin_prof)
+    - [] Editar Dados da Empresa (admin, admin_prof)
   - Prontuários
-    - [] Adicionar Prontuários
-    - [] Editar Prontuários
-    - [] Desativar/Ativar Prontuários
+    - [] Adicionar Prontuários (admin, prof, admin_prof)
+    - [] Editar Prontuários (admin, prof, admin_prof)
+    - [] Desativar/Ativar Prontuários (admin, prof, admin_prof)
   - Histórico de Prontuários
-    - [] Editar Histórico de Prontuários
-    - [] Desativar/Ativar Histórico de Prontuários
-  - Consultas
-    - [] Adicionar Consultas
-    - [] Editar Consultas
-    - [] Desativar/Ativar Consultas
-    - [] Visualizar lista de Consultas
+    - [] Editar Histórico de Prontuários (admin, prof, admin_prof)
+    - [] Desativar/Ativar Histórico de Prontuários(admin, prof, admin_prof)
+  - Planos de Saúde
+    - [] Buscar Planos de Saúde (sec, admin, prof, admin_prof)
+    - [] Adicionar Planos de Saúde (sec, admin, prof, admin_prof)
+    - [] Editar Planos de Saúde (sec, admin, prof, admin_prof)
+    - [] Desativar/Ativar Planos de Saúde (sec, admin, prof, admin_prof)

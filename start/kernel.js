@@ -39,6 +39,8 @@ const namedMiddleware = {
   auth: 'Adonis/Middleware/Auth',
   guest: 'Adonis/Middleware/AllowGuestOnly',
   apiKey: 'App/Middleware/AuthAdminApiKey',
+  permission: 'App/Middleware/AuthPermission',
+  createPermissionFirstLogin: 'App/Middleware/LoginCreatePermission',
 };
 
 /*

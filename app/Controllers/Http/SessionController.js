@@ -1,7 +1,11 @@
 'use strict';
+const mongoose = require('mongoose');
+
 const SELECTS = require('../../SelectsQuery/user-select');
 
 const promiseErrorHandler = require('../../utils/promise-err-handler');
+const PermissionEntityV2 = require('../../Domain/Entities/Permission/permission-entityV2')
+const PermissionDefaultAdmin = require('../../Domain/Entities/Permission/permission-default-admin')
 
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
@@ -9,6 +13,31 @@ const User = use('App/Models/User');
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Unity = use('App/Models/Unity');
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
+const PermissionsV2Model = use('App/Models/PermissionsV2');
+
+const sessionFirstCreatePermissions = async ({ user_id, unity_id, type }) => {
+  try {
+    return await PermissionsV2Model
+      .where('user_id', user_id)
+      .firstOrFail()
+  } catch (error) {
+    const PERMISSIONS_DEFAULTS = (await PermissionEntityV2.build(null)).params()
+    let PERMISSIONS_ADMIN = null
+
+    if (type === 'admin' || type === 'admin_prof') {
+      PERMISSIONS_ADMIN = (await PermissionDefaultAdmin.build(PERMISSIONS_DEFAULTS)).params()
+    }
+    const PERMISSIONS = PERMISSIONS_ADMIN || PERMISSIONS_DEFAULTS
+
+    try {
+      await PermissionsV2Model.create({ ...PERMISSIONS, user_id, unity_id });
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+}
 
 class SessionController {
   /**
@@ -50,6 +79,9 @@ class SessionController {
     }
 
     const token = await auth.withRefreshToken().attempt(email, password);
+
+    await sessionFirstCreatePermissions({ user_id: user._id, unity_id: user.unity_id, type: user.type })
+
     return { user, token };
   }
 
