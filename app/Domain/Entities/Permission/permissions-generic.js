@@ -9,7 +9,8 @@ class PermissionsGenericEntity {
     }
 
     this._map = new Map();
-    this._name = name;
+    this.$name = PERMISSIONS[name].$name;
+    this.$route = PERMISSIONS[name].$route;
   }
 
   /**
@@ -38,26 +39,31 @@ class PermissionsGenericEntity {
   }
 
   get params() {
-    return Object.fromEntries(this._map);
+    const props = Object.fromEntries(this._map);
+    return {
+      $name: this.$name,
+      $route: this.$route,
+      ...props,
+    }
   }
 
   definePermissionsDelete(permission = false) {
-    this._map.set(PERMISSIONS?.[this._name]?.DELETE, permission);
+    this._map.set(PERMISSIONS?.[this.$name]?.DELETE, permission);
     return this;
   }
 
   definePermissionsPut(permission = false) {
-    this._map.set(PERMISSIONS?.[this._name]?.PUT, permission);
+    this._map.set(PERMISSIONS?.[this.$name]?.PUT, permission);
     return this;
   }
 
   definePermissionsPost(permission = false) {
-    this._map.set(PERMISSIONS?.[this._name]?.POST, permission);
+    this._map.set(PERMISSIONS?.[this.$name]?.POST, permission);
     return this;
   }
 
   definePermissionsGet(permission = false) {
-    this._map.set(PERMISSIONS?.[this._name]?.GET, permission);
+    this._map.set(PERMISSIONS?.[this.$name]?.GET, permission);
     return this;
   }
 

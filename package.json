@@ -8,7 +8,7 @@
     "start": "NODE_ENV=production node fork.js",
     "dev": "NODE_ENV=development nodemon --inspect server.js",
     "deploy": "node server.js",
-    "test": "node ace test"
+    "test": "cross-env NODE_ENV=test vitest"
   },
   "keywords": [
     "adonisjs",
@@ -48,7 +48,8 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
     "nodemon": "^2.0.16",
-    "prettier": "^2.4.1"
+    "prettier": "^2.4.1",
+    "vitest": "^0.28.4"
   },
   "autoload": {
     "App": "./app"

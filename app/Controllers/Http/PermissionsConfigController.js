@@ -1,17 +1,21 @@
 'use strict';
 
-const PermissionsUnity = require('../../Domain/Entities/Permission/permission-entity-unity');
-const PermissionsGeneric = require('../../Domain/Entities/Permission/permissions-generic');
+const PermissionsUnity = require('../../Domain/Entities/Permission/permissions-entity-unity');
 
 const PermissionsConfigModel = use('App/Models/PermissionsConfig');
 const UnityModel = use('App/Models/Unity');
 
 class PermissionsConfigController {
   async generateConfig({ request, auth }) {
-    const config = await PermissionsUnity.build();
-    config.defineAllPermissionByTrue();
+
     const unities = await UnityModel.all();
-    return config.params;
+
+    const config = await Promise.all(unities.rows.map(async (unity) => {
+      const permissions = await PermissionsUnity.build({ type: "admin", unity_id: unity._id });
+      return permissions.params;
+    }));
+
+    return config;
   }
   async store({ request, auth }) {
     const userLogged = auth.user;

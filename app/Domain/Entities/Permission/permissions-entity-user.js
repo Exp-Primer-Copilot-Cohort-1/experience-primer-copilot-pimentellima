@@ -1,4 +1,4 @@
-const PermissionsEntityV2 = require('./permission-entity-v2')
+const PermissionsEntityV2 = require('./permissions-entity-v2')
 
 class PermissionEntityOfUser extends PermissionsEntityV2 {
 
@@ -42,12 +42,10 @@ class PermissionEntityOfUser extends PermissionsEntityV2 {
   }
 
   get params() {
-    const props = Object.fromEntries(this._map)
+    const props = super.params;
     return {
       ...props,
       user_id: this.user_id,
-      unity_id: this.unity_id,
-      _id: this._id,
     };
   }
 
