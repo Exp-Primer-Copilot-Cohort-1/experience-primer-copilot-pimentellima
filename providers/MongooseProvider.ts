@@ -21,8 +21,7 @@ import { Mongoose } from 'mongoose'
 |
 */
 export default class MongoProvider {
-  constructor(protected app: ApplicationContract) {
-  }
+  constructor(protected app: ApplicationContract) { }
 
   public register() {
     const mongoose = new Mongoose()
