@@ -44,6 +44,7 @@ Server.middleware.register([
 |
 */
 Server.middleware.registerNamed({
+  auth: 'App/Middleware/Auth',
   apiKey: 'App/Middleware/AuthAdminApiKey',
   permission: 'App/Middleware/AuthPermission',
   createPermissionFirstLogin: 'App/Middleware/LoginCreatePermission',
