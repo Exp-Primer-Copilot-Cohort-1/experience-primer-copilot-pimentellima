@@ -1,11 +1,11 @@
-import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
-import Log from '../../config/log';
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Log from '../../config/log'
 
 class LogMiddleware {
-  async handle({ request }: HttpContextContract, next) {
+  public async handle({ request }: HttpContextContract, next) {
     Log.info(`${new Date().toISOString()} -  ${request.url()}`)
-    await next();
+    await next()
   }
 }
 
-export default LogMiddleware;
+export default LogMiddleware
