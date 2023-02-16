@@ -8,3 +8,4 @@ tmp
 .docker/data
 .docker/data-backup
 logs
+log
