@@ -1,31 +1,107 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
+import type { IUser } from 'Types/IUser'
 
-class User extends Schema {
-  constructor() {
-    super({
-      name: {
-        type: String,
-        required: true,
-      },
-      email: {
-        type: String,
-        required: true,
-        unique: true,
-      },
-      password: {
-        type: String,
-        required: true,
-      },
-      createdAt: {
-        type: Date,
-        default: Date.now,
-      },
-      updatedAt: {
-        type: Date,
-        default: Date.now,
-      },
-    })
-  }
-}
+const UserSchema = new Schema<IUser>({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  unity_id: {
+    type: Mongoose.Schema.Types.ObjectId,
+    ref: 'unities',
+  },
+  type: {
+    type: String,
+    required: true,
+  },
+  active: {
+    type: Boolean,
+    required: true,
+  },
+  avatar: {
+    type: String,
+    required: false,
+  },
+  due_date: {
+    type: String,
+    required: false,
+  },
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
+  updated_at: {
+    type: Date,
+    default: Date.now,
+  },
+  schedule_obs: {
+    type: String,
+    required: false,
+  },
+  show_lack: {
+    type: Boolean,
+    required: false,
+  },
+  exib_minutes: {
+    type: Number,
+    required: false,
+  },
+  is_friday: {
+    type: Boolean,
+    required: false,
+  },
+  is_saturday: {
+    type: Boolean,
+    required: false,
+  },
+  is_sunday: {
+    type: Boolean,
+    required: false,
+  },
+  is_monday: {
+    type: Boolean,
+    required: false,
+  },
+  is_tuesday: {
+    type: Boolean,
+    required: false,
+  },
+  is_wednesday: {
+    type: Boolean,
+    required: false,
+  },
+  is_thursday: {
+    type: Boolean,
+    required: false,
+  },
+  hour_end: {
+    type: String,
+    required: false,
+  },
+  hour_start: {
+    type: String,
+    required: false,
+  },
+  hour_end_lunch: {
+    type: String,
+    required: false,
+  },
+  hour_start_lunch: {
+    type: String,
+    required: false,
+  },
+  lunch_time_active: {
+    type: Boolean,
+    required: false,
+  },
+})
 
-export default Mongoose.model('User', new User())
+export default Mongoose.model<IUser>('user', UserSchema)
