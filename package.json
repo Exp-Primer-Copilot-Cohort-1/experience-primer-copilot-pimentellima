@@ -1,8 +1,10 @@
 {
-  "name": "dpsystem-front-V2",
-  "version": "1.0.0",
+  "name": "dpsystem-api",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
+    "prepare": "husky install",
+    "commit": "git-cz",
     "dev": "node ace serve --watch",
     "build": "node ace build --production",
     "test": "NODE_ENV=test node ace test",
@@ -38,6 +40,8 @@
     "printWidth": 100
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.4.4",
+    "@commitlint/config-conventional": "^17.4.4",
     "@adonisjs/assembler": "^5.9.5",
     "@japa/preset-adonis": "^1.2.0",
     "@japa/runner": "^2.2.2",
@@ -52,7 +56,10 @@
     "prettier": "^2.8.3",
     "typescript": "~4.6",
     "youch": "^3.2.2",
-    "youch-terminal": "^2.1.5"
+    "youch-terminal": "^2.1.5",
+    "husky": "^8.0.3",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0"
   },
   "dependencies": {
     "@adonisjs/auth": "^8.2.3",
@@ -64,5 +71,10 @@
     "reflect-metadata": "^0.1.13",
     "source-map-support": "^0.5.21",
     "winston": "^3.8.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
