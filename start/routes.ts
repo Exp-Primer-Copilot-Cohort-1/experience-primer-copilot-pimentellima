@@ -56,10 +56,8 @@ Route.group(() => {
 }).prefix(`admin`).middleware(`apiKey`);
 
 Route.group(() => {
-  Route.post(`unity`, `SingUpController.storeUnity`);
-  Route.post(`user`, `SingUpController.storeUserAdmin`);
-  Route.post(`existUnity`, `SingUpController.existUnity`);
-  Route.post(`existUser`, `SingUpController.existUser`);
+  Route.post(`unity`, `SingUpUnityController.store`);
+  Route.post(`user`, `SingUpUserController.store`);
   Route.put(`users-confirm/:id`, `SingUpController.activeUser`);
 });
 

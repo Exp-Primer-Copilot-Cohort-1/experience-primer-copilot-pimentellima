@@ -14,7 +14,8 @@
   },
   "preloads": [
     "./start/routes",
-    "./start/kernel"
+    "./start/kernel",
+    "./start/validator"
   ],
   "providers": [
     "./providers/AppProvider",
@@ -30,7 +31,7 @@
       {
         "name": "functional",
         "files": [
-          "tests/functional/**/*.spec(.ts|.js)"
+          "./tests/e2e/*.spec.(ts|js)"
         ],
         "timeout": 60000
       }
