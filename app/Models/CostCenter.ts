@@ -9,4 +9,4 @@ const CostCenterSchema = new Schema<ICostCenter>({
     updated_at: { type: Date, default: Date.now },
   });
   
-  export default model<ICostCenter>('ExpenseCategory', CostCenterSchema);
+  export default model<ICostCenter>('cost_centers', CostCenterSchema);
