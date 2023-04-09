@@ -2,7 +2,7 @@ import { model, Schema } from '@ioc:Mongoose'
 import { IAccount } from 'Types/IAccount'
 import { PaymentStatus, PaymentType } from 'Types/IHelpers'
 
-const PaymentSchema = new Schema<IAccount>(
+const AccountSchema = new Schema<IAccount>(
     {
         name: {
             type: String,
@@ -49,4 +49,4 @@ const PaymentSchema = new Schema<IAccount>(
     { timestamps: true }
 )
 
-export default model<IAccount>('accounts', PaymentSchema)
+export default model<IAccount>('accounts', AccountSchema)
