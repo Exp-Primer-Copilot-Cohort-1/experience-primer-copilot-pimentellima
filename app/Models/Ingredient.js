@@ -1,12 +1,14 @@
-'use strict';
+import { model, Schema } from '@ioc:Mongoose';
 
-/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model');
 
-class Ingredient extends Model {
-  client() {
-    return this.belongsTo('App/Models/User');
-  }
-}
+const IgredientSchema = new Schema<>(
+    {
+    
 
-module.exports = Ingredient;
+    
+    
+    },
+    
+);
+
+export default model<>('', IgredientSchema);

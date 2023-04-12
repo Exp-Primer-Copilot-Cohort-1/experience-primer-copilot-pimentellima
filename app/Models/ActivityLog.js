@@ -1,9 +1,14 @@
-'use strict';
+import { model, Schema } from '@ioc:Mongoose';
 
-/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model');
 
-class ActivityLog extends Model {
-}
+const ActivityLogSchema = new Schema<>(
+    {
+    
 
-module.exports = ActivityLog;
+    
+    
+    },
+    
+);
+
+export default model<>('activity_logs', ActivityLogSchema);
