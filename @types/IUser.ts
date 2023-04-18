@@ -17,4 +17,5 @@ export interface IUser extends IDaysOffice {
   updated_at: Date
   schedule_obs: string
   show_lack: boolean
+  rememberMeToken?: string
 }

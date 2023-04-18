@@ -21,15 +21,12 @@ import { Mongoose } from 'mongoose'
 |
 */
 export default class MongoProvider {
-  constructor(protected app: ApplicationContract) { }
+  constructor(protected app: ApplicationContract) {}
 
   public register() {
     const mongoose = new Mongoose()
 
-    mongoose.connect(Env.get('DB_CONNECTION_STRING'), {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
+    mongoose.connect(Env.get('DB_CONNECTION_STRING'))
 
     this.app.container.singleton('Mongoose', () => mongoose)
   }

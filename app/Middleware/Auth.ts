@@ -31,7 +31,6 @@ export default class AuthMiddleware {
      * driver
      */
     let guardLastAttempted: string | undefined
-
     for (let guard of guards) {
       guardLastAttempted = guard
 
@@ -53,14 +52,14 @@ export default class AuthMiddleware {
       'Unauthorized access',
       'E_UNAUTHORIZED_ACCESS',
       guardLastAttempted,
-      this.redirectTo,
+      this.redirectTo
     )
   }
 
   /**
    * Handle request
    */
-  public async handle (
+  public async handle(
     { auth }: HttpContextContract,
     next: () => Promise<void>,
     customGuards: (keyof GuardsList)[]
@@ -69,7 +68,8 @@ export default class AuthMiddleware {
      * Uses the user defined guards or the default guard mentioned in
      * the config file
      */
-    const guards = customGuards.length ? customGuards : [auth.name]
+
+    const guards = ['api'] as (keyof GuardsList)[]
     await this.authenticate(auth, guards)
     await next()
   }

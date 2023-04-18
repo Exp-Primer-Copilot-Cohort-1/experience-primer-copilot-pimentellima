@@ -5,7 +5,7 @@
  * file.
  */
 
-import User from 'App/Models/User'
+import { MongoDbAuthProvider, MongoDbAuthProviderConfig } from 'providers/MongooseAuthProvider'
 
 declare module '@ioc:Adonis/Addons/Auth' {
   /*
@@ -34,8 +34,8 @@ declare module '@ioc:Adonis/Addons/Auth' {
     |
     */
     user: {
-      implementation: LucidProviderContract<typeof User>
-      config: LucidProviderConfig<typeof User>
+      implementation: MongoDbAuthProvider
+      config: MongoDbAuthProviderConfig
     }
   }
 
@@ -64,6 +64,10 @@ declare module '@ioc:Adonis/Addons/Auth' {
     | to authenticate requests.
     |
     */
+    web: {
+      implementation: SessionGuardContract<'user', 'web'>
+      config: SessionGuardConfig<'user'>
+    }
     api: {
       implementation: OATGuardContract<'user', 'api'>
       config: OATGuardConfig<'user'>
