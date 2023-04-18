@@ -31,7 +31,7 @@
       {
         "name": "functional",
         "files": [
-          "./tests/e2e/*.spec.(ts|js)"
+          "tests/functional/**/*.spec(.ts|.js)"
         ],
         "timeout": 60000
       }
