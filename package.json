@@ -8,7 +8,7 @@
     "dev": "node ace serve --watch",
     "build": "node ace build --production",
     "test:e2e": "node ace test --watch",
-    "test": "cross-env NODE_ENV=test vitest --ui --watch --t Unitary",
+    "test": "cross-env NODE_ENV=test vitest --ui --watch --t Unit",
     "test:integration": "cross-env NODE_ENV=test vitest --ui --watch --t Integration",
     "coverage": "vitest run --coverage",
     "start": "node server.js",
@@ -22,6 +22,7 @@
     "@adonisjs/assembler": "^5.9.5",
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
+    "@faker-js/faker": "^7.6.0",
     "@japa/preset-adonis": "^1.2.0",
     "@japa/runner": "^2.5.1",
     "@types/cli-color": "^2.0.2",
@@ -64,7 +65,8 @@
     "proxy-addr": "^2.0.7",
     "reflect-metadata": "^0.1.13",
     "source-map-support": "^0.5.21",
-    "winston": "^3.8.2"
+    "winston": "^3.8.2",
+    "zod": "^3.21.4"
   },
   "config": {
     "commitizen": {

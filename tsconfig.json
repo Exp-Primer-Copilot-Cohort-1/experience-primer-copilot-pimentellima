@@ -14,9 +14,6 @@
     "sourceMap": true,
     "experimentalDecorators": true,
     "paths": {
-      "@/*": [
-        "app/Core/*"
-      ],
       "App/*": [
         "./app/*"
       ],

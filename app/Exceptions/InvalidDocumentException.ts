@@ -11,10 +11,10 @@ export class InvalidDocumentException extends Exception {
             error: {
                 message: error.message,
             },
-        })
+        });
     }
 
     public static invoke(): string {
-        return new InvalidDocumentException().message
+        return new InvalidDocumentException().message;
     }
 }
