@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { ObjectId } from '@ioc:Mongoose'
 
 export interface ICategory {
@@ -10,4 +9,7 @@ export interface ICategory {
   }
   active: boolean
   unity_id: ObjectId
+  created_at: Date;
+  updated_at: Date;
 }
+
