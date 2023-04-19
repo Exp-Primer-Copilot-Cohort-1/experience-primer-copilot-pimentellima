@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { IUser } from 'Types/IUser';
 import { z } from 'zod';
-import ValidateDocument from '../validates/document';
-import ValidateEmail from '../validates/email';
+import ValidateDocument from '../validations/document';
+import ValidateEmail from '../validations/email';
 
 class User implements IUser {
 	public _id: string;

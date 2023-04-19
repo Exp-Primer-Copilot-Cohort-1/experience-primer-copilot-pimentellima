@@ -1,52 +1,20 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+import { adaptRoute } from 'App/Core/adapters';
+import { makeSignInComposer } from 'App/Core/composers';
+import User from 'App/Models/User';
 
 const SELECTS = require('../../SelectsQuery/user-select');
 
-import Unity from 'App/Models/Unity';
-import User from 'App/Models/User';
-
 class SessionController {
-	public async store({ request, auth, response }: HttpContextContract) {
-		const { email, password } = request.all();
-
-		const userAuth = await auth.use('api').attempt(email, password);
-
-		const { user } = userAuth;
-
-		if (!user) {
-			return response.status(404).send({
-				message: 'Usuário Não Cadastrado',
-			});
-		}
-
-		const unity = await Unity.findById(user.unity_id);
-
-		if (!unity) {
-			return response.status(401).send({
-				message: 'Unidade Não Cadastrada',
-			});
-		}
-
-		const dateNow = new Date();
-
-		if (user.active === false) {
-			return response.status(403).send({
-				message: 'Usuário não está ativo',
-			});
-		}
-
-		if (unity.date_expiration && new Date(unity.date_expiration) < dateNow) {
-			return response.status(402).send({
-				message: 'Sua Unidade está expirada, entre em contato com os responsáveis',
-			});
-		}
-
-		return { token: userAuth, user };
+	public async store(ctx: HttpContextContract) {
+		return adaptRoute(makeSignInComposer(ctx), ctx);
 	}
 
 	public async refreshToken({ request, auth }) {
 		const refreshTokenInput = request.input('refresh_token');
-		return await auth.newRefreshToken().generateForRefreshToken(refreshTokenInput, true);
+		return await auth
+			.newRefreshToken()
+			.generateForRefreshToken(refreshTokenInput, true);
 	}
 
 	public async getUser({ auth }) {
@@ -74,4 +42,4 @@ class SessionController {
 	}
 }
 
-module.exports = SessionController;
+export default SessionController;

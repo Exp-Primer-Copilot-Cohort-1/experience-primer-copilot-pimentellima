@@ -5,6 +5,9 @@ import { UnitiesManagerInterface } from '../interface/unities-manager.interface'
 
 export class UnitiesMongooseRepository implements UnitiesManagerInterface {
 	constructor() { }
+	public findAll(): PromiseEither<Error, IUnity[]> {
+		throw new Error('Method not implemented.');
+	}
 	public findById(id: string): PromiseEither<Error, IUnity> {
 		return new Promise((resolve) => {
 			Unity.findById(id)

@@ -1,4 +1,4 @@
-import User from 'App/Core/domain/entities/user/user';
+import UserEntity from 'App/Core/domain/entities/user/user';
 import { PromiseEither } from 'App/Core/shared/either';
 
 export type ISession = {
@@ -7,7 +7,7 @@ export type ISession = {
 		expires: string;
 		type: 'bearer';
 	};
-	user: User;
+	user: UserEntity;
 };
 
 export interface SessionManagerInterface {

@@ -3,4 +3,5 @@ import { IUnity } from 'Types/IUnity';
 
 export interface UnitiesManagerInterface {
 	findById: (id: string) => PromiseEither<Error, IUnity>;
+	findAll: () => PromiseEither<Error, IUnity[]>;
 }

@@ -19,16 +19,12 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route';
-import { adaptRoute } from 'App/Core/adapters';
-import { makeSignInComposer } from 'App/Core/composers';
 
 Route.get('/', async () => {
 	return { hello: 'world' };
 });
 
-Route.post('sessionsV2', async (ctx) =>
-	adaptRoute(makeSignInComposer(ctx), ctx),
-);
+Route.post('sessions', 'SessionController.store');
 
 Route.post('users', 'UserController.store');
 
@@ -43,7 +39,6 @@ Route.put('activity-user/:id', 'ActivityController.updateStatusUser');
 
 Route.get('permissions-default', 'PermissionController.defaultPermissions');
 
-Route.post('sessions', 'SessionController.store');
 Route.post('recover', 'RecoverController.store');
 
 Route.group(() => {

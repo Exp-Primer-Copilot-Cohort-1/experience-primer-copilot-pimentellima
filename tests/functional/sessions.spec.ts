@@ -1,45 +1,10 @@
-import { ApiClient } from '@japa/api-client';
 import { test } from '@japa/runner';
 
 import { assert } from 'chai';
 
-type CredentialsSuceess = {
-	token: {
-		type: string;
-		token: string;
-	};
-	user: {
-		[key: string]: any;
-		_id: string;
-	};
-};
+import { loginAndGetToken } from './helpers/login';
 
-async function loginAndGetToken(
-	client: ApiClient,
-): Promise<CredentialsSuceess> {
-	const login = await client.post('/sessionsV2').json({
-		email: 'rmmorais2@gmail.com',
-		password: '123456',
-	});
-
-	return login.body() as CredentialsSuceess;
-}
-
-test.group('Sessions', () => {
-	test('display get unities admin', async ({ client }) => {
-		const response = await client.get('/admin/unities');
-		response.assertStatus(200);
-	});
-
-	test('display get clients', async ({ client }) => {
-		const { token } = await loginAndGetToken(client);
-		const response = await client
-			.get('users/secs')
-			.headers({ Authorization: `Bearer ${token.token}` });
-
-		response.assertStatus(200);
-	});
-
+test.group('Sessions Controller', () => {
 	test('display post session', async ({ client }) => {
 		const { token, user } = await loginAndGetToken(client);
 

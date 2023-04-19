@@ -7,7 +7,7 @@ type IsValid = boolean;
 export class UnityValidationUseCase
 	implements UseCase<IUnity, undefined, IsValid>
 {
-	constructor() { }
+	constructor() {}
 
 	public async execute(unity: IUnity): PromiseEither<Error, IsValid> {
 		const dateNow = new Date();

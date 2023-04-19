@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker';
 import { IUser } from 'Types/IUser';
 import User from './user';
 
-const user: IUser = {
+const user = {
 	_id: faker.datatype.uuid(),
 	created_at: faker.date.past(),
 	due_date: faker.date.future().toISOString(),
@@ -32,7 +32,7 @@ const user: IUser = {
 	unity_id: faker.datatype.uuid(),
 	updated_at: faker.date.recent(),
 	rememberMeToken: faker.datatype.uuid(),
-};
+} as IUser;
 
 describe('Entity User (Unit)', () => {
 	it('should be able to create a new user', () => {
