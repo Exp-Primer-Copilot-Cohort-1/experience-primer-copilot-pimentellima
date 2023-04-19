@@ -22,6 +22,8 @@ export default defineConfig({
 		],
 	},
 	resolve: {
-		alias: {},
+		alias: {
+			App: '/app',
+		},
 	},
 });
