@@ -1,0 +1,25 @@
+{
+    "extends": [
+        "plugin:adonis/typescriptApp",
+        "prettier"
+    ],
+    "plugins": [
+        "prettier"
+    ],
+    "rules": {
+        "prettier/prettier": [
+            "error",
+            {
+                "semi": true,
+                "useTabs": true,
+                "quoteProps": "consistent",
+                "bracketSpacing": true,
+                "arrowParens": "always",
+                "singleQuote": true,
+                "trailingComma": "all",
+                "printWidth": 80,
+                "tabWidth": 4
+            }
+        ]
+    }
+}
