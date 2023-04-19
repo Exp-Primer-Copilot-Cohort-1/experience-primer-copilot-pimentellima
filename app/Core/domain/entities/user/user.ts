@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { IUser } from 'Types/IUser';
 import { z } from 'zod';
-import Email from './email';
+import ValidateDocument from '../validates/document';
+import ValidateEmail from '../validates/email';
 
 class User implements IUser {
 	public _id: string;
@@ -31,6 +32,8 @@ class User implements IUser {
 	public is_tuesday: boolean;
 	public is_wednesday: boolean;
 	public lunch_time_active: boolean;
+	public celphone: string;
+	public document: string;
 
 	private constructor() { }
 
@@ -46,8 +49,7 @@ class User implements IUser {
 	}
 
 	public defineEmail(email: string): this {
-		const emailEntity = Email.build(email);
-		this.email = emailEntity.email;
+		this.email = ValidateEmail.build(email).email;
 		return this;
 	}
 
@@ -178,6 +180,16 @@ class User implements IUser {
 
 	public defineLunchTimeActive(lunch_time_active: boolean): this {
 		this.lunch_time_active = lunch_time_active;
+		return this;
+	}
+
+	public defineCelphone(celphone: string): this {
+		this.celphone = celphone;
+		return this;
+	}
+
+	public defineDocument(document: string): this {
+		this.document = ValidateDocument.build(document).document;
 		return this;
 	}
 

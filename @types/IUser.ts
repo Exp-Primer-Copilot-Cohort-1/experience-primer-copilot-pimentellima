@@ -8,6 +8,8 @@ export interface IUser extends IDaysOffice {
 	name: string;
 	email: string;
 	password: string;
+	celphone: string;
+	document: string;
 	unity_id: ObjectId | string;
 	type: string;
 	active: boolean;
