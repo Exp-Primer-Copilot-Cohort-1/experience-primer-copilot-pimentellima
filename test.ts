@@ -16,11 +16,11 @@ process.env.NODE_ENV = 'test'
 
 import { Ignitor } from '@adonisjs/core/build/standalone'
 import { configure, processCliArgs, run, RunnerHooksHandler } from '@japa/runner'
-import sourceMapSupport from 'source-map-support'
-
 import 'reflect-metadata'
+import { install } from 'source-map-support'
 
-sourceMapSupport.install({ handleUncaughtExceptions: false })
+install({ handleUncaughtExceptions: false })
+
 const kernel = new Ignitor(__dirname).kernel('test')
 
 kernel

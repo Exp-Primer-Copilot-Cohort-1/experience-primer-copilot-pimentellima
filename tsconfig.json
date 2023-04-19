@@ -28,13 +28,15 @@
       ],
       "Types/*": [
         "./@types/*"
-      ],
+      ]
     },
     "types": [
       "@adonisjs/core",
       "@adonisjs/repl",
       "@japa/preset-adonis/build/adonis-typings",
-      "@adonisjs/auth"
+      "@adonisjs/auth",
+      "@adonisjs/redis",
+      "@adonisjs/session"
     ]
   }
 }

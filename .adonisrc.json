@@ -21,7 +21,9 @@
     "./providers/AppProvider",
     "./providers/MongooseProvider.ts",
     "@adonisjs/core",
-    "@adonisjs/auth"
+    "@adonisjs/auth",
+    "@adonisjs/redis",
+    "@adonisjs/session"
   ],
   "aceProviders": [
     "@adonisjs/repl"
@@ -31,7 +33,7 @@
       {
         "name": "functional",
         "files": [
-          "./tests/e2e/*.spec.(ts|js)"
+          "tests/functional/**/*.spec(.ts|.js)"
         ],
         "timeout": 60000
       }
