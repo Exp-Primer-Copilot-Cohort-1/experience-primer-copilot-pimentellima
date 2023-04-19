@@ -107,6 +107,11 @@
     serve-static "^1.15.0"
     stringify-attributes "^2.0.0"
 
+"@adonisjs/cors@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@adonisjs/cors/-/cors-1.0.7.tgz#9b7565ad0b80215c620e8864b4af8651220a527c"
+  integrity sha512-jBO+bI/zdydAXURL02gQxXB57L5+eV2MUYp7zmDrVa12M6mQPMRz5TC2F7a0Kknx9JUr5dsl4+eN0XNfe/8sWQ==
+
 "@adonisjs/drive@^2.3.0":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@adonisjs/drive/-/drive-2.3.0.tgz#8556a8f97c885957191064fc8a9a7b4fd8e9fb33"
