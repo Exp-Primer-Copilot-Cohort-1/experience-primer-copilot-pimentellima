@@ -1,9 +1,14 @@
-'use strict';
+import { model, Schema } from '@ioc:Mongoose';
 
-/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model');
 
-class ActivityPayMonth extends Model {
-}
+const ActivityPayMonthSchema = new Schema<>(
+    {
+    
 
-module.exports = ActivityPayMonth;
+    
+    
+    },
+    
+);
+
+export default model<>('activity_pay_months', ActivityPayMonthSchema);

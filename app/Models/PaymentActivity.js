@@ -1,12 +1,14 @@
-'use strict';
+import { model, Schema } from '@ioc:Mongoose';
 
-/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model');
 
-class PaymentActivity extends Model {
-  activity() {
-    return this.belongsTo('App/Models/Activity');
-  }
-}
+const PaymentActivitySchema = new Schema<>(
+    {
+    
 
-module.exports = PaymentActivity;
+    
+    
+    },
+    
+);
+
+export default model<>('payment_activities', PaymentActivitySchema);
