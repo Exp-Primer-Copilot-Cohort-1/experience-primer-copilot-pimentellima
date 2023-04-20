@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { IDaysOffice } from 'Types/IDaysOffice';
-import { IUnity } from 'Types/IUnity';
 
 class DaysOfTrade implements IDaysOffice {
 	public exib_minutes: number;
@@ -19,83 +18,76 @@ class DaysOfTrade implements IDaysOffice {
 
 	constructor() { }
 
-	public defineExibMinutes(exib_minutes: number): this {
+	public defineExibMinutes(exib_minutes: number = 0): this {
 		this.exib_minutes = exib_minutes;
 		return this;
 	}
 
-	public defineHourEnd(hour_end: string): this {
+	public defineHourEnd(hour_end: string = ''): this {
 		this.hour_end = hour_end;
 		return this;
 	}
 
-	public defineHourEndLunch(hour_end_lunch: string): this {
+	public defineHourEndLunch(hour_end_lunch: string = ''): this {
 		this.hour_end_lunch = hour_end_lunch;
 		return this;
 	}
 
-	public defineHourStart(hour_start: string): this {
+	public defineHourStart(hour_start: string = ''): this {
 		this.hour_start = hour_start;
 		return this;
 	}
 
-	public defineHourStartLunch(hour_start_lunch: string): this {
+	public defineHourStartLunch(hour_start_lunch: string = ''): this {
 		this.hour_start_lunch = hour_start_lunch;
 		return this;
 	}
 
-	public defineIsFriday(is_friday: boolean): this {
+	public defineIsFriday(is_friday: boolean = false): this {
 		this.is_friday = is_friday;
 		return this;
 	}
 
-	public defineIsMonday(is_monday: boolean): this {
+	public defineIsMonday(is_monday: boolean = false): this {
 		this.is_monday = is_monday;
 		return this;
 	}
 
-	public defineIsSaturday(is_saturday: boolean): this {
+	public defineIsSaturday(is_saturday: boolean = false): this {
 		this.is_saturday = is_saturday;
 		return this;
 	}
 
-	public defineIsSunday(is_sunday: boolean): this {
+	public defineIsSunday(is_sunday: boolean = false): this {
 		this.is_sunday = is_sunday;
 		return this;
 	}
 
-	public defineIsThursday(is_thursday: boolean): this {
+	public defineIsThursday(is_thursday: boolean = false): this {
 		this.is_thursday = is_thursday;
 		return this;
 	}
 
-	public defineIsTuesday(is_tuesday: boolean): this {
+	public defineIsTuesday(is_tuesday: boolean = false): this {
 		this.is_tuesday = is_tuesday;
 		return this;
 	}
 
-	public defineIsWednesday(is_wednesday: boolean): this {
+	public defineIsWednesday(is_wednesday: boolean = false): this {
 		this.is_wednesday = is_wednesday;
 		return this;
 	}
 
-	public defineLunchTimeActive(lunch_time_active: boolean): this {
+	public defineLunchTimeActive(lunch_time_active: boolean = false): this {
 		this.lunch_time_active = lunch_time_active;
 		return this;
 	}
 
-	// public verifyHoursOfTrade(unit: IUnity) {
-	// 	const { hour_start, hour_end } = this;
-	// 	const { hour_start: unitHourStart, hour_end: unitHourEnd } = unit;
+	public params(): IDaysOffice {
+		return Object.assign({}, this);
+	}
 
-	// 	if (hour_start < unitHourStart || hour_end > unitHourEnd) {
-	// 		throw new Error('Horário de atendimento inválido');
-	// 	}
-
-	// 	return this;
-	// }
-
-	public static build(daysOfTrade: IDaysOffice, unit: IUnity): DaysOfTrade {
+	public static build(daysOfTrade: IDaysOffice): DaysOfTrade {
 		const {
 			exib_minutes,
 			hour_end,

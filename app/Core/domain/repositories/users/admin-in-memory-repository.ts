@@ -2,9 +2,11 @@ import AdminEntity from 'App/Core/domain/entities/user/admin';
 import { PromiseEither, left, right } from 'App/Core/shared/either';
 import { AdminManagerInterface } from '../interface/admin-manager.interface';
 
-import User from 'App/Models/User';
+import { faker } from '@faker-js/faker';
 
-export class AdminMongooseRepository implements AdminManagerInterface {
+export class AdminInMemoryRepository implements AdminManagerInterface {
+	private items: AdminEntity[] = [];
+
 	constructor() { }
 
 	public async create(data: AdminEntity): PromiseEither<Error, AdminEntity> {
@@ -16,15 +18,15 @@ export class AdminMongooseRepository implements AdminManagerInterface {
 
 		const admin = adminOrErr.extract();
 
-		const user = await User.create(admin);
+		admin.defineId(faker.datatype.uuid());
 
-		admin.defineId(user._id);
+		this.items.push(admin);
 
 		return right(admin);
 	}
 
 	public async findByEmail(email: string): PromiseEither<Error, AdminEntity> {
-		const user = await User.findOne({ email });
+		const user = this.items.find((item) => item.email === email);
 
 		if (!user) {
 			return left(new Error('Usuário não encontrada'));
@@ -40,29 +42,11 @@ export class AdminMongooseRepository implements AdminManagerInterface {
 	}
 
 	public async findAll(): PromiseEither<Error, AdminEntity[]> {
-		const users = await User.find({
-			type: {
-				$in: ['admin', 'admin_prof'],
-			},
-		});
-
-		const entities = await Promise.all(
-			users.map(async (user) => {
-				const adminOrErr = await AdminEntity.build(user as any);
-
-				if (adminOrErr.isLeft()) {
-					return {} as AdminEntity;
-				}
-
-				return adminOrErr.extract();
-			}),
-		);
-
-		return right(entities);
+		return right(this.items);
 	}
 
 	public async findById(id: string): PromiseEither<Error, AdminEntity> {
-		const user = await User.findById(id);
+		const user = this.items.find((item) => item._id === id);
 
 		if (!user) {
 			return left(new Error('Usuário não encontrada'));

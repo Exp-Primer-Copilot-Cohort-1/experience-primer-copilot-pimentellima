@@ -43,7 +43,6 @@ describe('Entity User (Unit)', () => {
 
 	it('should be able to create a new user with params', () => {
 		const userEntity = User.build(user);
-
 		expect(userEntity.params()).toEqual(user);
 	});
 

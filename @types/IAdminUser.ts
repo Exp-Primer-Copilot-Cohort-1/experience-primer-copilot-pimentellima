@@ -1,4 +1,5 @@
 import { ObjectId } from '@ioc:Mongoose';
+import { IDaysOffice } from './IDaysOffice';
 
 export type IAdminUser = {
 	_id: string | ObjectId;
@@ -11,5 +12,6 @@ export type IAdminUser = {
 	email: string;
 	document: string;
 	celphone: string;
+	dayOfTrade: IDaysOffice;
 	type: 'admin' | 'admin_prof';
 };

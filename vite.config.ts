@@ -23,7 +23,9 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			App: '/app',
+			'App': '/app',
+			'@ioc:Mongoose': 'mongoose',
+			'@ioc:Adonis/Core/Hash': '@adonisjs/hash/build/standalone',
 		},
 	},
 });

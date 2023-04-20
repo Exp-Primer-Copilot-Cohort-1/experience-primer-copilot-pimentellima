@@ -1,105 +1,61 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { IUser } from 'Types/IUser';
-import { z } from 'zod';
-import ValidateDocument from '../validations/document';
-import ValidateEmail from '../validations/email';
+import { SystemUser } from '../abstract/system-user.abstract';
 
-class User implements IUser {
-	public _id: string;
-	public name: string;
-	public email: string;
-	public password: string;
-	public unity_id: string;
-	public type: string;
-	public active: boolean;
-	public avatar: string;
+class User extends SystemUser implements IUser {
 	public due_date: string;
-	public created_at: Date;
-	public updated_at: Date;
 	public schedule_obs: string;
 	public show_lack: boolean;
 	public rememberMeToken?: string;
-	public exib_minutes: number;
-	public hour_end: string;
-	public hour_end_lunch: string;
-	public hour_start: string;
-	public hour_start_lunch: string;
-	public is_friday: boolean;
-	public is_monday: boolean;
-	public is_saturday: boolean;
-	public is_sunday: boolean;
-	public is_thursday: boolean;
-	public is_tuesday: boolean;
-	public is_wednesday: boolean;
-	public lunch_time_active: boolean;
-	public celphone: string;
-	public document: string;
 
-	private constructor() { }
-
-	public defineId(id: string): this {
-		this._id = id;
-		return this;
+	public get exib_minutes(): number {
+		return this.dayOfTrade.exib_minutes;
 	}
 
-	public defineName(name: string): this {
-		const nameSchema = z.string().min(3).max(50);
-		this.name = nameSchema.parse(name);
-		return this;
+	public get hour_end(): string {
+		return this.dayOfTrade.hour_end;
+	}
+	public get hour_end_lunch(): string {
+		return this.dayOfTrade.hour_end_lunch;
+	}
+	public get hour_start(): string {
+		return this.dayOfTrade.hour_start;
+	}
+	public get hour_start_lunch(): string {
+		return this.dayOfTrade.hour_start_lunch;
+	}
+	public get is_friday(): boolean {
+		return this.dayOfTrade.is_friday;
+	}
+	public get is_monday(): boolean {
+		return this.dayOfTrade.is_monday;
+	}
+	public get is_saturday(): boolean {
+		return this.dayOfTrade.is_saturday;
+	}
+	public get is_sunday(): boolean {
+		return this.dayOfTrade.is_sunday;
+	}
+	public get is_thursday(): boolean {
+		return this.dayOfTrade.is_thursday;
+	}
+	public get is_tuesday(): boolean {
+		return this.dayOfTrade.is_tuesday;
+	}
+	public get is_wednesday(): boolean {
+		return this.dayOfTrade.is_wednesday;
 	}
 
-	public defineEmail(email: string): this {
-		this.email = ValidateEmail.build(email).email;
-		return this;
+	public get lunch_time_active(): boolean {
+		return this.dayOfTrade.lunch_time_active;
 	}
 
-	public definePassword(password: string): this {
-		const passwordSchema = z
-			.string()
-			.min(6)
-			.max(50)
-			.regex(/[a-zA-Z]/)
-			.regex(/[0-9]/);
-		this.password = password;
-		return this;
-	}
-
-	public defineUnityId(unity_id: string): this {
-		if (!unity_id) {
-			throw new Error('Unity id is required');
-		}
-
-		this.unity_id = unity_id;
-		return this;
-	}
-
-	public defineType(type: string): this {
-		this.type = type;
-		return this;
-	}
-
-	public defineActive(active: boolean = false): this {
-		this.active = active;
-		return this;
-	}
-
-	public defineAvatar(avatar: string): this {
-		this.avatar = avatar;
-		return this;
+	constructor() {
+		super();
 	}
 
 	public defineDueDate(due_date: string): this {
 		this.due_date = due_date;
-		return this;
-	}
-
-	public defineCreatedAt(created_at: Date): this {
-		this.created_at = created_at;
-		return this;
-	}
-
-	public defineUpdatedAt(updated_at: Date): this {
-		this.updated_at = updated_at;
 		return this;
 	}
 
@@ -119,82 +75,77 @@ class User implements IUser {
 	}
 
 	public defineExibMinutes(exib_minutes: number): this {
-		this.exib_minutes = exib_minutes;
+		this.dayOfTrade?.defineExibMinutes(exib_minutes);
 		return this;
 	}
 
 	public defineHourEnd(hour_end: string): this {
-		this.hour_end = hour_end;
+		this.dayOfTrade?.defineHourEnd(hour_end);
 		return this;
 	}
 
 	public defineHourEndLunch(hour_end_lunch: string): this {
-		this.hour_end_lunch = hour_end_lunch;
+		this.dayOfTrade?.defineHourEndLunch(hour_end_lunch);
 		return this;
 	}
 
 	public defineHourStart(hour_start: string): this {
-		this.hour_start = hour_start;
+		this.dayOfTrade?.defineHourStart(hour_start);
 		return this;
 	}
 
 	public defineHourStartLunch(hour_start_lunch: string): this {
-		this.hour_start_lunch = hour_start_lunch;
+		this.dayOfTrade?.defineHourStartLunch(hour_start_lunch);
 		return this;
 	}
 
 	public defineIsFriday(is_friday: boolean): this {
-		this.is_friday = is_friday;
+		this.dayOfTrade?.defineIsFriday(is_friday);
 		return this;
 	}
 
 	public defineIsMonday(is_monday: boolean): this {
-		this.is_monday = is_monday;
+		this.dayOfTrade?.defineIsMonday(is_monday);
 		return this;
 	}
 
 	public defineIsSaturday(is_saturday: boolean): this {
-		this.is_saturday = is_saturday;
+		this.dayOfTrade?.defineIsSaturday(is_saturday);
 		return this;
 	}
 
 	public defineIsSunday(is_sunday: boolean): this {
-		this.is_sunday = is_sunday;
+		this.dayOfTrade?.defineIsSunday(is_sunday);
 		return this;
 	}
 
 	public defineIsThursday(is_thursday: boolean): this {
-		this.is_thursday = is_thursday;
+		this.dayOfTrade?.defineIsThursday(is_thursday);
 		return this;
 	}
 
 	public defineIsTuesday(is_tuesday: boolean): this {
-		this.is_tuesday = is_tuesday;
+		this.dayOfTrade?.defineIsTuesday(is_tuesday);
 		return this;
 	}
 
 	public defineIsWednesday(is_wednesday: boolean): this {
-		this.is_wednesday = is_wednesday;
+		this.dayOfTrade?.defineIsWednesday(is_wednesday);
 		return this;
 	}
 
 	public defineLunchTimeActive(lunch_time_active: boolean): this {
-		this.lunch_time_active = lunch_time_active;
-		return this;
-	}
-
-	public defineCelphone(celphone: string): this {
-		this.celphone = celphone;
-		return this;
-	}
-
-	public defineDocument(document: string): this {
-		this.document = ValidateDocument.build(document).document;
+		this.dayOfTrade?.defineLunchTimeActive(lunch_time_active);
 		return this;
 	}
 
 	public params(): IUser {
-		return Object.assign({}, this);
+		const { dayOfTrade, ...user } = Object.assign({}, this);
+
+		return {
+			...user,
+			...dayOfTrade.params(),
+		};
 	}
 
 	public static build(user: IUser): User {
@@ -207,25 +158,13 @@ class User implements IUser {
 			avatar,
 			created_at,
 			due_date,
-			exib_minutes,
-			hour_end,
-			hour_end_lunch,
-			hour_start,
-			hour_start_lunch,
-			is_friday,
-			is_monday,
-			is_saturday,
-			is_sunday,
-			is_thursday,
-			is_tuesday,
-			is_wednesday,
-			lunch_time_active,
 			schedule_obs,
 			show_lack,
 			type,
 			unity_id,
 			updated_at,
 			rememberMeToken,
+			...dayOfTrade
 		} = user;
 
 		return new User()
@@ -237,19 +176,7 @@ class User implements IUser {
 			.defineAvatar(avatar)
 			.defineCreatedAt(created_at)
 			.defineDueDate(due_date)
-			.defineExibMinutes(exib_minutes)
-			.defineHourEnd(hour_end)
-			.defineHourEndLunch(hour_end_lunch)
-			.defineHourStart(hour_start)
-			.defineHourStartLunch(hour_start_lunch)
-			.defineIsFriday(is_friday)
-			.defineIsMonday(is_monday)
-			.defineIsSaturday(is_saturday)
-			.defineIsSunday(is_sunday)
-			.defineIsThursday(is_thursday)
-			.defineIsTuesday(is_tuesday)
-			.defineIsWednesday(is_wednesday)
-			.defineLunchTimeActive(lunch_time_active)
+			.defineDayOfTrade(dayOfTrade)
 			.defineScheduleObs(schedule_obs)
 			.defineShowLack(show_lack)
 			.defineType(type)

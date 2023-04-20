@@ -19,6 +19,9 @@ export class Controller implements ControllerGeneric {
 		);
 
 		if (err) {
+			if (process.env.NODE_ENV !== 'production') {
+				console.log('Controller: ', err);
+			}
 			return serverError(err.message);
 		}
 

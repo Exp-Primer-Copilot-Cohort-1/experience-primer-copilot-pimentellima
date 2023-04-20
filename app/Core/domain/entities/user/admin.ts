@@ -1,57 +1,17 @@
 import { PromiseEither, left, right } from 'App/Core/shared';
 import { IAdminUser } from 'Types/IAdminUser';
+import { SystemUser } from '../abstract/system-user.abstract';
 
-class AdminUser implements IAdminUser {
-	public _id: string;
+class AdminUser extends SystemUser implements IAdminUser {
 	public is_company: boolean;
-	public unity_id: string;
-	public name: string;
-	public date_expiration: string;
-	public password: string;
-	public email: string;
-	public document: string;
-	public celphone: string;
 	public type: 'admin' | 'admin_prof';
-	public active: boolean;
 
-	private constructor() { }
-
-	public defineId(id: string): this {
-		if (!id) {
-			return this;
-		}
-
-		this._id = id;
-		return this;
-	}
-
-	public defineName(name: string): this {
-		this.name = name;
-		return this;
-	}
-
-	public defineEmail(email: string): this {
-		this.email = email;
-		return this;
-	}
-
-	public definePassword(password: string): this {
-		this.password = password;
-		return this;
-	}
-
-	public defineUnityId(unity_id: string): this {
-		this.unity_id = unity_id;
-		return this;
+	private constructor() {
+		super();
 	}
 
 	public defineType(type: 'admin' | 'admin_prof'): this {
 		this.type = type;
-		return this;
-	}
-
-	public defineActive(active: boolean = false): this {
-		this.active = active;
 		return this;
 	}
 
@@ -60,22 +20,7 @@ class AdminUser implements IAdminUser {
 		return this;
 	}
 
-	public defineDateExpiration(date_expiration: string): this {
-		this.date_expiration = date_expiration;
-		return this;
-	}
-
-	public defineDocument(document: string): this {
-		this.document = document;
-		return this;
-	}
-
-	public defineCelphone(celphone: string): this {
-		this.celphone = celphone;
-		return this;
-	}
-
-	public params(): IAdminUser {
+	public params(): AdminUser {
 		return Object.assign({}, this);
 	}
 
@@ -95,6 +40,7 @@ class AdminUser implements IAdminUser {
 					.definePassword(admin.password)
 					.defineUnityId(admin.unity_id)
 					.defineType(admin.type)
+					.defineDayOfTrade(admin.dayOfTrade)
 					.defineActive(admin.active),
 			);
 		} catch (error) {
