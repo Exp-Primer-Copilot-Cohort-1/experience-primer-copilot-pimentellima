@@ -1,4 +1,4 @@
-type CredentialsSuceess = {
+type CredentialsSuccess = {
 	token: {
 		type: string;
 		token: string;
@@ -12,11 +12,11 @@ import { ApiClient } from '@japa/api-client';
 
 export async function loginAndGetToken(
 	client: ApiClient,
-): Promise<CredentialsSuceess> {
+): Promise<CredentialsSuccess> {
 	const login = await client.post('/sessions').json({
 		email: 'rmmorais2@gmail.com',
 		password: '123456',
 	});
 
-	return login.body() as CredentialsSuceess;
+	return login.body() as CredentialsSuccess;
 }

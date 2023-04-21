@@ -2,7 +2,7 @@ import { AuthContract } from '@ioc:Adonis/Addons/Auth';
 import promiseErrorHandler from 'App/Core/adapters/controller/helpers/promise-err-handler';
 import { AbstractError } from 'App/Core/errors/error.interface';
 import { PromiseEither, left, right } from 'App/Core/shared/either';
-import SesssionUser from '../../entities/user/session';
+import SessionUser from '../../entities/user/session';
 import { InvalidCredentialsError } from '../../errors/invalid-credentials';
 import {
 	ISession,
@@ -24,7 +24,7 @@ export class SessionRepository implements SessionManagerInterface {
 			return left(new InvalidCredentialsError());
 		}
 
-		const sessionOrErr = await SesssionUser.build(userAuth.user);
+		const sessionOrErr = await SessionUser.build(userAuth.user);
 
 		if (sessionOrErr.isLeft()) {
 			return left(sessionOrErr.extract());
