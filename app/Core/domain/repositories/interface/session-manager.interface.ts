@@ -1,15 +1,18 @@
-import UserEntity from 'App/Core/domain/entities/user/user';
+import { AbstractError } from 'App/Core/errors/error.interface';
 import { PromiseEither } from 'App/Core/shared/either';
+import { SystemUser } from '../../entities/abstract/system-user.abstract';
 
 export type ISession = {
 	token: {
 		token: string;
-		expires: string;
 		type: 'bearer';
 	};
-	user: UserEntity;
+	user: SystemUser;
 };
 
 export interface SessionManagerInterface {
-	signIn: (email: string, password: string) => PromiseEither<Error, ISession>;
+	signIn: (
+		email: string,
+		password: string,
+	) => PromiseEither<AbstractError, ISession>;
 }

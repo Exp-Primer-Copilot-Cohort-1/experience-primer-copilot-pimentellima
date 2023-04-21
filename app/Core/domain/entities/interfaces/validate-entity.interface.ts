@@ -1,3 +1,0 @@
-interface ValidateEntity {
-	validate(): this;
-}

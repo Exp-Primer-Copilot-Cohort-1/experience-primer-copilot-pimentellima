@@ -1,31 +1,21 @@
 import { z } from 'zod';
+import { Validate } from '../abstract/validate.abstract';
 
-class ValidateEmail implements ValidateEntity {
-	public email: string;
-
+class Email extends Validate {
 	private constructor(email: string) {
-		this.defineEmail(email);
+		super(email);
 		this.validate();
 	}
 
 	public validate(): this {
 		const emailSchema = z.string().email();
-		emailSchema.parse(this.email);
+		emailSchema.parse(this.value);
 		return this;
 	}
 
-	public defineEmail(email: string): this {
-		if (!email) {
-			throw new Error('ValidateEmail is required');
-		}
-
-		this.email = email;
-		return this;
-	}
-
-	public static build(email: string): ValidateEmail {
-		return new ValidateEmail(email);
+	public static build(email: string): Email {
+		return new Email(email);
 	}
 }
 
-export default ValidateEmail;
+export default Email;

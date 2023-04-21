@@ -34,7 +34,7 @@ const UserSchema = new Schema<IUser>(
 		},
 		active: {
 			type: Boolean,
-			required: true,
+			default: false,
 		},
 		avatar: {
 			type: String,

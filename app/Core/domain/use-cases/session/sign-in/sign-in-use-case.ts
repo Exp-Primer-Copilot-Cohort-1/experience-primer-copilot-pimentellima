@@ -3,6 +3,7 @@ import {
 	SessionManagerInterface,
 	UnitiesManagerInterface,
 } from 'App/Core/domain/repositories/interface';
+import { AbstractError } from 'App/Core/errors/error.interface';
 import { UseCase } from 'App/Core/interfaces/use-case.interface';
 import { PromiseEither, left, right } from 'App/Core/shared/either';
 import { IUnity } from 'Types/IUnity';
@@ -24,7 +25,7 @@ export class SignInUseCase
 	public async execute({
 		email,
 		password,
-	}: Credentials): PromiseEither<Error, ISession> {
+	}: Credentials): PromiseEither<AbstractError, ISession> {
 		const sessionOrErr = await this.sessionManager.signIn(email, password);
 
 		if (sessionOrErr.isLeft()) {

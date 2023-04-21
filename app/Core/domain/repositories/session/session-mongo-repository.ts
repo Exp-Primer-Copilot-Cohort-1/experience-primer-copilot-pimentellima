@@ -1,6 +1,9 @@
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
 import promiseErrorHandler from 'App/Core/adapters/controller/helpers/promise-err-handler';
+import { AbstractError } from 'App/Core/errors/error.interface';
 import { PromiseEither, left, right } from 'App/Core/shared/either';
+import SesssionUser from '../../entities/user/session';
+import { InvalidCredentialsError } from '../../errors/invalid-credentials';
 import {
 	ISession,
 	SessionManagerInterface,
@@ -12,24 +15,29 @@ export class SessionRepository implements SessionManagerInterface {
 	public async signIn(
 		email: string,
 		password: string,
-	): PromiseEither<Error, ISession> {
+	): PromiseEither<AbstractError, ISession> {
 		const [err, userAuth] = await promiseErrorHandler(
 			this.auth.use('api').attempt(email, password),
 		);
 
 		if (err) {
-			return left(new Error('Invalid credentials'));
+			return left(new InvalidCredentialsError());
 		}
 
-		const user = userAuth.user;
+		const sessionOrErr = await SesssionUser.build(userAuth.user);
+
+		if (sessionOrErr.isLeft()) {
+			return left(sessionOrErr.extract());
+		}
+
 		const token = {
 			type: userAuth.type,
 			token: userAuth.token,
 		};
 
 		return right({
-			user,
+			user: sessionOrErr.extract(),
 			token,
-		} as ISession);
+		});
 	}
 }

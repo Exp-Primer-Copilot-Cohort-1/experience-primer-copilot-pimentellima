@@ -2,7 +2,7 @@ import { test } from '@japa/runner';
 
 import { assert } from 'chai';
 
-import { loginAndGetToken } from './helpers/login';
+import { loginAndGetToken } from '../helpers/login';
 
 test.group('Sessions Controller', () => {
 	test('display post session', async ({ client }) => {

@@ -1,8 +1,8 @@
 import { test } from '@japa/runner';
 
-import { loginAndGetToken } from './helpers/login';
+import { loginAndGetToken } from '../helpers/login';
 
-test.group('User Controller', () => {
+test.group('User Controller V2', () => {
 	test('display get clients', async ({ client }) => {
 		const { token } = await loginAndGetToken(client);
 		const response = await client
