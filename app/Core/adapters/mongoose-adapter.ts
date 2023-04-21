@@ -7,12 +7,14 @@ import { HttpRequest } from './controller/ports/http';
 export const adaptRoute = async (
 	controller: ControllerGeneric,
 	{ request, params, response }: HttpContextContract,
+	customParams?: any,
 ) => {
 	try {
 		const httpRequest: HttpRequest = {
 			body: request.body(),
-			params,
+			params: { ...customParams, ...params },
 		};
+
 		const { body, statusCode } = await controller.handle(httpRequest);
 
 		if (process.env.NODE_ENV === 'development') {
