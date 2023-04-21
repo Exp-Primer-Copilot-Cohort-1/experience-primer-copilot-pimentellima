@@ -9,11 +9,9 @@ import { PromiseEither, left, right } from 'App/Core/shared';
 import { IAdminUser } from 'Types/IAdminUser';
 import { UserAdminIsExistError } from '../../../errors/user-admin-is-exist';
 
-type CreatePasswordUseCase = UseCase<string, undefined, string>;
+type CreatePasswordUseCase = UseCase<string, string>;
 
-export class CreateUserAdminUseCase
-	implements UseCase<IAdminUser, undefined, AdminUser>
-{
+export class CreateUserAdminUseCase implements UseCase<IAdminUser, AdminUser> {
 	constructor(
 		private readonly unityManager: UnitiesManagerInterface,
 		private readonly adminManager: AdminManagerInterface,

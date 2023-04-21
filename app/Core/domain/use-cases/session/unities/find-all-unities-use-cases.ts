@@ -5,9 +5,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface';
 import { PromiseEither, left, right } from 'App/Core/shared';
 import { IUnity } from 'Types/IUnity';
 
-export class FindAllUnitiesUseCase
-	implements UseCase<undefined, undefined, IUnity[]>
-{
+export class FindAllUnitiesUseCase implements UseCase<undefined, IUnity[]> {
 	constructor(private readonly unitiesManager: UnitiesManagerInterface) { }
 
 	public async execute(): PromiseEither<AbstractError, IUnity[]> {

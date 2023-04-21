@@ -9,17 +9,11 @@ import { PromiseEither, left, right } from 'App/Core/shared/either';
 import { IUnity } from 'Types/IUnity';
 import { Credentials } from '../../helpers/credentials';
 
-export class SignInUseCase
-	implements UseCase<Credentials, undefined, ISession>
-{
+export class SignInUseCase implements UseCase<Credentials, ISession> {
 	constructor(
 		private readonly sessionManager: SessionManagerInterface,
 		private readonly unittiesManager: UnitiesManagerInterface,
-		private readonly unityValidationUseCase: UseCase<
-			IUnity,
-			undefined,
-			boolean
-		>,
+		private readonly unityValidationUseCase: UseCase<IUnity, boolean>,
 	) { }
 
 	public async execute({

@@ -7,9 +7,7 @@ import { UnitNotFoundError } from '../../errors/unit-not-found';
 
 type IsValid = boolean;
 
-export class UnityValidationUseCase
-	implements UseCase<IUnity, undefined, IsValid>
-{
+export class UnityValidationUseCase implements UseCase<IUnity, IsValid> {
 	constructor() { }
 
 	public async execute(unity: IUnity): PromiseEither<AbstractError, IsValid> {

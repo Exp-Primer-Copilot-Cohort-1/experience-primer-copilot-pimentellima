@@ -1,14 +1,15 @@
+import { AbstractError } from 'App/Core/errors/error.interface';
 import { UseCase } from 'App/Core/interfaces/use-case.interface';
 import { PromiseEither, right } from 'App/Core/shared';
 
 type Password = string;
 
-export class CreatePasswordUseCase
-	implements UseCase<Password, undefined, Password>
-{
+export class CreatePasswordUseCase implements UseCase<Password, Password> {
 	constructor() { }
 
-	public async execute(password?: Password): PromiseEither<Error, string> {
+	public async execute(
+		password?: Password,
+	): PromiseEither<AbstractError, string> {
 		if (password) {
 			return right(password);
 		}
