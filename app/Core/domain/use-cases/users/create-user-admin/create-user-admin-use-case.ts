@@ -3,10 +3,11 @@ import {
 	AdminManagerInterface,
 	UnitiesManagerInterface,
 } from 'App/Core/domain/repositories/interface';
+import { AbstractError } from 'App/Core/errors/error.interface';
 import { UseCase } from 'App/Core/interfaces/use-case.interface';
 import { PromiseEither, left, right } from 'App/Core/shared';
 import { IAdminUser } from 'Types/IAdminUser';
-import { UserAdminIsExistError } from '../../errors/user-admin-is-exist';
+import { UserAdminIsExistError } from '../../../errors/user-admin-is-exist';
 
 type CreatePasswordUseCase = UseCase<string, undefined, string>;
 
@@ -19,7 +20,9 @@ export class CreateUserAdminUseCase
 		private readonly createPasswordUseCase: CreatePasswordUseCase,
 	) { }
 
-	public async execute(data: IAdminUser): PromiseEither<Error, AdminUser> {
+	public async execute(
+		data: IAdminUser,
+	): PromiseEither<AbstractError, AdminUser> {
 		const adminOrErr = await AdminUser.build(data);
 
 		if (adminOrErr.isLeft()) {

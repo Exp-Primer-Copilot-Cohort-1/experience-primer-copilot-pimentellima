@@ -1,13 +1,14 @@
 import { ServerError } from 'App/Core/errors/server-error';
 
+import { AbstractError } from 'App/Core/errors/error.interface';
 import { HttpResponse } from '../controller/ports/http';
 
-export const badRequest = (error: Error): HttpResponse => ({
-	statusCode: 400,
+export const err = (error: AbstractError): HttpResponse => ({
+	statusCode: error.statusCode || 500,
 	body: error.message,
 });
 
-export const notFound = (error: Error): HttpResponse => ({
+export const notFound = (error: AbstractError): HttpResponse => ({
 	statusCode: 404,
 	body: error.message,
 });
