@@ -15,46 +15,23 @@ const { format, parseISO, subYears } = require('date-fns');
 const ActivityEntity = require('../../Domain/Entities/Activity/activity-entity');
 const IsDateModified = require('../../utils/date-modified');
 
-const Activity = use('App/Models/Activity');
-const ActivityLog = use('App/Models/ActivityLog');
-const User = use('App/Models/User');
-const PaymentActivity = use('App/Models/PaymentActivity');
-const ActivityPayMonth = use('App/Models/ActivityPayMonth');
-const ActivityStock = use('App/Models/ActivityStock');
+import Activity from 'App/Models/Activity';
+import ActivityLog from 'App/Models/ActivityLog';
+import User from 'App/Models/User';
+import PaymentActivity from 'App/Models/PaymentActivity';
+import ActivityPayMonth from 'App/Models/ActivityPayMonth';
+import ActivityStock from 'App/Models/ActivityStock';
+import { adaptRoute } from 'App/Core/adapters';
+import { makeActivityFindByUnityIdComposer } from 'App/Core/composers/activities/make-composer-activity-find-by-unity-id';
 
 const PERMISSION_PROF = ['prof'];
 
-const Mail = use('Mail');
+// const Mail = use('Mail');
 
 class ActivityController {
-  async findAllActivitiesByUnity({ auth }) {
-    const userLogged = auth.user;
-
-    const WHERE_QUERY = (params) => ({
-      unity_id: userLogged.unity_id,
-      active: true,
-      status: {
-        $ne: ['not_count'],
-      },
-      scheduled: {
-        $ne: ['not_count'],
-      },
-      ...params,
-    });
-
-    if (PERMISSION_PROF.includes(userLogged.type)) {
-      const activities = await Activity
-        .where(WHERE_QUERY({ user_id: mongoose.Types.ObjectId(userLogged._id) }))
-        .fetch();
-
-      return activities;
-    }
-
-    const activities = await Activity
-      .where(WHERE_QUERY())
-      .fetch();
-
-    return activities;
+  async findAllActivitiesByUnity(ctx) {
+    return adaptRoute(makeActivityFindByUnityIdComposer(ctx.auth), ctx);
+ 
   }
 
   async index({ auth }) {
@@ -214,7 +191,7 @@ class ActivityController {
         }
       }
       const userData = await User.where({ _id: data.prof.value }).first();
-      if (userData) {
+     /*  if (userData) {
         try {
           await Mail.send(
             'emails.activity',
@@ -230,7 +207,7 @@ class ActivityController {
         } catch (error) {
           console.log('linha 212');
         }
-      }
+      } */
       if (data.is_recorrent && !data.is_recorrent_now) {
         const dateAc = format(parseISO(data.date), 'yyyy-MM-dd');
         data.date = new Date(
