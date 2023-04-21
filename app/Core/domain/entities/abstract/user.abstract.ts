@@ -1,18 +1,29 @@
-import ValidateEmail from '../validations/email';
+import Document from '../validations/document';
+import Email from '../validations/email';
 
 abstract class AbstractUser {
 	public _id: string;
 	public unity_id: string;
 	public name: string;
-	public email: string;
-	public document: string;
+
 	public celphone: string;
 	public type: 'admin' | 'admin_prof' | 'prof' | 'client' | 'sec';
 	public avatar: string;
 	public created_at: Date;
 	public updated_at: Date;
 
+	private _email: Email;
+	private _document: Document;
+
 	constructor() { }
+
+	public get email(): string {
+		return this._email?.value;
+	}
+
+	public get document(): string {
+		return this._document?.value;
+	}
 
 	public defineId(id: string): this {
 		if (!id) {
@@ -28,8 +39,13 @@ abstract class AbstractUser {
 		return this;
 	}
 
-	public defineEmail(email: string): this {
-		this.email = ValidateEmail.build(email).email;
+	public defineEmail(email: string | Email): this {
+		if (email instanceof Email) {
+			this._email = email;
+			return this;
+		}
+
+		this._email = Email.build(email);
 		return this;
 	}
 
@@ -45,8 +61,13 @@ abstract class AbstractUser {
 		return this;
 	}
 
-	public defineDocument(document: string): this {
-		this.document = document;
+	public defineDocument(document: string | Document): this {
+		if (document instanceof Document) {
+			this._document = document;
+			return this;
+		}
+
+		this._document = Document.build(document);
 		return this;
 	}
 
