@@ -1,3 +1,4 @@
+import { AbstractError } from 'App/Core/errors/error.interface';
 import { PromiseEither, left, right } from 'App/Core/shared';
 import { IAdminUser } from 'Types/IAdminUser';
 import { SystemUser } from '../abstract/system-user.abstract';
@@ -21,12 +22,18 @@ class AdminUser extends SystemUser implements IAdminUser {
 	}
 
 	public params(): AdminUser {
-		return Object.assign({}, this);
+		const admin = Object.assign({}, this);
+
+		return {
+			...admin,
+			email: this.email,
+			document: this.document,
+		};
 	}
 
 	public static async build(
 		admin: IAdminUser,
-	): PromiseEither<Error, AdminUser> {
+	): PromiseEither<AbstractError, AdminUser> {
 		try {
 			return right(
 				new AdminUser()
