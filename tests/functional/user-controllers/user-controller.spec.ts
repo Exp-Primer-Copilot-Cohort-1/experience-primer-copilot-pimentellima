@@ -3,6 +3,8 @@ import { test } from '@japa/runner';
 import User from 'App/Models/User';
 import { assert } from 'chai';
 
+import { cpf } from 'cpf-cnpj-validator';
+
 const user = {
 	is_company: false,
 	unity_id: '63528c11c109b232759921d1',
@@ -10,7 +12,7 @@ const user = {
 	date_expiration: '2021-01-01',
 	password: '123456',
 	email: 'murilomontinojr2@hotmail.com',
-	document: '000.000.000-00',
+	document: cpf.generate(),
 	celphone: '(00) 00000-0000',
 	type: 'admin_prof',
 };
