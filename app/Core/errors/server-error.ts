@@ -1,8 +1,8 @@
-import { InterfaceError } from './error.interface';
+import { AbstractError } from './error.interface';
 
-export class ServerError extends Error implements InterfaceError {
-	constructor(reason: string) {
-		super('Server error: ' + reason + '.');
+export class ServerError extends AbstractError {
+	constructor(reason: string, public readonly statusCode: number = 500) {
+		super('Server error: ' + reason + '.', statusCode);
 		this.name = 'ServerError';
 	}
 }
