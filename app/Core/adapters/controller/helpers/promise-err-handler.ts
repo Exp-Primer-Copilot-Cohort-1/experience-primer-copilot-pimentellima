@@ -1,4 +1,6 @@
-type ErrorPromise = [Error, null];
+import { AbstractError } from 'App/Core/errors/error.interface';
+
+type ErrorPromise = [AbstractError, null];
 type SuccessPromise<T> = [null, T];
 type Response<T> = ErrorPromise | SuccessPromise<T>;
 
