@@ -21,6 +21,8 @@
                 "printWidth": 80,
                 "tabWidth": 4
             }
-        ]
+        ],
+        "@typescript-eslint/naming-convention": "off",
+        "@typescript-eslint/explicit-member-accessibility": "off"
     }
 }

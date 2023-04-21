@@ -1,6 +1,5 @@
-import { Schema, model } from "@ioc:Mongoose";
+import Mongoose, { Schema } from '@ioc:Mongoose';
 
-const ActivityAwaitSchema = new Schema<any>({
-})
+const ActivityAwaitSchema = new Schema({});
 
-export default model<any>('activity_awaits', ActivityAwaitSchema);
+export default Mongoose.model('activity_awaits', ActivityAwaitSchema);

@@ -1,9 +1,5 @@
-import { model, Schema } from '@ioc:Mongoose';
+import Mongoose, { Schema } from '@ioc:Mongoose';
 
+const ActivityLogSchema = new Schema({});
 
-const ActivityLogSchema = new Schema(
-    {
-    },
-);
-
-export default model('activity_logs', ActivityLogSchema);
+export default Mongoose.model('activity_logs', ActivityLogSchema);

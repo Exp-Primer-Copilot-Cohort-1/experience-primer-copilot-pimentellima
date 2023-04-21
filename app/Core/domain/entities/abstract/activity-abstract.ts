@@ -1,10 +1,10 @@
-import { PaymentStatus, STATUS } from "Types/IHelpers";
+import { PaymentStatus, STATUS } from 'App/Helpers';
 
 export abstract class AbstractActivity {
 	_id: string;
 	status: STATUS;
 	client_id: string;
-	procedures: IProcedure [];
+	procedures: IProcedure[];
 	client: IClient;
 	partner: string;
 	obs: string | null;
@@ -18,16 +18,16 @@ export abstract class AbstractActivity {
 }
 
 interface IProf {
-    value: string;
-    label: string
+	value: string;
+	label: string;
 }
 
 interface IClient {
-    value: string;
-    label: string;
-    celphone: string | null;
-    email: string | null;
-    partner: string | null;
+	value: string;
+	label: string;
+	celphone: string | null;
+	email: string | null;
+	partner: string | null;
 }
 
 interface IProcedure {
@@ -36,10 +36,12 @@ interface IProcedure {
 	minutes: number;
 	color: string;
 	val: number;
-	health_insurance?: IHealthInsurance
+	health_insurance?: IHealthInsurance;
 	status: PaymentStatus;
 }
 
 interface IHealthInsurance {
-    value: string; label: string; price: number
+	value: string;
+	label: string;
+	price: number;
 }
