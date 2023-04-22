@@ -6,34 +6,35 @@ import Procedure from 'App/Models/Procedure';
 type FindAllProps = {
 	name?: string;
 	active?: boolean;
-};
-type Params = {
 	unity_id: string;
 };
 
 export class FindAllProceduresByUnityUseCase
-	implements UseCase<FindAllProps, Params, any[]>
+	implements UseCase<FindAllProps, any[]>
 {
-	constructor() { }
+	constructor() {}
 
-	public async execute(
-		{ name, active = true }: FindAllProps,
-		{ unity_id }: Params,
-	): PromiseEither<AbstractError, any[]> {
+	public async execute({
+		name,
+		active = true,
+		unity_id,
+	}: FindAllProps): PromiseEither<AbstractError, any[]> {
 		if (name) {
 			const procedures = await Procedure.find({
 				name: { $regex: new RegExp(`.*${name}.*`) },
 				unity_id: unity_id,
 				active,
-			}).sort('-name');
+			})
+				.sort('-name')
+				.exec();
 
 			return right(procedures);
 		}
 
-		const procedures = await Procedure.where({
+		const procedures = await Procedure.find({
 			unity_id: unity_id,
 			active,
-		});
+		}).exec();
 
 		return right(procedures);
 	}
