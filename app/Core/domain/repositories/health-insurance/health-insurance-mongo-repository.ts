@@ -1,18 +1,15 @@
-import { AbstractError } from 'App/Core/errors/error.interface';
-import { PromiseEither, left, right } from 'App/Core/shared';
-import HealthInsurance from 'App/Models/HealthInsurance';
-import { OptsQuery } from '../../entities/helpers/opts-query';
-import { MissingParamsError } from '../../errors/missing-params';
-import { HealthInsuranceManagerInterface } from '../interface/health-insurance-manager.interface';
+import { AbstractError } from 'App/Core/errors/error.interface'
+import { PromiseEither, left, right } from 'App/Core/shared'
+import HealthInsurance from 'App/Models/HealthInsurance'
+import { OptsQuery } from '../../entities/helpers/opts-query'
+import { MissingParamsError } from '../../errors/missing-params'
+import { HealthInsuranceManagerInterface } from '../interface/health-insurance-manager.interface'
 
-export class HealthInsuranceMongoRepository
-	implements HealthInsuranceManagerInterface {
+export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInterface {
 	constructor(private readonly opts: OptsQuery = OptsQuery.build()) { }
-	async findAllByUnityId(
-		unity_id: string,
-	): PromiseEither<AbstractError, any[]> {
+	async findAllByUnityId(unity_id: string): PromiseEither<AbstractError, any[]> {
 		if (!unity_id) {
-			return left(new MissingParamsError('unity_id'));
+			return left(new MissingParamsError('unity_id'))
 		}
 
 		const healthInsurances = await HealthInsurance.find({
@@ -22,9 +19,9 @@ export class HealthInsuranceMongoRepository
 			.limit(this.opts.limit)
 			.skip(this.opts.skip)
 			.where({ active: this.opts.active })
-			.exec();
+			.exec()
 
-		return right(healthInsurances);
+		return right(healthInsurances)
 	}
 
 	async findAllByName(
@@ -36,7 +33,7 @@ export class HealthInsuranceMongoRepository
 				new MissingParamsError()
 					.addParam('name', name)
 					.addParam('unity_id', unity_id),
-			);
+			)
 		}
 
 		const healthInsurances = await HealthInsurance.find({
@@ -47,8 +44,8 @@ export class HealthInsuranceMongoRepository
 			.limit(this.opts.limit)
 			.skip(this.opts.skip)
 			.where({ active: this.opts.active })
-			.exec();
+			.exec()
 
-		return right(healthInsurances);
+		return right(healthInsurances)
 	}
 }
