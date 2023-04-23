@@ -12,7 +12,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const { format, parseISO, subYears } = require('date-fns');
 
-const ActivityEntity = require('../../Domain/Entities/Activity/activity-entity');
+const ActivityEntity = require('../activity-entity');
 const IsDateModified = require('../../utils/date-modified');
 
 import { adaptRoute } from 'App/Core/adapters';

@@ -3,7 +3,7 @@ import { adaptRoute } from 'App/Core/adapters';
 import { makeSignInComposer } from 'App/Core/composers';
 import User from 'App/Models/User';
 
-const SELECTS = require('../../SelectsQuery/user-select');
+const SELECTS = require('../user-select');
 
 class SessionController {
 	public async store(ctx: HttpContextContract) {
