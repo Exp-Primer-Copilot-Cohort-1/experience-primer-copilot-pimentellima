@@ -11,7 +11,7 @@ import { UserAdminIsExistError } from '../../../errors/user-admin-is-exist';
 
 type CreatePasswordUseCase = UseCase<string, string>;
 
-export class CreateUserAdminUseCase implements UseCase<IAdminUser, AdminUser> {
+export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {
 	constructor(
 		private readonly unityManager: UnitiesManagerInterface,
 		private readonly adminManager: AdminManagerInterface,
@@ -20,7 +20,7 @@ export class CreateUserAdminUseCase implements UseCase<IAdminUser, AdminUser> {
 
 	public async execute(
 		data: IAdminUser,
-	): PromiseEither<AbstractError, AdminUser> {
+	): PromiseEither<AbstractError, IAdminUser> {
 		const adminOrErr = await AdminUser.build(data);
 
 		if (adminOrErr.isLeft()) {
@@ -59,6 +59,6 @@ export class CreateUserAdminUseCase implements UseCase<IAdminUser, AdminUser> {
 
 		admin.defineId(createUserOrErr.extract()._id);
 
-		return right(admin);
+		return right(admin.params());
 	}
 }

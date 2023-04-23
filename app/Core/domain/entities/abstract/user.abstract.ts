@@ -1,21 +1,16 @@
+/* eslint-disable no-unreachable */
 import Document from '../validations/document';
 import Email from '../validations/email';
+import { Entity } from './entity.abstract';
 
-abstract class AbstractUser {
-	public _id: string;
-	public unity_id: string;
-	public name: string;
-
-	public celphone: string;
-	public type: 'admin' | 'admin_prof' | 'prof' | 'client' | 'sec';
-	public avatar: string;
-	public created_at: Date;
-	public updated_at: Date;
-
+export abstract class AbstractUser extends Entity {
+	private _unity_id: string;
+	private _name: string;
+	private _celphone: string;
+	protected _type: 'admin' | 'admin_prof' | 'prof' | 'client' | 'sec';
+	private _avatar: string;
 	private _email: Email;
 	private _document: Document;
-
-	constructor() { }
 
 	public get email(): string {
 		return this._email?.value;
@@ -25,17 +20,28 @@ abstract class AbstractUser {
 		return this._document?.value;
 	}
 
-	public defineId(id: string): this {
-		if (!id) {
-			return this;
-		}
+	public get unity_id(): string {
+		return this._unity_id;
+	}
 
-		this._id = id;
-		return this;
+	public get name(): string {
+		return this._name;
+	}
+
+	public get celphone(): string {
+		return this._celphone;
+	}
+
+	public get type(): 'admin' | 'admin_prof' | 'prof' | 'client' | 'sec' {
+		return this._type;
+	}
+
+	public get avatar(): string {
+		return this._avatar;
 	}
 
 	public defineName(name: string): this {
-		this.name = name;
+		this._name = name;
 		return this;
 	}
 
@@ -50,14 +56,14 @@ abstract class AbstractUser {
 	}
 
 	public defineUnityId(unity_id: string): this {
-		this.unity_id = unity_id;
+		this._unity_id = unity_id;
 		return this;
 	}
 
 	public defineType(
 		type: 'admin' | 'admin_prof' | 'prof' | 'client' | 'sec',
 	): this {
-		this.type = type;
+		this._type = type;
 		return this;
 	}
 
@@ -72,24 +78,12 @@ abstract class AbstractUser {
 	}
 
 	public defineCelphone(celphone: string): this {
-		this.celphone = celphone;
+		this._celphone = celphone;
 		return this;
 	}
 
 	public defineAvatar(avatar: string): this {
-		this.avatar = avatar;
-		return this;
-	}
-
-	public defineCreatedAt(created_at: Date): this {
-		this.created_at = created_at;
-		return this;
-	}
-
-	public defineUpdatedAt(updated_at: Date): this {
-		this.updated_at = updated_at;
+		this._avatar = avatar;
 		return this;
 	}
 }
-
-export { AbstractUser };

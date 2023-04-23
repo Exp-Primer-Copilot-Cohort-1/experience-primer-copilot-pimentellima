@@ -7,51 +7,53 @@ import { SystemUser } from '../abstract/system-user.abstract';
 import DaysOfTrade from '../helpers/days-of-trade';
 
 class SesssionUser extends SystemUser {
-	public due_date: string;
-	public schedule_obs: string;
-	public show_lack: boolean;
-	public rememberMeToken?: string;
+	private _due_date: string;
+	private _schedule_obs: string;
+	private _show_lack: boolean;
+	private _rememberMeToken?: string;
 
-	constructor() {
-		super();
+	public get due_date(): string {
+		return this._due_date;
+	}
+
+	public get schedule_obs(): string {
+		return this._schedule_obs;
+	}
+
+	public get show_lack(): boolean {
+		return this._show_lack;
+	}
+
+	public get rememberMeToken(): string | undefined {
+		return this._rememberMeToken;
 	}
 
 	public defineDueDate(due_date: string): this {
-		this.due_date = due_date;
+		this._due_date = due_date;
 		return this;
 	}
 
 	public defineScheduleObs(schedule_obs: string): this {
-		this.schedule_obs = schedule_obs;
+		this._schedule_obs = schedule_obs;
 		return this;
 	}
 
 	public defineShowLack(show_lack: boolean): this {
-		this.show_lack = show_lack;
+		this._show_lack = show_lack;
 		return this;
 	}
 
 	public defineRememberMeToken(rememberMeToken?: string): this {
-		this.rememberMeToken = rememberMeToken;
+		this._rememberMeToken = rememberMeToken;
 		return this;
-	}
-
-	public params(): IUser {
-		const { dayOfTrade, ...user } = Object.assign({}, this);
-
-		return {
-			...user,
-			...dayOfTrade.params(),
-			email: this.email,
-			document: this.document,
-		};
 	}
 
 	public static async build(
 		data: IUser,
 	): PromiseEither<AbstractError, SesssionUser> {
 		try {
-			const daysOfTrade = DaysOfTrade.build(data);
+			const daysOfTradeOrErr = await DaysOfTrade.build(data);
+
 			const user = new SesssionUser()
 				.defineId(data._id)
 				.defineName(data.name)
@@ -61,7 +63,7 @@ class SesssionUser extends SystemUser {
 				.defineAvatar(data.avatar)
 				.defineCreatedAt(data.created_at)
 				.defineDueDate(data.due_date)
-				.defineDayOfTrade(daysOfTrade)
+				.defineDayOfTrade(daysOfTradeOrErr.extract() as DaysOfTrade)
 				.defineDocument(data.document)
 				.defineCelphone(data.celphone)
 				.defineScheduleObs(data.schedule_obs)

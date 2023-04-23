@@ -1,13 +1,13 @@
 import { ObjectId } from '@ioc:Mongoose';
 
 // Prof Interface
-interface Prof {
+export interface Prof {
 	value: ObjectId;
 	label: string;
 }
 
 // Profs Interface
-interface Profs {
+export interface Profs {
 	prof: Prof;
 }
 

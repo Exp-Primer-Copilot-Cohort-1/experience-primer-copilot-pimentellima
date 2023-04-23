@@ -15,7 +15,6 @@ export class AdminMongooseRepository implements AdminManagerInterface {
 		const user = await User.create(admin.params());
 
 		admin.defineId(user._id);
-
 		return right(admin);
 	}
 
