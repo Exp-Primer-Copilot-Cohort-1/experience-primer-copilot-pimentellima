@@ -1,26 +1,23 @@
-import { AbstractError } from 'App/Core/errors/error.interface';
-import { UseCase } from 'App/Core/interfaces/use-case.interface';
-import { PromiseEither, right } from 'App/Core/shared';
+import { AbstractError } from 'App/Core/errors/error.interface'
+import { UseCase } from 'App/Core/interfaces/use-case.interface'
+import { PromiseEither, right } from 'App/Core/shared'
 
-type Password = string;
+type Password = string
 
 export class CreatePasswordUseCase implements UseCase<Password, Password> {
 	constructor() { }
 
-	public async execute(
-		password?: Password,
-	): PromiseEither<AbstractError, string> {
+	public async execute(password?: Password): PromiseEither<AbstractError, string> {
 		if (password) {
-			return right(password);
+			return right(password)
 		}
 
-		const pwdChars =
-			'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-		const pwdLen = 6;
+		const pwdChars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+		const pwdLen = 6
 		const randPassword = Array(pwdLen)
 			.fill(pwdChars)
 			.map((x) => x[Math.floor(Math.random() * x.length)])
-			.join('');
+			.join('')
 
 		// try {
 		// 	// await Mail.send(
@@ -37,6 +34,6 @@ export class CreatePasswordUseCase implements UseCase<Password, Password> {
 		// 	Log.error(error.message);
 		// }
 
-		return right(randPassword);
+		return right(randPassword)
 	}
 }
