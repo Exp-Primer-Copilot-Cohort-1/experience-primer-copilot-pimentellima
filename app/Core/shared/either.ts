@@ -16,7 +16,7 @@ export class Left<L, A> {
 	}
 
 	public extract(): L {
-		throw this.value;
+		return this.value;
 	}
 }
 

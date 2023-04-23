@@ -18,7 +18,19 @@ export class Model {
 		return this;
 	}
 
+	static where() {
+		return this;
+	}
+
 	static sort() {
+		return this;
+	}
+
+	static limit() {
+		return this;
+	}
+
+	static skip() {
 		return this;
 	}
 

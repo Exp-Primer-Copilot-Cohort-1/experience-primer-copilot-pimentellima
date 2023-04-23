@@ -7,14 +7,20 @@ import { UnitiesManagerInterface } from '../interface/unities-manager.interface'
 
 export class UnitiesMongooseRepository implements UnitiesManagerInterface {
 	constructor() { }
-	public findAll(): PromiseEither<AbstractError, IUnity[]> {
-		throw new Error('Method not implemented.');
-	}
-	public async findById(id: string): PromiseEither<AbstractError, IUnity> {
-		const unity = await Unity.findById(id);
-		if (!unity) {
+	async findAll(): PromiseEither<AbstractError, IUnity[]> {
+		const unities = await Unity.find();
+
+		if (!unities) {
 			return left(new UnitNotFoundError());
 		}
-		return right(unity);
+
+		return right(unities);
+	}
+	async findById(id: string): PromiseEither<AbstractError, IUnity> {
+		const unities = await Unity.findById(id);
+		if (!unities) {
+			return left(new UnitNotFoundError());
+		}
+		return right(unities);
 	}
 }
