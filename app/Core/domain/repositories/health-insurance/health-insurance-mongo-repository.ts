@@ -40,7 +40,7 @@ export class HealthInsuranceMongoRepository
 		}
 
 		const healthInsurances = await HealthInsurance.find({
-			name: { $regex: new RegExp(`.*${name}.*`) },
+			name: { $regex: new RegExp(`.*${name.toUpperCase()}.*`) },
 			unity_id,
 		})
 			.sort(this.opts.sort)

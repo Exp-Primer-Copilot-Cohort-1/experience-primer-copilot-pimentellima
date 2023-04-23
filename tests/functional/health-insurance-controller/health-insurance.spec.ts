@@ -8,7 +8,7 @@ test.group('Health Insurance Controller', () => {
 
 		const response = await client
 			.get('health-insurance')
-			.headers({ Authorization: `Bearer ${token.token}` });
+			.bearerToken(token.token);
 
 		response.assertStatus(200);
 	});
@@ -17,8 +17,19 @@ test.group('Health Insurance Controller', () => {
 
 		const response = await client
 			.get('health-insurance?active=false')
-			.bearerToken(token.token)
-			.send();
+			.bearerToken(token.token);
+
+		response.assertStatus(200);
+	});
+
+	test('display all health insurance name equal Convênio', async ({
+		client,
+	}) => {
+		const { token } = await loginAndGetToken(client);
+
+		const response = await client
+			.get('health-insurance?name=Convênio&active=false')
+			.bearerToken(token.token);
 
 		response.assertStatus(200);
 	});
