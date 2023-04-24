@@ -7,7 +7,9 @@ export default defineConfig({
 	root: __dirname,
 	test: {
 		coverage: {
-			provider: 'istanbul', // or 'c8'
+			provider: 'istanbul',
+			all: true,
+			include: ['app/Core/**/*.ts'],
 		},
 		reporters: ['html', 'default'],
 		testTimeout: 5000000,
@@ -20,6 +22,7 @@ export default defineConfig({
 			'**/.docker/**',
 			'**/tests/functional/**',
 		],
+		include: ['app/Core/**/*.spec.ts'],
 	},
 	resolve: {
 		alias: {
