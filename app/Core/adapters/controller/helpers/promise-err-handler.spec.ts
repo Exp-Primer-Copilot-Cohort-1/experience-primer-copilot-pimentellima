@@ -27,6 +27,6 @@ describe('Function Promise Err Handler (Unit)', () => {
 
 		const result = await promiseErrorHandler(rejectedPromise)
 
-		expect(result).toEqual<PromiseError<string>>([expectedError, null])
+		expect(result).toEqual<PromiseError>([expectedError, null])
 	})
 })

@@ -1,7 +1,7 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from 'vitest/config'
 
-import { config } from 'dotenv';
-config();
+import { config } from 'dotenv'
+config()
 
 export default defineConfig({
 	root: __dirname,
@@ -23,9 +23,9 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			'App': '/app',
+			App: '/app',
 			'@ioc:Mongoose': 'mongoose',
 			'@ioc:Adonis/Core/Hash': '@adonisjs/hash/build/standalone',
 		},
 	},
-});
+})
