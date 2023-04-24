@@ -9,6 +9,7 @@ test.group('Activity Controller', () => {
 		const response = await client
 			.get('activities')
 			.headers({ Authorization: `Bearer ${token.token}` });
+		console.log(response.body())
 
 		response.assertStatus(200);
 	});

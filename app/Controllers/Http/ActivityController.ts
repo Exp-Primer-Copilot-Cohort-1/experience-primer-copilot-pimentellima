@@ -16,21 +16,22 @@ const ActivityEntity = require('../../Domain/Entities/Activity/activity-entity')
 const IsDateModified = require('../../utils/date-modified');
 
 import Activity from 'App/Models/Activity';
+import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import ActivityLog from 'App/Models/ActivityLog';
 import User from 'App/Models/User';
 import PaymentActivity from 'App/Models/PaymentActivity';
 import ActivityPayMonth from 'App/Models/ActivityPayMonth';
 import ActivityStock from 'App/Models/ActivityStock';
 import { adaptRoute } from 'App/Core/adapters';
-import { makeActivityFindByUnityIdComposer } from 'App/Core/composers/activities/make-composer-activity-find-by-unity-id';
+import { makeFindActivityByUnityIdComposer } from 'App/Core/composers/activities/make-find-activity-by-unity-id-composer';
+import { makeUpdateActivityComposer } from 'App/Core/composers/activities/make-update-activity-composer';
 
-const PERMISSION_PROF = ['prof'];
-
-// const Mail = use('Mail');
 
 class ActivityController {
-  async findAllActivitiesByUnity(ctx) {
-    return adaptRoute(makeActivityFindByUnityIdComposer(ctx.auth), ctx);
+  async findAllActivitiesByUnity(ctx: HttpContextContract) {
+    const userLogged = ctx.auth.user;
+
+    return adaptRoute(makeFindActivityByUnityIdComposer(), ctx, { unity_id: userLogged?.unity_id });
  
   }
 
@@ -45,7 +46,7 @@ class ActivityController {
           .fetch();
         return activities;
       }
-      if (userLogged.type === 'sec' || userLogged.type === 'sec') {
+      if (userLogged.type === 'sec') {
         const activities = Activity.where({
           unity_id: userLogged.unity_id,
         })
@@ -65,7 +66,6 @@ class ActivityController {
       }
       return [];
     } catch (err) {
-      console.log('linha 72');
       return false;
     }
   }
@@ -312,12 +312,8 @@ class ActivityController {
     }
   }
 
-  async update({ params, request }) {
-    const activity = await Activity.where({ _id: params.id }).firstOrFail();
-
-    if (!activity) return false;
-
-    const data = request.only([
+  async update(ctx: HttpContextContract) {
+    const params = ctx.request.only([
       'date',
       'hour_start',
       'hour_end',
@@ -339,78 +335,7 @@ class ActivityController {
       'scheduled',
     ]);
 
-    if (data.active === 'false' || data.active === false) {
-      activity.merge({
-        active: false,
-      });
-      await activity.save();
-      return activity;
-    }
-    /*   if (data.date) {
-      const dateAc = format(parseISO(data.date), 'yyyy-MM-dd');
-      data.date = new Date(
-        dateAc.split('-')[0],
-        parseInt(dateAc.split('-')[1], 10) - 1,
-        parseInt(dateAc.split('-')[2], 10),
-        0,
-        0,
-      );
-    }
-    try {
-      if (data.status && data.status === 'finished') {
-        if (activity.procedures && activity.procedures.length) {
-          for (const proc of activity.procedures) {
-            const procedure = await Procedure
-              .where({ _id: mongoose.Types.ObjectId(proc.value) }).first();
-            if (procedure && procedure.products) {
-              for (const produ of procedure.products) {
-                const stocks = await Stock
-                  .where({ _id: mongoose.Types.ObjectId(produ.product.value) }).first();
-                stocks
-                  .merge({
-                    quantity: parseInt(stocks.quantity, 10)
-                      - parseInt(produ.quantity, 10),
-                  });
-                await stocks.save();
-              }
-            }
-          }
-        }
-      }
-    } catch (er) {
-      console.log('linha 477');
-    } */
-
-    try {
-      const activityEntity = new ActivityEntity(data);
-      const isDateBefore = new IsDateModified(activityEntity.params());
-
-      const isDateAfter = new IsDateModified(activity);
-      const isDateModified = IsDateModified.compare(isDateBefore, isDateAfter);
-
-      if (isDateModified) {
-        activityEntity.status = 'rescheduled';
-      }
-
-      activity.merge({ ...activityEntity.params(), ...isDateBefore.transformThisDateStringObject() });
-      await activity.save();
-
-      return activity;
-    } catch (error) {
-      console.log(error);
-
-      return error;
-    }
-
-    /*   const dataArr = customIsEquals(activity.toJSON(), data);
-    for (const dt of dataArr) {
-      const title = new MapStatus(dt.key).title;
-      await ActivityLog.create({
-        title,
-        activity_id: mongoose.Types.ObjectId(activity._id),
-        admin: userLogged.toJSON(),
-      });
-    } */
+    return adaptRoute(makeUpdateActivityComposer(), ctx, params );
   }
 
   async updateStatus({ params, request }) {
