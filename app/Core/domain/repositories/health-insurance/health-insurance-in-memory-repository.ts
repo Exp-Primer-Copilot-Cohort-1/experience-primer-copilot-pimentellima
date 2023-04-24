@@ -4,6 +4,8 @@ import { MissingParamsError } from '../../errors/missing-params'
 import { HealthInsuranceManagerInterface } from '../interface/health-insurance-manager.interface'
 
 export class HealthInsuranceInMemoryManager implements HealthInsuranceManagerInterface {
+	private _items: any[] = []
+
 	async findAllByUnityId(unity_id: string): PromiseEither<AbstractError, any[]> {
 		if (!unity_id) {
 			return left(new MissingParamsError('unity_id'))
@@ -48,5 +50,15 @@ export class HealthInsuranceInMemoryManager implements HealthInsuranceManagerInt
 		}
 
 		return right({})
+	}
+
+	async create(item): PromiseEither<AbstractError, any> {
+		if (!item) {
+			return left(new MissingParamsError('item'))
+		}
+
+		this._items.push(item)
+
+		return right(item)
 	}
 }

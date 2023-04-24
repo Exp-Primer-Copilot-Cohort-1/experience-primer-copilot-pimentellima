@@ -66,24 +66,29 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 		return right(healthInsurance)
 	}
 
-	async update(id: string, entity: Entity): PromiseEither<AbstractError, any> {
+	async update(id: string, entity: Entity): PromiseEither<AbstractError, Entity> {
 		if (!isValidObjectId(id)) {
 			return left(new HealthInsuranceNotFoundError())
 		}
 
-		const healthInsurance = await HealthInsurance.findByIdAndUpdate(
-			id,
-			entity.params(),
-		)
+		const healthInsurance = await HealthInsurance.findByIdAndUpdate(id, entity)
 
 		if (!healthInsurance) {
 			return left(new HealthInsuranceNotFoundError())
 		}
 
-		return right(healthInsurance)
+		return right({
+			...healthInsurance.toJSON(),
+			...entity,
+		} as any)
 	}
 
 	async delete(id: string): PromiseEither<AbstractError, any> {
 		return right({})
+	}
+
+	async create(entity: Entity): PromiseEither<AbstractError, Entity> {
+		const healthInsurances = await HealthInsurance.create({ ...entity })
+		return right(healthInsurances.toObject())
 	}
 }

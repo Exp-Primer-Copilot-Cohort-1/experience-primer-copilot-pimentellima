@@ -3,10 +3,12 @@ import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { HealthInsuranceMongoRepository } from 'App/Core/domain/repositories'
 import {
+	CreateHealthInsuranceUseCase,
 	FindAllHealthInsuranceByNameUseCase,
 	FindAllHealthInsuranceByUnityUseCase,
 	FindAllHealthInsuranceUseCase,
 	FindHealthInsuranceByIdUseCase,
+	UpdateHealthInsuranceUseCase,
 } from 'App/Core/domain/use-cases'
 
 export const makeHealthInsuranceFindAllByUnityIdComposer = (
@@ -26,5 +28,17 @@ export const makeHealthInsuranceFindAllByUnityIdComposer = (
 export const makeHealthInsuranceFindByIdComposer = (): ControllerGeneric => {
 	return new Controller(
 		new FindHealthInsuranceByIdUseCase(new HealthInsuranceMongoRepository()),
+	)
+}
+
+export const makeHealtInsuranceUpdateComposer = (): ControllerGeneric => {
+	return new Controller(
+		new UpdateHealthInsuranceUseCase(new HealthInsuranceMongoRepository()),
+	)
+}
+
+export const makeHealtInsuranceCreateComposer = (): ControllerGeneric => {
+	return new Controller(
+		new CreateHealthInsuranceUseCase(new HealthInsuranceMongoRepository()),
 	)
 }

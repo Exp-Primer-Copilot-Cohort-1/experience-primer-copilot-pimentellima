@@ -85,7 +85,7 @@ Route.group(() => {
 Route.group(() => {
 	Route.get('', 'HealthInsuranceController.index')
 	Route.get(':id', 'HealthInsuranceController.show')
-	Route.put(':id', 'HealthInsuranceController.update')
+	Route.put(':_id', 'HealthInsuranceController.update')
 	Route.delete(':id', 'HealthInsuranceController.destroy')
 	Route.post('', 'HealthInsuranceController.store')
 })

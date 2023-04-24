@@ -1,6 +1,8 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import {
+	makeHealtInsuranceCreateComposer,
+	makeHealtInsuranceUpdateComposer,
 	makeHealthInsuranceFindAllByUnityIdComposer,
 	makeHealthInsuranceFindByIdComposer,
 } from 'App/Core/composers'
@@ -21,33 +23,21 @@ class HealthInsuranceController {
 		return adaptRoute(makeHealthInsuranceFindByIdComposer(), ctx)
 	}
 
-	async store({ request, auth }) {
-		const userLogged = auth.user
-		const data = request.only(['name', 'register_code', 'carence', 'profs'])
-		const healthInsurances = await HealthInsurance.create({
-			...data,
-			active: true,
-			unity_id: userLogged.unity_id,
+	async store(ctx: HttpContextContract) {
+		const unity_id = ctx.auth.user?.unity_id?.toString()
+		return adaptRoute(makeHealtInsuranceCreateComposer(), ctx, {
+			unity_id,
 		})
-		return healthInsurances
 	}
 
-	async update({ params, request, auth }) {
-		const userLogged = auth.user
-		const healthInsurances = await HealthInsurance.where({
-			_id: params.id,
-		}).firstOrFail()
-		const data = request.only(['name', 'register_code', 'carence', 'active', 'profs'])
-		healthInsurances.merge({ ...data, unity_id: userLogged.unity_id })
-		await healthInsurances.save()
-		return healthInsurances
+	async update(ctx: HttpContextContract) {
+		return adaptRoute(makeHealtInsuranceUpdateComposer(), ctx)
 	}
 
 	async destroy({ params }) {
-		const healthInsurances = await HealthInsurance.where({
-			_id: params.id,
-		}).firstOrFail()
-		await healthInsurances.delete()
+		const healthInsurances = await HealthInsurance.findByIdAndDelete(params.id)
+
+		return healthInsurances
 	}
 }
 

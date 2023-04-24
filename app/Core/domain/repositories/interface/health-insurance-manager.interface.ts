@@ -6,6 +6,7 @@ export interface HealthInsuranceManagerInterface {
 	findAllByUnityId: (unity_id: string) => PromiseEither<AbstractError, any[]>
 	findAllByName: (name: string, unity_id: string) => PromiseEither<AbstractError, any[]>
 	findById: (id: string) => PromiseEither<AbstractError, any>
-	update: (id: string, entity: Entity) => PromiseEither<AbstractError, any>
+	update: (id: string, entity: Entity) => PromiseEither<AbstractError, Entity>
 	delete: (id: string) => PromiseEither<AbstractError, any>
+	create: (entity: Entity) => PromiseEither<AbstractError, Entity>
 }
