@@ -12,7 +12,7 @@ export class FindAllHealthInsuranceByNameUseCase
 	public async execute({
 		name,
 		unity_id,
-	}: OptsQueryDefault): PromiseEither<AbstractError, any[]> {
+	}: Record<keyof OptsQueryDefault, string>): PromiseEither<AbstractError, any[]> {
 		const healthsOrErr = await this.manager.findAllByName(name, unity_id)
 
 		return healthsOrErr

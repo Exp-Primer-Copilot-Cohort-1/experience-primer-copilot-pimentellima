@@ -1,4 +1,5 @@
 export interface OptsQueryDefault {
-	name?: string;
-	unity_id: string;
+	id?: string
+	name?: string
+	unity_id: string
 }

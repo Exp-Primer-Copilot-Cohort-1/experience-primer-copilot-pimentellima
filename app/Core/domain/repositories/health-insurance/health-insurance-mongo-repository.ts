@@ -1,7 +1,10 @@
+import { isValidObjectId } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import HealthInsurance from 'App/Models/HealthInsurance'
+import { Entity } from '../../entities/abstract/entity.abstract'
 import { OptsQuery } from '../../entities/helpers/opts-query'
+import { HealthInsuranceNotFoundError } from '../../errors/health-insurance-not-found'
 import { MissingParamsError } from '../../errors/missing-params'
 import { HealthInsuranceManagerInterface } from '../interface/health-insurance-manager.interface'
 
@@ -47,5 +50,40 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 			.exec()
 
 		return right(healthInsurances)
+	}
+
+	async findById(id: string): PromiseEither<AbstractError, any> {
+		if (!isValidObjectId(id)) {
+			return left(new HealthInsuranceNotFoundError())
+		}
+
+		const healthInsurance = await HealthInsurance.findById(id)
+
+		if (!healthInsurance) {
+			return left(new HealthInsuranceNotFoundError())
+		}
+
+		return right(healthInsurance)
+	}
+
+	async update(id: string, entity: Entity): PromiseEither<AbstractError, any> {
+		if (!isValidObjectId(id)) {
+			return left(new HealthInsuranceNotFoundError())
+		}
+
+		const healthInsurance = await HealthInsurance.findByIdAndUpdate(
+			id,
+			entity.params(),
+		)
+
+		if (!healthInsurance) {
+			return left(new HealthInsuranceNotFoundError())
+		}
+
+		return right(healthInsurance)
+	}
+
+	async delete(id: string): PromiseEither<AbstractError, any> {
+		return right({})
 	}
 }
