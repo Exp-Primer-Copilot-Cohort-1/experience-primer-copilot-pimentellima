@@ -25,6 +25,7 @@ import { adaptRoute } from "App/Core/adapters";
 import { makeFindAllActivitiesComposer } from "App/Core/composers/activities/make-find-all-activities-composer";
 import { makeUpdateActivityComposer } from "App/Core/composers/activities/make-update-activity-composer";
 import { makeFindActivitiesByProfComposer } from "App/Core/composers/activities/make-find-activity-by-prof-composer";
+import { makeFindActivityByClientComposer } from "App/Core/composers/activities/make-find-activity-by-client-composer";
 
 class ActivityController {
 	async index(ctx: HttpContextContract) {
@@ -39,15 +40,10 @@ class ActivityController {
 		});
 	}
 
-	async indexByClient({ params }) {
-		const activy = await Activity.where({
-			"client.value": params.id,
-			status: "finished",
-		})
-			.sort("-date")
-			.fetch();
-
-		return activy;
+	async findActivitiesByClient(ctx: HttpContextContract) {
+		return adaptRoute(makeFindActivityByClientComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id
+		});
 	}
 
 	async store({ request, auth }) {

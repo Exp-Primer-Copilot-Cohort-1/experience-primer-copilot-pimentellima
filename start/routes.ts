@@ -135,7 +135,7 @@ Route.group(() => {
 	Route.get('activities', 'ActivityController.index')
 	Route.put('activity/:id', 'ActivityController.update')
 	Route.get('activities/prof/:prof_id', 'ActivityController.findActivitiesByProf')
-	Route.get('activities-client/:id', 'ActivityController.indexByClient')
+	Route.get('activities-client/:client_id', 'ActivityController.findActivitiesByClient')
 	Route.delete('activity/:id', 'ActivityController.destroy')
 	Route.post('activity', 'ActivityController.store')
 	Route.post('activity-pay', 'ActivityController.payment')

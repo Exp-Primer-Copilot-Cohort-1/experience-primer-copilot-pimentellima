@@ -41,6 +41,21 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
         return right(activities);
     }
 
+    async findActivitiesByClient (unity_id: string, client_id: string) : PromiseEither<AbstractError, ActivityEntity[]> {
+        if(!unity_id) return left(new MissingParamsError('unity id'));
+        if(!client_id) return left(new MissingParamsError('client id'));
+        
+        const data = await Activity.find({ unity_id, client_id });
+        const activities = await Promise.all(data.map(async item => {
+            const activityOrErr = await ActivityEntity.build(item);
+            if(activityOrErr.isLeft()) {
+                return {} as ActivityEntity;
+            }
+            return activityOrErr.extract();
+        }))
+        return right(activities);
+    }
+
     async updateActivity (params: IActivity) : PromiseEither<AbstractError, ActivityEntity> {
         if(!params._id) return left(new MissingParamsError('id'));
         const oldActivity = await Activity.findOne({ 
