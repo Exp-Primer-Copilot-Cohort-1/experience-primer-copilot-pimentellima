@@ -8,4 +8,6 @@ export interface ActivitiesManagerInterface {
 	updateActivity: (params: IActivity) => PromiseEither<AbstractError, Activity>;
 	findActivitiesByProf : (unity_id: string, prof_id: string) => PromiseEither<AbstractError, Activity[]>;
 	findActivitiesByClient: (unity_id: string, client_id: string) => PromiseEither<AbstractError, Activity[]>;
+	findActivityById: (id: string) => PromiseEither<AbstractError, Activity>;
+	findAndDeleteActivityById: (id: string) => PromiseEither<AbstractError, Activity>;
 }

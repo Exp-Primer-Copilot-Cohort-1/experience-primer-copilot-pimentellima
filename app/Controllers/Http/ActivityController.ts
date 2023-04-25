@@ -26,6 +26,8 @@ import { makeFindAllActivitiesComposer } from "App/Core/composers/activities/mak
 import { makeUpdateActivityComposer } from "App/Core/composers/activities/make-update-activity-composer";
 import { makeFindActivitiesByProfComposer } from "App/Core/composers/activities/make-find-activity-by-prof-composer";
 import { makeFindActivityByClientComposer } from "App/Core/composers/activities/make-find-activity-by-client-composer";
+import { makeFindActivityByIdComposer } from "App/Core/composers/activities/make-find-activity-by-id-composer";
+import { makeFindAndDeleteActivityByIdComposer } from "App/Core/composers/activities/make-find-and-delete-activity-by-id-composer";
 
 class ActivityController {
 	async index(ctx: HttpContextContract) {
@@ -353,17 +355,12 @@ class ActivityController {
 		return false;
 	}
 
-	async show({ params }) {
-		const activy = await Activity.where({ _id: params.id })
-			.with("user")
-			.firstOrFail();
-
-		return activy;
+	async show(ctx: HttpContextContract) {
+		return adaptRoute(makeFindActivityByIdComposer(), ctx);
 	}
 
-	async destroy({ params }) {
-		const activy = await Activity.where({ _id: params.id }).firstOrFail();
-		await activy.delete();
+	async destroy(ctx: HttpContextContract) {
+		return adaptRoute(makeFindAndDeleteActivityByIdComposer(), ctx)
 	}
 
 	async payment({ request, auth }) {
