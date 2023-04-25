@@ -6,75 +6,45 @@
 /* eslint-disable no-console */
 /* eslint-disable no-underscore-dangle */
 
-'use strict';
+"use strict";
 
-const mongoose = require('mongoose');
-const moment = require('moment');
-const { format, parseISO, subYears } = require('date-fns');
+const mongoose = require("mongoose");
+const moment = require("moment");
+const { format, parseISO, subYears } = require("date-fns");
 
-const ActivityEntity = require('../activity-entity');
+const ActivityEntity = require("../activity-entity");
 
-import Activity from 'App/Models/Activity';
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
-import ActivityLog from 'App/Models/ActivityLog';
-import User from 'App/Models/User';
-import PaymentActivity from 'App/Models/PaymentActivity';
-import ActivityPayMonth from 'App/Models/ActivityPayMonth';
-import ActivityStock from 'App/Models/ActivityStock';
-import { adaptRoute } from 'App/Core/adapters';
-import { makeFindActivityByUnityIdComposer } from 'App/Core/composers/activities/make-find-activity-by-unity-id-composer';
-import { makeUpdateActivityComposer } from 'App/Core/composers/activities/make-update-activity-composer';
-
+import Activity from "App/Models/Activity";
+import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
+import ActivityLog from "App/Models/ActivityLog";
+import User from "App/Models/User";
+import PaymentActivity from "App/Models/PaymentActivity";
+import ActivityPayMonth from "App/Models/ActivityPayMonth";
+import ActivityStock from "App/Models/ActivityStock";
+import { adaptRoute } from "App/Core/adapters";
+import { makeFindAllActivitiesComposer } from "App/Core/composers/activities/make-find-all-activities-composer";
+import { makeUpdateActivityComposer } from "App/Core/composers/activities/make-update-activity-composer";
+import { makeFindActivitiesByProfComposer } from "App/Core/composers/activities/make-find-activity-by-prof-composer";
 
 class ActivityController {
-  async findAllActivitiesByUnity(ctx: HttpContextContract) {
-    const userLogged = ctx.auth.user;
+	async index(ctx: HttpContextContract) {
+		return adaptRoute(makeFindAllActivitiesComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		});
+	}
 
-    return adaptRoute(makeFindActivityByUnityIdComposer(), ctx, { unity_id: userLogged?.unity_id });
- 
-  }
-
-  async index({ auth }) {
-    const userLogged = auth.user;
-    try {
-      if (userLogged.type === 'admin' || userLogged.type === 'admin_prof') {
-        const activities = Activity.where({
-          unity_id: userLogged.unity_id,
-        })
-          .with('user')
-          .fetch();
-        return activities;
-      }
-      if (userLogged.type === 'sec') {
-        const activities = Activity.where({
-          unity_id: userLogged.unity_id,
-        })
-          .with('user')
-          .fetch();
-        return activities;
-      }
-      if (userLogged.type === 'prof' || userLogged.type === 'prof') {
-        const activities = Activity.where({
-          unity_id: userLogged.unity_id,
-          user_id: userLogged._id,
-        })
-          .sort('-created_at')
-          .with('user')
-          .fetch();
-        return activities;
-      }
-      return [];
-    } catch (err) {
-      return false;
-    }
-  }
+	async findActivitiesByProf(ctx: HttpContextContract) {
+		return adaptRoute(makeFindActivitiesByProfComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		});
+	}
 
 	async indexByClient({ params }) {
 		const activy = await Activity.where({
-			'client.value': params.id,
-			'status': 'finished',
+			"client.value": params.id,
+			status: "finished",
 		})
-			.sort('-date')
+			.sort("-date")
 			.fetch();
 
 		return activy;
@@ -83,26 +53,26 @@ class ActivityController {
 	async store({ request, auth }) {
 		const userLogged = auth.user;
 		const data = request.only([
-			'date',
-			'description',
-			'hour_start',
-			'hour_end',
-			'status',
-			'schedule_block',
-			'schedule',
-			'procedures',
-			'client',
-			'obs',
-			'prof',
-			'partner',
-			'phone',
-			'all_day',
-			'dates',
-			'is_recorrent',
-			'is_recorrent_quantity',
-			'is_recorrent_now',
-			'is_recorrent_quantity_now',
-			'health_insurance',
+			"date",
+			"description",
+			"hour_start",
+			"hour_end",
+			"status",
+			"schedule_block",
+			"schedule",
+			"procedures",
+			"client",
+			"obs",
+			"prof",
+			"partner",
+			"phone",
+			"all_day",
+			"dates",
+			"is_recorrent",
+			"is_recorrent_quantity",
+			"is_recorrent_now",
+			"is_recorrent_quantity_now",
+			"health_insurance",
 		]);
 		try {
 			const isRecorrentANDdayMarked =
@@ -116,21 +86,21 @@ class ActivityController {
 					_id: data.prof.value,
 				}).first();
 				for (const dat of data.dates) {
-					const dateAc = format(new Date(dat.date), 'yyyy-MM-dd');
+					const dateAc = format(new Date(dat.date), "yyyy-MM-dd");
 					const activityNew = await Activity.create({
 						...data,
 						date: new Date(
-							dateAc.split('-')[0],
-							parseInt(dateAc.split('-')[1], 10) - 1,
-							parseInt(dateAc.split('-')[2], 10),
+							dateAc.split("-")[0],
+							parseInt(dateAc.split("-")[1], 10) - 1,
+							parseInt(dateAc.split("-")[2], 10),
 							0,
-							0,
+							0
 						),
 						active: true,
 						unity_id: userLogged.unity_id,
 						user_id: mongoose.Types.ObjectId(userData._id),
 						prof_id: mongoose.Types.ObjectId(data.prof.value),
-						scheduled: 'scheduled',
+						scheduled: "scheduled",
 					});
 					activitiesArr.push(activityNew);
 				}
@@ -139,7 +109,7 @@ class ActivityController {
 				const actStock = await ActivityStock.where({
 					user_id: mongoose.Types.ObjectId(data.prof.value),
 				})
-					.with('activity')
+					.with("activity")
 					.fetch();
 				const actStockJSON = actStock.toJSON();
 				if (actStockJSON && actStockJSON.length) {
@@ -152,10 +122,10 @@ class ActivityController {
 					if (activityFinded) {
 						const acStock = await ActivityStock.where({
 							activity_id: mongoose.Types.ObjectId(
-								activityFinded.activity_id,
+								activityFinded.activity_id
 							),
 						})
-							.with('activity')
+							.with("activity")
 							.first();
 
 						const QUANTIFICATION_RECORRENT_NOW =
@@ -173,7 +143,7 @@ class ActivityController {
 								unity_id: userLogged.unity_id,
 								user_id: mongoose.Types.ObjectId(userData._id),
 								activity_id: mongoose.Types.ObjectId(
-									activityFinded.activity_id,
+									activityFinded.activity_id
 								),
 								quantity,
 								quantity_total: acStock.quantity_total,
@@ -186,7 +156,7 @@ class ActivityController {
 							unity_id: userLogged.unity_id,
 							user_id: mongoose.Types.ObjectId(userData._id),
 							activity_id: mongoose.Types.ObjectId(
-								activitiesArr[0]._id,
+								activitiesArr[0]._id
 							),
 							quantity:
 								data.is_recorrent_quantity -
@@ -202,7 +172,7 @@ class ActivityController {
 						unity_id: userLogged.unity_id,
 						user_id: mongoose.Types.ObjectId(userData._id),
 						activity_id: mongoose.Types.ObjectId(
-							activitiesArr[0]._id,
+							activitiesArr[0]._id
 						),
 						quantity:
 							parseInt(data.is_recorrent_quantity, 10) -
@@ -233,30 +203,30 @@ class ActivityController {
 		}
 	  } */
 			if (data.is_recorrent && !data.is_recorrent_now) {
-				const dateAc = format(parseISO(data.date), 'yyyy-MM-dd');
+				const dateAc = format(parseISO(data.date), "yyyy-MM-dd");
 				data.date = new Date(
-					dateAc.split('-')[0],
-					parseInt(dateAc.split('-')[1], 10) - 1,
-					parseInt(dateAc.split('-')[2], 10),
+					dateAc.split("-")[0],
+					parseInt(dateAc.split("-")[1], 10) - 1,
+					parseInt(dateAc.split("-")[2], 10),
 					0,
-					0,
+					0
 				);
 				const activity = await Activity.create({
 					...data,
 					date: subYears(
 						new Date(
-							dateAc.split('-')[0],
-							parseInt(dateAc.split('-')[1], 10) - 1,
-							parseInt(dateAc.split('-')[2], 10),
+							dateAc.split("-")[0],
+							parseInt(dateAc.split("-")[1], 10) - 1,
+							parseInt(dateAc.split("-")[2], 10),
 							0,
-							0,
+							0
 						),
-						20,
+						20
 					),
 					active: true,
 					unity_id: userLogged.unity_id,
 					user_id: mongoose.Types.ObjectId(userData._id),
-					scheduled: 'not_count',
+					scheduled: "not_count",
 					// scheduled: 'scheduled',
 					prof_id: mongoose.Types.ObjectId(data.prof.value),
 				});
@@ -264,7 +234,7 @@ class ActivityController {
 				const actStock = await ActivityStock.where({
 					user_id: mongoose.Types.ObjectId(data.prof.value),
 				})
-					.with('activity')
+					.with("activity")
 					.fetch();
 				const actStockJSON = actStock.toJSON();
 				if (actStockJSON && actStockJSON.length) {
@@ -277,7 +247,7 @@ class ActivityController {
 					if (activityFinded) {
 						const acStck = await ActivityStock.where({
 							activity_id: mongoose.Types.ObjectId(
-								activityFinded.activity_id,
+								activityFinded.activity_id
 							),
 						}).first();
 						const quantity =
@@ -289,7 +259,7 @@ class ActivityController {
 								unity_id: userLogged.unity_id,
 								user_id: mongoose.Types.ObjectId(userData._id),
 								activity_id: mongoose.Types.ObjectId(
-									activityFinded.activity_id,
+									activityFinded.activity_id
 								),
 								quantity_total: acStck.quantity_total,
 								quantity_atual: quantity,
@@ -319,7 +289,7 @@ class ActivityController {
 				}
 
 				const obj = {
-					title: 'Nova atividade',
+					title: "Nova atividade",
 				};
 				await ActivityLog.create({
 					...obj,
@@ -335,7 +305,7 @@ class ActivityController {
 				active: true,
 				unity_id: userLogged.unity_id,
 				user_id: mongoose.Types.ObjectId(userData._id),
-				scheduled: 'scheduled',
+				scheduled: "scheduled",
 				prof_id: mongoose.Types.ObjectId(data.prof.value),
 			});
 
@@ -346,19 +316,19 @@ class ActivityController {
 		}
 	}
 
-  async update(ctx: HttpContextContract) {
-    return adaptRoute(makeUpdateActivityComposer(), ctx );
-  }
+	async update(ctx: HttpContextContract) {
+		return adaptRoute(makeUpdateActivityComposer(), ctx);
+	}
 
 	async updateStatus({ params, request }) {
 		const activy = await Activity.where({ _id: params.id }).firstOrFail();
 		if (activy) {
 			const data = request.only([
-				'started_at',
-				'finished_at',
-				'scheduled',
-				'time',
-				'status',
+				"started_at",
+				"finished_at",
+				"scheduled",
+				"time",
+				"status",
 			]);
 			activy.merge({
 				...data,
@@ -373,11 +343,11 @@ class ActivityController {
 		const activy = await Activity.where({ _id: params.id }).firstOrFail();
 		if (
 			activy &&
-			(activy.status === 'finished' ||
-				activy.status === 'canceled' ||
-				activy.status === 'canceled_client')
+			(activy.status === "finished" ||
+				activy.status === "canceled" ||
+				activy.status === "canceled_client")
 		) {
-			const data = request.only(['status']);
+			const data = request.only(["status"]);
 			activy.merge({
 				...data,
 			});
@@ -389,7 +359,7 @@ class ActivityController {
 
 	async show({ params }) {
 		const activy = await Activity.where({ _id: params.id })
-			.with('user')
+			.with("user")
 			.firstOrFail();
 
 		return activy;
@@ -404,13 +374,13 @@ class ActivityController {
 		// PaymentActivity
 		const userLogged = auth.user;
 		const data = request.only([
-			'activity_id',
-			'client',
-			'prof',
-			'total',
-			'type_payment',
-			'months',
-			'date_pay',
+			"activity_id",
+			"client",
+			"prof",
+			"total",
+			"type_payment",
+			"months",
+			"date_pay",
 		]);
 
 		const activityAlter = await Activity.where({
@@ -426,18 +396,18 @@ class ActivityController {
 				for (const proc of activityAlter.procedures) {
 					const newProc = {
 						...proc,
-						status: 'PAGO',
+						status: "PAGO",
 					};
 					proceduresNew.push(newProc);
 				}
 				activityAlter.merge({ procedures: proceduresNew });
 				await activityAlter.save();
 			} catch (er) {
-				console.log('linha 631');
+				console.log("linha 631");
 			}
 		}
 
-		if (data.type_payment === 'credit_card' && data.months > 1) {
+		if (data.type_payment === "credit_card" && data.months > 1) {
 			const value = data.total / data.months;
 			const arrPay = [];
 			for (let i = 1; i <= data.months; i++) {
@@ -445,7 +415,7 @@ class ActivityController {
 					activity_id: mongoose.Types.ObjectId(data.activity_id),
 					client: data.client,
 					value,
-					date: moment(data.date_pay).add(i - 1, 'M'),
+					date: moment(data.date_pay).add(i - 1, "M"),
 				};
 				arrPay.push(obj);
 			}

@@ -8,7 +8,7 @@ type ActivityProps = {
 	unity_id: string;
 };
 
-export class FindAllActivitiesByUnityUseCase
+export class FindAllActivitiesUseCase
 	implements UseCase<ActivityProps, Activity[]>
 {
 	constructor(
@@ -20,7 +20,7 @@ export class FindAllActivitiesByUnityUseCase
 	): PromiseEither<AbstractError, Activity[]> {
 
 		const activitiesOrErr =
-			await this.activitiesManager.findAllActivitiesByUnityId(
+			await this.activitiesManager.findAllActivities(
 				params?.unity_id
 			);
 

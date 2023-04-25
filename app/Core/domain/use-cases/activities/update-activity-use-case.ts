@@ -13,11 +13,11 @@ export class UpdateActivityUseCase
 	) {}
 
 	public async execute(
-		activity: IActivity
+		params: IActivity
 	): PromiseEither<AbstractError, Activity> {
 
 		const updatedActivityOrErr =
-			await this.activitiesManager.updateActivity(activity);
+			await this.activitiesManager.updateActivity(params);
 
 		if (updatedActivityOrErr.isLeft()) return left(updatedActivityOrErr.extract());
 		const updatedActivity = updatedActivityOrErr.extract();

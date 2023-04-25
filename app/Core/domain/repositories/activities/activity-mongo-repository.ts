@@ -12,10 +12,25 @@ import { IActivity } from 'Types/IActivities';
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() { }
 
-    async findAllActivitiesByUnityId (unity_id: string) : PromiseEither<AbstractError, ActivityEntity[]> {
+    async findAllActivities (unity_id: string) : PromiseEither<AbstractError, ActivityEntity[]> {
         if(!unity_id) return left(new MissingParamsError('unity id'));
 
         const data = await Activity.find({ unity_id });
+        const activities = await Promise.all(data.map(async item => {
+            const activityOrErr = await ActivityEntity.build(item);
+            if(activityOrErr.isLeft()) {
+                return {} as ActivityEntity;
+            }
+            return activityOrErr.extract();
+        }))
+        return right(activities);
+    }
+
+    async findActivitiesByProf (unity_id: string, prof_id: string) : PromiseEither<AbstractError, ActivityEntity[]> {
+        if(!unity_id) return left(new MissingParamsError('unity id'));
+        if(!prof_id) return left(new MissingParamsError('prof id'));
+        
+        const data = await Activity.find({ unity_id, prof_id });
         const activities = await Promise.all(data.map(async item => {
             const activityOrErr = await ActivityEntity.build(item);
             if(activityOrErr.isLeft()) {
@@ -42,4 +57,5 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
         await Activity.findOneAndUpdate({ _id: params._id }, newActivity.params());
         return right(newActivity);
     }
+
 }

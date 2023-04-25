@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { ActivityInMemoryRepository } from '../../repositories/activities/activity-in-memory-repository';
 
-import { FindAllActivitiesByUnityUseCase } from './find-all-activities-by-unity-use-case';
+import { FindAllActivitiesUseCase } from './find-all-activities-use-case';
 import { MissingParamsError } from '../../errors/missing-params';
 
 const makeSut = () => {
-	const sut = new FindAllActivitiesByUnityUseCase(new ActivityInMemoryRepository());
+	const sut = new FindAllActivitiesUseCase(new ActivityInMemoryRepository());
 
 	return { sut };
 };

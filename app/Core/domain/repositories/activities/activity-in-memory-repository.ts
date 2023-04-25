@@ -8,7 +8,7 @@ export class ActivityInMemoryRepository implements ActivitiesManagerInterface {
 	private items: Activity[] = [];
 
 	constructor() { }
-	async findAllActivitiesByUnityId (unity_id: string): PromiseEither<AbstractError, Activity[]> {
+	async findAllActivities (unity_id: string): PromiseEither<AbstractError, Activity[]> {
         if(!unity_id) return left(new MissingParamsError('unity id'));
 
 		return right(this.items.filter(item => item.unity_id.toString() === unity_id));
