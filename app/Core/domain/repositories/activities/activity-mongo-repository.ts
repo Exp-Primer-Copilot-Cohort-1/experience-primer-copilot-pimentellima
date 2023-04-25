@@ -7,7 +7,6 @@ import {
     ActivitiesManagerInterface
 } from '../interface/activities-manager.interface';
 import { ActivityNotFoundError } from '../../errors/activity-not-found,';
-import { STATUS } from 'App/Helpers';
 import { IActivity } from 'Types/IActivities';
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
@@ -29,14 +28,18 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
     async updateActivity (params: IActivity) : PromiseEither<AbstractError, ActivityEntity> {
         if(!params._id) return left(new MissingParamsError('id'));
-        const oldActivity = await Activity.findOne({ _id: params._id });
+        const oldActivity = await Activity.findOne({ 
+            _id: params._id 
+        });
         if(!oldActivity) return left(new ActivityNotFoundError());
+        const newActivityOrErr = await ActivityEntity.build({ 
+            ...oldActivity.toObject(),
+            ...params
+        });
+        if(newActivityOrErr.isLeft()) return left(new AbstractError("Invalid params", 400));
+        const newActivity = newActivityOrErr.extract();
         
-        const update = {
-            ...params, 
-            status: params.status !== oldActivity.status ? STATUS.RESCHEDULED : oldActivity.status 
-        }
-        const updatedActivity = await Activity.findOneAndUpdate({ _id: params._id }, update, { new: true });
-        return right(updatedActivity);
+        await Activity.findOneAndUpdate({ _id: params._id }, newActivity.params());
+        return right(newActivity);
     }
 }

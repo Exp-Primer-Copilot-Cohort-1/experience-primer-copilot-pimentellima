@@ -11,7 +11,12 @@ export const adaptRoute = async (
 ) => {
 	try {
 		const httpRequest: HttpRequest = {
-			body: { ...request.body(), ...customParams, ...params },
+			body: {
+				...request.body(),
+				...request.qs(),
+				...customParams,
+				...params,
+			},
 		};
 
 		const { body, statusCode } = await controller.handle(httpRequest);

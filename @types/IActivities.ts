@@ -1,46 +1,30 @@
-import { Document, ObjectId } from '@ioc:Mongoose';
-import { AppointmentStatus, PaymentStatus, STATUS } from '../app/Helpers';
+import { ObjectId } from '@ioc:Mongoose';
+import { AppointmentStatus, STATUS } from '../app/Helpers';
+import { IProcedure } from './IProcedure';
+import { IClient } from './IClient';
+import { IProf } from "Types/IProf";
 
-export interface IActivity extends Document {
+export interface IActivity
+ {
 	_id: ObjectId;
 	date: Date;
 	hour_start: Date;
 	hour_end: Date;
 	status: STATUS;
 	schedule_block: boolean;
-	procedures: {
-		value: string;
-		label: string;
-		minutes: number;
-		color: string;
-		val: number;
-		health_insurance?: {
-			value: string;
-			label: string;
-			price: number;
-		};
-		status: PaymentStatus;
-	}[];
-	client: {
-		value: string;
-		label: string;
-		celphone: string | null;
-		email: string | null;
-		partner: string | null;
-	};
-	obs: string | null;
-	prof: {
-		value: string;
-		label: string;
-	};
-	phone: string | null;
+	procedures: IProcedure[];
+	client_id: string | ObjectId,
+	client: IClient;
+	obs?: string;
+	prof: IProf;
+	phone?: string;
 	all_day: boolean;
 	is_recorrent: boolean;
 	active: boolean;
-	unity_id: ObjectId;
-	user_id?: ObjectId;
+	unity_id: string | ObjectId;
+	user_id?: string | ObjectId;
 	scheduled: AppointmentStatus;
-	prof_id: ObjectId;
+	prof_id: string | ObjectId;
 	created_at: Date;
 	updated_at: Date;
 }

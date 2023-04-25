@@ -4,7 +4,7 @@ export interface InterfaceError {
 	cause?: Error;
 }
 
-export abstract class AbstractError extends Error implements InterfaceError {
+export class AbstractError extends Error implements InterfaceError {
 	constructor(
 		message: string,
 		public readonly statusCode: number,

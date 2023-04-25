@@ -5,7 +5,7 @@ import User from 'App/Models/User';
 import UserLog from 'App/Models/UserLog';
 // const Mail = use('Mail');
 
-const SELECTS = require('../../SelectsQuery/user-select');
+const SELECTS = require('../user-select');
 
 const mongoose = require('mongoose');
 

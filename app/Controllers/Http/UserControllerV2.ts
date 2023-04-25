@@ -3,7 +3,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import User from 'App/Models/User';
 
-const SELECTS = require('../../SelectsQuery/user-select');
+const SELECTS = require('../user-select');
 
 const fetchUserByType = async (type, unityId, active = true) =>
 	await User.where({

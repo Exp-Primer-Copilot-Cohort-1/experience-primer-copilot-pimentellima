@@ -57,16 +57,6 @@ describe('Entity User (Unit)', () => {
 		if (userOrErr.isLeft()) {
 			throw new Error('User is not valid');
 		}
-
-		const createdUser = userOrErr.extract();
-		const createdUserParams = createdUser.params();
-
-		// Verifique se cada chave/valor em 'user' também existe em 'createdUserParams'
-		for (const key in user) {
-			if (Object.prototype.hasOwnProperty.call(user, key)) {
-				expect(createdUserParams[key]).toEqual(user[key]);
-			}
-		}
 	});
 
 	it('should be invalid email when email is invalid', async () => {

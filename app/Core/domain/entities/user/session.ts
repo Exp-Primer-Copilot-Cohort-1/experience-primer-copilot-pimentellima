@@ -1,58 +1,58 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { AbstractError } from 'App/Core/errors/error.interface';
-import { PromiseEither, left, right } from 'App/Core/shared';
-import { IUser } from 'Types/IUser';
-import { UserNotValidError } from '../../errors/user-not-valid';
-import { SystemUser } from '../abstract/system-user.abstract';
-import DaysOfTrade from '../helpers/days-of-trade';
+import { AbstractError } from 'App/Core/errors/error.interface'
+import { PromiseEither, left, right } from 'App/Core/shared'
+import { IUser } from 'Types/IUser'
+import { UserNotValidError } from '../../errors/user-not-valid'
+import { SystemUser } from '../abstract/system-user.abstract'
+import DaysOfTrade from '../helpers/days-of-trade'
 
-class SesssionUser extends SystemUser {
-	public due_date: string;
-	public schedule_obs: string;
-	public show_lack: boolean;
-	public rememberMeToken?: string;
+export class SessionUser extends SystemUser {
+	private _due_date: string
+	private _schedule_obs: string
+	private _show_lack: boolean
+	private _rememberMeToken?: string
 
-	constructor() {
-		super();
+	public get due_date(): string {
+		return this._due_date
+	}
+
+	public get schedule_obs(): string {
+		return this._schedule_obs
+	}
+
+	public get show_lack(): boolean {
+		return this._show_lack
+	}
+
+	public get rememberMeToken(): string | undefined {
+		return this._rememberMeToken
 	}
 
 	public defineDueDate(due_date: string): this {
-		this.due_date = due_date;
-		return this;
+		this._due_date = due_date
+		return this
 	}
 
 	public defineScheduleObs(schedule_obs: string): this {
-		this.schedule_obs = schedule_obs;
-		return this;
+		this._schedule_obs = schedule_obs
+		return this
 	}
 
 	public defineShowLack(show_lack: boolean): this {
-		this.show_lack = show_lack;
-		return this;
+		this._show_lack = show_lack
+		return this
 	}
 
 	public defineRememberMeToken(rememberMeToken?: string): this {
-		this.rememberMeToken = rememberMeToken;
-		return this;
+		this._rememberMeToken = rememberMeToken
+		return this
 	}
 
-	public params(): IUser {
-		const { dayOfTrade, ...user } = Object.assign({}, this);
-
-		return {
-			...user,
-			...dayOfTrade.params(),
-			email: this.email,
-			document: this.document,
-		};
-	}
-
-	public static async build(
-		data: IUser,
-	): PromiseEither<AbstractError, SesssionUser> {
+	public static async build(data: IUser): PromiseEither<AbstractError, SessionUser> {
 		try {
-			const daysOfTrade = DaysOfTrade.build(data);
-			const user = new SesssionUser()
+			const daysOfTradeOrErr = await DaysOfTrade.build(data)
+
+			const user = new SessionUser()
 				.defineId(data._id)
 				.defineName(data.name)
 				.defineEmail(data.email)
@@ -61,7 +61,7 @@ class SesssionUser extends SystemUser {
 				.defineAvatar(data.avatar)
 				.defineCreatedAt(data.created_at)
 				.defineDueDate(data.due_date)
-				.defineDayOfTrade(daysOfTrade)
+				.defineDayOfTrade(daysOfTradeOrErr.extract() as DaysOfTrade)
 				.defineDocument(data.document)
 				.defineCelphone(data.celphone)
 				.defineScheduleObs(data.schedule_obs)
@@ -69,13 +69,13 @@ class SesssionUser extends SystemUser {
 				.defineType(data.type)
 				.defineUnityId(data.unity_id.toString())
 				.defineUpdatedAt(data.updated_at)
-				.defineRememberMeToken(data.rememberMeToken);
+				.defineRememberMeToken(data.rememberMeToken)
 
-			return right(user);
+			return right(user)
 		} catch (error) {
-			return left(new UserNotValidError(error));
+			return left(new UserNotValidError(error))
 		}
 	}
 }
 
-export default SesssionUser;
+export default SessionUser
