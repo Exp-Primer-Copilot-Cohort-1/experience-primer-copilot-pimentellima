@@ -27,7 +27,7 @@ const AccountSchema = new Schema<IAccount>(
 		unity_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
-			ref: 'Unity',
+			ref: 'unities',
 		},
 		description: String,
 		status: {

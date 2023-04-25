@@ -4,8 +4,10 @@ import { ControllerGeneric } from 'App/Core/adapters/controller/helpers';
 import { ActivityMongoRepository } from 'App/Core/domain/repositories/activities/activity-mongo-repository';
 import { FindAllActivitiesByUnityUseCase } from 'App/Core/domain/use-cases';
 
-export const makeActivityFindByUnityIdComposer = (auth: AuthContract): ControllerGeneric => {
+export const makeActivityFindByUnityIdComposer = (
+	auth: AuthContract,
+): ControllerGeneric => {
 	return new Controller(
-        new FindAllActivitiesByUnityUseCase(new ActivityMongoRepository(auth))
-    )
+		new FindAllActivitiesByUnityUseCase(new ActivityMongoRepository(auth)),
+	);
 };

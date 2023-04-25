@@ -9,11 +9,9 @@ import { PromiseEither, left, right } from 'App/Core/shared';
 import { IAdminUser } from 'Types/IAdminUser';
 import { UserAdminIsExistError } from '../../../errors/user-admin-is-exist';
 
-type CreatePasswordUseCase = UseCase<string, undefined, string>;
+type CreatePasswordUseCase = UseCase<string, string>;
 
-export class CreateUserAdminUseCase
-	implements UseCase<IAdminUser, undefined, AdminUser>
-{
+export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {
 	constructor(
 		private readonly unityManager: UnitiesManagerInterface,
 		private readonly adminManager: AdminManagerInterface,
@@ -22,7 +20,7 @@ export class CreateUserAdminUseCase
 
 	public async execute(
 		data: IAdminUser,
-	): PromiseEither<AbstractError, AdminUser> {
+	): PromiseEither<AbstractError, IAdminUser> {
 		const adminOrErr = await AdminUser.build(data);
 
 		if (adminOrErr.isLeft()) {
@@ -61,6 +59,6 @@ export class CreateUserAdminUseCase
 
 		admin.defineId(createUserOrErr.extract()._id);
 
-		return right(admin);
+		return right(admin.params());
 	}
 }

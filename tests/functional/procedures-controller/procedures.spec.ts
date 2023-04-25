@@ -11,7 +11,5 @@ test.group('Procedure Controller', () => {
 			.headers({ Authorization: `Bearer ${token.token}` });
 
 		response.assertStatus(200);
-
-		console.log(response.body());
 	});
 });

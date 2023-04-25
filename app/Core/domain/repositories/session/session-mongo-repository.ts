@@ -36,7 +36,7 @@ export class SessionRepository implements SessionManagerInterface {
 		};
 
 		return right({
-			user: sessionOrErr.extract(),
+			user: sessionOrErr.extract().params(),
 			token,
 		});
 	}

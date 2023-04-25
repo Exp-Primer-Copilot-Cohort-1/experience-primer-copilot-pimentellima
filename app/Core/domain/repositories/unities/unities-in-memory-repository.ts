@@ -1,6 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface';
 import { PromiseEither, left, right } from 'App/Core/shared/either';
 import { IUnity } from 'Types/IUnity';
+import { UnitNotFoundError } from '../../errors/unit-not-found';
 import { UnitiesManagerInterface } from '../interface/unities-manager.interface';
 
 export class UnitiesInMemoryRepository implements UnitiesManagerInterface {
@@ -16,7 +17,7 @@ export class UnitiesInMemoryRepository implements UnitiesManagerInterface {
 		const unity = this.items.find((item) => item._id === id);
 
 		if (!unity) {
-			return left(new AbstractError('Unidade não encontrada', 404));
+			return left(new UnitNotFoundError());
 		}
 
 		return right(unity);

@@ -2,38 +2,39 @@ import { AbstractError } from 'App/Core/errors/error.interface';
 import { PromiseEither, left, right } from 'App/Core/shared';
 import { IAdminUser } from 'Types/IAdminUser';
 import { SystemUser } from '../abstract/system-user.abstract';
+import DaysOfTrade from '../helpers/days-of-trade';
 
 class AdminUser extends SystemUser implements IAdminUser {
-	public is_company: boolean;
-	public type: 'admin' | 'admin_prof';
+	private _is_company: boolean;
+	protected _type: 'admin' | 'admin_prof';
 
 	private constructor() {
 		super();
 	}
 
+	public get type(): 'admin' | 'admin_prof' {
+		return this._type;
+	}
+
+	public get is_company(): boolean {
+		return this._is_company;
+	}
+
 	public defineType(type: 'admin' | 'admin_prof'): this {
-		this.type = type;
+		super.defineType(type);
 		return this;
 	}
 
 	public defineIsCompany(is_company: boolean = false): this {
-		this.is_company = is_company;
+		this._is_company = is_company;
 		return this;
-	}
-
-	public params(): AdminUser {
-		const admin = Object.assign({}, this);
-
-		return {
-			...admin,
-			email: this.email,
-			document: this.document,
-		};
 	}
 
 	public static async build(
 		admin: IAdminUser,
 	): PromiseEither<AbstractError, AdminUser> {
+		const dayOfTradeEntityOrErr = await DaysOfTrade.build(admin.dayOfTrade);
+
 		try {
 			return right(
 				new AdminUser()
@@ -47,7 +48,9 @@ class AdminUser extends SystemUser implements IAdminUser {
 					.definePassword(admin.password)
 					.defineUnityId(admin.unity_id)
 					.defineType(admin.type)
-					.defineDayOfTrade(admin.dayOfTrade)
+					.defineDayOfTrade(
+						dayOfTradeEntityOrErr.extract() as DaysOfTrade,
+					)
 					.defineActive(admin.active),
 			);
 		} catch (error) {

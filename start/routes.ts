@@ -86,6 +86,16 @@ Route.group(() => {
 }).middleware('auth');
 
 Route.group(() => {
+	Route.get('', 'HealthInsuranceController.index');
+	Route.get(':id', 'HealthInsuranceController.show');
+	Route.put(':id', 'HealthInsuranceController.update');
+	Route.delete(':id', 'HealthInsuranceController.destroy');
+	Route.post('', 'HealthInsuranceController.store');
+})
+	.prefix('health-insurance')
+	.middleware('auth');
+
+Route.group(() => {
 	Route.get('users', 'UserController.index');
 	Route.get('users-type', 'UserController.indexByType');
 	Route.post('users/client', 'ClientControllerV2.create');
@@ -153,12 +163,6 @@ Route.group(() => {
 	Route.put('partner/:id', 'PartnerController.update');
 	Route.delete('partner/:id', 'PartnerController.destroy');
 	Route.post('partner', 'PartnerController.store');
-
-	Route.get('health-insurance', 'HealthInsuranceController.index');
-	Route.get('health-insurance/:id', 'HealthInsuranceController.show');
-	Route.put('health-insurance/:id', 'HealthInsuranceController.update');
-	Route.delete('health-insurance/:id', 'HealthInsuranceController.destroy');
-	Route.post('health-insurance', 'HealthInsuranceController.store');
 
 	Route.get('procedure', 'ProcedureController.index');
 	Route.get('procedure/:id', 'ProcedureController.show');

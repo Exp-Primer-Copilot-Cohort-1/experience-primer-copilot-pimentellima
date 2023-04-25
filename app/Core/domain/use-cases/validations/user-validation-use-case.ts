@@ -4,9 +4,7 @@ import { AbstractUser } from '../../entities/abstract/user.abstract';
 
 type IsValid = boolean;
 
-export class UserValidationUseCase
-	implements UseCase<AbstractUser, undefined, IsValid>
-{
+export class UserValidationUseCase implements UseCase<AbstractUser, IsValid> {
 	constructor() { }
 
 	public async execute(user: AbstractUser): PromiseEither<Error, IsValid> {
