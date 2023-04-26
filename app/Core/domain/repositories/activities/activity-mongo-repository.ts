@@ -12,6 +12,17 @@ import { IActivity } from 'Types/IActivities';
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() { }
 
+    async createActivity (params: IActivity) : PromiseEither<AbstractError, ActivityEntity> {
+        const newActivityOrErr = await ActivityEntity.build({ 
+            ...params
+        });
+        if(newActivityOrErr.isLeft()) return left(new AbstractError("Invalid params", 400));
+        const newActivity = newActivityOrErr.extract();
+        
+        await Activity.create(newActivity.params());
+        return right(newActivity);
+    }
+
     async findActivityById (id: string) : PromiseEither<AbstractError, ActivityEntity> {
         if(!id) return left(new MissingParamsError('id'));
 
@@ -24,7 +35,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
         return right(activityOrErr.extract());
     }
 
-    async findAndDeleteActivityById (id: string) : PromiseEither<AbstractError, ActivityEntity> {
+    async deleteActivityById (id: string) : PromiseEither<AbstractError, ActivityEntity> {
         if(!id) return left(new MissingParamsError('id'));
 
         const item = await Activity.findByIdAndDelete(id);

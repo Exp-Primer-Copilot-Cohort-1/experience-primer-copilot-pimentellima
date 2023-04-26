@@ -3,29 +3,24 @@ import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import Activity from "../../entities/activities/activity";
+import { IActivity } from "Types/IActivities";
 
-type ActivityProps = {
-	id: string
-};
-
-export class FindAndDeleteActivityByIdUseCase
-	implements UseCase<ActivityProps, Activity>
+export class CreateActivityUseCase
+	implements UseCase<IActivity, Activity>
 {
 	constructor(
 		private readonly activitiesManager: ActivitiesManagerInterface
 	) {}
 
 	public async execute(
-		params: ActivityProps
+		params: IActivity
 	): PromiseEither<AbstractError, Activity> {
 
-		const activityOrErr =
-			await this.activitiesManager.findAndDeleteActivityById(
-                params.id
-			);
+		const newActivityOrErr =
+			await this.activitiesManager.createActivity(params);
 
-		if (activityOrErr.isLeft()) return left(activityOrErr.extract());
-		const activities = activityOrErr.extract();
-		return right(activities);
+		if (newActivityOrErr.isLeft()) return left(newActivityOrErr.extract());
+		const newActivity = newActivityOrErr.extract();
+		return right(newActivity);
 	}
 }

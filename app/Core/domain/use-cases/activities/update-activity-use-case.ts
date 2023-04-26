@@ -20,7 +20,7 @@ export class UpdateActivityUseCase
 			await this.activitiesManager.updateActivity(params);
 
 		if (updatedActivityOrErr.isLeft()) return left(updatedActivityOrErr.extract());
-		const updatedActivity = updatedActivityOrErr.extract();
-		return right(updatedActivity);
+		const activity = updatedActivityOrErr.extract();
+		return right(activity);
 	}
 }

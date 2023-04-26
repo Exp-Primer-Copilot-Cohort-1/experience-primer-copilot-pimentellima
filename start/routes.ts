@@ -34,7 +34,7 @@ Route.delete('unity/:id', 'UnityController.destroy')
 Route.put('unity/:id', 'UnityController.update')
 
 Route.put('activity-stts/:id', 'ActivityController.updateStatus')
-Route.get('activity/:id', 'ActivityController.show')
+Route.get('activity/:id', 'ActivityController.findActivityById')
 Route.put('activity-user/:id', 'ActivityController.updateStatusUser')
 
 Route.get('permissions-default', 'PermissionController.defaultPermissions')
@@ -131,13 +131,13 @@ Route.group(() => {
 
 	Route.get('activity-stock', 'ActivityStockController.index')
 
-	Route.get('activity', 'ActivityController.index')
-	Route.get('activities', 'ActivityController.index')
-	Route.put('activity/:id', 'ActivityController.update')
+	Route.get('activity', 'ActivityController.findAllActivities')
+	Route.get('activities', 'ActivityController.findAllActivities')
+	Route.put('activity/:id', 'ActivityController.updateActivity')
 	Route.get('activities/prof/:prof_id', 'ActivityController.findActivitiesByProf')
 	Route.get('activities-client/:client_id', 'ActivityController.findActivitiesByClient')
-	Route.delete('activity/:id', 'ActivityController.destroy')
-	Route.post('activity', 'ActivityController.store')
+	Route.delete('activity/:id', 'ActivityController.deleteActivityById')
+	Route.post('activity', 'ActivityController.createActivity')
 	Route.post('activity-pay', 'ActivityController.payment')
 
 	Route.get('activity-await', 'ActivityAwaitController.index')

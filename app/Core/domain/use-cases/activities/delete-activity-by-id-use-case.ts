@@ -8,7 +8,7 @@ type ActivityProps = {
 	id: string
 };
 
-export class FindActivityByIdUseCase
+export class DeleteActivityByIdUseCase
 	implements UseCase<ActivityProps, Activity>
 {
 	constructor(
@@ -20,7 +20,7 @@ export class FindActivityByIdUseCase
 	): PromiseEither<AbstractError, Activity> {
 
 		const activityOrErr =
-			await this.activitiesManager.findActivityById(
+			await this.activitiesManager.deleteActivityById(
                 params?.id
 			);
 
