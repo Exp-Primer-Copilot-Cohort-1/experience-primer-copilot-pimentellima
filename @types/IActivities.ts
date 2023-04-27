@@ -8,8 +8,8 @@ export interface IActivity
  {
 	_id: ObjectId;
 	date: Date;
-	hour_start: Date;
-	hour_end: Date;
+	hour_start: string;
+	hour_end: string;
 	status: STATUS;
 	schedule_block: boolean;
 	procedures: IProcedure[];

@@ -132,10 +132,9 @@ Route.group(() => {
 	Route.get('activity-stock', 'ActivityStockController.index')
 
 	Route.get('activity', 'ActivityController.findAllActivities')
-	Route.get('activities', 'ActivityController.findAllActivities')
-	Route.put('activity/:id', 'ActivityController.updateActivity')
-	Route.get('activities/prof/:prof_id', 'ActivityController.findActivitiesByProf')
-	Route.get('activities-client/:client_id', 'ActivityController.findActivitiesByClient')
+	Route.put('activity', 'ActivityController.updateActivity')
+	Route.get('activity/prof/:prof_id', 'ActivityController.findActivitiesByProf')
+	Route.get('activity/client/:client_id', 'ActivityController.findActivitiesByClient')
 	Route.delete('activity/:id', 'ActivityController.deleteActivityById')
 	Route.post('activity', 'ActivityController.createActivity')
 	Route.post('activity-pay', 'ActivityController.payment')

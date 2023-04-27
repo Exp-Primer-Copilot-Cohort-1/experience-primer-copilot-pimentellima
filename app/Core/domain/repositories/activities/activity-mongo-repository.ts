@@ -93,9 +93,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
     async updateActivity (params: IActivity) : PromiseEither<AbstractError, ActivityEntity> {
         if(!params._id) return left(new MissingParamsError('id'));
-        const oldActivity = await Activity.findOne({ 
-            _id: params._id 
-        });
+        const oldActivity = await Activity.findById(params._id);
         if(!oldActivity) return left(new ActivityNotFoundError());
         const newActivityOrErr = await ActivityEntity.build({ 
             ...oldActivity.toObject(),
@@ -104,7 +102,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
         if(newActivityOrErr.isLeft()) return left(new AbstractError("Invalid params", 400));
         const newActivity = newActivityOrErr.extract();
         
-        await Activity.findOneAndUpdate({ _id: params._id }, newActivity.params());
+        await Activity.findByIdAndUpdate(params._id, newActivity.params());
         return right(newActivity);
     }
 

@@ -2,11 +2,11 @@ import { ActivitiesManagerInterface } from "App/Core/domain/repositories/interfa
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import Activity from "../../entities/activities/activity";
+import ActivityEntity from "../../entities/activities/activity";
 import { IActivity } from "Types/IActivities";
 
 export class UpdateActivityUseCase
-	implements UseCase<IActivity, Activity>
+	implements UseCase<IActivity, ActivityEntity>
 {
 	constructor(
 		private readonly activitiesManager: ActivitiesManagerInterface
@@ -14,7 +14,7 @@ export class UpdateActivityUseCase
 
 	public async execute(
 		params: IActivity
-	): PromiseEither<AbstractError, Activity> {
+	): PromiseEither<AbstractError, ActivityEntity> {
 
 		const updatedActivityOrErr =
 			await this.activitiesManager.updateActivity(params);

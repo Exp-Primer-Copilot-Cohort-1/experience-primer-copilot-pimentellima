@@ -2,14 +2,14 @@ import { ActivitiesManagerInterface } from "App/Core/domain/repositories/interfa
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import Activity from "../../entities/activities/activity";
+import ActivityEntity from "../../entities/activities/activity";
 
 type ActivityProps = {
 	id: string
 };
 
 export class DeleteActivityByIdUseCase
-	implements UseCase<ActivityProps, Activity>
+	implements UseCase<ActivityProps, ActivityEntity>
 {
 	constructor(
 		private readonly activitiesManager: ActivitiesManagerInterface
@@ -17,7 +17,7 @@ export class DeleteActivityByIdUseCase
 
 	public async execute(
 		params: ActivityProps
-	): PromiseEither<AbstractError, Activity> {
+	): PromiseEither<AbstractError, ActivityEntity> {
 
 		const activityOrErr =
 			await this.activitiesManager.deleteActivityById(

@@ -2,109 +2,145 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import { AppointmentStatus, PaymentStatus, STATUS } from "App/Helpers";
-import { MissingParamsError } from "../../errors/missing-params";
 import { AbstractActivity } from "../abstract/activity-abstract";
 import { z } from "zod";
 import { IActivity } from "Types/IActivities";
+import { InvalidParamsError } from "../../errors/invalid-params-error";
 
-export class Activity extends AbstractActivity {
-	public date: Date;
-	public hour_start: Date;
-	public hour_end: Date;
-	public schedule_block: boolean;
-	public all_day: boolean;
-	public is_recorrent: boolean;
-	public user_id?: string;
-	public scheduled: AppointmentStatus;
+export class ActivityEntity extends AbstractActivity {
+	private _date: Date;
+	private _hour_start: string;
+	private _hour_end: string;
+	private _schedule_block: boolean;
+	private _all_day: boolean;
+	private _is_recorrent: boolean;
+	private _user_id?: string;
+	private _scheduled: AppointmentStatus;
 
 	private constructor() {
 		super();
 	}
 
+	public get date(): Date {
+		return this._date;
+	}
+	  
+	public get hour_start(): string {
+	return this._hour_start;
+	}
+	
+	public get hour_end(): string {
+	return this._hour_end;
+	}
+	
+	public get schedule_block(): boolean {
+	return this._schedule_block;
+	}
+	
+	public get all_day(): boolean {
+	return this._all_day;
+	}
+	
+	public get is_recurrent(): boolean {
+	return this._is_recorrent;
+	}
+	
+	public get user_id(): string | undefined {
+	return this._user_id;
+	}
+	
+	public get scheduled(): AppointmentStatus {
+	return this._scheduled;
+	}
+
 	defineDate(date: Date): this {
-		this.date = date;
+		this._date = date;
 		return this;
 	}
-	defineHourStart(date: Date): this {
-		this.hour_start = date;
+	defineHourStart(date: string): this {
+		this._hour_start = date;
 		return this;
 	}
-	defineHourEnd(date: Date): this {
-		this.hour_end = date;
+	defineHourEnd(date: string): this {
+		this._hour_end = date;
 		return this;
 	}
 	defineScheduleBlock(schedule_block: boolean): this {
-		this.schedule_block = schedule_block;
+		this._schedule_block = schedule_block;
 		return this;
 	}
 	defineAllDay(all_day: boolean): this {
-		this.all_day = all_day;
+		this._all_day = all_day;
 		return this;
 	}
 	defineIsRecorrent(is_recorrent: boolean): this {
-		this.is_recorrent = is_recorrent;
+		this._is_recorrent = is_recorrent;
 		return this;
 	}
 	defineUserId(user_id?: string): this {
-		this.user_id = user_id;
+		this._user_id = user_id;
 		return this;
 	}
 	defineScheduled(scheduled: AppointmentStatus): this {
-		this.scheduled = scheduled;
+		this._scheduled = scheduled;
 		return this;
 	}
 
 	public static async build(
 		params: IActivity
-	): PromiseEither<AbstractError, Activity> {
+	): PromiseEither<AbstractError, ActivityEntity> {
 		try {
+			const proceduresSchema = z.object({
+				value: z.string(),
+				label: z.string(),
+				minutes: z.number(),
+				color: z.string(),
+				val: z.number(),
+				health_insurance: z
+					.object({
+						value: z.string(),
+						label: z.string(),
+						price: z.number(),
+					})
+					.optional(),
+				status: z.nativeEnum(PaymentStatus),
+			})
+
 			const schema = z.object({
-				date: z.date(),
 				user_id: z.string().optional(),
-				hour_start: z.date(),
-				hour_end: z.date(),
 				active: z.boolean(),
 				all_day: z.boolean(),
 				prof_id: z.string(),
-				client_id: z.string(),
-				unity_id: z.string(),
-				status: z.nativeEnum(STATUS),
-				schedule_block: z.boolean(),
-				obs: z.string().optional(),
-				phone: z.string().optional(),
-				procedures: z.object({
+				client: z.object({
 					value: z.string(),
 					label: z.string(),
-					minutes: z.number(),
-					color: z.string(),
-					val: z.number(),
-					health_insurance: z
-						.object({
-							value: z.string(),
-							label: z.string(),
-							price: z.number(),
-						})
-						.optional(),
-					status: z.nativeEnum(PaymentStatus),
+					celphone: z.string(),
+					partner: z.object({}).nullable()
 				}),
+				obs: z.string().optional().nullable(),
+				unity_id: z.string(),
+				schedule_block: z.boolean().default(false),
+				phone: z.string().optional().nullable(),
+				procedures: z.array(proceduresSchema),
+				paid: z.boolean().optional().default(false),
 			});
 
 			schema.parse({
 				...params,
 				user_id: params.user_id?.toString(),
-				unity_id: params.unity_id.toString(),
-				client_id: params.client_id.toString(),
-				prof_id: params.prof_id.toString(),
+				unity_id: params.unity_id?.toString(),
+				client_id: params.client_id?.toString(),
+				prof_id: params.prof_id?.toString(),
+
 			});
 			return right(
-				new Activity()
+				new ActivityEntity()
 					.defineDate(params.date)
 					.defineHourStart(params.hour_start)
 					.defineHourEnd(params.hour_end)
 					.defineStatus(params.status)
 					.defineScheduleBlock(params.schedule_block)
 					.defineProcedures(params.procedures)
-					.defineClientId(params.client_id.toString())
 					.defineClient(params.client)
 					.defineObs(params.obs)
 					.defineProf(params.prof)
@@ -117,10 +153,11 @@ export class Activity extends AbstractActivity {
 					.defineScheduled(params.scheduled)
 					.defineProfId(params.prof_id.toString())
 			);
-		} catch (err) {
-			return left(new MissingParamsError(null as any));
+		} catch(err) {
+			console.log(err)
+			return left(new InvalidParamsError(err));
 		}
 	}
 }
 
-export default Activity;
+export default ActivityEntity;

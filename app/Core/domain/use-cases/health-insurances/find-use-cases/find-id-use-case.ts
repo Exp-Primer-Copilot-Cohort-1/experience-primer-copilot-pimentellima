@@ -1,4 +1,4 @@
-import { ParamsNotPassedError } from 'App/Core/domain/errors/params-not-passed'
+import { InvalidParamsError } from 'App/Core/domain/errors/invalid-params-error'
 import { HealthInsuranceManagerInterface } from 'App/Core/domain/repositories/interface'
 import { OptsQueryDefault } from 'App/Core/domain/use-cases/helpers/opts-query'
 import { AbstractError } from 'App/Core/errors/error.interface'
@@ -12,7 +12,7 @@ export class FindHealthInsuranceByIdUseCase implements UseCase<OptFindID, any[]>
 
 	public async execute(params: OptFindID): PromiseEither<AbstractError, any[]> {
 		if (!params) {
-			return left(new ParamsNotPassedError())
+			return left(new InvalidParamsError())
 		}
 
 		const healthOrErr = await this.manager.findById(params.id)

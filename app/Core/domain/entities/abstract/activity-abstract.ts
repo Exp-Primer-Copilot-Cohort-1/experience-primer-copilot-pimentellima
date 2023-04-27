@@ -1,12 +1,11 @@
-import { STATUS } from "App/Helpers";
+import { AppointmentStatus, STATUS } from "App/Helpers";
 import { Entity } from "./entity.abstract";
 import { IProcedure } from "Types/IProcedure";
 import { IClient } from "Types/IClient";
 import { IProf } from "Types/IProf";
 
 export abstract class AbstractActivity extends Entity {
-	private _status: STATUS;
-	private _client_id: string;
+	private _status: AppointmentStatus;
 	private _procedures: IProcedure[];
 	private _client: IClient;
 	private _partner: string;
@@ -19,10 +18,6 @@ export abstract class AbstractActivity extends Entity {
 
 	public get status() {
 		return this._status;
-	}
-
-	public get client_id() {
-		return this._client_id;
 	}
 
 	public get procedures() {
@@ -63,11 +58,6 @@ export abstract class AbstractActivity extends Entity {
 
 	public defineStatus(status: STATUS): this {
 		this._status = status;
-		return this;
-	}
-
-	public defineClientId(client_id: string): this {
-		this._client_id = client_id;
 		return this;
 	}
 
