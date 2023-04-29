@@ -135,6 +135,7 @@ export class ActivityEntity extends AbstractActivity {
 			});
 			return right(
 				new ActivityEntity()
+					.defineId(params._id?.toString())
 					.defineDate(params.date)
 					.defineHourStart(params.hour_start)
 					.defineHourEnd(params.hour_end)

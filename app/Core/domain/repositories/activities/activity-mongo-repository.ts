@@ -8,15 +8,39 @@ import {
 } from '../interface/activities-manager.interface';
 import { ActivityNotFoundError } from '../../errors/activity-not-found,';
 import { IActivity } from 'Types/IActivities';
+import { ScheduleEntity } from '../../entities/schedule/schedule';
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() { }
 
     async createActivity (params: IActivity) : PromiseEither<AbstractError, ActivityEntity> {
+        const activities = (await Activity.find({ prof_id: params.prof_id }))
+            .filter(activity => activity.date.getDay() === new Date(params.date).getDay());
+
+         const scheduleParams = { 
+            prof_id: params.prof_id.toString(),
+            appointments: activities.map(activity => ({
+                date: activity.date,
+                hour_start: new Date(activity.hour_start),
+                hour_end: new Date(activity.hour_end)
+            }))
+         };
+        
+        const scheduleOrErr = await ScheduleEntity.build(scheduleParams);
+        if(scheduleOrErr.isLeft()) return left(scheduleOrErr.extract());
+
+        const newAppointmentOrErr = await scheduleOrErr.extract().addAppointment({
+            hour_start: new Date(params.hour_start),
+            hour_end: new Date(params.hour_end),
+            date: new Date(params.date)
+        });
+
+        if(newAppointmentOrErr.isLeft()) return left(newAppointmentOrErr.extract()) 
+
         const newActivityOrErr = await ActivityEntity.build({ 
             ...params
         });
-        if(newActivityOrErr.isLeft()) return left(new AbstractError("Invalid params", 400));
+        if(newActivityOrErr.isLeft()) return left(newActivityOrErr.extract());
         const newActivity = newActivityOrErr.extract();
         
         await Activity.create(newActivity.params());
