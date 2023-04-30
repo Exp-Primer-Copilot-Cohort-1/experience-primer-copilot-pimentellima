@@ -6,11 +6,11 @@ import { IProf } from "Types/IProf";
 
 export interface IActivity
  {
-	_id: ObjectId;
+	id: ObjectId | string;
 	date: Date;
 	hour_start: string;
 	hour_end: string;
-	status: STATUS;
+	status: AppointmentStatus;
 	schedule_block: boolean;
 	procedures: IProcedure[];
 	client_id: string | ObjectId,

@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import { AppointmentStatus, PaymentStatus, STATUS } from "App/Helpers";
+import { AppointmentStatus, PaymentStatus } from "App/Helpers";
 import { AbstractActivity } from "../abstract/activity-abstract";
 import { z } from "zod";
-import { IActivity } from "Types/IActivities";
+import { IActivity } from "Types/IActivity";
 import { InvalidParamsError } from "../../errors/invalid-params-error";
 
-export class ActivityEntity extends AbstractActivity {
+export class ActivityEntity extends AbstractActivity implements IActivity {
 	private _date: Date;
 	private _hour_start: string;
 	private _hour_end: string;
@@ -19,6 +19,10 @@ export class ActivityEntity extends AbstractActivity {
 
 	private constructor() {
 		super();
+	}
+
+	public get is_recorrent(): boolean {
+		return this._is_recorrent;
 	}
 
 	public get date(): Date {
@@ -51,6 +55,11 @@ export class ActivityEntity extends AbstractActivity {
 	
 	public get scheduled(): AppointmentStatus {
 	return this._scheduled;
+	}
+
+	defineisRecorrent(is_recorrent: boolean): this {
+		this._is_recorrent = is_recorrent;
+		return this;
 	}
 
 	defineDate(date: Date): this {
@@ -135,7 +144,7 @@ export class ActivityEntity extends AbstractActivity {
 			});
 			return right(
 				new ActivityEntity()
-					.defineId(params._id?.toString())
+					.defineId(params.id?.toString())
 					.defineDate(params.date)
 					.defineHourStart(params.hour_start)
 					.defineHourEnd(params.hour_end)
@@ -155,7 +164,6 @@ export class ActivityEntity extends AbstractActivity {
 					.defineProfId(params.prof_id.toString())
 			);
 		} catch(err) {
-			console.log(err)
 			return left(new InvalidParamsError(err));
 		}
 	}

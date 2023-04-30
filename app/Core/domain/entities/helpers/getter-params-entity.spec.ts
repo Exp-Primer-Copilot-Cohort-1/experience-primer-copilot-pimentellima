@@ -54,7 +54,7 @@ describe('Getter Params Entity (Unit)', () => {
 		const entity = entityOrErr.extract();
 
 		expect(entity.params()).toEqual({
-			_id: '123',
+			id: '123',
 			created_at: entity.created_at,
 			updated_at: entity.updated_at,
 			password: '123456',

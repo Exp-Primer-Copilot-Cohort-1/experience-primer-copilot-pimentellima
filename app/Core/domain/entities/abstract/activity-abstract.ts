@@ -7,6 +7,7 @@ import { IProf } from "Types/IProf";
 export abstract class AbstractActivity extends Entity {
 	private _status: AppointmentStatus;
 	private _procedures: IProcedure[];
+	private _client_id: string;
 	private _client: IClient;
 	private _partner: string;
 	private _obs?: string;
@@ -15,15 +16,19 @@ export abstract class AbstractActivity extends Entity {
 	private _active: boolean;
 	private _unity_id: string;
 	private _prof_id: string;
-
+	
 	public get status() {
 		return this._status;
 	}
-
+	
 	public get procedures() {
 		return this._procedures;
 	}
 
+	public get client_id() {
+		return this._client_id;
+	}
+	
 	public get client() {
 		return this._client;
 	}
@@ -56,7 +61,12 @@ export abstract class AbstractActivity extends Entity {
 		return this._prof_id;
 	}
 
-	public defineStatus(status: STATUS): this {
+	public defineClientId(client_id: string) : this {
+		this._client_id = client_id;
+		return this;
+	}
+
+	public defineStatus(status: AppointmentStatus): this {
 		this._status = status;
 		return this;
 	}
