@@ -50,8 +50,11 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		if (newActivityOrErr.isLeft()) return left(newActivityOrErr.extract());
 		const newActivity = newActivityOrErr.extract();
 
+		
 		const { _id } = await Activity.create(newActivity.params());
-		return right(newActivity.defineId(_id.toString()));
+		newActivity.defineId(_id.toString());
+		console.log(newActivity);
+		return right(newActivity);
 	}
 
 	async findActivityById(

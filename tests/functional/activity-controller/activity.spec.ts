@@ -2,11 +2,12 @@ import { test } from '@japa/runner';
 import { loginAndGetToken } from '../helpers/login';
 import { assert } from 'chai'
 import Activity from 'App/Models/Activity';
+import { faker } from '@faker-js/faker';
 
 const newActivity = {
-    date: '2023-04-26T03:00:00.000Z',
-    hour_start: '2023-04-26T11:00:00.000Z',
-    hour_end: '2023-04-26T12:00:00.000Z',
+    date: faker.date.future(),
+    hour_start: faker.date.future(),
+    hour_end: faker.date.future(),
     status: 'scheduled',
     schedule_block: false,
     procedures: [
@@ -44,8 +45,6 @@ const newActivity = {
     user_id: '635978cec109b232759921da',
     scheduled: 'scheduled',
     prof_id: '635978cec109b232759921da',
-    created_at: '2023-04-26T14:40:15.161Z',
-    updated_at: '2023-04-26T17:51:20.526Z',
     paid: true
 }
 
@@ -65,15 +64,12 @@ test.group('Activity Controller', () => {
 
 		const response = await client
 			.post('activity')
-			.json({ 
-                ...newActivity,
-                date: new Date().toISOString()
-            })
+			.json(newActivity)
 			.bearerToken(token.token);
 
 		response.assertStatus(200);
 
-		const { deletedCount } = await Activity.deleteOne({ _id: response.body()._id });
+		const { deletedCount } = await Activity.deleteOne({ __id: response.body()._id });
         assert.equal(deletedCount, 1);
 	});
 
