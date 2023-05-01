@@ -6,7 +6,7 @@ import { IProf } from "Types/IProf";
 
 export interface IActivity
  {
-	id: ObjectId | string;
+	_id: ObjectId | string;
 	date: Date;
 	hour_start: string;
 	hour_end: string;

@@ -4,6 +4,7 @@ import { AbstractError } from "App/Core/errors/error.interface";
 import { InvalidParamsError } from "../../errors/invalid-params-error";
 import { z } from "zod";
 import { ConflictingScheduleError } from "../../errors/ conflicting-schedule-error";
+import { InvalidScheduleError } from "../../errors/invalid-schedule-error";
 
 type appointment = {
     hour_start: Date,
@@ -15,7 +16,7 @@ const appointmentSchema = z.object({
     hour_start: z.date(),
     hour_end: z.date(),
     date: z.date(),
-});
+})
 
 type ISchedule = {
     prof_id: string,
@@ -47,6 +48,12 @@ export class ScheduleEntity extends Entity {
     public async addAppointment(newApp : appointment): PromiseEither<AbstractError, ScheduleEntity> {
         try {
             appointmentSchema.parse(newApp);
+
+            if(newApp.date < new Date() || 
+            newApp.hour_start >= newApp.hour_end) {
+                return left(new InvalidScheduleError());
+            } 
+
             for(const appointment of this._appointments) {
                 if(newApp.hour_start >= appointment.hour_start &&
                 newApp.hour_end <= appointment.hour_end

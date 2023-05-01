@@ -144,7 +144,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 			});
 			return right(
 				new ActivityEntity()
-					.defineId(params.id?.toString())
+					.defineId(params._id?.toString())
 					.defineDate(params.date)
 					.defineHourStart(params.hour_start)
 					.defineHourEnd(params.hour_end)
@@ -164,6 +164,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					.defineProfId(params.prof_id.toString())
 			);
 		} catch(err) {
+			console.log(err)
 			return left(new InvalidParamsError(err));
 		}
 	}

@@ -3,20 +3,20 @@ import { PromiseEither } from 'App/Core/shared';
 import { GetterParams, getGetters } from '../helpers/getters-params-entitys';
 
 interface IEntity {
-	id: string;
+	_id: string;
 	created_at: Date;
 	updated_at: Date;
 }
 
 export abstract class Entity implements IEntity {
-	private _id: string;
+	private __id: string;
 	private _created_at: Date;
 	private _updated_at: Date;
 
 	constructor() { }
 
-	public get id(): string {
-		return this._id;
+	public get _id(): string {
+		return this.__id;
 	}
 
 	public get created_at(): Date {
@@ -32,7 +32,7 @@ export abstract class Entity implements IEntity {
 			return this;
 		}
 
-		this._id = id;
+		this.__id = id;
 		return this;
 	}
 

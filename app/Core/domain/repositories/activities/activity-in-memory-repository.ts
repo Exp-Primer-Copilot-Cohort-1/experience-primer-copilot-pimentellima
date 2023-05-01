@@ -5,12 +5,16 @@ import ActivityEntity from "../../entities/activities/activity";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ScheduleEntity } from "../../entities/schedule/schedule";
 import { IActivity } from "Types/IActivity";
-import { ActivityNotFoundError } from "../../errors/activity-not-found,";
 
 export class ActivityInMemoryRepository implements ActivitiesManagerInterface {
-	private activities: IActivity[] = [];
+	public activities: any[] = [];
 
 	constructor() {}
+
+	findAllActivities: (unity_id: string) => PromiseEither<AbstractError, ActivityEntity[]>;
+	updateActivity: (params: IActivity) => PromiseEither<AbstractError, ActivityEntity>;
+	findActivityById: (id: string) => PromiseEither<AbstractError, ActivityEntity>;
+	deleteActivityById: (id: string) => PromiseEither<AbstractError, ActivityEntity>;
 
 	async createActivity(
 		params: IActivity
@@ -52,56 +56,6 @@ export class ActivityInMemoryRepository implements ActivitiesManagerInterface {
 		return right(newActivity);
 	}
 
-	async findActivityById(
-		id: string
-	): PromiseEither<AbstractError, ActivityEntity> {
-		if (!id) return left(new MissingParamsError("id"));
-
-		const activity = this.activities.find((activity) => activity.id === id);
-		if (!activity) return left(new ActivityNotFoundError());
-
-		const activityOrErr = await ActivityEntity.build(activity);
-		if (activityOrErr.isLeft())
-			return left(new AbstractError("Invalid params", 400));
-
-		return right(activityOrErr.extract());
-	}
-
-	async deleteActivityById(
-		id: string
-	): PromiseEither<AbstractError, ActivityEntity> {
-		if (!id) return left(new MissingParamsError("id"));
-
-		const item = this.activities.find((activity) => activity.id !== id);
-		if (!item) return left(new ActivityNotFoundError());
-		this.activities.filter((activity) => activity.id !== item.id);
-
-		const activityOrErr = await ActivityEntity.build(item);
-		if (activityOrErr.isLeft())
-			return left(new AbstractError("Invalid params", 400));
-
-		return right(activityOrErr.extract());
-	}
-
-	async findAllActivities(
-		unity_id: string
-	): PromiseEither<AbstractError, ActivityEntity[]> {
-		if (!unity_id) return left(new MissingParamsError("unity id"));
-
-		const data = this.activities.filter(
-			(activity) => activity.unity_id === unity_id
-		);
-		const activities = await Promise.all(
-			data.map(async (item) => {
-				const activityOrErr = await ActivityEntity.build(item);
-				if (activityOrErr.isLeft()) {
-					return {} as ActivityEntity;
-				}
-				return activityOrErr.extract();
-			})
-		);
-		return right(activities);
-	}
 
 	async findActivitiesByProf(
 		unity_id: string,
@@ -149,21 +103,5 @@ export class ActivityInMemoryRepository implements ActivitiesManagerInterface {
 		return right(activities);
 	}
 
-	async updateActivity(
-		params: IActivity
-	): PromiseEither<AbstractError, ActivityEntity> {
-		if (!params.id) return left(new MissingParamsError("id"));
-		const oldActivity = this.activities.find(
-			activity => activity.id === params.id
-		)
-		if (!oldActivity) return left(new ActivityNotFoundError());
-		const newActivityOrErr = await ActivityEntity.build({
-			...oldActivity,
-			...params,
-		});
-		if (newActivityOrErr.isLeft())
-			return left(new AbstractError("Invalid params", 400));
 
-		return right(newActivityOrErr.extract());
-	}
 }

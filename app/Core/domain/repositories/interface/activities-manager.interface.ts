@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface';
 import { PromiseEither } from 'App/Core/shared/either';
 import ActivityEntity from '../../entities/activities/activity';
-import { IActivity } from 'Types/IActivities';
+import { IActivity } from 'Types/IActivity';
 
 export interface ActivitiesManagerInterface {
 	createActivity: (params: IActivity) => PromiseEither<AbstractError, ActivityEntity>;

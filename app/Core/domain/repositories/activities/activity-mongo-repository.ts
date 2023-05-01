@@ -4,7 +4,7 @@ import Activity from "App/Models/Activity";
 import ActivityEntity from "../../entities/activities/activity";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ActivitiesManagerInterface } from "../interface/activities-manager.interface";
-import { ActivityNotFoundError } from "../../errors/activity-not-found,";
+import { ActivityNotFoundError } from "../../errors/activity-not-found";
 import { IActivity } from "Types/IActivity";
 import { ScheduleEntity } from "../../entities/schedule/schedule";
 
@@ -59,7 +59,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	): PromiseEither<AbstractError, ActivityEntity> {
 		if (!id) return left(new MissingParamsError("id"));
 
-		const item = await Activity.findById(id);
+		const item = await Activity.findOne({ _id: id });
 		if (!item) return left(new ActivityNotFoundError());
 
 		const activityOrErr = await ActivityEntity.build(item.toObject());
@@ -145,8 +145,8 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	async updateActivity(
 		params: IActivity
 	): PromiseEither<AbstractError, ActivityEntity> {
-		if (!params.id) return left(new MissingParamsError("id"));
-		const oldActivity = await Activity.findById(params.id);
+		if (!params._id) return left(new MissingParamsError("id"));
+		const oldActivity = await Activity.findById(params._id);
 		if (!oldActivity) return left(new ActivityNotFoundError());
 		const newActivityOrErr = await ActivityEntity.build({
 			...oldActivity.toObject(),
@@ -156,7 +156,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			return left(new AbstractError("Invalid params", 400));
 		const newActivity = newActivityOrErr.extract();
 
-		await Activity.findByIdAndUpdate(params.id, newActivity.params());
+		await Activity.findByIdAndUpdate(params._id, newActivity.params());
 		return right(newActivity);
 	}
 }
