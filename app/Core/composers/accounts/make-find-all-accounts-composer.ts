@@ -3,7 +3,7 @@ import { ControllerGeneric } from 'App/Core/adapters/controller/helpers';
 import { AccountMongoRepository } from 'App/Core/domain/repositories/account/account-mongo-repository';
 import { FindAllAccountUseCase } from 'App/Core/domain/use-cases/accounts/find-all-accounts-use-case';
 
-export const makeFindAllAccountComposer = (): ControllerGeneric => {
+export const makeFindAllAccountsComposer = (): ControllerGeneric => {
 	return new Controller(
 		new FindAllAccountUseCase(new AccountMongoRepository()),
 	);

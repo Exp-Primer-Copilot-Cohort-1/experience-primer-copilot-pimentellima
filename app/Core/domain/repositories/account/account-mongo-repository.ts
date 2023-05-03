@@ -6,6 +6,7 @@ import { AccountManagerInterface } from "../interface/account-manager-interface"
 import { MissingParamsError } from "../../errors/missing-params";
 import Account from "App/Models/Account";
 import { AccountNotFoundError } from "../../errors/account-not-found-error";
+import { InvalidParamsError } from "../../errors/invalid-params-error";
 
 export class AccountMongoRepository implements AccountManagerInterface {
 	constructor() {}
@@ -45,7 +46,7 @@ export class AccountMongoRepository implements AccountManagerInterface {
 		params: IAccount
 	): PromiseEither<AbstractError, AccountEntity> {
 		if (!params._id) return left(new MissingParamsError("id"));
-		const oldAccount = await Account.findById(params._id);
+		const oldAccount = await Account.findById(params._id.toString());
 		if (!oldAccount) return left(new AccountNotFoundError());
 		const newAccountOrErr = await AccountEntity.build({
 			...oldAccount.toObject(),
@@ -59,23 +60,21 @@ export class AccountMongoRepository implements AccountManagerInterface {
 		return right(newAccount);
 	}
     
-    async findAccountById(
-		id: string,
-	): PromiseEither<AbstractError, AccountEntity> {
+    async findAccountById(id: string): PromiseEither<AbstractError, AccountEntity> {
 		if (!id) return left(new MissingParamsError("id"));
 
-		const item = await Account.findOne({ _id: id });
+		const item = await Account.findById(id);
 		if (!item) return left(new AccountNotFoundError());
 
 		const accountOrErr = await AccountEntity.build(item.toObject());
 		if (accountOrErr.isLeft())
-			return left(new AbstractError("Invalid params", 400));
+			return left(new InvalidParamsError());
 
 		return right(accountOrErr.extract());
 	}
 
     async deleteAccountById(
-		id: string 
+		id: string
 	): PromiseEither<AbstractError, AccountEntity> {
 		if (!id) return left(new MissingParamsError("id"));
 

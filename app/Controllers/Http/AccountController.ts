@@ -4,13 +4,13 @@ import { adaptRoute } from "App/Core/adapters";
 import { makeCreateAccountComposer } from "App/Core/composers/accounts/make-create-account-composer";
 import { makeDeleteAccountComposer } from "App/Core/composers/accounts/make-delete-account-composer";
 import { makeFindAccountComposer } from "App/Core/composers/accounts/make-find-account-by-id-composer";
-import { makeFindAllAccountComposer } from "App/Core/composers/accounts/make-find-all-accounts-composer";
+import { makeFindAllAccountsComposer } from "App/Core/composers/accounts/make-find-all-accounts-composer";
 import { makeUpdateAccountComposer } from "App/Core/composers/accounts/make-update-account-composer";
 
 class AccountController {
 
   async findAllAccounts(ctx: HttpContextContract) {
-    return adaptRoute(makeFindAllAccountComposer(), ctx, {
+    return adaptRoute(makeFindAllAccountsComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		});
   }

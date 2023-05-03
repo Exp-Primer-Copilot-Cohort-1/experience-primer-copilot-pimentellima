@@ -4,19 +4,23 @@ import { PromiseEither, left, right } from "App/Core/shared";
 import AccountEntity from "../../entities/account/account";
 import { AccountManagerInterface } from "../../repositories/interface/account-manager-interface";
 
+type TypeParams = {
+	unity_id: string
+}
+
 export class FindAllAccountUseCase
-	implements UseCase<string, AccountEntity[]>
+	implements UseCase<TypeParams, AccountEntity[]>
 {
 	constructor(
 		private readonly activitiesManager: AccountManagerInterface
 	) {}
 
 	public async execute(
-		unity_id: string
+		params: TypeParams
 	): PromiseEither<AbstractError, AccountEntity[]> {
 
 		const accountsOrErr =
-			await this.activitiesManager.findAllAccounts(unity_id);
+			await this.activitiesManager.findAllAccounts(params.unity_id);
 
 		if (accountsOrErr.isLeft()) return left(accountsOrErr.extract());
 		const accounts = accountsOrErr.extract();

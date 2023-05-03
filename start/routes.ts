@@ -229,11 +229,11 @@ Route.group(() => {
 	Route.delete('cost-center/:id', 'CostCenterController.destroy')
 	Route.post('cost-center', 'CostCenterController.store')
 
-	Route.get('accounts', 'AccountController.findAllAccounts')
-	Route.get('accounts/:id', 'AccountController.findAccountById')
-	Route.put('accounts/:id', 'AccountController.updateAccount')
-	Route.delete('accounts/:id', 'AccountController.deleteAccountById')
-	Route.post('accounts', 'AccountController.createAccount')
+	Route.get('account', 'AccountController.findAllAccounts')
+	Route.get('account/:id', 'AccountController.findAccountById')
+	Route.put('account/:id', 'AccountController.updateAccount')
+	Route.delete('account/:id', 'AccountController.deleteAccountById')
+	Route.post('account', 'AccountController.createAccount')
 
 	Route.get('default-config', 'DefaultConfigController.index')
 	Route.get('default-config/:id', 'DefaultConfigController.show')

@@ -4,19 +4,23 @@ import { PromiseEither, left, right } from "App/Core/shared";
 import AccountEntity from "../../entities/account/account";
 import { AccountManagerInterface } from "../../repositories/interface/account-manager-interface";
 
+type TypeParams = {
+	id: string
+}
+
 export class DeleteAccountByIdUseCase
-	implements UseCase<string, AccountEntity>
+	implements UseCase<TypeParams, AccountEntity>
 {
 	constructor(
 		private readonly activitiesManager: AccountManagerInterface
 	) {}
 
 	public async execute(
-		id: string,
+		params: TypeParams
 	): PromiseEither<AbstractError, AccountEntity> {
 
 		const accountOrErr =
-			await this.activitiesManager.deleteAccountById(id);
+			await this.activitiesManager.deleteAccountById(params.id);
 
 		if (accountOrErr.isLeft()) return left(accountOrErr.extract());
 		const account = accountOrErr.extract();
