@@ -1,28 +1,28 @@
 import type { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
 export default class AppProvider {
-  constructor(protected app: ApplicationContract) {}
+	constructor(protected app: ApplicationContract) {}
 
-  public register() {
-    // Register your own bindings
-  }
+	public register() {
+		// Register your own bindings
+	}
 
-  public async boot() {
-    const Auth = this.app.container.resolveBinding('Adonis/Addons/Auth')
-    const Hash = this.app.container.resolveBinding('Adonis/Core/Hash')
+	public async boot() {
+		const Auth = this.app.container.resolveBinding('Adonis/Addons/Auth')
+		const Hash = this.app.container.resolveBinding('Adonis/Core/Hash')
 
-    const { MongoDbAuthProvider } = await import('./MongooseAuthProvider')
+		const { MongoDbAuthProvider } = await import('./MongooseAuthProvider')
 
-    Auth.extend('provider', 'mongo', (_, __, config) => {
-      return new MongoDbAuthProvider(config, Hash)
-    })
-  }
+		Auth.extend('provider', 'mongo', (_, __, config) => {
+			return new MongoDbAuthProvider(config, Hash)
+		})
+	}
 
-  public async ready() {
-    // App is ready
-  }
+	public async ready() {
+		// App is ready
+	}
 
-  public async shutdown() {
-    // Cleanup, since app is going down
-  }
+	public async shutdown() {
+		// Cleanup, since app is going down
+	}
 }

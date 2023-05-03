@@ -1,7 +1,88 @@
-import Hash from '@ioc:Adonis/Core/Hash';
-import Mongoose, { Schema } from '@ioc:Mongoose';
-import type { IUser } from 'Types/IUser';
+import Hash from '@ioc:Adonis/Core/Hash'
+import Mongoose, { Schema } from '@ioc:Mongoose'
+import type { IUser } from 'Types/IUser'
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           readOnly: true
+ *         name:
+ *           type: string
+ *           required: true
+ *         email:
+ *           type: string
+ *           format: email
+ *           required: true
+ *         password:
+ *           type: string
+ *           format: password
+ *           required: true
+ *         celphone:
+ *           type: string
+ *           required: true
+ *         document:
+ *           type: string
+ *           required: true
+ *         unity_id:
+ *           type: string
+ *           required: true
+ *         type:
+ *           type: string
+ *           required: true
+ *         active:
+ *           type: boolean
+ *           default: false
+ *         avatar:
+ *           type: string
+ *         due_date:
+ *           type: string
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *           readOnly: true
+ *         updated_at:
+ *           type: string
+ *           format: date-time
+ *           readOnly: true
+ *         schedule_obs:
+ *           type: string
+ *         show_lack:
+ *           type: boolean
+ *         exib_minutes:
+ *           type: integer
+ *         is_friday:
+ *           type: boolean
+ *         is_saturday:
+ *           type: boolean
+ *         is_sunday:
+ *           type: boolean
+ *         is_monday:
+ *           type: boolean
+ *         is_tuesday:
+ *           type: boolean
+ *         is_wednesday:
+ *           type: boolean
+ *         is_thursday:
+ *           type: boolean
+ *         hour_end:
+ *           type: string
+ *         hour_start:
+ *           type: string
+ *         hour_end_lunch:
+ *           type: string
+ *         hour_start_lunch:
+ *           type: string
+ *         lunch_time_active:
+ *           type: boolean
+ *         rememberMeToken:
+ *           type: string
+ */
 const UserSchema = new Schema<IUser>(
 	{
 		name: {
@@ -120,12 +201,11 @@ const UserSchema = new Schema<IUser>(
 	{
 		timestamps: true,
 	},
-);
+)
 
 UserSchema.pre('save', async function (next) {
-	const user = this;
-	user.password = await Hash.make(user?.password);
-	next();
-});
+	this.password = await Hash.make(this?.password)
+	next()
+})
 
-export default Mongoose.model<IUser>('users', UserSchema);
+export default Mongoose.model<IUser>('users', UserSchema)
