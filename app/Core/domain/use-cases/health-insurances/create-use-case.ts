@@ -4,7 +4,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IHealthInsurance } from 'Types/IHealthInsurance'
-import { Entity } from '../../entities/abstract/entity.abstract'
+import { HealtInsuranceEntity } from '../../entities/health-insurances/health-insurance'
 
 export class CreateHealthInsuranceUseCase
 	implements UseCase<IHealthInsurance, IHealthInsurance>
@@ -18,14 +18,18 @@ export class CreateHealthInsuranceUseCase
 			return left(new ParamsNotPassedError())
 		}
 
-		const healthOrErr = await this.manager.create(params as unknown as Entity)
+		const entityOrErr = await HealtInsuranceEntity.build(params)
 
-		if (healthOrErr.isLeft()) {
-			return left(healthOrErr.extract())
-		}
+		if (entityOrErr.isLeft()) return entityOrErr
 
-		return right({
-			...healthOrErr.extract(),
-		} as IHealthInsurance)
+		const entity = entityOrErr.extract()
+
+		const healthOrErr = await this.manager.create(entity)
+
+		if (healthOrErr.isLeft()) return healthOrErr as any
+
+		const health = healthOrErr.extract().params() as unknown as IHealthInsurance
+
+		return right(health)
 	}
 }

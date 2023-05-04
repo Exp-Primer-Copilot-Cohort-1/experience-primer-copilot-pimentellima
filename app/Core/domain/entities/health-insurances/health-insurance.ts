@@ -1,21 +1,15 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IHealthInsurance, Profs } from 'Types/IHealthInsurance'
+import { Entity } from '../abstract/entity.abstract'
 
-export class HealtInsuranceEntity implements IHealthInsurance {
-	private _id_: string
+export class HealtInsuranceEntity extends Entity implements IHealthInsurance {
 	private _register_code: string
 	private _carence: number
 	private _profs: Profs[]
 	private _active: boolean
 	private _unity_id: string
-	private _created_at: string | Date
-	private _updated_at: string | Date
 	private _name: string
-
-	get _id(): string {
-		return this._id_
-	}
 
 	get register_code(): string {
 		return this._register_code
@@ -37,28 +31,12 @@ export class HealtInsuranceEntity implements IHealthInsurance {
 		return this._unity_id
 	}
 
-	get created_at(): string | Date {
-		return this._created_at
-	}
-
-	get updated_at(): string | Date {
-		return this._updated_at
-	}
-
 	get name(): string {
 		return this._name
 	}
 
-	private constructor() { }
-
-	defineId(id: string): HealtInsuranceEntity {
-		this._id_ = id
-		return this
-	}
-
-	defineName(name: string): HealtInsuranceEntity {
-		this._name = name
-		return this
+	private constructor() {
+		super()
 	}
 
 	defineRegisterCode(register_code: string): HealtInsuranceEntity {
@@ -66,33 +44,36 @@ export class HealtInsuranceEntity implements IHealthInsurance {
 		return this
 	}
 
-	defineCarence(carence: number): HealtInsuranceEntity {
+	defineCarence(carence = 0): HealtInsuranceEntity {
 		this._carence = carence
 		return this
 	}
 
-	defineProfs(profs: Profs[]): HealtInsuranceEntity {
+	defineProfs(profs: Profs[] = []): HealtInsuranceEntity {
 		this._profs = profs
 		return this
 	}
 
-	defineActive(active: boolean): HealtInsuranceEntity {
+	defineActive(active = true): HealtInsuranceEntity {
 		this._active = active
 		return this
 	}
 
 	defineUnityId(unity_id: string): HealtInsuranceEntity {
+		if (!unity_id) {
+			throw new Error('Unity id not defined')
+		}
+
 		this._unity_id = unity_id
 		return this
 	}
 
-	defineCreatedAt(created_at: string | Date): HealtInsuranceEntity {
-		this._created_at = created_at
-		return this
-	}
+	defineName(name: string): HealtInsuranceEntity {
+		if (!name) {
+			throw new Error('Name not defined')
+		}
 
-	defineUpdatedAt(updated_at: string | Date): HealtInsuranceEntity {
-		this._updated_at = updated_at
+		this._name = name
 		return this
 	}
 

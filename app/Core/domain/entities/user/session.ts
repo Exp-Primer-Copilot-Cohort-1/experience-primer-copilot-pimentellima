@@ -12,6 +12,10 @@ export class SessionUser extends SystemUser {
 	private _show_lack: boolean
 	private _rememberMeToken?: string
 
+	private constructor() {
+		super()
+	}
+
 	public get due_date(): string {
 		return this._due_date
 	}
