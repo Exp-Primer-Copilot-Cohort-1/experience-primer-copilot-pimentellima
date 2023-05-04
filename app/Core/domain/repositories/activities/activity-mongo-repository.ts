@@ -53,7 +53,6 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		
 		const { _id } = await Activity.create(newActivity.params());
 		newActivity.defineId(_id.toString());
-		console.log(newActivity);
 		return right(newActivity);
 	}
 
