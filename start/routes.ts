@@ -34,7 +34,7 @@ Route.delete('unity/:id', 'UnityController.destroy')
 Route.put('unity/:id', 'UnityController.update')
 
 Route.put('activity-stts/:id', 'ActivityController.updateStatus')
-Route.get('activity/:id', 'ActivityController.show')
+Route.get('activity/:id', 'ActivityController.findActivityById')
 Route.put('activity-user/:id', 'ActivityController.updateStatusUser')
 
 Route.get('permissions-default', 'PermissionController.defaultPermissions')
@@ -131,14 +131,13 @@ Route.group(() => {
 
 	Route.get('activity-stock', 'ActivityStockController.index')
 
-	Route.get('activities-client/:id', 'ActivityController.indexByClient')
-	Route.put('activity/:id', 'ActivityController.update')
-	Route.get('activity', 'ActivityController.index')
-	Route.delete('activity/:id', 'ActivityController.destroy')
-	Route.post('activity', 'ActivityController.store')
+	Route.get('activity', 'ActivityController.findAllActivities')
+	Route.put('activity', 'ActivityController.updateActivity')
+	Route.get('activity/prof/:prof_id', 'ActivityController.findActivitiesByProf')
+	Route.get('activity/client/:client_id', 'ActivityController.findActivitiesByClient')
+	Route.delete('activity/:id', 'ActivityController.deleteActivityById')
+	Route.post('activity', 'ActivityController.createActivity')
 	Route.post('activity-pay', 'ActivityController.payment')
-	Route.get('activities', 'ActivityController.findAllActivitiesByUnity')
-	Route.get('activities/prof/:id', 'ActivityControllerV2.findAllActivitiesByUser')
 
 	Route.get('activity-await', 'ActivityAwaitController.index')
 	Route.get('activity-await/:id', 'ActivityAwaitController.show')
@@ -230,11 +229,11 @@ Route.group(() => {
 	Route.delete('cost-center/:id', 'CostCenterController.destroy')
 	Route.post('cost-center', 'CostCenterController.store')
 
-	Route.get('accounts', 'AccountController.index')
-	Route.get('accounts/:id', 'AccountController.show')
-	Route.put('accounts/:id', 'AccountController.update')
-	Route.delete('accounts/:id', 'AccountController.destroy')
-	Route.post('accounts', 'AccountController.store')
+	Route.get('account', 'AccountController.findAllAccounts')
+	Route.get('account/:id', 'AccountController.findAccountById')
+	Route.put('account/:id', 'AccountController.updateAccount')
+	Route.delete('account/:id', 'AccountController.deleteAccountById')
+	Route.post('account', 'AccountController.createAccount')
 
 	Route.get('default-config', 'DefaultConfigController.index')
 	Route.get('default-config/:id', 'DefaultConfigController.show')

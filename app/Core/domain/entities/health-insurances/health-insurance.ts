@@ -1,12 +1,13 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IHealthInsurance, Profs } from 'Types/IHealthInsurance'
+import { IHealthInsurance } from 'Types/IHealthInsurance'
+import { IProf } from 'Types/IProf'
 import { Entity } from '../abstract/entity.abstract'
 
-export class HealtInsuranceEntity extends Entity implements IHealthInsurance {
+export class HealthInsuranceEntity extends Entity implements IHealthInsurance {
 	private _register_code: string
 	private _carence: number
-	private _profs: Profs[]
+	private _profs: IProf[]
 	private _active: boolean
 	private _unity_id: string
 	private _name: string
@@ -19,7 +20,7 @@ export class HealtInsuranceEntity extends Entity implements IHealthInsurance {
 		return this._carence
 	}
 
-	get profs(): Profs[] {
+	get profs(): IProf[] {
 		return this._profs
 	}
 
@@ -39,27 +40,27 @@ export class HealtInsuranceEntity extends Entity implements IHealthInsurance {
 		super()
 	}
 
-	defineRegisterCode(register_code: string): HealtInsuranceEntity {
+	defineRegisterCode(register_code: string): HealthInsuranceEntity {
 		this._register_code = register_code
 		return this
 	}
 
-	defineCarence(carence = 0): HealtInsuranceEntity {
+	defineCarence(carence = 0): HealthInsuranceEntity {
 		this._carence = carence
 		return this
 	}
 
-	defineProfs(profs: Profs[] = []): HealtInsuranceEntity {
+	defineProfs(profs: IProf[] = []): HealthInsuranceEntity {
 		this._profs = profs
 		return this
 	}
 
-	defineActive(active = true): HealtInsuranceEntity {
+	defineActive(active = true): HealthInsuranceEntity {
 		this._active = active
 		return this
 	}
 
-	defineUnityId(unity_id: string): HealtInsuranceEntity {
+	defineUnityId(unity_id: string): HealthInsuranceEntity {
 		if (!unity_id) {
 			throw new Error('Unity id not defined')
 		}
@@ -68,7 +69,7 @@ export class HealtInsuranceEntity extends Entity implements IHealthInsurance {
 		return this
 	}
 
-	defineName(name: string): HealtInsuranceEntity {
+	defineName(name: string): HealthInsuranceEntity {
 		if (!name) {
 			throw new Error('Name not defined')
 		}
@@ -79,10 +80,10 @@ export class HealtInsuranceEntity extends Entity implements IHealthInsurance {
 
 	static async build(
 		params: IHealthInsurance,
-	): PromiseEither<AbstractError, HealtInsuranceEntity> {
+	): PromiseEither<AbstractError, HealthInsuranceEntity> {
 		try {
 			return right(
-				new HealtInsuranceEntity()
+				new HealthInsuranceEntity()
 					.defineId(params._id)
 					.defineName(params.name)
 					.defineRegisterCode(params.register_code)

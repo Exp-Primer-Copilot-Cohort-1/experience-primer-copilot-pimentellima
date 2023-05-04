@@ -1,4 +1,4 @@
-import { ParamsNotPassedError } from 'App/Core/domain/errors/params-not-passed'
+import { InvalidParamsError } from 'App/Core/domain/errors/invalid-params-error'
 import { HealthInsuranceManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
@@ -14,7 +14,7 @@ export class UpdateHealthInsuranceUseCase
 		params: Partial<IHealthInsurance>,
 	): PromiseEither<AbstractError, IHealthInsurance> {
 		if (!params?._id) {
-			return left(new ParamsNotPassedError())
+			return left(new InvalidParamsError())
 		}
 
 		const healthOrErr = await this.manager.update(params._id, params)

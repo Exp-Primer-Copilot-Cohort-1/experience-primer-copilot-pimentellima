@@ -1,6 +1,6 @@
 import Mongoose, { Schema } from '@ioc:Mongoose';
 import { AppointmentStatus, PaymentStatus, STATUS } from 'App/Helpers';
-import type { IActivity } from 'Types/IActivities';
+import type { IActivity } from 'Types/IActivity';
 
 const ActivitySchema = new Schema<IActivity>(
 	{
@@ -9,18 +9,15 @@ const ActivitySchema = new Schema<IActivity>(
 			required: true,
 		},
 		hour_start: {
-			type: Date,
+			type: String,
 			required: true,
 		},
 		hour_end: {
-			type: Date,
+			type: String,
 			required: true,
 		},
 		status: {
-			type: String,
-			required: true,
-			enum: Object.values(STATUS),
-			default: STATUS.AWAITING,
+			enum: Object.values(AppointmentStatus),
 		},
 		schedule_block: {
 			type: Boolean,
