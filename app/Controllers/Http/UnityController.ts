@@ -1,25 +1,10 @@
+import { adaptRoute } from 'App/Core/adapters';
+import { makeUnityFindAllByNameComposer } from 'App/Core/composers/unities/make-composer-unity-find-by-name';
 import Permission from 'App/Models/Permission';
 import Unity from 'App/Models/Unity';
-
 class UnityController {
-	public async index({ request }) {
-		try {
-			const data = request.only(['name']);
-			if (data.name) {
-				const unities = await Unity.where({
-					name: { $regex: new RegExp(`.*${data.name}.*`) },
-				})
-					.with('users')
-					.sort('-name')
-					.fetch();
-
-				return unities;
-			}
-			const unities = await Unity.with('users').fetch();
-			return unities;
-		} catch (err) {
-			return false;
-		}
+	public async index(ctx) {
+		return adaptRoute(makeUnityFindAllByNameComposer(), ctx);
 	}
 
 	public async store({ request, response }) {

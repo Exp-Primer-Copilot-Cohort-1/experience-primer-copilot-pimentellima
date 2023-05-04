@@ -8,7 +8,11 @@ export class UnitiesInMemoryRepository implements UnitiesManagerInterface {
 	private items: IUnity[] = [];
 
 	constructor() { }
-	findByName: (name: string) => PromiseEither<AbstractError, IUnity[]>;
+	public async findByName(
+		name: string,
+	): PromiseEither<AbstractError, IUnity[]> {
+		return right(this.items);
+	}
 	public async findAll(): PromiseEither<AbstractError, IUnity[]> {
 		return right(this.items);
 	}
