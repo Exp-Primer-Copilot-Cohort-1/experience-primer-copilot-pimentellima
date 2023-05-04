@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IUser } from 'Types/IUser'
+import type { IUser } from 'Types/IUser'
 import { UserNotValidError } from '../../errors/user-not-valid'
 import { SystemUser } from '../abstract/system-user.abstract'
+import ExtractValueEntitiesValidations from '../decorators/extract-value-entities-validations'
 import DaysOfTrade from '../helpers/days-of-trade'
 
 export class SessionUser extends SystemUser {
@@ -11,6 +11,10 @@ export class SessionUser extends SystemUser {
 	private _schedule_obs: string
 	private _show_lack: boolean
 	private _rememberMeToken?: string
+
+	private constructor() {
+		super()
+	}
 
 	public get due_date(): string {
 		return this._due_date
@@ -48,6 +52,7 @@ export class SessionUser extends SystemUser {
 		return this
 	}
 
+	@ExtractValueEntitiesValidations
 	public static async build(data: IUser): PromiseEither<AbstractError, SessionUser> {
 		try {
 			const daysOfTradeOrErr = await DaysOfTrade.build(data)

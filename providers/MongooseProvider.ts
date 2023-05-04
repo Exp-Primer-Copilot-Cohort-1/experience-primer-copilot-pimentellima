@@ -21,25 +21,25 @@ import { Mongoose } from 'mongoose'
 |
 */
 export default class MongoProvider {
-  constructor(protected app: ApplicationContract) {}
+	constructor(protected app: ApplicationContract) { }
 
-  public register() {
-    const mongoose = new Mongoose()
+	public register() {
+		const mongoose = new Mongoose()
 
-    mongoose.connect(Env.get('DB_CONNECTION_STRING'))
+		mongoose.connect(Env.get('DB_CONNECTION_STRING'))
 
-    this.app.container.singleton('Mongoose', () => mongoose)
-  }
+		this.app.container.singleton('Mongoose', () => mongoose)
+	}
 
-  public async boot() {
-    // All bindings are ready, feel free to use them
-  }
+	public async boot() {
+		// All bindings are ready, feel free to use them
+	}
 
-  public async ready() {
-    // App is ready
-  }
+	public async ready() {
+		// App is ready
+	}
 
-  public async shutdown() {
-    await this.app.container.use('Mongoose').disconnect()
-  }
+	public async shutdown() {
+		await this.app.container.use('Mongoose').disconnect()
+	}
 }

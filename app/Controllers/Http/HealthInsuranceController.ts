@@ -34,7 +34,7 @@ class HealthInsuranceController {
 		return adaptRoute(makeHealtInsuranceUpdateComposer(), ctx)
 	}
 
-	async destroy({ params }) {
+	async destroy({ params }: HttpContextContract) {
 		const healthInsurances = await HealthInsurance.findByIdAndDelete(params.id)
 
 		return healthInsurances
