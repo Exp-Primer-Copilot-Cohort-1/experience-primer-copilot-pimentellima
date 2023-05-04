@@ -4,10 +4,12 @@ import { assert } from 'chai'
 import Activity from 'App/Models/Activity';
 import { faker } from '@faker-js/faker';
 
+const date = faker.date.future();
+
 const newActivity = {
-    date: faker.date.future(),
-    hour_start: faker.date.future(),
-    hour_end: faker.date.future(),
+    date: date,
+    hour_start: new Date(date.getHours() + 1),
+    hour_end: new Date(date.getHours() + 2),
     status: 'scheduled',
     schedule_block: false,
     procedures: [
@@ -27,7 +29,7 @@ const newActivity = {
     ],
     client: {
         value: '6399e196373d349c09b46dba',
-        label: 'Wesley de Paula Pedra',
+        label: 'TESTE',
         celphone: '(31) 9 9937-9196',
         email: 'wesley de paula pedra',
         partner: null
@@ -73,17 +75,24 @@ test.group('Activity Controller', () => {
         assert.equal(deletedCount, 1);
 	});
 
-/*     test('display conflicting dates error', async ({ client }) => {
+    test('display invalid date error', async ({ client }) => {
 		const { token } = await loginAndGetToken(client);
 
+        
 		const response = await client
-			.post('activity')
-			.json({...newActivity})
+        .post('activity')
+        .json({
+                ...newActivity,
+                date: faker.date.future(),
+                hour_start: faker.date.future(),
+                hour_end: faker.date.past()
+            })
 			.bearerToken(token.token);
-
-		response.assertStatus(409);
+            
+        console.log(response.error())
+        response.assertStatus(409); 
 	});
- */
+
     /* test('update activity', async ({ client }) => {
 		const { token } = await loginAndGetToken(client);
 
@@ -124,7 +133,6 @@ test.group('Activity Controller', () => {
         const id = "644afd8a2f4968d63d9bfd04";
 
 		const response = await client.get('activity/' + id);
-        console.log(response.error())
 		response.assertStatus(200);
 	});
 

@@ -164,7 +164,6 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					.defineProfId(params.prof_id.toString())
 			);
 		} catch(err) {
-			console.log(err)
 			return left(new InvalidParamsError(err));
 		}
 	}
