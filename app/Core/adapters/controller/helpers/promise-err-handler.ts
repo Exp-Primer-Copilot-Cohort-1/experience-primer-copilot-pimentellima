@@ -1,19 +1,15 @@
-import { AbstractError } from 'App/Core/errors/error.interface';
+export type PromiseError = [Error, null]
+export type PromiseSuccess<T> = [null, T]
+export type PromiseResult<T> = Promise<PromiseError | PromiseSuccess<T>>
 
-type ErrorPromise = [AbstractError, null];
-type SuccessPromise<T> = [null, T];
-type Response<T> = ErrorPromise | SuccessPromise<T>;
-
-async function promiseErrorHandler<T>(
-	promise: Promise<T>,
-): Promise<Response<T>> {
+async function promiseErrorHandler<T>(promise: Promise<T>): PromiseResult<T> {
 	try {
-		const data = await promise;
+		const data = await promise
 
-		return [null, data];
+		return [null, data]
 	} catch (error) {
-		return [error, null];
+		return [error, null]
 	}
 }
 
-export default promiseErrorHandler;
+export default promiseErrorHandler

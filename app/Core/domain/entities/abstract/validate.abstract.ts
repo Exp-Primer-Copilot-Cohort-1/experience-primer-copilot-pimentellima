@@ -1,12 +1,16 @@
 export abstract class Validate {
-	private readonly _value: any;
-	public abstract validate(value): this;
+	private readonly _value: any
+	public abstract validate(value): this
 
 	constructor(value) {
-		this._value = value;
+		this._value = value
 	}
 
 	public get value(): any {
-		return this._value;
+		return this._value
+	}
+
+	toString(): string {
+		return this._value
 	}
 }

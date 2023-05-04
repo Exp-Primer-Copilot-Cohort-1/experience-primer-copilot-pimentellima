@@ -1,16 +1,15 @@
-import { describe, expect, it } from 'vitest';
-import { CreateUserAdminUseCase } from './create-user-admin-use-case';
+import { describe, expect, it } from 'vitest'
+import { CreateUserAdminUseCase } from './create-user-admin-use-case'
 
 import {
 	AdminInMemoryRepository,
 	UnitiesInMemoryRepository,
-} from 'App/Core/domain/repositories';
-import { CreatePasswordUseCase } from '../create-password/create-password-use-case';
+} from 'App/Core/domain/repositories'
+import { CreatePasswordUseCase } from '../create-password/create-password-use-case'
 
-import { faker } from '@faker-js/faker';
-import DaysOfTrade from 'App/Core/domain/entities/helpers/days-of-trade';
-import { IAdminUser } from 'Types/IAdminUser';
-import { cpf } from 'cpf-cnpj-validator';
+import { faker } from '@faker-js/faker'
+import { IAdminUser } from 'Types/IAdminUser'
+import { cpf } from 'cpf-cnpj-validator'
 
 const user: IAdminUser = {
 	is_company: faker.datatype.boolean(),
@@ -22,24 +21,54 @@ const user: IAdminUser = {
 	document: cpf.generate(),
 	celphone: faker.phone.number('(99) 99999-9999'),
 	type: 'admin_prof',
-	dayOfTrade: DaysOfTrade.build({} as any),
-};
+	dayOfTrade: null,
+	_id: null,
+	active: null,
+}
 
 const makeSut = () => {
 	const sut = new CreateUserAdminUseCase(
 		new UnitiesInMemoryRepository(),
 		new AdminInMemoryRepository(),
 		new CreatePasswordUseCase(),
-	);
+	)
 
 	return {
 		sut,
-	};
-};
+	}
+}
 
 describe('Create User Admin Use Case (Unit)', () => {
+	it('should return right with user created', async () => {
+		const { sut } = makeSut()
+		const userOrErr = await sut.execute(user)
+		expect(userOrErr.isRight()).toBeTruthy()
+	})
+
 	it('should return left with error when user already exists', async () => {
-		const { sut } = makeSut();
-		expect(true).toBe(true);
-	});
-});
+		const { sut } = makeSut()
+		const userOrErr = await sut.execute(user)
+
+		expect(userOrErr.isRight()).toBeTruthy()
+
+		const user2OrErr = await sut.execute(user)
+		expect(user2OrErr.isLeft()).toBeTruthy()
+	})
+
+	it('should return right with user created if not passed password', async () => {
+		const { sut } = makeSut()
+		const userOrErr = await sut.execute({ ...user, password: null })
+		expect(userOrErr.isRight()).toBeTruthy()
+		if (userOrErr.isLeft()) {
+			throw new Error('User not created')
+		}
+
+		expect(userOrErr.extract().password).toBeDefined()
+	})
+
+	it('should return left with error when unit not exists', async () => {
+		const { sut } = makeSut()
+		const userOrErr = await sut.execute({ ...user, unity_id: 'invalid_unity' })
+		expect(userOrErr.isLeft()).toBeTruthy()
+	})
+})
