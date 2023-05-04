@@ -43,6 +43,13 @@ export class UnitiesInMemoryRepository implements UnitiesManagerInterface {
 	constructor() {
 		this.items = fabricateUnity(10)
 	}
+  
+  public async findByName(
+		name: string,
+	): PromiseEither<AbstractError, IUnity[]> {
+		return right(this.items);
+  }
+    
 	public async findAll(): PromiseEither<AbstractError, IUnity[]> {
 		return right(this.items)
 	}

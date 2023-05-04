@@ -1,41 +1,45 @@
 import { AbstractError } from 'App/Core/errors/error.interface';
 import { UseCase } from 'App/Core/interfaces/use-case.interface';
-import { PromiseEither, right } from 'App/Core/shared';
-import Procedure from 'App/Models/Procedure';
-
+import { PromiseEither, left } from 'App/Core/shared';
+import { MissingParamsError } from '../../errors/missing-params';
+import { ProceduresManagerInterface } from '../../repositories/interface';
 type FindAllProps = {
 	name?: string;
-	active?: boolean;
+
 	unity_id: string;
 };
 
 export class FindAllProceduresByUnityUseCase
 	implements UseCase<FindAllProps, any[]>
 {
-	constructor() {}
+	constructor(
+		private readonly proceduresManager: ProceduresManagerInterface,
+	) { }
 
-	public async execute({
-		name,
-		active = true,
-		unity_id,
-	}: FindAllProps): PromiseEither<AbstractError, any[]> {
-		if (name) {
-			const procedures = await Procedure.find({
-				name: { $regex: new RegExp(`.*${name}.*`) },
-				unity_id: unity_id,
-				active,
-			})
-				.sort('-name')
-				.exec();
+	public async execute(
+		input: FindAllProps,
+	): PromiseEither<AbstractError, any[]> {
+		if (!input?.unity_id) {
+			return left(new MissingParamsError('unity_id'));
+		}
+		if (input.name) {
+			const proceduresOrErr = await this.proceduresManager.findByName(
+				input.name,
+				input.unity_id,
+			);
+			if (proceduresOrErr.isLeft()) {
+				return left(proceduresOrErr.extract());
+			}
 
-			return right(procedures);
+			return proceduresOrErr;
 		}
 
-		const procedures = await Procedure.find({
-			unity_id: unity_id,
-			active,
-		}).exec();
-
-		return right(procedures);
+		const proceduresOrErr = await this.proceduresManager.findById(
+			input.unity_id,
+		);
+		if (proceduresOrErr.isLeft()) {
+			return left(proceduresOrErr.extract());
+		}
+		return proceduresOrErr;
 	}
 }
