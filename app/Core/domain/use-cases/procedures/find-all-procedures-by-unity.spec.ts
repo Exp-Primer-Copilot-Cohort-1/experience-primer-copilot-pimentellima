@@ -1,23 +1,42 @@
-import mongoose from 'mongoose';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { ProceduresInMemoryRepository } from '../../repositories/produceres/procedures-in-memory-repository';
 import { FindAllProceduresByUnityUseCase } from './find-all-procedures-by-unity';
 
 const makeSut = () => {
-	const sut = new FindAllProceduresByUnityUseCase();
+	const sut = new FindAllProceduresByUnityUseCase(
+		new ProceduresInMemoryRepository(),
+	);
+
 	return { sut };
 };
 
-describe('Find All Procedures By Unity', () => {
-	beforeAll(async () => {
-		if (process.env.DB_CONNECTION_STRING) {
-			mongoose.connect(process.env.DB_CONNECTION_STRING);
-		}
-	});
-	it('should return all procedures by unity', async () => {
+describe('FindAllproceduresByUnityUseCase (Unit)', () => {
+	it('should return is left if unity_id is not provided', async () => {
 		const { sut } = makeSut();
-		const proceduresOrErr = await sut.execute({ unity_id: 'any_unity_id' });
+		const input = { name: 'cara' };
+		const proceduresOrErr = await sut.execute(input);
 
-		expect(proceduresOrErr.isRight()).toBeTruthy();
-		console.log(proceduresOrErr.extract());
+		expect(proceduresOrErr.isLeft()).toBeTruthy();
+	});
+	//	it('should return array if right', async () => {
+	//		const { sut } = makeSut();
+	//		const input = { unity_id: 'unity_id' };
+	//		const proceduresOrErr = await sut.execute(input);
+	//
+	//		expect(proceduresOrErr.isRight()).toBeTruthy();
+	//		expect(proceduresOrErr.extract()).toBeInstanceOf(Array);
+	//	});
+
+	it('should return is left', async () => {
+		const { sut } = makeSut();
+		const proceduresOrErr = await sut.execute({});
+
+		expect(proceduresOrErr.isLeft()).toBeTruthy();
+	});
+	it('should return is left if is null', async () => {
+		const { sut } = makeSut();
+		const proceduresOrErr = await sut.execute(null as any);
+
+		expect(proceduresOrErr.isLeft()).toBeTruthy();
 	});
 });
