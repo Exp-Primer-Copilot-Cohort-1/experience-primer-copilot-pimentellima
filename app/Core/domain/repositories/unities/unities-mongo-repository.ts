@@ -31,4 +31,15 @@ export class UnitiesMongooseRepository implements UnitiesManagerInterface {
 		}
 		return right(unity)
 	}
+	public async findByName(
+		name: string,
+	): PromiseEither<AbstractError, IUnity[]> {
+		const unity = await Unity.find({
+			name: { $regex: new RegExp(`.*${name}.*`) },
+		});
+		if (!unity) {
+			return left(new UnitNotFoundError());
+		}
+		return right(unity);
+	}
 }

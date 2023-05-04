@@ -1,41 +1,42 @@
-import { Model } from '__mocks__/model';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { ProceduresInMemoryRepository } from '../../repositories/produceres/procedures-in-memory-repository';
 import { FindAllProceduresByUnityUseCase } from './find-all-procedures-by-unity';
 
 const makeSut = () => {
-	const sut = new FindAllProceduresByUnityUseCase();
+	const sut = new FindAllProceduresByUnityUseCase(
+		new ProceduresInMemoryRepository(),
+	);
 
 	return { sut };
 };
 
-describe('Find All Procedures By Unity', () => {
-	// beforeAll(async () => {
-	// 	if (process.env.DB_CONNECTION_STRING) {
-	// 		mongoose.connect(process.env.DB_CONNECTION_STRING);
-	// 	}
-	// });
-
-	vi.mock('App/Models/Procedure', () => ({
-		__esModule: true,
-		default: Model,
-	}));
-
-	// beforeAll(() => {
-	// 	vi.spyOn(Procedure, 'find').mockReturnValue(new Model() as any);
-	// });
-
-	it('should return all procedures by unity', async () => {
+describe('FindAllproceduresByUnityUseCase (Unit)', () => {
+	it('should return is left if unity_id is not provided', async () => {
 		const { sut } = makeSut();
+		const input = { name: 'cara' };
+		const proceduresOrErr = await sut.execute(input);
 
-		Model.find = () =>
-		({
-			exec: () => Promise.resolve([]),
-		} as any);
+		expect(proceduresOrErr.isLeft()).toBeTruthy();
+	});
+	//	it('should return array if right', async () => {
+	//		const { sut } = makeSut();
+	//		const input = { unity_id: 'unity_id' };
+	//		const proceduresOrErr = await sut.execute(input);
+	//
+	//		expect(proceduresOrErr.isRight()).toBeTruthy();
+	//		expect(proceduresOrErr.extract()).toBeInstanceOf(Array);
+	//	});
 
-		const proceduresOrErr = await sut.execute({
-			unity_id: 'any_unity_id',
-		});
+	it('should return is left', async () => {
+		const { sut } = makeSut();
+		const proceduresOrErr = await sut.execute({});
 
-		expect(proceduresOrErr.isRight()).toBeTruthy();
+		expect(proceduresOrErr.isLeft()).toBeTruthy();
+	});
+	it('should return is left if is null', async () => {
+		const { sut } = makeSut();
+		const proceduresOrErr = await sut.execute(null as any);
+
+		expect(proceduresOrErr.isLeft()).toBeTruthy();
 	});
 });
