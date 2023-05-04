@@ -1,1 +1,1 @@
-export * from './mongose-adapter';
+export * from './mongoose-adapter';

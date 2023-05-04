@@ -7,11 +7,11 @@ import promiseErrorHandler from '../helpers/promise-err-handler';
 import { ControllerGeneric } from '../helpers/controller-generic';
 
 export class Controller implements ControllerGeneric {
-	constructor(private readonly UseCase: UseCase<any, any, any>) { }
+	constructor(private readonly UseCase: UseCase<any, any>) { }
 
 	public async handle(httpRequest: HttpRequest) {
 		const [error, resOrErr] = await promiseErrorHandler(
-			this.UseCase.execute(httpRequest.body, httpRequest.params ?? {}),
+			this.UseCase.execute(httpRequest.body),
 		);
 
 		if (error) {
