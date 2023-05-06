@@ -110,15 +110,14 @@ Route.group(() => {
 	Route.delete('category/:id', 'CategoryController.destroy')
 	Route.post('category', 'CategoryController.store')
 
-	Route.get('form/prof/:id', 'FormControllerV2.findFormByProfID')
-	Route.get('form/unity', 'FormControllerV2.findFormByUnityID')
-	Route.get('form/category/:id', 'FormControllerV2.findFormByCategoryID')
-	Route.post('form', 'FormControllerV2.store')
-
-	Route.get('form', 'FormController.index')
-	Route.get('form/:id', 'FormController.show')
-	Route.put('form/:id', 'FormController.update')
-	Route.delete('form/:id', 'FormController.destroy')
+	Route.get('form/prof/:id', 'FormController.findFormByProfId')
+	Route.get('form/unity', 'FormController.findFormByUnityId')
+	Route.get('form/category/:id', 'FormController.findFormByCategoryId')
+	Route.post('form', 'FormController.createForm')
+	Route.get('form', 'FormController.findAllForms')
+	Route.get('form/:id', 'FormController.findFormById')
+	Route.put('form/:id', 'FormController.updateForm')
+	Route.delete('form/:id', 'FormController.deleteFormById')
 
 	Route.get('answer', 'AnswerController.index')
 	Route.get('answer/:id', 'AnswerController.show')
