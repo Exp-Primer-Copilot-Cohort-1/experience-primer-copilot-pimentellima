@@ -12,7 +12,7 @@ export class FindAllAccountUseCase
 	implements UseCase<TypeParams, AccountEntity[]>
 {
 	constructor(
-		private readonly activitiesManager: AccountManagerInterface
+		private readonly accountManager: AccountManagerInterface
 	) {}
 
 	public async execute(
@@ -20,7 +20,7 @@ export class FindAllAccountUseCase
 	): PromiseEither<AbstractError, AccountEntity[]> {
 
 		const accountsOrErr =
-			await this.activitiesManager.findAllAccounts(params.unity_id);
+			await this.accountManager.findAllAccounts(params.unity_id);
 
 		if (accountsOrErr.isLeft()) return left(accountsOrErr.extract());
 		const accounts = accountsOrErr.extract();

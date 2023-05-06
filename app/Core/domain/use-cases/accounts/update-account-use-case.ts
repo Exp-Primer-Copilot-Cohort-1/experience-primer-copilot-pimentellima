@@ -9,7 +9,7 @@ export class UpdateAccountUseCase
 	implements UseCase<IAccount, AccountEntity>
 {
 	constructor(
-		private readonly activitiesManager: AccountManagerInterface
+		private readonly accountManager: AccountManagerInterface
 	) {}
 
 	public async execute(
@@ -17,7 +17,7 @@ export class UpdateAccountUseCase
 	): PromiseEither<AbstractError, AccountEntity> {
 
 		const accountOrErr =
-			await this.activitiesManager.updateAccount(params);
+			await this.accountManager.updateAccount(params);
 
 		if (accountOrErr.isLeft()) return left(accountOrErr.extract());
 		const account = accountOrErr.extract();
