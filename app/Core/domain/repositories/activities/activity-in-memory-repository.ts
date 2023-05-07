@@ -20,12 +20,16 @@ export class ActivityInMemoryRepository implements ActivitiesManagerInterface {
 		id: string,
 		activity: IActivity
 	): PromiseEither<AbstractError, ActivityEntity> {
-		const activities = this.activities.filter(
-			(activity) =>
-				activity.prof_id === activity.prof_id &&
-				activity.date.getDay() === new Date(activity.date).getDay() &&
-				activity._id !== id
-		);
+		const activities = this.activities.filter((act) => {
+			act.date.setHours(0, 0, 0, 0);
+			activity.date.setHours(0, 0, 0, 0);
+
+			return (
+				act.prof_id === activity.prof_id &&
+				act.date.getDate() === activity.date.getDate() &&
+				act._id !== id
+			);
+		});
 
 		const scheduleOrErr = await ScheduleEntity.build(activities);
 		if (scheduleOrErr.isLeft()) return left(scheduleOrErr.extract());
@@ -44,7 +48,7 @@ export class ActivityInMemoryRepository implements ActivitiesManagerInterface {
 		if (!oldActivity) return left(new ActivityNotFoundError());
 		const activityOrErr = await ActivityEntity.build({
 			...oldActivity,
-			...activity
+			...activity,
 		});
 		if (activityOrErr.isLeft())
 			return left(new AbstractError("Internal Error", 500));
@@ -52,17 +56,19 @@ export class ActivityInMemoryRepository implements ActivitiesManagerInterface {
 		const updatedActivity = activityOrErr.extract().updateStatus({
 			date: oldActivity.date,
 			hour_start: oldActivity.hour_start,
-			hour_end: oldActivity.hour_end
+			hour_end: oldActivity.hour_end,
 		});
 		return right(updatedActivity);
 	}
 
-	async findActivityById (
+	async findActivityById(
 		id: string
-	) : PromiseEither<AbstractError, ActivityEntity> {
+	): PromiseEither<AbstractError, ActivityEntity> {
 		if (!id) return left(new MissingParamsError("id"));
 
-		const item = await this.activities.find(activity => activity._id === id);
+		const item = await this.activities.find(
+			(activity) => activity._id === id
+		);
 		if (!item) return left(new ActivityNotFoundError());
 
 		const activityOrErr = await ActivityEntity.build(item);
@@ -72,19 +78,22 @@ export class ActivityInMemoryRepository implements ActivitiesManagerInterface {
 		return right(activityOrErr.extract());
 	}
 
-
-	deleteActivityById : (
+	deleteActivityById: (
 		id: string
 	) => PromiseEither<AbstractError, ActivityEntity>;
 
 	async createActivity(
 		activity: IActivity
 	): PromiseEither<AbstractError, ActivityEntity> {
-		const activities = this.activities.filter(
-			(activity) =>
-				activity.prof_id === activity.prof_id &&
-				activity.date.getDay() === new Date(activity.date).getDay()
-		);
+		const activities = this.activities.filter((act) => {
+			act.date.setHours(0, 0, 0, 0);
+			activity.date.setHours(0, 0, 0, 0);
+
+			return (
+				act.date.getDate() === activity.date.getDate() &&
+				act.prof_id === activity.prof_id
+			);
+		})
 
 		const scheduleOrErr = await ScheduleEntity.build(activities);
 		if (scheduleOrErr.isLeft()) return left(scheduleOrErr.extract());

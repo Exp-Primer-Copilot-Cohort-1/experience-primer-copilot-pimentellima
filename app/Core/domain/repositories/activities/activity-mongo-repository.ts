@@ -16,10 +16,14 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	): PromiseEither<AbstractError, ActivityEntity> {
 		const activities = (
 			await Activity.find({ prof_id: activity.prof_id })
-		).filter(
-			(activity) =>
-				activity.date.getDay() === new Date(activity.date).getDay()
-		);
+		).filter((act) => {
+			act.date.setHours(0, 0, 0, 0);
+			activity.date.setHours(0, 0, 0, 0);
+
+			return (
+				act.date.getDate() === activity.date.getDate()
+			);
+		});
 
 		const scheduleOrErr = await ScheduleEntity.build(activities);
 		if (scheduleOrErr.isLeft()) return left(scheduleOrErr.extract());
@@ -132,13 +136,19 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		id: string,
 		activity: IActivity
 	): PromiseEither<AbstractError, ActivityEntity> {
+		if (!id) return left(new MissingParamsError("id"));
+
 		const activities = (
 			await Activity.find({ prof_id: activity.prof_id })
-		).filter(
-			(activity) =>
-				activity.date.getDay() === new Date(activity.date).getDay() &&
-				activity._id !== id
-		);
+		).filter((act) => {
+			act.date.setHours(0, 0, 0, 0);
+			activity.date.setHours(0, 0, 0, 0);
+
+			return (
+				act.date.getDate() === activity.date.getDate() &&
+				act._id !== id
+			);
+		});
 
 		const scheduleOrErr = await ScheduleEntity.build(activities);
 		if (scheduleOrErr.isLeft()) return left(scheduleOrErr.extract());
@@ -150,7 +160,6 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		if (newAppointmentOrErr.isLeft())
 			return left(newAppointmentOrErr.extract());
 
-		if (!id) return left(new MissingParamsError("id"));
 		const oldActivity = await Activity.findById(id);
 		if (!oldActivity) return left(new ActivityNotFoundError());
 		const activityOrErr = await ActivityEntity.build({
