@@ -128,47 +128,21 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		return this;
 	}
 
-	public async merge(
-		params: IActivity,
-	): PromiseEither<AbstractError, ActivityEntity> {
-		try {
-			activitySchema.parse({
-				...params,
-				user_id: params.user_id?.toString(),
-				unity_id: params.unity_id?.toString(),
-				client_id: params.client_id?.toString(),
-				prof_id: params.prof_id?.toString(),
-			});
-
-			const rescheduled = params.date !== this.date ||
+	public updateStatus(
+		params: {
+			date: Date | string,
+			hour_start: string,
+			hour_end: string
+		},
+	): ActivityEntity {
+		if(params.date !== this.date ||
 			params.hour_start !== this.hour_start ||
-			params.hour_end !== this.hour_end
+			params.hour_end !== this.hour_end) {
+				return this.defineStatus(AppointmentStatus.RESCHEDULED)
+			} 
+			return this;
+		}
 
-			return right(this
-				.defineId(params._id?.toString())
-				.defineDate(params.date)
-				.defineHourStart(params.hour_start)
-				.defineHourEnd(params.hour_end)
-				.defineScheduleBlock(params.schedule_block)
-				.defineProcedures(params.procedures)
-				.defineClient(params.client)
-				.defineStatus(rescheduled ? AppointmentStatus.RESCHEDULED : params.status)
-				.defineObs(params.obs)
-				.defineProf(params.prof)
-				.definePhone(params.phone)
-				.defineAllDay(params.all_day)
-				.defineIsRecorrent(params.is_recorrent)
-				.defineActive(params.active)
-				.defineUnityId(params.unity_id.toString())
-				.defineUserId(params.user_id?.toString())
-				.defineScheduled(params.scheduled)
-				.defineProfId(params.prof_id.toString())
-				);
-		}
-		catch(error) {
-			return left(new AbstractError("", 500));
-		}
-	}
 
 	public static async build(
 		params: IActivity

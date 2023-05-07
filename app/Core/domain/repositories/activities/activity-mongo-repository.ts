@@ -31,9 +31,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		if (newAppointmentOrErr.isLeft())
 			return left(newAppointmentOrErr.extract());
 
-		const newActivityOrErr = await ActivityEntity.build({
-			...activity,
-		});
+		const newActivityOrErr = await ActivityEntity.build(activity);
 		if (newActivityOrErr.isLeft()) return left(newActivityOrErr.extract());
 		const newActivity = newActivityOrErr.extract();
 
@@ -155,13 +153,20 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		if (!id) return left(new MissingParamsError("id"));
 		const oldActivity = await Activity.findById(id);
 		if (!oldActivity) return left(new ActivityNotFoundError());
-		const activityOrErr = await ActivityEntity.build(oldActivity);
+		const activityOrErr = await ActivityEntity.build({
+			...oldActivity,
+			...activity
+		});
 		if (activityOrErr.isLeft())
 			return left(new AbstractError("Internal Error", 500));
 
-		const updatedActivityOrErr = await activityOrErr.extract().merge(activity);
-		if(updatedActivityOrErr.isLeft()) return left(new AbstractError("Invalid params", 400));
-		await Activity.findByIdAndUpdate(id, updatedActivityOrErr.extract());
-		return right(updatedActivityOrErr.extract());
+		const updatedActivity = activityOrErr.extract().updateStatus({
+			date: oldActivity.date,
+			hour_start: oldActivity.hour_start,
+			hour_end: oldActivity.hour_end
+		});
+
+		await Activity.findByIdAndUpdate(id, updatedActivity);
+		return right(updatedActivity);
 	}
 }
