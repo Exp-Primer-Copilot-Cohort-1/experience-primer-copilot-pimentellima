@@ -5,57 +5,103 @@ import ActivityEntity from "../../entities/activities/activity";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ScheduleEntity } from "../../entities/schedule/schedule";
 import { IActivity } from "Types/IActivity";
+import { ActivityNotFoundError } from "../../errors/activity-not-found";
 
 export class ActivityInMemoryRepository implements ActivitiesManagerInterface {
 	public activities: any[] = [];
 
 	constructor() {}
 
-	findAllActivities: (unity_id: string) => PromiseEither<AbstractError, ActivityEntity[]>;
-	updateActivity: (params: IActivity) => PromiseEither<AbstractError, ActivityEntity>;
-	findActivityById: (id: string) => PromiseEither<AbstractError, ActivityEntity>;
-	deleteActivityById: (id: string) => PromiseEither<AbstractError, ActivityEntity>;
+	findAllActivities: (
+		unity_id: string
+	) => PromiseEither<AbstractError, ActivityEntity[]>;
 
-	async createActivity(
-		params: IActivity
+	async updateActivityById(
+		id: string,
+		activity: IActivity
 	): PromiseEither<AbstractError, ActivityEntity> {
 		const activities = this.activities.filter(
 			(activity) =>
-				activity.date.getDay() === new Date(params.date).getDay()
+				activity.prof_id === activity.prof_id &&
+				activity.date.getDay() === new Date(activity.date).getDay() &&
+				activity._id !== id
 		);
 
-		const scheduleParams = {
-			prof_id: params.prof_id.toString(),
-			appointments: activities.map((activity) => ({
-				date: activity.date,
-				hour_start: new Date(activity.hour_start),
-				hour_end: new Date(activity.hour_end),
-			})),
-		};
-
-		const scheduleOrErr = await ScheduleEntity.build(scheduleParams);
+		const scheduleOrErr = await ScheduleEntity.build(activities);
 		if (scheduleOrErr.isLeft()) return left(scheduleOrErr.extract());
 
 		const newAppointmentOrErr = await scheduleOrErr
 			.extract()
-			.addAppointment({
-				hour_start: new Date(params.hour_start),
-				hour_end: new Date(params.hour_end),
-				date: new Date(params.date),
-			});
+			.addAppointment(activity);
+
+		if (newAppointmentOrErr.isLeft())
+			return left(newAppointmentOrErr.extract());
+
+		if (!id) return left(new MissingParamsError("id"));
+		const oldActivity = await this.activities.find(
+			(activity) => activity._id === activity._id
+		);
+		if (!oldActivity) return left(new ActivityNotFoundError());
+		const activityOrErr = await ActivityEntity.build(oldActivity);
+		if (activityOrErr.isLeft())
+			return left(new AbstractError("Internal error", 500));
+
+		const updatedActivityOrErr = await activityOrErr
+			.extract()
+			.merge(activity);
+		if (updatedActivityOrErr.isLeft())
+			return left(new AbstractError("Invalid params", 400));
+
+		return right(updatedActivityOrErr.extract());
+	}
+
+	async findActivityById (
+		id: string
+	) : PromiseEither<AbstractError, ActivityEntity> {
+		if (!id) return left(new MissingParamsError("id"));
+
+		const item = await this.activities.find(activity => activity._id === id);
+		if (!item) return left(new ActivityNotFoundError());
+
+		const activityOrErr = await ActivityEntity.build(item);
+		if (activityOrErr.isLeft())
+			return left(new AbstractError("Internal Error", 500));
+
+		return right(activityOrErr.extract());
+	}
+
+
+	deleteActivityById : (
+		id: string
+	) => PromiseEither<AbstractError, ActivityEntity>;
+
+	async createActivity(
+		activity: IActivity
+	): PromiseEither<AbstractError, ActivityEntity> {
+		const activities = this.activities.filter(
+			(activity) =>
+				activity.prof_id === activity.prof_id &&
+				activity.date.getDay() === new Date(activity.date).getDay()
+		);
+
+		const scheduleOrErr = await ScheduleEntity.build(activities);
+		if (scheduleOrErr.isLeft()) return left(scheduleOrErr.extract());
+
+		const newAppointmentOrErr = await scheduleOrErr
+			.extract()
+			.addAppointment(activity);
 
 		if (newAppointmentOrErr.isLeft())
 			return left(newAppointmentOrErr.extract());
 
 		const newActivityOrErr = await ActivityEntity.build({
-			...params,
+			...activity,
 		});
 		if (newActivityOrErr.isLeft()) return left(newActivityOrErr.extract());
 		const newActivity = newActivityOrErr.extract();
 
 		return right(newActivity);
 	}
-
 
 	async findActivitiesByProf(
 		unity_id: string,
@@ -89,7 +135,8 @@ export class ActivityInMemoryRepository implements ActivitiesManagerInterface {
 
 		const data = this.activities.filter(
 			(activity) =>
-				activity.unity_id === unity_id && activity.client_id === client_id
+				activity.unity_id === unity_id &&
+				activity.client_id === client_id
 		);
 		const activities = await Promise.all(
 			data.map(async (item) => {
@@ -102,6 +149,4 @@ export class ActivityInMemoryRepository implements ActivitiesManagerInterface {
 		);
 		return right(activities);
 	}
-
-
 }

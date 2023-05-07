@@ -5,10 +5,13 @@ import { ConflictingScheduleError } from '../../errors/ conflicting-schedule-err
 import { faker } from '@faker-js/faker';
 import { InvalidScheduleError } from '../../errors/invalid-schedule-error';
 
-const prototypeActivity = {
-    date: '2023-04-26T03:00:00.000Z',
-    hour_start: '2023-04-26T11:00:00.000Z',
-    hour_end: '2023-04-26T12:00:00.000Z',
+const date = faker.date.future();
+
+const activity = {
+    _id: '1',
+    date: date,
+    hour_start: new Date(date.getHours() + 1),
+    hour_end: new Date(date.getHours() + 2),
     status: 'scheduled',
     schedule_block: false,
     procedures: [
@@ -48,32 +51,28 @@ const prototypeActivity = {
     prof_id: '635978cec109b232759921da',
     created_at: '2023-04-26T14:40:15.161Z',
     updated_at: '2023-04-26T17:51:20.526Z',
-    paid: true
 }
 
-
 describe('Create activity (Unit)', () => {
-	it('should display activity', async () => {
-		const sut = new CreateActivityUseCase(new ActivityInMemoryRepository());
-
-        const date = faker.date.future();
-        const hour_start = faker.date.future();
-        const hour_end = faker.date.future();
-        const activityWithValidDates = {
-            ...prototypeActivity,
-            date,
-            hour_start,
-            hour_end
+	it('should create activity', async () => {
+        const memoryRepo = new ActivityInMemoryRepository();
+        memoryRepo.activities = [activity]
+        const sut = new CreateActivityUseCase(memoryRepo);
+        const newActivity = {
+            ...activity,
+            _id: '2',
+            hour_start: new Date(activity.hour_end.getDate() + 1),
+            hour_end: new Date(activity.hour_end.getDate() + 2)
         };
+		const respOrErr = await sut.execute(newActivity as any);
 
-		const respOrErr = await sut.execute(activityWithValidDates as any);
         expect(respOrErr.isRight()).toBeTruthy();
 	});
 
-    it('should display invalid schedule error', async () => {
+    it('should throw invalid schedule error', async () => {
 		const sut = new CreateActivityUseCase(new ActivityInMemoryRepository());
 		const respOrErr = await sut.execute({
-            ...prototypeActivity,
+            ...activity,
             date: faker.date.past(),
             hour_start: faker.date.past(),
             hour_end: faker.date.past()
@@ -83,19 +82,15 @@ describe('Create activity (Unit)', () => {
         expect(respOrErr.extract()).toBeInstanceOf(InvalidScheduleError);
 	});
 
-    it('should display conflicting schedule error'), async() => {
-        const activity = {
-            ...prototypeActivity,
-            date: faker.date.future(),
-            hour_start: faker.date.future(),
-            hour_end: faker.date.future()
-        }
-
+    it('should throw conflicting schedule error'), async() => {
         const memoryRepo = new ActivityInMemoryRepository();
         memoryRepo.activities = [activity]
-        const sut = new CreateActivityUseCase(new ActivityInMemoryRepository());
-
-		const respOrErr = await sut.execute(activity as any);
+        const sut = new CreateActivityUseCase(memoryRepo);
+        const newActivity = {
+            ...activity,
+            _id: '2',
+        };
+		const respOrErr = await sut.execute(newActivity as any);
 
         expect(respOrErr.isLeft()).toBeTruthy();
         expect(respOrErr.extract()).toBeInstanceOf(ConflictingScheduleError);

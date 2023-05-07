@@ -33,11 +33,15 @@ class ActivityController {
 	}
 
 	async createActivity(ctx: HttpContextContract) {
-		return adaptRoute(makeCreateActivityComposer(), ctx)
+		return adaptRoute(makeCreateActivityComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id
+		})
 	}
 
 	async updateActivity(ctx: HttpContextContract) {
-		return adaptRoute(makeUpdateActivityComposer(), ctx);
+		return adaptRoute(makeUpdateActivityComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id
+		});
 	}
 
 	async deleteActivityById(ctx: HttpContextContract) {

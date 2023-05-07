@@ -1,5 +1,5 @@
+import Mongoose, { Schema } from "@ioc:Mongoose";
 import { IForm } from "Types/IForm";
-import mongoose, { Schema } from "mongoose";
 
 const FormSchema = new Schema<IForm>({
 	name: { type: String, required: true },
@@ -19,12 +19,12 @@ const FormSchema = new Schema<IForm>({
     label: { type: String, required: true },
     dirty: { type: Boolean, required: true },
   }],
-	category_id: { type: mongoose.Types.ObjectId, required: true },
+	category_id: { type: Mongoose.Types.ObjectId, required: true },
 	prof: { type: Object, required: true },
-	unity_id: { type: mongoose.Types.ObjectId, required: true },
+	unity_id: { type: Mongoose.Types.ObjectId, required: true },
 	active: { type: Boolean, required: true },
 	created_at: { type: Date, required: true },
 	updated_at: { type: Date, required: true },
 });
 
-export default mongoose.model<IForm>("forms", FormSchema);
+export default Mongoose.model<IForm>("forms", FormSchema);

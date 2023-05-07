@@ -111,7 +111,6 @@ Route.group(() => {
 	Route.post('category', 'CategoryController.store')
 
 	Route.get('form/prof/:id', 'FormController.findFormByProfId')
-	Route.get('form/unity', 'FormController.findFormByUnityId')
 	Route.get('form/category/:id', 'FormController.findFormByCategoryId')
 	Route.post('form', 'FormController.createForm')
 	Route.get('form', 'FormController.findAllForms')
@@ -131,7 +130,7 @@ Route.group(() => {
 	Route.get('activity-stock', 'ActivityStockController.index')
 
 	Route.get('activity', 'ActivityController.findAllActivities')
-	Route.put('activity', 'ActivityController.updateActivity')
+	Route.put('activity/:id', 'ActivityController.updateActivityById')
 	Route.get('activity/prof/:prof_id', 'ActivityController.findActivitiesByProf')
 	Route.get('activity/client/:client_id', 'ActivityController.findActivitiesByClient')
 	Route.delete('activity/:id', 'ActivityController.deleteActivityById')

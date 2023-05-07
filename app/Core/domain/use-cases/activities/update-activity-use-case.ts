@@ -5,21 +5,29 @@ import { PromiseEither, left, right } from "App/Core/shared";
 import ActivityEntity from "../../entities/activities/activity";
 import { IActivity } from "Types/IActivity";
 
+type ActivityProps = {
+	id: string;
+	activity: IActivity;
+};
+
 export class UpdateActivityUseCase
-	implements UseCase<IActivity, ActivityEntity>
+	implements UseCase<ActivityProps, ActivityEntity>
 {
 	constructor(
 		private readonly activitiesManager: ActivitiesManagerInterface
 	) {}
 
 	public async execute(
-		params: IActivity
+		params: ActivityProps
 	): PromiseEither<AbstractError, ActivityEntity> {
-
 		const updatedActivityOrErr =
-			await this.activitiesManager.updateActivity(params);
+			await this.activitiesManager.updateActivityById(
+				params.id,
+				params.activity
+			);
 
-		if (updatedActivityOrErr.isLeft()) return left(updatedActivityOrErr.extract());
+		if (updatedActivityOrErr.isLeft())
+			return left(updatedActivityOrErr.extract());
 		const activity = updatedActivityOrErr.extract();
 		return right(activity);
 	}
