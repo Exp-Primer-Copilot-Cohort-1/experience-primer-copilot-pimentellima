@@ -10,7 +10,7 @@ type ActivityProps = {
 	activity: IActivity;
 };
 
-export class UpdateActivityUseCase
+export class UpdateActivityByIdUseCase
 	implements UseCase<ActivityProps, ActivityEntity>
 {
 	constructor(

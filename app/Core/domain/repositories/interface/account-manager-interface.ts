@@ -5,8 +5,8 @@ import AccountEntity from '../../entities/account/account';
 
 export interface AccountManagerInterface {
 	findAllAccounts: (unity_id: string) => PromiseEither<AbstractError, AccountEntity[]>;
-    createAccount: (params: IAccount) => PromiseEither<AbstractError, AccountEntity>;
-    updateAccount: (params: IAccount) => PromiseEither<AbstractError, AccountEntity>;
+    createAccount: (account: IAccount) => PromiseEither<AbstractError, AccountEntity>;
+    updateAccountById: (account: IAccount, id: string) => PromiseEither<AbstractError, AccountEntity>;
     findAccountById: (id: string) => PromiseEither<AbstractError, AccountEntity>;
     deleteAccountById: (id: string) => PromiseEither<AbstractError, AccountEntity>;
 }

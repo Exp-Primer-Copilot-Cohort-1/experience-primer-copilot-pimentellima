@@ -17,12 +17,12 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		const activities = (
 			await Activity.find({ prof_id: activity.prof_id })
 		).filter((act) => {
-			act.date.setHours(0, 0, 0, 0);
-			activity.date.setHours(0, 0, 0, 0);
+			const dateAct = new Date(act.date);
+			dateAct.setHours(0,0,0,0);
+			const dateActivity = new Date(activity.date);
+			dateActivity.setHours(0, 0, 0, 0);
 
-			return (
-				act.date.getDate() === activity.date.getDate()
-			);
+			return dateAct === dateActivity;
 		});
 
 		const scheduleOrErr = await ScheduleEntity.build(activities);
@@ -54,7 +54,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 		const activityOrErr = await ActivityEntity.build(item.toObject());
 		if (activityOrErr.isLeft())
-		return left(new AbstractError("Internal Error", 500));
+			return left(new AbstractError("Internal Error", 500));
 
 		return right(activityOrErr.extract());
 	}
@@ -82,7 +82,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		const data = await Activity.find({ unity_id });
 		const activities = await Promise.all(
 			data.map(async (item) => {
-				const activityOrErr = await ActivityEntity.build(item);
+				const activityOrErr = await ActivityEntity.build(item.toObject());
 				if (activityOrErr.isLeft()) {
 					return {} as ActivityEntity;
 				}
@@ -102,7 +102,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		const data = await Activity.find({ unity_id, prof_id });
 		const activities = await Promise.all(
 			data.map(async (item) => {
-				const activityOrErr = await ActivityEntity.build(item);
+				const activityOrErr = await ActivityEntity.build(item.toObject());
 				if (activityOrErr.isLeft()) {
 					return {} as ActivityEntity;
 				}
@@ -122,7 +122,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		const data = await Activity.find({ unity_id, client_id });
 		const activities = await Promise.all(
 			data.map(async (item) => {
-				const activityOrErr = await ActivityEntity.build(item);
+				const activityOrErr = await ActivityEntity.build(item.toObject());
 				if (activityOrErr.isLeft()) {
 					return {} as ActivityEntity;
 				}
@@ -145,8 +145,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			activity.date.setHours(0, 0, 0, 0);
 
 			return (
-				act.date.getDate() === activity.date.getDate() &&
-				act._id !== id
+				act.date.getDate() === activity.date.getDate() && act._id !== id
 			);
 		});
 
@@ -163,17 +162,15 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		const oldActivity = await Activity.findById(id);
 		if (!oldActivity) return left(new ActivityNotFoundError());
 		const activityOrErr = await ActivityEntity.build({
-			...oldActivity,
-			...activity
+			...oldActivity.toObject(),
+			...activity,
 		});
 		if (activityOrErr.isLeft())
 			return left(new AbstractError("Internal Error", 500));
 
-		const updatedActivity = activityOrErr.extract().updateStatus({
-			date: oldActivity.date,
-			hour_start: oldActivity.hour_start,
-			hour_end: oldActivity.hour_end
-		});
+		const updatedActivity = activityOrErr
+			.extract()
+			.updateStatus(oldActivity);
 
 		await Activity.findByIdAndUpdate(id, updatedActivity);
 		return right(updatedActivity);

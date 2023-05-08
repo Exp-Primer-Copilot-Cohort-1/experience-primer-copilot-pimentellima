@@ -53,11 +53,7 @@ export class ActivityInMemoryRepository implements ActivitiesManagerInterface {
 		if (activityOrErr.isLeft())
 			return left(new AbstractError("Internal Error", 500));
 
-		const updatedActivity = activityOrErr.extract().updateStatus({
-			date: oldActivity.date,
-			hour_start: oldActivity.hour_start,
-			hour_end: oldActivity.hour_end,
-		});
+		const updatedActivity = activityOrErr.extract().updateStatus(oldActivity);
 		return right(updatedActivity);
 	}
 

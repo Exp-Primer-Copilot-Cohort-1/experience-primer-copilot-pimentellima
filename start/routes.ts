@@ -115,7 +115,7 @@ Route.group(() => {
 	Route.post('form', 'FormController.createForm')
 	Route.get('form', 'FormController.findAllForms')
 	Route.get('form/:id', 'FormController.findFormById')
-	Route.put('form/:id', 'FormController.updateForm')
+	Route.put('form/:id', 'FormController.updateFormById')
 	Route.delete('form/:id', 'FormController.deleteFormById')
 
 	Route.get('answer', 'AnswerController.index')
@@ -229,7 +229,7 @@ Route.group(() => {
 
 	Route.get('account', 'AccountController.findAllAccounts')
 	Route.get('account/:id', 'AccountController.findAccountById')
-	Route.put('account/:id', 'AccountController.updateAccount')
+	Route.put('account/:id', 'AccountController.updateAccountById')
 	Route.delete('account/:id', 'AccountController.deleteAccountById')
 	Route.post('account', 'AccountController.createAccount')
 

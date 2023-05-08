@@ -50,9 +50,6 @@ export const makeValidActivity = () => {
         user_id: "635978cec109b232759921da",
         scheduled: "scheduled",
         prof_id: "635978cec109b232759921da",
-        created_at: "2023-04-26T14:40:15.161Z",
-        updated_at: "2023-04-26T17:51:20.526Z",
-        
     };
     return validActivity;
 }

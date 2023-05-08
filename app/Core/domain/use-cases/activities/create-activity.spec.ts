@@ -29,18 +29,20 @@ describe('Create activity (Unit)', () => {
         expect(respOrErr.extract()).toBeInstanceOf(InvalidScheduleError);
 	});
 
-    it('should throw conflicting schedule error'), async() => {
+    it('should throw conflicting schedule error', async() => {
         const memoryRepo = new ActivityInMemoryRepository();
 		const validActivity = makeValidActivity();
         memoryRepo.activities = [validActivity]
         const sut = new CreateActivityUseCase(memoryRepo);
+
         const newActivity = {
             ...validActivity,
             _id: faker.random.alpha({ bannedChars: [validActivity._id] })
         };
+        
 		const respOrErr = await sut.execute(newActivity as any);
 
         expect(respOrErr.isLeft()).toBeTruthy();
         expect(respOrErr.extract()).toBeInstanceOf(ConflictingScheduleError);
-    }
+    })
 });

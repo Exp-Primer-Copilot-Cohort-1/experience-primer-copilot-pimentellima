@@ -8,9 +8,9 @@ import { MissingParamsError } from "../../errors/missing-params";
 import { FormNotFoundError } from "../../errors/form-not-found-error";
 
 export class FormMongoRepository implements FormManagerInterface {
-    async createForm (params: IForm) : PromiseEither<AbstractError, FormEntity> {
+    async createForm (form: IForm) : PromiseEither<AbstractError, FormEntity> {
         const newFormOrErr = await FormEntity.build({
-            ...params,
+            ...form,
         });
         if (newFormOrErr.isLeft()) return left(newFormOrErr.extract());
 
@@ -36,19 +36,19 @@ export class FormMongoRepository implements FormManagerInterface {
 		return right(forms);
     }
 
-    async updateForm (params: IForm) : PromiseEither<AbstractError, FormEntity> {
-        if (!params._id) return left(new MissingParamsError("id"));
-		const oldForm = await Form.findById(params._id);
+    async updateFormById (form: IForm, id: string) : PromiseEither<AbstractError, FormEntity> {
+        if (!id) return left(new MissingParamsError("id"));
+		const oldForm = await Form.findById(id);
 		if (!oldForm) return left(new FormNotFoundError());
 		const newFormOrErr = await FormEntity.build({
 			...oldForm.toObject(),
-			...params,
+			...form,
 		});
 		if (newFormOrErr.isLeft())
 			return left(new AbstractError("Invalid params", 400));
 		const newForm = newFormOrErr.extract();
 
-		await Form.findByIdAndUpdate(params._id, newForm.params());
+		await Form.findByIdAndUpdate(id, newForm.params());
 		return right(newForm);
     }
 
@@ -59,7 +59,7 @@ export class FormMongoRepository implements FormManagerInterface {
 		const data = await Form.find({ unity_id, prof_id });
 		const forms = await Promise.all(
 			data.map(async (item) => {
-				const formOrErr = await FormEntity.build(item);
+				const formOrErr = await FormEntity.build(item.toObject());
 				if (formOrErr.isLeft()) {
 					return {} as FormEntity;
 				}
@@ -75,7 +75,7 @@ export class FormMongoRepository implements FormManagerInterface {
 		const data = await Form.find({ unity_id, category_id });
 		const forms = await Promise.all(
 			data.map(async (item) => {
-				const formOrErr = await FormEntity.build(item);
+				const formOrErr = await FormEntity.build(item.toObject());
 				if (formOrErr.isLeft()) {
 					return {} as FormEntity;
 				}
@@ -92,7 +92,7 @@ export class FormMongoRepository implements FormManagerInterface {
 
 		const formOrErr = await FormEntity.build(item.toObject());
 		if (formOrErr.isLeft())
-			return left(new AbstractError("Invalid params", 400));
+			return left(new AbstractError("Internal Error", 500));
 
 		return right(formOrErr.extract());
     }
@@ -104,7 +104,7 @@ export class FormMongoRepository implements FormManagerInterface {
 
 		const formOrErr = await FormEntity.build(item.toObject());
 		if (formOrErr.isLeft())
-			return left(new AbstractError("Invalid params", 400));
+			return left(new AbstractError("Internal Error", 500));
 
 		return right(formOrErr.extract());
     }

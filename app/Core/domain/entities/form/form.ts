@@ -72,25 +72,9 @@ export class FormEntity extends Entity implements IForm {
 		params: IForm
 	): PromiseEither<AbstractError, FormEntity> {
 		try {
-			const questionSchema = z.object({
-				element: z.string(),
-				text: z.string(),
-				required: z.boolean(),
-				canHaveAnswer: z.boolean(),
-				canHavePageBreakBefore: z.boolean(),
-				canHaveAlternateForm: z.boolean(),
-				canHaveDisplayHorizontal: z.boolean(),
-				canHaveOptionCorrect: z.boolean(),
-				canHaveOptionValue: z.boolean(),
-				canPopulateFromApi: z.boolean(),
-				field_name: z.string(),
-				label: z.string(),
-				dirty: z.boolean(),
-			  });
 	
 			const schema = z.object({
 				name: z.string(),
-				questions: z.array(questionSchema).optional(),
 				category_id: z.string(),
 				prof: z.object({
 					value: z.string(),
@@ -105,6 +89,7 @@ export class FormEntity extends Entity implements IForm {
 				unity_id: params.unity_id.toString()
 			})
             return right(new FormEntity()
+				.defineId(params._id?.toString())
 				.defineName(params.name)
 				.defineQuestions(params.questions)
 				.defineActive(params.active)
@@ -113,7 +98,7 @@ export class FormEntity extends Entity implements IForm {
 				.defineUnityId(params.unity_id)
 			);
 		} catch(err) {
-			return left(new AbstractError("Error", 500));
+			return left(new AbstractError(err, 500));
 		}
 	}
 }

@@ -2,15 +2,16 @@ import { AppointmentStatus } from "App/Helpers";
 import { describe, expect, it } from "vitest";
 import { ConflictingScheduleError } from "../../errors/ conflicting-schedule-error";
 import { ActivityInMemoryRepository } from "../../repositories/activities/activity-in-memory-repository";
-import { UpdateActivityUseCase } from "./update-activity-use-case";
+import { UpdateActivityByIdUseCase } from "./update-activity-use-case";
 import { makeValidActivity } from "tests/functional/helpers/makeValidActivity";
+import { faker } from "@faker-js/faker";
 
 describe("Update activity (Unit)", () => {
 	it("should update activity active attribute", async () => {
 		const repo = new ActivityInMemoryRepository();
 		const validActivity = makeValidActivity();
 		repo.activities = [validActivity];
-		const sut = new UpdateActivityUseCase(repo);
+		const sut = new UpdateActivityByIdUseCase(repo);
 
 		const updatedActivity = {
 			...validActivity,
@@ -33,7 +34,7 @@ describe("Update activity (Unit)", () => {
 		const repo = new ActivityInMemoryRepository();
 		const validActivity = makeValidActivity();
 		repo.activities = [validActivity];
-		const sut = new UpdateActivityUseCase(repo);
+		const sut = new UpdateActivityByIdUseCase(repo);
 
 		const hour_end = new Date(validActivity.hour_start);
 		hour_end.setHours(validActivity.hour_start.getHours() + 1);
@@ -55,16 +56,21 @@ describe("Update activity (Unit)", () => {
 
 	it("should throw ConflictingScheduleError", async () => {
 		const repo = new ActivityInMemoryRepository();
+
 		const activityOne = makeValidActivity();
+		activityOne.date.setFullYear(2050);
 		const activityTwo = makeValidActivity();
+		activityTwo.date.setFullYear(3000);
+		activityTwo._id = faker.random.alpha({ bannedChars: [activityOne._id] });
 		repo.activities = [activityOne, activityTwo];
-		const sut = new UpdateActivityUseCase(repo);
+
+		const sut = new UpdateActivityByIdUseCase(repo);
 
 		const updatedActivity = {
 			...activityTwo,
-			date: new Date(activityOne.date),
-			hour_start: new Date(activityOne.hour_start),
-			hour_end: new Date(activityOne.hour_end),
+			date: activityOne.date,
+			hour_start: activityOne.hour_start,
+			hour_end: activityOne.hour_end,
 		};
 
 		const query = {
@@ -83,7 +89,7 @@ describe("Update activity (Unit)", () => {
 		const activityOne = makeValidActivity();
 		const activityTwo = makeValidActivity();
 		repo.activities = [activityOne, activityTwo];
-		const sut = new UpdateActivityUseCase(repo);
+		const sut = new UpdateActivityByIdUseCase(repo);
 
 		const date = new Date(activityOne.date.getDate());
 		date.setFullYear(5000);
@@ -112,7 +118,7 @@ describe("Update activity (Unit)", () => {
 		const repo = new ActivityInMemoryRepository();
 		const validActivity = makeValidActivity();
 		repo.activities = [validActivity];
-		const sut = new UpdateActivityUseCase(repo);
+		const sut = new UpdateActivityByIdUseCase(repo);
 
 		const updatedActivity = {
 			...validActivity,

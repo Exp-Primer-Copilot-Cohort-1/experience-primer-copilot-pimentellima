@@ -7,7 +7,6 @@ import { z } from "zod";
 import { IActivity } from "Types/IActivity";
 import { InvalidParamsError } from "../../errors/invalid-params-error";
 
-
 const activitySchema = z.object({
 	user_id: z.string().optional(),
 	active: z.boolean(),
@@ -23,21 +22,23 @@ const activitySchema = z.object({
 	unity_id: z.string(),
 	schedule_block: z.boolean().default(false),
 	phone: z.string().optional().nullable(),
-	procedures: z.array(z.object({
-		value: z.string(),
-		label: z.string(),
-		minutes: z.number(),
-		color: z.string(),
-		val: z.number(),
-		health_insurance: z
-			.object({
-				value: z.string(),
-				label: z.string(),
-				price: z.number(),
-			})
-			.optional(),
-		status: z.nativeEnum(PaymentStatus),
-	})),
+	procedures: z.array(
+		z.object({
+			value: z.string(),
+			label: z.string(),
+			minutes: z.number(),
+			color: z.string(),
+			val: z.number(),
+			health_insurance: z
+				.object({
+					value: z.string(),
+					label: z.string(),
+					price: z.number(),
+				})
+				.optional(),
+			status: z.nativeEnum(PaymentStatus),
+		})
+	),
 });
 
 export class ActivityEntity extends AbstractActivity implements IActivity {
@@ -128,21 +129,16 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		return this;
 	}
 
-	public updateStatus(
-		params: {
-			date: Date | string,
-			hour_start: string,
-			hour_end: string
-		},
-	): ActivityEntity {
-		if(params.date !== this.date ||
-			params.hour_start !== this.hour_start ||
-			params.hour_end !== this.hour_end) {
-				return this.defineStatus(AppointmentStatus.RESCHEDULED)
-			} 
-			return this;
+	public updateStatus(activity: IActivity): ActivityEntity {
+		if (
+			activity.date !== this.date ||
+			activity.hour_start !== this.hour_start ||
+			activity.hour_end !== this.hour_end
+		) {
+			return this.defineStatus(AppointmentStatus.RESCHEDULED);
 		}
-
+		return this;
+	}
 
 	public static async build(
 		params: IActivity

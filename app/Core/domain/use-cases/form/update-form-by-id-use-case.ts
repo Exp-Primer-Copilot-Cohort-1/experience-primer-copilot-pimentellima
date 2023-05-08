@@ -5,19 +5,24 @@ import { IForm } from "Types/IForm";
 import FormEntity from "../../entities/form/form";
 import { FormManagerInterface } from "../../repositories/interface/form-manager-interface";
 
-export class UpdateFormUseCase
-	implements UseCase<IForm, FormEntity>
+type TypeParams = {
+	form: IForm,
+	id: string
+}
+
+export class UpdateFormByIdUseCase
+	implements UseCase<TypeParams, FormEntity>
 {
 	constructor(
 		private readonly formManager: FormManagerInterface
 	) {}
 
 	public async execute(
-		params: IForm
+		params: TypeParams
 	): PromiseEither<AbstractError, FormEntity> {
 
 		const formOrErr =
-			await this.formManager.updateForm(params);
+			await this.formManager.updateFormById(params.form, params.id);
 
 		if (formOrErr.isLeft()) return left(formOrErr.extract());
 		const form = formOrErr.extract();
