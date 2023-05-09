@@ -61,6 +61,7 @@
 		"@adonisjs/session": "^6.4.0",
 		"@adonisjs/validator": "^12.4.2",
 		"adonis5-swagger": "^1.4.1",
+		"axios": "^1.4.0",
 		"cpf-cnpj-validator": "^1.0.3",
 		"date-fns": "^2.29.3",
 		"lucid-mongo": "^3.1.6",
