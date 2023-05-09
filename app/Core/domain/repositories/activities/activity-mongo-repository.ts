@@ -3,7 +3,7 @@ import { PromiseEither, left, right } from "App/Core/shared";
 import Activity from "App/Models/Activity";
 import ActivityEntity from "../../entities/activities/activity";
 import { MissingParamsError } from "../../errors/missing-params";
-import { ActivitiesManagerInterface } from "../interface/activities-manager.interface";
+import { ActivitiesManagerInterface } from "../interface/activity-manager.interface";
 import { ActivityNotFoundError } from "../../errors/activity-not-found";
 import { IActivity } from "Types/IActivity";
 import { ScheduleEntity } from "../../entities/schedule/schedule";
