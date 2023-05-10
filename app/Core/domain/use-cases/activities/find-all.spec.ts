@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { ActivityInMemoryRepository } from '../../repositories/activities/activity-in-memory-repository';
 import { MissingParamsError } from '../../errors/missing-params';
-import { FindActivitiesByClientUseCase } from './find-activities-by-client-use-case';
-import { FindActivitiesByProfUseCase } from './find-activities-by-prof-use-case';
+import { FindActivitiesByClientIdUseCase } from './find-activities-by-client-use-case';
+import { FindActivitiesByProfIdUseCase } from './find-activities-by-prof-use-case';
 
 describe('Find all activities by client_id (Unit)', () => {
 	it('should find all activities matching unity_id and client_id', async () => {
@@ -13,7 +13,7 @@ describe('Find all activities by client_id (Unit)', () => {
 			{ unity_id: '1', client_id: '2' },
 			{ unity_id: '2', client_id: '1' },
 		]
-		const sut = new FindActivitiesByClientUseCase(memoryRepo);
+		const sut = new FindActivitiesByClientIdUseCase(memoryRepo);
 		const respOrErr = await sut.execute({
             unity_id: '1',
 			client_id: '1'
@@ -25,7 +25,7 @@ describe('Find all activities by client_id (Unit)', () => {
 
     it('should return missing params error', async () => {
 		const memoryRepo = new ActivityInMemoryRepository();
-		const sut = new FindActivitiesByClientUseCase(memoryRepo);
+		const sut = new FindActivitiesByClientIdUseCase(memoryRepo);
 		const respOrErr = await sut.execute({
             unity_id: undefined as any,
 			client_id: undefined as any
@@ -45,7 +45,7 @@ describe('Find activities by prof_id (Unit)', () => {
 			{ unity_id: '2', prof_id: '1' },
 			{ unity_id: '1', prod_id: '2' },
 		]
-		const sut = new FindActivitiesByProfUseCase(memoryRepo);
+		const sut = new FindActivitiesByProfIdUseCase(memoryRepo);
 		const respOrErr = await sut.execute({
             unity_id: '1',
 			prof_id: '1'
@@ -57,7 +57,7 @@ describe('Find activities by prof_id (Unit)', () => {
 
     it('should return missing params error', async () => {
 		const memoryRepo = new ActivityInMemoryRepository();
-		const sut = new FindActivitiesByProfUseCase(memoryRepo);
+		const sut = new FindActivitiesByProfIdUseCase(memoryRepo);
 		const respOrErr = await sut.execute({
             unity_id: undefined as any,
 			prof_id: undefined as any

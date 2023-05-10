@@ -28,7 +28,9 @@ class AccountController {
   } 
 
   async createAccount(ctx: HttpContextContract) {
-    return adaptRoute(makeCreateAccountComposer(), ctx);
+    return adaptRoute(makeCreateAccountComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		});
   } 
 }
 

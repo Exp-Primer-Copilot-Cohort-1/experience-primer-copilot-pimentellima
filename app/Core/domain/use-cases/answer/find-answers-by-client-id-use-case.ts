@@ -6,10 +6,10 @@ import { AbstractError } from "App/Core/errors/error.interface";
 
 type TypeParams = {
 	unity_id: string;
-	form_id: string;
+	client_id: string;
 };
 
-export class FindAnswersByFormIdUseCase
+export class FindAnswersByClientIdUseCase
 	implements UseCase<TypeParams, AnswerEntity[]>
 {
 	constructor(private readonly answerManager: AnswerManagerInterface) {}
@@ -17,9 +17,9 @@ export class FindAnswersByFormIdUseCase
 	public async execute(
 		params: TypeParams
 	): PromiseEither<AbstractError, AnswerEntity[]> {
-		const answerOrErr = await this.answerManager.findAnswersByFormId(
+		const answerOrErr = await this.answerManager.findAnswersByClientId(
 			params.unity_id,
-            params.form_id
+            params.client_id
 		);
 
 		if (answerOrErr.isLeft()) return left(answerOrErr.extract());

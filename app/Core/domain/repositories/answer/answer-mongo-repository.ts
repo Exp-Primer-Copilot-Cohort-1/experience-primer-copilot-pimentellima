@@ -8,7 +8,9 @@ import { MissingParamsError } from "../../errors/missing-params";
 import { AnswerNotFoundError } from "../../errors/answer-not-found-error";
 
 export class AnswerMongoRepository implements AnswerManagerInterface {
-	async findAnswerById (id: string) : PromiseEither<AbstractError, AnswerEntity> {
+	async findAnswerById(
+		id: string
+	): PromiseEither<AbstractError, AnswerEntity> {
 		if (!id) return left(new MissingParamsError("id"));
 
 		const item = await Answer.findById(id);
@@ -21,7 +23,9 @@ export class AnswerMongoRepository implements AnswerManagerInterface {
 		return right(answerOrErr.extract());
 	}
 
-	async createAnswer(answer: IAnswer): PromiseEither<AbstractError, AnswerEntity> {
+	async createAnswer(
+		answer: IAnswer
+	): PromiseEither<AbstractError, AnswerEntity> {
 		const newAnswerOrErr = await AnswerEntity.build(answer);
 		if (newAnswerOrErr.isLeft()) return left(newAnswerOrErr.extract());
 		const newAnswer = newAnswerOrErr.extract();
@@ -49,7 +53,9 @@ export class AnswerMongoRepository implements AnswerManagerInterface {
 		return right(updatedAnswer);
 	}
 
-	async deleteAnswerById(id: string): PromiseEither<AbstractError, AnswerEntity> {
+	async deleteAnswerById(
+		id: string
+	): PromiseEither<AbstractError, AnswerEntity> {
 		if (!id) return left(new MissingParamsError("id"));
 
 		const item = await Answer.findByIdAndDelete(id);
@@ -68,6 +74,26 @@ export class AnswerMongoRepository implements AnswerManagerInterface {
 		if (!unity_id) return left(new MissingParamsError("unity id"));
 
 		const data = await Answer.find({ unity_id });
+		const answers = await Promise.all(
+			data.map(async (item) => {
+				const answerOrErr = await AnswerEntity.build(item.toObject());
+				if (answerOrErr.isLeft()) {
+					return {} as AnswerEntity;
+				}
+				return answerOrErr.extract();
+			})
+		);
+		return right(answers);
+	}
+
+	async findAnswersByClientId(
+		unity_id: string,
+		client_id: string
+	): PromiseEither<AbstractError, AnswerEntity[]> {
+		if (!unity_id) return left(new MissingParamsError("unity id"));
+		if (!client_id) return left(new MissingParamsError("client id"));
+
+		const data = await Answer.find({ unity_id, client_id });
 		const answers = await Promise.all(
 			data.map(async (item) => {
 				const answerOrErr = await AnswerEntity.build(item.toObject());

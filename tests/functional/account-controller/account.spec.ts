@@ -34,7 +34,7 @@ test.group('Account Controller', () => {
 
 		response.assertStatus(200);
 
-		const { deletedCount } = await Account.deleteOne({ _id: response.body().__id });
+		const { deletedCount } = await Account.deleteOne({ _id: response.body()._id_ });
         assert.equal(deletedCount, 1);
 	});
 

@@ -9,7 +9,7 @@ type ActivityProps = {
     prof_id: string
 };
 
-export class FindActivitiesByProfUseCase
+export class FindActivitiesByProfIdUseCase
 	implements UseCase<ActivityProps, ActivityEntity[]>
 {
 	constructor(

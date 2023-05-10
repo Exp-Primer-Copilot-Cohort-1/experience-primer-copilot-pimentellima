@@ -17,7 +17,6 @@ export async function loginAndGetToken(
 		email: 'rmmorais2@gmail.com',
 		password: '123456',
 	});
-	console.log(login.error())
 
 	return login.body() as CredentialsSuccess;
 }
