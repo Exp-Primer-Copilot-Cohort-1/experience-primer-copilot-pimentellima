@@ -138,19 +138,6 @@ Route.group(() => {
 	Route.get('users-type', 'UserController.indexByType')
 	Route.post('users/client', 'ClientControllerV2.create')
 
-	Route.get('stock', 'StockController.index')
-	Route.get('stock/:id', 'StockController.show')
-	Route.put('stock/:id', 'StockController.update')
-	Route.put('stock-update/:id', 'StockController.updateLot')
-	Route.delete('stock/:id', 'StockController.destroy')
-	Route.post('stock', 'StockController.store')
-
-	Route.get('category', 'CategoryController.index')
-	Route.get('category/:id', 'CategoryController.show')
-	Route.put('category/:id', 'CategoryController.update')
-	Route.delete('category/:id', 'CategoryController.destroy')
-	Route.post('category', 'CategoryController.store')
-
 	Route.get('form/prof/:id', 'FormController.findFormByProfId')
 	Route.get('form/category/:id', 'FormController.findFormByCategoryId')
 	Route.post('form', 'FormController.createForm')

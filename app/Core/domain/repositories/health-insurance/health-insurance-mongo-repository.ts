@@ -3,7 +3,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import HealthInsurance from 'App/Models/HealthInsurance'
 import { IHealthInsurance } from 'Types/IHealthInsurance'
-import { HealtInsuranceEntity } from '../../entities/health-insurances/health-insurance'
+import { HealthInsuranceEntity } from '../../entities/health-insurances/health-insurance'
 import { OptsQuery } from '../../entities/helpers/opts-query'
 import { HealthInsuranceNotFoundError } from '../../errors/health-insurance-not-found'
 import { MissingParamsError } from '../../errors/missing-params'
@@ -55,7 +55,7 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 		return right(healthInsurances)
 	}
 
-	async findById(id: string): PromiseEither<AbstractError, HealtInsuranceEntity> {
+	async findById(id: string): PromiseEither<AbstractError, HealthInsuranceEntity> {
 		if (!isValidObjectId(id)) {
 			return left(new HealthInsuranceNotFoundError())
 		}
@@ -71,8 +71,8 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 
 	async update(
 		id: string,
-		entity: Partial<HealtInsuranceEntity>,
-	): PromiseEither<AbstractError, HealtInsuranceEntity> {
+		entity: Partial<HealthInsuranceEntity>,
+	): PromiseEither<AbstractError, HealthInsuranceEntity> {
 		if (!isValidObjectId(id)) {
 			return left(new HealthInsuranceNotFoundError())
 		}
@@ -83,7 +83,7 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 			return left(new HealthInsuranceNotFoundError())
 		}
 
-		const entityOrErr = await HealtInsuranceEntity.build({
+		const entityOrErr = await HealthInsuranceEntity.build({
 			...healthInsurance.toJSON(),
 			...entity,
 		} as IHealthInsurance)
@@ -95,13 +95,13 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 		return right(updateEntity)
 	}
 
-	async delete(id: string): PromiseEither<AbstractError, HealtInsuranceEntity> {
-		return right({})
+	async delete(id: string): PromiseEither<AbstractError, HealthInsuranceEntity> {
+		return right({} as any)
 	}
 
 	async create(
-		entity: HealtInsuranceEntity,
-	): PromiseEither<AbstractError, HealtInsuranceEntity> {
+		entity: HealthInsuranceEntity,
+	): PromiseEither<AbstractError, HealthInsuranceEntity> {
 		const healthInsurances = await HealthInsurance.create(entity.params())
 
 		entity.defineId(healthInsurances._id)
