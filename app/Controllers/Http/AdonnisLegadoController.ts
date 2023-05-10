@@ -14,23 +14,39 @@ enum Methods {
 }
 
 const get = async (url: string) => {
-	const { data } = await api.get(url)
-	return data
+	try {
+		const { data } = await api.get(url)
+		return data
+	} catch (error) {
+		throw new Error(error)
+	}
 }
 
 const post = async (url: string, body: any) => {
-	const { data } = await api.post(url, body)
-	return data
+	try {
+		const { data } = await api.post(url, body)
+		return data
+	} catch (error) {
+		throw new Error(error)
+	}
 }
 
 const put = async (url: string, body: any) => {
-	const { data } = await api.put(url, body)
-	return data
+	try {
+		const { data } = await api.put(url, body)
+		return data
+	} catch (error) {
+		throw new Error(error)
+	}
 }
 
 const del = async (url: string) => {
-	const { data } = await api.delete(url)
-	return data
+	try {
+		const { data } = await api.delete(url)
+		return data
+	} catch (error) {
+		throw new Error(error)
+	}
 }
 
 class AdonnisLegadoController {
@@ -39,19 +55,40 @@ class AdonnisLegadoController {
 		const unity_id = auth.user?.unity_id
 		const role = auth.user?.type
 
-		const uri = url + `?unity_id=${unity_id}&type=${role}`
+		const newParams = {
+			...request.qs(),
+			unity_id: unity_id?.toString() || '',
+			type: role || '',
+		}
+
+		const params = new URLSearchParams(newParams).toString()
+
+		const uri = url + `?${params}`
 
 		const method = Methods[request.method()]
 
-		switch (method) {
-			case Methods.GET:
-				return get(uri)
-			case Methods.POST:
-				return post(uri, request.body())
-			case Methods.PUT:
-				return put(uri, request.body())
-			case Methods.DELETE:
-				return del(uri)
+		try {
+			let response
+
+			switch (method) {
+				case Methods.GET:
+					response = await get(uri)
+					break
+				case Methods.POST:
+					response = await post(uri, request.body())
+					break
+				case Methods.PUT:
+					response = await put(uri, request.body())
+					break
+				case Methods.DELETE:
+					response = await del(uri)
+					break
+			}
+
+			return response
+		} catch (error) {
+			console.log(error)
+			return error
 		}
 	}
 }
