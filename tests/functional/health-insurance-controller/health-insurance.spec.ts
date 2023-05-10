@@ -4,6 +4,13 @@ import HealthInsurance from 'App/Models/HealthInsurance'
 import { assert } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 
+const healthInsurance = (unity_id) => ({
+	name: faker.name.firstName(),
+	register_code: faker.random.numeric(),
+	carence: faker.random.numeric(),
+	unity_id: unity_id,
+})
+
 test.group('Health Insurance Controller', () => {
 	test('display find all health insurance', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
@@ -51,10 +58,13 @@ test.group('Health Insurance Controller', () => {
 	})
 	test('display update health insurance by id', async ({ client }) => {
 		const name = faker.name.firstName()
-		const { token } = await loginAndGetToken(client)
+		const { token, user } = await loginAndGetToken(client)
+
+		const item = healthInsurance(user.unity_id)
+		const health = await HealthInsurance.create(item)
 
 		const response = await client
-			.put('health-insurance/63597974c109b232759921dc')
+			.put(`health-insurance/${health._id.toString()}`)
 			.bearerToken(token.token)
 			.json({
 				name,
@@ -64,6 +74,9 @@ test.group('Health Insurance Controller', () => {
 		response.assertStatus(200)
 		const data = response.body()
 		assert.equal(data.name, name)
+
+		const { deletedCount } = await HealthInsurance.deleteOne({ _id: health._id })
+		assert.equal(deletedCount, 1)
 	})
 	test('display create health insurance', async ({ client }) => {
 		const { token, user } = await loginAndGetToken(client)
@@ -71,12 +84,7 @@ test.group('Health Insurance Controller', () => {
 		const response = await client
 			.post('health-insurance')
 			.bearerToken(token.token)
-			.json({
-				name: faker.name.firstName(),
-				register_code: faker.random.numeric(),
-				carence: faker.random.numeric(),
-				unity_id: user.unity_id,
-			})
+			.json(healthInsurance(user.unity_id))
 			.send()
 
 		if (response.status() !== 200) {
