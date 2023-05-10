@@ -4,6 +4,9 @@ import axios from 'axios'
 
 const api = axios.create({
 	baseURL: 'http://localhost:3000',
+	headers: {
+		'Content-Type': 'application/json',
+	},
 })
 
 enum Methods {
@@ -13,45 +16,36 @@ enum Methods {
 	DELETE = 'delete',
 }
 
-const get = async (url: string) => {
-	try {
-		const { data } = await api.get(url)
-		return data
-	} catch (error) {
-		throw new Error(error)
+const get = async (url: string, params: any) => {
+	const { data, status } = await api.get(url, { params })
+
+	if (status > 299) {
+		console.log(data)
+		return []
 	}
+
+	return data
 }
 
 const post = async (url: string, body: any) => {
-	try {
-		const { data } = await api.post(url, body)
-		return data
-	} catch (error) {
-		throw new Error(error)
-	}
+	const { data } = await api.post(url, body)
+	return data
 }
 
 const put = async (url: string, body: any) => {
-	try {
-		const { data } = await api.put(url, body)
-		return data
-	} catch (error) {
-		throw new Error(error)
-	}
+	const { data } = await api.put(url, body)
+	return data
 }
 
 const del = async (url: string) => {
-	try {
-		const { data } = await api.delete(url)
-		return data
-	} catch (error) {
-		throw new Error(error)
-	}
+	const { data } = await api.delete(url)
+	return data
 }
 
 class AdonnisLegadoController {
 	public async bridge({ request, auth }: HttpContextContract) {
-		const url = request.url(true)
+		const url = request.url(false)
+
 		const unity_id = auth.user?.unity_id
 		const role = auth.user?.type
 
@@ -61,31 +55,27 @@ class AdonnisLegadoController {
 			type: role || '',
 		}
 
-		const params = new URLSearchParams(newParams).toString()
+		Object.keys(newParams).forEach((key) => {
+			if (newParams[key] === '') {
+				delete newParams[key]
+			}
+		})
 
-		const uri = url + `?${params}`
+		const params = new URLSearchParams(newParams)
 
 		const method = Methods[request.method()]
 
 		try {
-			let response
-
 			switch (method) {
 				case Methods.GET:
-					response = await get(uri)
-					break
+					return await get(url, params)
 				case Methods.POST:
-					response = await post(uri, request.body())
-					break
+					return await post(url, request.body())
 				case Methods.PUT:
-					response = await put(uri, request.body())
-					break
+					return await put(url, request.body())
 				case Methods.DELETE:
-					response = await del(uri)
-					break
+					return await del(url)
 			}
-
-			return response
 		} catch (error) {
 			console.log(error)
 			return error
