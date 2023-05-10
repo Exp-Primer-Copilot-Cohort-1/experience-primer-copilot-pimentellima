@@ -5,7 +5,7 @@ import { makeCreateAccountComposer } from "App/Core/composers/accounts/make-crea
 import { makeDeleteAccountComposer } from "App/Core/composers/accounts/make-delete-account-composer";
 import { makeFindAccountComposer } from "App/Core/composers/accounts/make-find-account-by-id-composer";
 import { makeFindAllAccountsComposer } from "App/Core/composers/accounts/make-find-all-accounts-composer";
-import { makeUpdateAccountComposer } from "App/Core/composers/accounts/make-update-account-composer";
+import { makeUpdateAccountByIdComposer } from "App/Core/composers/accounts/make-update-account-by-id-composer";
 
 class AccountController {
 
@@ -20,7 +20,7 @@ class AccountController {
   } 
 
   async updateAccount(ctx: HttpContextContract) {
-    return adaptRoute(makeUpdateAccountComposer(), ctx);
+    return adaptRoute(makeUpdateAccountByIdComposer(), ctx);
   } 
 
   async deleteAccountById(ctx: HttpContextContract) {

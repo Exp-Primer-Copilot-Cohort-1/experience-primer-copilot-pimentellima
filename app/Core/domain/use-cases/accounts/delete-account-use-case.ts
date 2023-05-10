@@ -12,7 +12,7 @@ export class DeleteAccountByIdUseCase
 	implements UseCase<TypeParams, AccountEntity>
 {
 	constructor(
-		private readonly activitiesManager: AccountManagerInterface
+		private readonly accountManager: AccountManagerInterface
 	) {}
 
 	public async execute(
@@ -20,7 +20,7 @@ export class DeleteAccountByIdUseCase
 	): PromiseEither<AbstractError, AccountEntity> {
 
 		const accountOrErr =
-			await this.activitiesManager.deleteAccountById(params.id);
+			await this.accountManager.deleteAccountById(params.id);
 
 		if (accountOrErr.isLeft()) return left(accountOrErr.extract());
 		const account = accountOrErr.extract();

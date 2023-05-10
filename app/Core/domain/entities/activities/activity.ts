@@ -7,6 +7,40 @@ import { z } from "zod";
 import { IActivity } from "Types/IActivity";
 import { InvalidParamsError } from "../../errors/invalid-params-error";
 
+const activitySchema = z.object({
+	user_id: z.string().optional(),
+	active: z.boolean(),
+	all_day: z.boolean(),
+	prof_id: z.string(),
+	client: z.object({
+		value: z.string(),
+		label: z.string(),
+		celphone: z.string(),
+		partner: z.object({}).nullable(),
+	}),
+	obs: z.string().optional().nullable(),
+	unity_id: z.string(),
+	schedule_block: z.boolean().default(false),
+	phone: z.string().optional().nullable(),
+	procedures: z.array(
+		z.object({
+			value: z.string(),
+			label: z.string(),
+			minutes: z.number(),
+			color: z.string(),
+			val: z.number(),
+			health_insurance: z
+				.object({
+					value: z.string(),
+					label: z.string(),
+					price: z.number(),
+				})
+				.optional(),
+			status: z.nativeEnum(PaymentStatus),
+		})
+	),
+});
+
 export class ActivityEntity extends AbstractActivity implements IActivity {
 	private _date: Date;
 	private _hour_start: string;
@@ -28,33 +62,33 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 	public get date(): Date {
 		return this._date;
 	}
-	  
+
 	public get hour_start(): string {
-	return this._hour_start;
+		return this._hour_start;
 	}
-	
+
 	public get hour_end(): string {
-	return this._hour_end;
+		return this._hour_end;
 	}
-	
+
 	public get schedule_block(): boolean {
-	return this._schedule_block;
+		return this._schedule_block;
 	}
-	
+
 	public get all_day(): boolean {
-	return this._all_day;
+		return this._all_day;
 	}
-	
+
 	public get is_recurrent(): boolean {
-	return this._is_recorrent;
+		return this._is_recorrent;
 	}
-	
+
 	public get user_id(): string | undefined {
-	return this._user_id;
+		return this._user_id;
 	}
-	
+
 	public get scheduled(): AppointmentStatus {
-	return this._scheduled;
+		return this._scheduled;
 	}
 
 	defineisRecorrent(is_recorrent: boolean): this {
@@ -95,52 +129,27 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		return this;
 	}
 
+	public updateStatus(activity: IActivity): ActivityEntity {
+		if (
+			activity.date !== this.date ||
+			activity.hour_start !== this.hour_start ||
+			activity.hour_end !== this.hour_end
+		) {
+			return this.defineStatus(AppointmentStatus.RESCHEDULED);
+		}
+		return this;
+	}
+
 	public static async build(
 		params: IActivity
 	): PromiseEither<AbstractError, ActivityEntity> {
 		try {
-			const proceduresSchema = z.object({
-				value: z.string(),
-				label: z.string(),
-				minutes: z.number(),
-				color: z.string(),
-				val: z.number(),
-				health_insurance: z
-					.object({
-						value: z.string(),
-						label: z.string(),
-						price: z.number(),
-					})
-					.optional(),
-				status: z.nativeEnum(PaymentStatus),
-			})
-
-			const schema = z.object({
-				user_id: z.string().optional(),
-				active: z.boolean(),
-				all_day: z.boolean(),
-				prof_id: z.string(),
-				client: z.object({
-					value: z.string(),
-					label: z.string(),
-					celphone: z.string(),
-					partner: z.object({}).nullable()
-				}),
-				obs: z.string().optional().nullable(),
-				unity_id: z.string(),
-				schedule_block: z.boolean().default(false),
-				phone: z.string().optional().nullable(),
-				procedures: z.array(proceduresSchema),
-				paid: z.boolean().optional().default(false),
-			});
-
-			schema.parse({
+			activitySchema.parse({
 				...params,
 				user_id: params.user_id?.toString(),
 				unity_id: params.unity_id?.toString(),
 				client_id: params.client_id?.toString(),
 				prof_id: params.prof_id?.toString(),
-
 			});
 			return right(
 				new ActivityEntity()
@@ -163,7 +172,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					.defineScheduled(params.scheduled)
 					.defineProfId(params.prof_id.toString())
 			);
-		} catch(err) {
+		} catch (err) {
 			return left(new InvalidParamsError(err));
 		}
 	}

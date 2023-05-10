@@ -2,7 +2,7 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import { adaptRoute } from "App/Core/adapters";
 import { makeFindAllActivitiesComposer } from "App/Core/composers/activities/make-find-all-activities-composer";
-import { makeUpdateActivityComposer } from "App/Core/composers/activities/make-update-activity-composer";
+import { makeUpdateActivityByIdComposer } from "App/Core/composers/activities/make-update-activity-by-id-composer";
 import { makeFindActivitiesByProfComposer } from "App/Core/composers/activities/make-find-activity-by-prof-composer";
 import { makeFindActivityByClientComposer } from "App/Core/composers/activities/make-find-activity-by-client-composer";
 import { makeFindActivityByIdComposer } from "App/Core/composers/activities/make-find-activity-by-id-composer";
@@ -33,11 +33,15 @@ class ActivityController {
 	}
 
 	async createActivity(ctx: HttpContextContract) {
-		return adaptRoute(makeCreateActivityComposer(), ctx)
+		return adaptRoute(makeCreateActivityComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id
+		})
 	}
 
 	async updateActivity(ctx: HttpContextContract) {
-		return adaptRoute(makeUpdateActivityComposer(), ctx);
+		return adaptRoute(makeUpdateActivityByIdComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id
+		});
 	}
 
 	async deleteActivityById(ctx: HttpContextContract) {

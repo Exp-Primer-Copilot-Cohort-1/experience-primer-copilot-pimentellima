@@ -19,7 +19,7 @@ export class AccountMongoRepository implements AccountManagerInterface {
 		const data = await Account.find({ unity_id });
 		const accounts = await Promise.all(
 			data.map(async (item) => {
-				const accountOrErr = await AccountEntity.build(item);
+				const accountOrErr = await AccountEntity.build(item.toObject());
 				if (accountOrErr.isLeft()) {
 					return {} as AccountEntity;
 				}
@@ -30,10 +30,10 @@ export class AccountMongoRepository implements AccountManagerInterface {
 	}
 
     async createAccount(
-		params: IAccount
+		account: IAccount
 	): PromiseEither<AbstractError, AccountEntity> {
 
-		const newAccountOrErr = await AccountEntity.build(params);
+		const newAccountOrErr = await AccountEntity.build(account);
 		if (newAccountOrErr.isLeft()) return left(newAccountOrErr.extract());
 		const newAccount = newAccountOrErr.extract();
 		
@@ -42,21 +42,22 @@ export class AccountMongoRepository implements AccountManagerInterface {
 		return right(newAccount);
 	}
 
-    async updateAccount(
-		params: IAccount
+    async updateAccountById(
+		account: IAccount,
+		id: string
 	): PromiseEither<AbstractError, AccountEntity> {
-		if (!params._id) return left(new MissingParamsError("id"));
-		const oldAccount = await Account.findById(params._id.toString());
+		if (!id) return left(new MissingParamsError("id"));
+		const oldAccount = await Account.findById(id);
 		if (!oldAccount) return left(new AccountNotFoundError());
 		const newAccountOrErr = await AccountEntity.build({
 			...oldAccount.toObject(),
-			...params,
+			...account,
 		});
 		if (newAccountOrErr.isLeft())
 			return left(new AbstractError("Invalid params", 400));
 		const newAccount = newAccountOrErr.extract();
 
-		await Account.findByIdAndUpdate(params._id, newAccount.params());
+		await Account.findByIdAndUpdate(id, newAccount.params());
 		return right(newAccount);
 	}
     

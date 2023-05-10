@@ -9,7 +9,7 @@ export class CreateAccountUseCase
 	implements UseCase<IAccount, AccountEntity>
 {
 	constructor(
-		private readonly activitiesManager: AccountManagerInterface
+		private readonly accountManager: AccountManagerInterface
 	) {}
 
 	public async execute(
@@ -17,7 +17,7 @@ export class CreateAccountUseCase
 	): PromiseEither<AbstractError, AccountEntity> {
 
 		const newAccountOrErr =
-			await this.activitiesManager.createAccount(params);
+			await this.accountManager.createAccount(params);
 
 		if (newAccountOrErr.isLeft()) return left(newAccountOrErr.extract());
 		const newActivity = newAccountOrErr.extract();

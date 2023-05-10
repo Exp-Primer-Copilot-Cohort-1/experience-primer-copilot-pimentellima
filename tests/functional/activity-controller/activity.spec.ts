@@ -89,21 +89,20 @@ test.group('Activity Controller', () => {
             })
 			.bearerToken(token.token);
             
-        console.log(response.error())
         response.assertStatus(409); 
 	});
 
-    /* test('update activity', async ({ client }) => {
+    test('update activity', async ({ client }) => {
 		const { token } = await loginAndGetToken(client);
 
 		const response = await client
 			.put('activity')
-			.json(updateActivity)
+			.json({})
 			.bearerToken(token.token);
 
 		response.assertStatus(200);
 
-	}); */
+	}).skip();
 
 	test('display all activities by prof_id', async ({ client }) => {
         const prof_id = '6359660fc109b232759921d6';

@@ -13,11 +13,11 @@ export class CreateActivityUseCase
 	) {}
 
 	public async execute(
-		params: IActivity
+		activity: IActivity
 	): PromiseEither<AbstractError, ActivityEntity> {
 
 		const newActivityOrErr =
-			await this.activitiesManager.createActivity(params);
+			await this.activitiesManager.createActivity(activity);
 
 		if (newActivityOrErr.isLeft()) return left(newActivityOrErr.extract());
 		const newActivity = newActivityOrErr.extract();

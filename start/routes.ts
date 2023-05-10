@@ -138,15 +138,26 @@ Route.group(() => {
 	Route.get('users-type', 'UserController.indexByType')
 	Route.post('users/client', 'ClientControllerV2.create')
 
-	Route.get('form/prof/:id', 'FormControllerV2.findFormByProfID')
-	Route.get('form/unity', 'FormControllerV2.findFormByUnityID')
-	Route.get('form/category/:id', 'FormControllerV2.findFormByCategoryID')
-	Route.post('form', 'FormControllerV2.store')
+	Route.get('stock', 'StockController.index')
+	Route.get('stock/:id', 'StockController.show')
+	Route.put('stock/:id', 'StockController.update')
+	Route.put('stock-update/:id', 'StockController.updateLot')
+	Route.delete('stock/:id', 'StockController.destroy')
+	Route.post('stock', 'StockController.store')
 
-	Route.get('form', 'FormController.index')
-	Route.get('form/:id', 'FormController.show')
-	Route.put('form/:id', 'FormController.update')
-	Route.delete('form/:id', 'FormController.destroy')
+	Route.get('category', 'CategoryController.index')
+	Route.get('category/:id', 'CategoryController.show')
+	Route.put('category/:id', 'CategoryController.update')
+	Route.delete('category/:id', 'CategoryController.destroy')
+	Route.post('category', 'CategoryController.store')
+
+	Route.get('form/prof/:id', 'FormController.findFormByProfId')
+	Route.get('form/category/:id', 'FormController.findFormByCategoryId')
+	Route.post('form', 'FormController.createForm')
+	Route.get('form', 'FormController.findAllForms')
+	Route.get('form/:id', 'FormController.findFormById')
+	Route.put('form/:id', 'FormController.updateFormById')
+	Route.delete('form/:id', 'FormController.deleteFormById')
 
 	Route.get('answer', 'AnswerController.index')
 	Route.get('answer/:id', 'AnswerController.show')
@@ -160,7 +171,7 @@ Route.group(() => {
 	Route.get('activity-stock', 'AdonnisLegadoController.bridge')
 
 	Route.get('activity', 'ActivityController.findAllActivities')
-	Route.put('activity', 'ActivityController.updateActivity')
+	Route.put('activity/:id', 'ActivityController.updateActivityById')
 	Route.get('activity/prof/:prof_id', 'ActivityController.findActivitiesByProf')
 	Route.get('activity/client/:client_id', 'ActivityController.findActivitiesByClient')
 	Route.delete('activity/:id', 'ActivityController.deleteActivityById')
@@ -247,7 +258,7 @@ Route.group(() => {
 
 	Route.get('account', 'AccountController.findAllAccounts')
 	Route.get('account/:id', 'AccountController.findAccountById')
-	Route.put('account/:id', 'AccountController.updateAccount')
+	Route.put('account/:id', 'AccountController.updateAccountById')
 	Route.delete('account/:id', 'AccountController.deleteAccountById')
 	Route.post('account', 'AccountController.createAccount')
 

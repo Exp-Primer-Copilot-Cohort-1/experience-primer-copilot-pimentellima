@@ -3,7 +3,7 @@ import { PromiseEither, left, right } from "App/Core/shared";
 import Activity from "App/Models/Activity";
 import ActivityEntity from "../../entities/activities/activity";
 import { MissingParamsError } from "../../errors/missing-params";
-import { ActivitiesManagerInterface } from "../interface/activities-manager.interface";
+import { ActivitiesManagerInterface } from "../interface/activity-manager.interface";
 import { ActivityNotFoundError } from "../../errors/activity-not-found";
 import { IActivity } from "Types/IActivity";
 import { ScheduleEntity } from "../../entities/schedule/schedule";
@@ -12,45 +12,33 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() {}
 
 	async createActivity(
-		params: IActivity
+		activity: IActivity
 	): PromiseEither<AbstractError, ActivityEntity> {
 		const activities = (
-			await Activity.find({ prof_id: params.prof_id })
-		).filter(
-			(activity) =>
-				activity.date.getDay() === new Date(params.date).getDay()
-		);
+			await Activity.find({ prof_id: activity.prof_id })
+		).filter((act) => {
+			const dateAct = new Date(act.date);
+			dateAct.setHours(0,0,0,0);
+			const dateActivity = new Date(activity.date);
+			dateActivity.setHours(0, 0, 0, 0);
 
-		const scheduleParams = {
-			prof_id: params.prof_id.toString(),
-			appointments: activities.map((activity) => ({
-				date: activity.date,
-				hour_start: new Date(activity.hour_start),
-				hour_end: new Date(activity.hour_end),
-			})),
-		};
+			return dateAct === dateActivity;
+		});
 
-		const scheduleOrErr = await ScheduleEntity.build(scheduleParams);
+		const scheduleOrErr = await ScheduleEntity.build(activities);
 		if (scheduleOrErr.isLeft()) return left(scheduleOrErr.extract());
 
 		const newAppointmentOrErr = await scheduleOrErr
 			.extract()
-			.addAppointment({
-				hour_start: new Date(params.hour_start),
-				hour_end: new Date(params.hour_end),
-				date: new Date(params.date),
-			});
+			.addAppointment(activity);
 
 		if (newAppointmentOrErr.isLeft())
 			return left(newAppointmentOrErr.extract());
 
-		const newActivityOrErr = await ActivityEntity.build({
-			...params,
-		});
+		const newActivityOrErr = await ActivityEntity.build(activity);
 		if (newActivityOrErr.isLeft()) return left(newActivityOrErr.extract());
 		const newActivity = newActivityOrErr.extract();
 
-		
 		const { _id } = await Activity.create(newActivity.params());
 		newActivity.defineId(_id.toString());
 		return right(newActivity);
@@ -61,12 +49,12 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	): PromiseEither<AbstractError, ActivityEntity> {
 		if (!id) return left(new MissingParamsError("id"));
 
-		const item = await Activity.findOne({ _id: id });
+		const item = await Activity.findById(id);
 		if (!item) return left(new ActivityNotFoundError());
 
 		const activityOrErr = await ActivityEntity.build(item.toObject());
 		if (activityOrErr.isLeft())
-			return left(new AbstractError("Invalid params", 400));
+			return left(new AbstractError("Internal Error", 500));
 
 		return right(activityOrErr.extract());
 	}
@@ -81,7 +69,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 		const activityOrErr = await ActivityEntity.build(item.toObject());
 		if (activityOrErr.isLeft())
-			return left(new AbstractError("Invalid params", 400));
+			return left(new AbstractError("Internal Error", 500));
 
 		return right(activityOrErr.extract());
 	}
@@ -94,7 +82,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		const data = await Activity.find({ unity_id });
 		const activities = await Promise.all(
 			data.map(async (item) => {
-				const activityOrErr = await ActivityEntity.build(item);
+				const activityOrErr = await ActivityEntity.build(item.toObject());
 				if (activityOrErr.isLeft()) {
 					return {} as ActivityEntity;
 				}
@@ -114,7 +102,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		const data = await Activity.find({ unity_id, prof_id });
 		const activities = await Promise.all(
 			data.map(async (item) => {
-				const activityOrErr = await ActivityEntity.build(item);
+				const activityOrErr = await ActivityEntity.build(item.toObject());
 				if (activityOrErr.isLeft()) {
 					return {} as ActivityEntity;
 				}
@@ -134,7 +122,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		const data = await Activity.find({ unity_id, client_id });
 		const activities = await Promise.all(
 			data.map(async (item) => {
-				const activityOrErr = await ActivityEntity.build(item);
+				const activityOrErr = await ActivityEntity.build(item.toObject());
 				if (activityOrErr.isLeft()) {
 					return {} as ActivityEntity;
 				}
@@ -144,21 +132,47 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		return right(activities);
 	}
 
-	async updateActivity(
-		params: IActivity
+	async updateActivityById(
+		id: string,
+		activity: IActivity
 	): PromiseEither<AbstractError, ActivityEntity> {
-		if (!params._id) return left(new MissingParamsError("id"));
-		const oldActivity = await Activity.findById(params._id);
-		if (!oldActivity) return left(new ActivityNotFoundError());
-		const newActivityOrErr = await ActivityEntity.build({
-			...oldActivity.toObject(),
-			...params,
-		});
-		if (newActivityOrErr.isLeft())
-			return left(new AbstractError("Invalid params", 400));
-		const newActivity = newActivityOrErr.extract();
+		if (!id) return left(new MissingParamsError("id"));
 
-		await Activity.findByIdAndUpdate(params._id, newActivity.params());
-		return right(newActivity);
+		const activities = (
+			await Activity.find({ prof_id: activity.prof_id })
+		).filter((act) => {
+			act.date.setHours(0, 0, 0, 0);
+			activity.date.setHours(0, 0, 0, 0);
+
+			return (
+				act.date.getDate() === activity.date.getDate() && act._id !== id
+			);
+		});
+
+		const scheduleOrErr = await ScheduleEntity.build(activities);
+		if (scheduleOrErr.isLeft()) return left(scheduleOrErr.extract());
+
+		const newAppointmentOrErr = await scheduleOrErr
+			.extract()
+			.addAppointment(activity);
+
+		if (newAppointmentOrErr.isLeft())
+			return left(newAppointmentOrErr.extract());
+
+		const oldActivity = await Activity.findById(id);
+		if (!oldActivity) return left(new ActivityNotFoundError());
+		const activityOrErr = await ActivityEntity.build({
+			...oldActivity.toObject(),
+			...activity,
+		});
+		if (activityOrErr.isLeft())
+			return left(new AbstractError("Internal Error", 500));
+
+		const updatedActivity = activityOrErr
+			.extract()
+			.updateStatus(oldActivity);
+
+		await Activity.findByIdAndUpdate(id, updatedActivity);
+		return right(updatedActivity);
 	}
 }

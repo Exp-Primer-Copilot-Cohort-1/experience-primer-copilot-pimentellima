@@ -5,6 +5,7 @@ import { InvalidParamsError } from "../../errors/invalid-params-error";
 import { z } from "zod";
 import { ConflictingScheduleError } from "../../errors/ conflicting-schedule-error";
 import { InvalidScheduleError } from "../../errors/invalid-schedule-error";
+import { IActivity } from "Types/IActivity";
 
 type appointment = {
     hour_start: Date,
@@ -19,44 +20,40 @@ const appointmentSchema = z.object({
 })
 
 type ISchedule = {
-    prof_id: string,
     appointments: appointment[]
 }
 
 export class ScheduleEntity extends Entity {
-    private _prof_id: string
     private _appointments: appointment[];
-
-    defineProfId(prof_id: string) : ScheduleEntity {
-        this._prof_id = prof_id;
-        return this;
-    }
 
     defineAppointments(appointments: appointment[]) : ScheduleEntity {
         this._appointments = appointments;
         return this;
     }
 
-    public get prof_id(): string {
-        return this._prof_id
-    }
-
     public get appointments(): appointment[] {
         return this._appointments;
     }
 
-    public async addAppointment(newApp : appointment): PromiseEither<AbstractError, ScheduleEntity> {
+    public async addAppointment(activity : IActivity): PromiseEither<AbstractError, ScheduleEntity> {
         try {
-            appointmentSchema.parse(newApp);
+            const appointment = {
+				hour_start: new Date(activity.hour_start),
+				hour_end: new Date(activity.hour_end),
+				date: new Date(activity.date)
+			}
+            appointmentSchema.parse(appointment);
 
-            if(newApp.date < new Date() || 
-            newApp.hour_start >= newApp.hour_end) {
+            if(appointment.date < new Date() || 
+            appointment.hour_start >= appointment.hour_end) {
                 return left(new InvalidScheduleError());
             } 
 
-            for(const appointment of this._appointments) {
-                if(newApp.hour_start >= appointment.hour_start &&
-                newApp.hour_end <= appointment.hour_end
+            for(const app of this._appointments) {
+                if((appointment.hour_start >= app.hour_start &&
+                appointment.hour_start <= app.hour_end) || 
+                (appointment.hour_end >= app.hour_start &&
+                appointment.hour_end <= app.hour_end)
                 ) return left(new ConflictingScheduleError());
             }
             return right(this);
@@ -66,21 +63,17 @@ export class ScheduleEntity extends Entity {
         }
     } 
 
-    public static async build(params: ISchedule) : PromiseEither<AbstractError, ScheduleEntity> {
+    public static async build(activities: IActivity[]) : PromiseEither<AbstractError, ScheduleEntity> {
         try {
-            z.object({
-                prof_id: z.string(),
-                appointments: z.array(appointmentSchema).default([])
-            }).parse({
-                prof_id: params.prof_id,
-                appointments: params.appointments
-            });
+            const appointments = activities.map((activity) => ({
+				date: activity.date,
+				hour_start: new Date(activity.hour_start),
+				hour_end: new Date(activity.hour_end),
+			}));
 
-
-            return right(new ScheduleEntity()
-                .defineProfId(params.prof_id)
-                .defineAppointments(params.appointments)
-            )
+            z.array(appointmentSchema).parse(appointments)
+            
+            return right(new ScheduleEntity().defineAppointments(appointments))
         }
         catch(err) {
             return left(new InvalidParamsError(err));

@@ -5,19 +5,23 @@ import AccountEntity from "../../entities/account/account";
 import { AccountManagerInterface } from "../../repositories/interface/account-manager-interface";
 import { IAccount } from "Types/IAccount";
 
-export class UpdateAccountUseCase
-	implements UseCase<IAccount, AccountEntity>
+type TypeParams = {
+	account: IAccount;
+	id: string;
+};
+
+export class UpdateAccountByIdUseCase
+	implements UseCase<TypeParams, AccountEntity>
 {
-	constructor(
-		private readonly activitiesManager: AccountManagerInterface
-	) {}
+	constructor(private readonly accountManager: AccountManagerInterface) {}
 
 	public async execute(
-		params: IAccount
+		params: TypeParams
 	): PromiseEither<AbstractError, AccountEntity> {
-
-		const accountOrErr =
-			await this.activitiesManager.updateAccount(params);
+		const accountOrErr = await this.accountManager.updateAccountById(
+			params.account,
+			params.id
+		);
 
 		if (accountOrErr.isLeft()) return left(accountOrErr.extract());
 		const account = accountOrErr.extract();
