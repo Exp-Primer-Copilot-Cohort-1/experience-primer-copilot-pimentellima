@@ -11,3 +11,5 @@ logs
 log
 html
 .husky
+output.log
+pid.txt
