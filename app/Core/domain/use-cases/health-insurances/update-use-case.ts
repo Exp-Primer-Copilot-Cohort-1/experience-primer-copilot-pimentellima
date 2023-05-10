@@ -6,25 +6,25 @@ import { PromiseEither, left, right } from 'App/Core/shared'
 import { IHealthInsurance } from 'Types/IHealthInsurance'
 
 export class UpdateHealthInsuranceUseCase
-	implements UseCase<IHealthInsurance, IHealthInsurance>
+	implements UseCase<Partial<IHealthInsurance>, IHealthInsurance>
 {
 	constructor(private readonly manager: HealthInsuranceManagerInterface) { }
 
 	public async execute(
-		params: IHealthInsurance,
+		params: Partial<IHealthInsurance>,
 	): PromiseEither<AbstractError, IHealthInsurance> {
-		if (!params) {
+		if (!params?._id) {
 			return left(new InvalidParamsError())
 		}
 
-		const healthOrErr = await this.manager.update(params._id, params as any)
+		const healthOrErr = await this.manager.update(params._id, params)
 
 		if (healthOrErr.isLeft()) {
 			return left(healthOrErr.extract())
 		}
 
-		return right({
-			...healthOrErr.extract(),
-		} as IHealthInsurance)
+		const health = healthOrErr.extract().params()
+
+		return right(health)
 	}
 }

@@ -2,7 +2,8 @@ import { isValidObjectId } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import HealthInsurance from 'App/Models/HealthInsurance'
-import { Entity } from '../../entities/abstract/entity.abstract'
+import { IHealthInsurance } from 'Types/IHealthInsurance'
+import { HealtInsuranceEntity } from '../../entities/health-insurances/health-insurance'
 import { OptsQuery } from '../../entities/helpers/opts-query'
 import { HealthInsuranceNotFoundError } from '../../errors/health-insurance-not-found'
 import { MissingParamsError } from '../../errors/missing-params'
@@ -10,7 +11,9 @@ import { HealthInsuranceManagerInterface } from '../interface/health-insurance-m
 
 export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInterface {
 	constructor(private readonly opts: OptsQuery = OptsQuery.build()) { }
-	async findAllByUnityId(unity_id: string): PromiseEither<AbstractError, any[]> {
+	async findAllByUnityId(
+		unity_id: string,
+	): PromiseEither<AbstractError, IHealthInsurance[]> {
 		if (!unity_id) {
 			return left(new MissingParamsError('unity_id'))
 		}
@@ -30,7 +33,7 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 	async findAllByName(
 		name: string,
 		unity_id: string,
-	): PromiseEither<AbstractError, any[]> {
+	): PromiseEither<AbstractError, IHealthInsurance[]> {
 		if (!name || !unity_id) {
 			return left(
 				new MissingParamsError()
@@ -52,7 +55,7 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 		return right(healthInsurances)
 	}
 
-	async findById(id: string): PromiseEither<AbstractError, any> {
+	async findById(id: string): PromiseEither<AbstractError, HealtInsuranceEntity> {
 		if (!isValidObjectId(id)) {
 			return left(new HealthInsuranceNotFoundError())
 		}
@@ -66,7 +69,10 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 		return right(healthInsurance)
 	}
 
-	async update(id: string, entity: Entity): PromiseEither<AbstractError, Entity> {
+	async update(
+		id: string,
+		entity: Partial<HealtInsuranceEntity>,
+	): PromiseEither<AbstractError, HealtInsuranceEntity> {
 		if (!isValidObjectId(id)) {
 			return left(new HealthInsuranceNotFoundError())
 		}
@@ -77,18 +83,29 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 			return left(new HealthInsuranceNotFoundError())
 		}
 
-		return right({
+		const entityOrErr = await HealtInsuranceEntity.build({
 			...healthInsurance.toJSON(),
 			...entity,
-		} as any)
+		} as IHealthInsurance)
+
+		if (entityOrErr.isLeft()) return entityOrErr as any
+
+		const updateEntity = entityOrErr.extract()
+
+		return right(updateEntity)
 	}
 
-	async delete(id: string): PromiseEither<AbstractError, any> {
+	async delete(id: string): PromiseEither<AbstractError, HealtInsuranceEntity> {
 		return right({})
 	}
 
-	async create(entity: Entity): PromiseEither<AbstractError, Entity> {
-		const healthInsurances = await HealthInsurance.create({ ...entity })
-		return right(healthInsurances.toObject())
+	async create(
+		entity: HealtInsuranceEntity,
+	): PromiseEither<AbstractError, HealtInsuranceEntity> {
+		const healthInsurances = await HealthInsurance.create(entity.params())
+
+		entity.defineId(healthInsurances._id)
+
+		return right(entity)
 	}
 }

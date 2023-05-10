@@ -3,7 +3,8 @@ import { PromiseEither } from 'App/Core/shared/either'
 import { IUnity } from 'Types/IUnity'
 
 export interface UnitiesManagerInterface {
-	findById: (id: string) => PromiseEither<AbstractError, IUnity>
-	findAll: () => PromiseEither<AbstractError, IUnity[]>
-	findOne: (id: string) => PromiseEither<AbstractError, IUnity>
+	findById: (id: string) => PromiseEither<AbstractError, IUnity>;
+	findAll: () => PromiseEither<AbstractError, IUnity[]>;
+	findByName: (name: string) => PromiseEither<AbstractError, IUnity[]>;
+  findOne: (id: string) => PromiseEither<AbstractError, IUnity>
 }
