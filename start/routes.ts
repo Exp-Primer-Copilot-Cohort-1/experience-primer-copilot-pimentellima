@@ -164,6 +164,7 @@ Route.group(() => {
 	Route.get('activity/client/:client_id', 'ActivityController.findActivitiesByClientId')
 	Route.delete('activity/:id', 'ActivityController.deleteActivityById')
 	Route.post('activity', 'ActivityController.createActivity')
+
 	Route.post('activity-pay', 'ActivityController.payment')
 
 	Route.get('procedure', 'ProcedureController.index')
@@ -226,11 +227,11 @@ Route.group(() => {
 
 	Route.get('activities-date', 'AdonnisLegadoController.bridge')
 
-	Route.get('payments-prof', 'AdonnisLegadoController.bridge')
-	Route.get('payments-prof/:id', 'AdonnisLegadoController.bridge')
-	Route.put('payments-prof/:id', 'AdonnisLegadoController.bridge')
-	Route.delete('payments-prof/:id', 'AdonnisLegadoController.bridge')
-	Route.post('payments-prof', 'AdonnisLegadoController.bridge')
+	Route.get('payments-prof', 'PaymentProfController.findAllPaymentProfs')
+	Route.get('payments-prof/:id', 'PaymentProfController.findPaymentProfById')
+	Route.put('payments-prof/:id', 'PaymentProfController.updatePaymentProfById')
+	Route.delete('payments-prof/:id', 'PaymentProfController.deletePaymentProfById')
+	Route.post('payments-prof', 'PaymentProfController.createPaymentProf')
 
 	Route.get('financial-category', 'AdonnisLegadoController.bridge')
 	Route.get('financial-category/:id', 'AdonnisLegadoController.bridge')
