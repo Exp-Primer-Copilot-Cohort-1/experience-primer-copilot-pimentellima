@@ -5,9 +5,14 @@ import { UnitNotFoundError } from '../../errors/unit-not-found';
 import { UnitiesManagerInterface } from '../interface/unities-manager.interface';
 
 export class UnitiesInMemoryRepository implements UnitiesManagerInterface {
-	private items: IUnity[] = [];
+	private items: IUnity[] = [
+		{ _id: 'idtest', name: 'Caiu' },
+		{ _id: 'idtest2', name: 'Osmar' },
+		{ _id: 'idtest3', name: 'Mikaela' },
+	];
 
 	constructor() { }
+
 	public async findByName(
 		name: string,
 	): PromiseEither<AbstractError, IUnity[]> {
@@ -16,8 +21,16 @@ export class UnitiesInMemoryRepository implements UnitiesManagerInterface {
 	public async findAll(): PromiseEither<AbstractError, IUnity[]> {
 		return right(this.items);
 	}
-
 	public async findById(id: string): PromiseEither<AbstractError, IUnity> {
+		const unity = this.items.find((item) => item._id === id);
+
+		if (!unity) {
+			return left(new UnitNotFoundError());
+		}
+
+		return right(unity);
+	}
+	public async deleteById(id: string): PromiseEither<AbstractError, IUnity> {
 		const unity = this.items.find((item) => item._id === id);
 
 		if (!unity) {

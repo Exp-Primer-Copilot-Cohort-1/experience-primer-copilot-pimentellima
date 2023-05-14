@@ -6,4 +6,5 @@ export interface UnitiesManagerInterface {
 	findById: (id: string) => PromiseEither<AbstractError, IUnity>;
 	findAll: () => PromiseEither<AbstractError, IUnity[]>;
 	findByName: (name: string) => PromiseEither<AbstractError, IUnity[]>;
+	deleteById(id: string) => PromiseEither<AbstractError, IUnity>;
 }
