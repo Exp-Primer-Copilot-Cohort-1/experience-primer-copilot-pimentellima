@@ -1,4 +1,4 @@
-export * from './activities-manager.interface';
+export * from './activity-manager.interface';
 export * from './admin-manager.interface';
 export * from './health-insurance-manager.interface';
 export * from './procedures-manager.interface';

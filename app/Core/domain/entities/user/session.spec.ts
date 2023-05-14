@@ -1,10 +1,10 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest'
 
-import { faker } from '@faker-js/faker';
-import { IUser } from 'Types/IUser';
-import User from './session';
+import { faker } from '@faker-js/faker'
+import { IUser } from 'Types/IUser'
+import User from './session'
 
-import { cpf } from 'cpf-cnpj-validator';
+import { cpf } from 'cpf-cnpj-validator'
 
 const user = {
 	_id: faker.datatype.uuid(),
@@ -36,40 +36,40 @@ const user = {
 	rememberMeToken: faker.datatype.uuid(),
 	celphone: faker.phone.number('(##) #####-####'),
 	document: cpf.generate(),
-} as IUser;
+} as IUser
 
 describe('Entity User (Unit)', () => {
 	it('should be able to create a new user', async () => {
-		const userOrErr = await User.build(user);
-		expect(userOrErr.isRight()).toBeTruthy();
+		const userOrErr = await User.build(user)
+		expect(userOrErr.isRight()).toBeTruthy()
 
 		if (userOrErr.isLeft()) {
-			throw new Error('User is not valid');
+			throw new Error('User is not valid')
 		}
-		expect(userOrErr.extract()).toBeInstanceOf(User);
-	});
+		expect(userOrErr.extract()).toBeInstanceOf(User)
+	})
 
 	it('should be able to create a new user with params', async () => {
-		const userOrErr = await User.build(user);
+		const userOrErr = await User.build(user)
 
-		expect(userOrErr.isRight()).toBeTruthy();
+		expect(userOrErr.isRight()).toBeTruthy()
 
 		if (userOrErr.isLeft()) {
-			throw new Error('User is not valid');
+			throw new Error('User is not valid')
 		}
-	});
+	})
 
 	it('should be invalid email when email is invalid', async () => {
-		const userOrErr = await User.build(user);
+		const userOrErr = await User.build(user)
 
-		expect(userOrErr.isRight()).toBeTruthy();
+		expect(userOrErr.isRight()).toBeTruthy()
 
 		if (userOrErr.isLeft()) {
-			throw new Error('User is not valid');
+			throw new Error('User is not valid')
 		}
 
-		const entity = userOrErr.extract();
+		const entity = userOrErr.extract()
 
-		expect(() => entity.defineEmail('invalid-email')).toThrow();
-	});
-});
+		expect(() => entity.defineEmail('invalid-email')).toThrow()
+	})
+})

@@ -1,92 +1,108 @@
-export type IProcedureEnt = {
-	value: number;
-	_id: string;
-	color: string;
-	name: string;
-	active: boolean;
-	minutes: number;
-	partner_id: string;
-	products: string[];
-	health_insurance: {
-		value: string;
-		label: string;
-		price: string;
-	}[];
-};
-class ProcedureEnt implements IProcedureEnt {
-	public _id: string;
-	public active: boolean;
-	public value: number;
-	public color: string;
-	public name: string;
-	public minutes: number;
-	public partner_id: string;
-	public products: string[];
-	public health_insurance: {
-		value: string;
-		label: string;
-		price: string;
-	}[];
-	private constructor() { }
-	public defineId(id: string): this {
-		this._id = id;
-		return this;
-	}
-	public defineActive(active: boolean): this {
-		this.active = active;
-		return this;
-	}
-	public defineValue(value: number): this {
-		this.value = value;
-		return this;
-	}
+import { IProcedure } from 'Types/IProcedure';
+import { IProf } from "Types/IProf";
+import { IHealthInsurance } from 'Types/IHealthInsurance';
+import { z } from 'zod';
+import { PaymentStatus } from 'App/Helpers';
+import { AbstractError } from 'App/Core/errors/error.interface';
+import { PromiseEither, left, right } from 'App/Core/shared';
+import { InvalidParamsError } from '../../errors/invalid-params-error';
 
-	public defineColor(color: string): this {
-		this.color = color;
-		return this;
-	}
+export class ProcedureEntity implements IProcedure {
+    _id: string;
+    active: boolean;
+    value: number;
+    color: string;
+    name: string;
+    minutes: number;
+    prof: IProf[];
+    health_insurance: IHealthInsurance[];
+    unity_id: string;
+    created_at: Date;
+    updated_at: Date;
+    __v?: any;
 
-	public defineName(name: string): this {
-		this.name = name;
-		return this;
-	}
+    defineId(id: string): this {
+        this._id = id;
+        return this;
+    }
+    
+    defineActive(active: boolean): this {
+        this.active = active;
+        return this;
+    }
+    
+    defineValue(value: number): this {
+        this.value = value;
+        return this;
+    }
+    
+    defineColor(color: string): this {
+        this.color = color;
+        return this;
+    }
+    
+    defineName(name: string): this {
+        this.name = name;
+        return this;
+    }
+    
+    defineMinutes(minutes: number): this {
+        this.minutes = minutes;
+        return this;
+    }
+    
+    defineProf(prof: IProf[]): this {
+        this.prof = prof;
+        return this;
+    }
+    
+    defineHealthInsurance(health_insurance: IHealthInsurance[]): this {
+        this.health_insurance = health_insurance;
+        return this;
+    }
+    
+    defineUnityId(unity_id: string): this {
+        this.unity_id = unity_id;
+        return this;
+    }
+    
+    defineCreatedAt(created_at: Date): this {
+        this.created_at = created_at;
+        return this;
+    }
+    
+    defineUpdatedAt(updated_at: Date): this {
+        this.updated_at = updated_at;
+        return this;
+    }
 
-	public defineMinutes(minutes: number): this {
-		this.minutes = minutes;
-		return this;
-	}
-
-	public definePartnerId(partner_id: string): this {
-		this.partner_id = partner_id;
-		return this;
-	}
-
-	public defineProducts(products: string[]): this {
-		this.products = products;
-		return this;
-	}
-
-	public defineHealthInsurance(
-		health_insurance: {
-			value: string;
-			label: string;
-			price: string;
-		}[],
-	): this {
-		this.health_insurance = health_insurance;
-		return this;
-	}
-	public static build(procedure: IProcedureEnt): ProcedureEnt {
-		return new ProcedureEnt()
-			.defineId(procedure.id.toString())
-			.defineName(procedure.name)
-			.defineActive(procedure.active)
-			.defineValue(procedure.value)
-			.defineColor(procedure.color)
-			.definePartnerId(procedure.partner_id)
-			.defineProducts(procedure.products)
-			.defineHealthInsurance(procedure.health_insurance)
-			.defineMinutes(procedure.minutes);
-	}
+    public static async build(params: IProcedure) : PromiseEither<AbstractError, ProcedureEntity> {
+        try {
+            const schema = z.object({
+                value: z.string(),
+                label: z.string(),
+                minutes: z.number(),
+                color: z.string(),
+                val: z.number(),
+                status: z.nativeEnum(PaymentStatus),
+            })
+            schema.parse(params);
+            return right(new ProcedureEntity()
+                .defineId(params._id)
+                .defineActive(params.active)
+                .defineValue(params.value)
+                .defineName(params.name)
+                .defineColor(params.color)
+                .defineProf(params.prof)
+                .defineMinutes(params.minutes)
+                .defineHealthInsurance(params.health_insurance)
+                .defineUnityId(params.unity_id.toString())
+                .defineCreatedAt()
+                .defineUpdatedAt()
+                )
+        }
+        catch(error) {
+            return left(new InvalidParamsError())
+        }
+    }
 }
-export default ProcedureEnt;

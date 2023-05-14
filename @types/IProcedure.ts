@@ -1,22 +1,17 @@
-import { Document, ObjectId } from '@ioc:Mongoose';
+import { ObjectId } from '@ioc:Mongoose';
+import { IHealthInsurance } from './IHealthInsurance';
+import { IProf } from './IProf';
 
-export interface IProcedure extends Document {
-    _id: ObjectId;
+export interface IProcedure {
+    _id: string;
     active: boolean;
     value: number;
     color: string;
+    prof: IProf[];
     name: string;
     minutes: number;
-    prof: {
-      value: ObjectId;
-      label: string;
-    }[];
-    health_insurance: {
-      value: ObjectId;
-      label: string;
-      price: string;
-    }[];
-    unity_id: ObjectId;
-    created_at: Date;
-    updated_at: Date;
+    health_insurance: IHealthInsurance[];
+    unity_id: string | ObjectId;
+    created_at: Date | string;
+    updated_at: Date | string;
   }

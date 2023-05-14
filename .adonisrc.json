@@ -1,47 +1,49 @@
 {
-  "typescript": true,
-  "commands": [
-    "./commands",
-    "@adonisjs/core/build/commands/index.js",
-    "@adonisjs/repl/build/commands",
-    "@adonisjs/mail/build/commands"
-  ],
-  "exceptionHandlerNamespace": "App/Exceptions/Handler",
-  "aliases": {
-    "App": "app",
-    "Config": "config",
-    "Database": "database",
-    "Contracts": "contracts"
-  },
-  "preloads": [
-    "./start/routes",
-    "./start/kernel",
-    "./start/validator"
-  ],
-  "providers": [
-    "./providers/AppProvider",
-    "./providers/MongooseProvider.ts",
-    "@adonisjs/core",
-    "@adonisjs/auth",
-    "@adonisjs/redis",
-    "@adonisjs/session",
-    "@adonisjs/mail"
-  ],
-  "aceProviders": [
-    "@adonisjs/repl"
-  ],
-  "tests": {
-    "suites": [
-      {
-        "name": "functional",
-        "files": [
-          "tests/functional/**/*.spec(.ts|.js)"
-        ],
-        "timeout": 60000
-      }
-    ]
-  },
-  "testProviders": [
-    "@japa/preset-adonis/TestsProvider"
-  ]
+	"typescript": true,
+	"commands": [
+		"./commands",
+		"@adonisjs/core/build/commands/index.js",
+		"@adonisjs/repl/build/commands",
+		"@adonisjs/mail/build/commands",
+		"adonis5-swagger/build/commands"
+	],
+	"exceptionHandlerNamespace": "App/Exceptions/Handler",
+	"aliases": {
+		"App": "app",
+		"Config": "config",
+		"Database": "database",
+		"Contracts": "contracts"
+	},
+	"preloads": [
+		"./start/routes",
+		"./start/kernel",
+		"./start/validator"
+	],
+	"providers": [
+		"./providers/AppProvider",
+		"./providers/MongooseProvider",
+		"@adonisjs/core",
+		"@adonisjs/auth",
+		"@adonisjs/redis",
+		"@adonisjs/session",
+		"@adonisjs/mail",
+		"adonis5-swagger"
+	],
+	"aceProviders": [
+		"@adonisjs/repl"
+	],
+	"tests": {
+		"suites": [
+			{
+				"name": "functional",
+				"files": [
+					"tests/functional/**/*.spec(.ts|.js)"
+				],
+				"timeout": 60000
+			}
+		]
+	},
+	"testProviders": [
+		"@japa/preset-adonis/TestsProvider"
+	]
 }

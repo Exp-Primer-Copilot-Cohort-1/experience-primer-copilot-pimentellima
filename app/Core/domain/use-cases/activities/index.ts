@@ -1,1 +1,1 @@
-export * from './find-all-activities-by-unity-use-case'
+export * from './find-all-activities-use-case'
