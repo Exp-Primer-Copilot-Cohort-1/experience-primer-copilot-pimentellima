@@ -1,5 +1,7 @@
 import { adaptRoute } from 'App/Core/adapters';
+import { makeUnityDeleteByIdComposer } from 'App/Core/composers/unities/make-composer-unity-delete-by-id';
 import { makeUnityFindAllByNameComposer } from 'App/Core/composers/unities/make-composer-unity-find-by-name';
+import { makeUnityShowByIdComposer } from 'App/Core/composers/unities/make-composer-unity-show-by-id';
 import Permission from 'App/Models/Permission';
 import Unity from 'App/Models/Unity';
 class UnityController {
@@ -139,17 +141,12 @@ class UnityController {
 		return false;
 	}
 
-	public async show({ params }) {
-		const unity = await Unity.with('users')
-			.where({ _id: params.id })
-			.firstOrFail();
-
-		return unity;
+	public async show(ctx) {
+		return adaptRoute(makeUnityShowByIdComposer(), ctx);
 	}
 
-	public async destroy({ params }) {
-		const unity = await Unity.where({ _id: params.id }).firstOrFail();
-		await unity.delete();
+	public async destroy(ctx: HttpContextContract) {
+		return adaptRoute(makeUnityDeleteByIdComposer(ctx), ctx);
 	}
 }
 
