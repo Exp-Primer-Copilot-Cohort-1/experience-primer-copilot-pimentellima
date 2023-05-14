@@ -33,4 +33,14 @@ export class ProceduresMongooseRepository
 		}
 		return right(procedure);
 	}
+	public async deleteById(
+		id: string,
+	): PromiseEither<AbstractError, IProcedure> {
+		const procedure = await Procedure.findById(id);
+		if (!procedure) {
+			return left(new UnitNotFoundError());
+		}
+		await procedure.remove();
+		return right(procedure);
+	}
 }
