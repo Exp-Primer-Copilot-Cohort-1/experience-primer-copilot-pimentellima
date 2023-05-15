@@ -14,7 +14,7 @@ export default function SendEmailSignUpConfirm(
 	descriptor.value = async function (...args: any[]) {
 		const result: Either<any, any> = await originalMethod.apply(this, args)
 
-		if (result.isLeft()) {
+		if (result.isLeft() || process.env.NODE_ENV !== 'production') {
 			return result
 		}
 
@@ -37,6 +37,8 @@ export default function SendEmailSignUpConfirm(
 				email: Env.get('SMTP_USERNAME'),
 			}),
 		])
+
+		console.log('chega aki')
 
 		return result
 	}

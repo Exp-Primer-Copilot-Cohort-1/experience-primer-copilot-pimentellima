@@ -20,10 +20,11 @@ class MailEntity {
 	async send({ edge, props, email, title }: MailParams) {
 		try {
 			await Mail.send((message) => {
-				message.from(email).to(this.to).subject(title).htmlView(edge, props)
+				message.from(email).to(this.to).subject(title).text('Seja Bem Vindo')
 			})
 			Logger.info(`Email enviado para ${email}`)
 		} catch (error) {
+			console.log(error)
 			Logger.error(error)
 		}
 	}

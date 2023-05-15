@@ -6,7 +6,7 @@ import {
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IAdminUser } from 'Types/IAdminUser'
+import type { IAdminUser } from 'Types/IAdminUser'
 import { UserAdminIsExistError } from '../../../errors/user-admin-is-exist'
 
 type CreatePasswordUseCase = UseCase<string, string>
