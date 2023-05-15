@@ -18,7 +18,7 @@ class SignUpAdminController {
 				'password.minLength': 'A senha deve ter no mínimo 6 caracteres',
 				'document.required': 'O campo de CNPJ/CPF é obrigatório',
 				'document.unique': 'Este CNPJ/CPF já está cadastrado',
-				'document.cpfIsCnpjIsValid': 'Este CNPJ/CPF não é válido',
+				'document.cpfOrCnpjIsValid': 'Este CNPJ/CPF não é válido',
 				'name.required': 'O campo de nome é obrigatório',
 			},
 		})
