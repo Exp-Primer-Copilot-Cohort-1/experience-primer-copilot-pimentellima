@@ -22,7 +22,7 @@ export default function SendEmailSignUpConfirm(
 
 		await Promise.all([
 			Mail.send({
-				edge: EDGE.confirm_user,
+				edge: EDGE.confirm,
 				props: {
 					site_activation: `${Env.get('URL')}/account-activation/${user.id}`,
 					label: user.label || user.name,
@@ -37,8 +37,6 @@ export default function SendEmailSignUpConfirm(
 				email: Env.get('SMTP_USERNAME'),
 			}),
 		])
-
-		console.log('chega aki')
 
 		return result
 	}
