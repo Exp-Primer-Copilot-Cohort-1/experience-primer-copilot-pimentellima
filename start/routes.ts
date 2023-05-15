@@ -53,9 +53,9 @@ Route.group(() => {
 	.middleware('apiKey')
 
 Route.group(() => {
-	Route.post('unity', 'SingUpUnityController.storeUnity')
-	Route.post('user', 'SingUpUserAdminController.storeUserAdmin')
-	Route.put('users-confirm/:id', 'SingUpUserAdminController.activeUser')
+	Route.post('unity', 'SignUpUnityController.storeUnity')
+	Route.post('user', 'SignUpUserAdminController.storeUserAdmin')
+	Route.put('users-confirm/:id', 'SignUpUserAdminController.activeUser')
 })
 
 Route.group(() => {
