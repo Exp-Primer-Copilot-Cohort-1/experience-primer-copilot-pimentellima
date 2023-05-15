@@ -23,24 +23,6 @@ class SignUpController {
 
 		const user = await this.userModel.create({ ...data, active: false })
 
-		// await Promise.all([
-		//   MailEntity.sendMail({
-		//     email: user.email,
-		//     props: {
-		//       site_activation: `${process.env.SITE_URL}/account-activation/${user.id}`,
-		//       label: user.label || user.name,
-		//     },
-		//     edge: EDGE.confirm_user,
-		//     title: 'Ative sua conta na DPSystem',
-		//   }),
-		//   MailEntity.sendMail({
-		//     edge: EDGE.new_account,
-		//     props: { user_email: user.email },
-		//     title: 'Um novo cadastro',
-		//     email: process.env.MAIL_USERNAME,
-		//   }),
-		// ]);
-
 		return user
 	}
 
