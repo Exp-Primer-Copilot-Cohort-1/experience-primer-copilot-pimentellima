@@ -11,6 +11,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: admin
     volumes:
       - './data:/data/db'
+
   mongo-express:
     image: mongo-express
     restart: always
@@ -22,8 +23,32 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://admin:admin@mongo:27017/
     depends_on:
       - mongo
+
+  mongo-express-production:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8082:8082
+    environment:
+      ME_CONFIG_MONGODB_URL: ${DB_CONNECTION_STRING}
+    depends_on:
+      - mongo
+
   redis:
     image: redis
+    restart: always
     command: redis-server
     ports:
       - "6379:6379"
+
+  postfix:
+    image: boky/postfix
+    ports:
+      - "587:587"
+    environment:
+      - POSTFIX_myhostname=${SMTP_USERNAME}
+      - POSTFIX_mydomain=${SMTP_DOMAIN}
+      - POSTFIX_mynetworks=127.0.0.0/8, 172.17.0.0/16
+    volumes:
+      - ./postfix/postfix:/var/spool/postfix
+      - ./postfix/mail:/var/mail

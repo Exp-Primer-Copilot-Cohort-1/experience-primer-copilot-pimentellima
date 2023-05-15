@@ -14,6 +14,6 @@ export const CREATE_USER_RULES = schema.create({
 	]),
 	document: schema.string({}, [
 		rules.unique({ column: 'document', table: 'unities' }),
-		rules.cpfIsCnpjIsValid(),
+		rules.cpfOrCnpjIsValid(),
 	]),
 })

@@ -27,7 +27,8 @@
 		"@adonisjs/redis",
 		"@adonisjs/session",
 		"@adonisjs/mail",
-		"adonis5-swagger"
+		"adonis5-swagger",
+		"@adonisjs/view"
 	],
 	"aceProviders": [
 		"@adonisjs/repl"
@@ -45,5 +46,11 @@
 	},
 	"testProviders": [
 		"@japa/preset-adonis/TestsProvider"
+	],
+	"metaFiles": [
+		{
+			"pattern": "resources/views/**/*.edge",
+			"reloadServer": false
+		}
 	]
 }
