@@ -12,8 +12,4 @@ export const CREATE_USER_RULES = schema.create({
 		rules.regex(/^(?=.*[0-9])/),
 		rules.regex(/^(?=.*[!@#$%^&*])/),
 	]),
-	document: schema.string({}, [
-		rules.unique({ column: 'document', table: 'unities' }),
-		rules.cpfIsCnpjIsValid(),
-	]),
 })

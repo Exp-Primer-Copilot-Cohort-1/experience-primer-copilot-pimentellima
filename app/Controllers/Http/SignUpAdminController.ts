@@ -1,13 +1,15 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { adaptRoute } from 'App/Core/adapters'
+import { makeCreateAdminUserComposer } from 'App/Core/composers'
 import { UserNotFoundException } from 'App/Exceptions'
 import User from 'App/Models/User'
 import { CREATE_USER_RULES } from '../../Rules'
 
-class SignUpController {
+class SignUpAdminController {
 	constructor(private readonly userModel = User) { }
 
-	public async store({ request }: HttpContextContract) {
-		const data = request.validate({
+	public async store(ctx: HttpContextContract) {
+		ctx.request.validate({
 			schema: CREATE_USER_RULES,
 			messages: {
 				'email.email': 'O campo de email deve ser um email válido',
@@ -21,9 +23,7 @@ class SignUpController {
 			},
 		})
 
-		const user = await this.userModel.create({ ...data, active: false })
-
-		return user
+		return adaptRoute(makeCreateAdminUserComposer(), ctx)
 	}
 
 	async activeUser({ params }) {
@@ -37,4 +37,4 @@ class SignUpController {
 	}
 }
 
-export default SignUpController
+export default SignUpAdminController
