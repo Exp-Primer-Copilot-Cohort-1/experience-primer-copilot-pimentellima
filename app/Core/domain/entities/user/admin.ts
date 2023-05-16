@@ -38,18 +38,21 @@ class AdminUser extends SystemUser implements IAdminUser {
 		try {
 			return right(
 				new AdminUser()
-					.defineId(admin._id?.toString())
-					.defineName(admin.name)
-					.defineEmail(admin.email)
-					.defineIsCompany(admin.is_company)
-					.defineDateExpiration(admin.date_expiration)
-					.defineDocument(admin.document)
-					.defineCelphone(admin.celphone)
-					.definePassword(admin.password)
-					.defineUnityId(admin.unity_id)
-					.defineType(admin.type)
+					.defineId(admin?._id?.toString() || '')
+					.defineName(admin?.name)
+					.defineCelphone(admin?.celphone)
+					.defineEmail(admin?.email)
+					.defineIsCompany(admin?.is_company)
+					.defineDateExpiration(admin?.date_expiration)
+					.defineDocument(admin?.document)
+					.definePassword(admin?.password)
+					.defineUnityId(admin?.unity_id)
+					.defineType(admin?.type)
 					.defineDayOfTrade(dayOfTradeEntityOrErr.extract() as DaysOfTrade)
-					.defineActive(admin.active),
+					.defineActive(admin?.active)
+					.defineCreatedAt(admin?.created_at)
+					.defineUpdatedAt(admin?.updated_at)
+					.defineAvatar(admin?.avatar),
 			)
 		} catch (error) {
 			return left(error)

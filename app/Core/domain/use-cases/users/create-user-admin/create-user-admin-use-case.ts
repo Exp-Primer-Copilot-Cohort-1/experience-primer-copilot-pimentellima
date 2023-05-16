@@ -6,8 +6,10 @@ import {
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IAdminUser } from 'Types/IAdminUser'
+import type { IAdminUser } from 'Types/IAdminUser'
 import { UserAdminIsExistError } from '../../../errors/user-admin-is-exist'
+
+import SendSignUpConfirmEmail from 'App/Mail/emails/send-sign-up-confirm-email'
 
 type CreatePasswordUseCase = UseCase<string, string>
 
@@ -18,6 +20,7 @@ export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {
 		private readonly createPasswordUseCase: CreatePasswordUseCase,
 	) { }
 
+	@SendSignUpConfirmEmail
 	public async execute(data: IAdminUser): PromiseEither<AbstractError, IAdminUser> {
 		const adminOrErr = await AdminUser.build(data)
 

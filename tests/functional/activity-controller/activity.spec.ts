@@ -69,8 +69,6 @@ test.group('Activity Controller', () => {
 
 		response.assertStatus(200)
 
-		console.log(response.body())
-
 		const { deletedCount } = await Activity.deleteOne({ _id: response.body()._id })
 		assert.equal(deletedCount, 1)
 	})

@@ -7,6 +7,7 @@ coverage
 tmp
 .docker/data
 .docker/data-backup
+.docker/postfix
 logs
 log
 html
