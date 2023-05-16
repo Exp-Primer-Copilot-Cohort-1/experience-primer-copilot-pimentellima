@@ -25,9 +25,16 @@ services:
     depends_on:
       - mongo
 
+ redis:
+    image: redis
+    command: redis-server
+    restart: always
+    ports:
+      - "6379:6379"
+
   mongo-express-production:
     image: mongo-express
-    restart: always
+    restart: 'no'
     ports:
       - 8082:8082
     environment:
@@ -36,23 +43,3 @@ services:
       ME_CONFIG_MONGODB_URL: ${DB_CONNECTION_STRING}
     depends_on:
       - mongo
-
-  redis:
-    image: redis
-    command: redis-server
-    restart: always
-    ports:
-      - "6379:6379"
-
-  postfix:
-    image: boky/postfix
-    ports:
-      - "587:587"
-    environment:
-      - POSTFIX_myhostname=${SMTP_USERNAME}
-      - POSTFIX_mydomain=${SMTP_DOMAIN}
-      - POSTFIX_mynetworks=127.0.0.0/8, 172.17.0.0/16
-      - ALLOWED_SENDER_DOMAINS=${SMTP_DOMAIN}
-    volumes:
-      - ./postfix/postfix:/var/spool/postfix
-      - ./postfix/mail:/var/mail
