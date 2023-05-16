@@ -1,5 +1,5 @@
-import Mongoose, { Schema } from '@ioc:Mongoose';
-import { IProcedure } from 'Types/IProcedure';
+import Mongoose, { Schema } from '@ioc:Mongoose'
+import { IProcedure } from 'Types/IProcedure'
 
 const ProcedureSchema = new Schema<IProcedure>(
 	{
@@ -57,7 +57,12 @@ const ProcedureSchema = new Schema<IProcedure>(
 			required: true,
 		},
 	},
-	{ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } },
-);
+	{
+		timestamps: {
+			createdAt: 'created_at',
+			updatedAt: 'updated_at',
+		},
+	},
+)
 
-export default Mongoose.model<IProcedure>('procedures', ProcedureSchema);
+export default Mongoose.model<IProcedure>('procedures', ProcedureSchema)

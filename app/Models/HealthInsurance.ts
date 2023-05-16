@@ -1,5 +1,5 @@
-import Mongoose, { Schema } from '@ioc:Mongoose';
-import { IHealthInsurance } from 'Types/IHealthInsurance';
+import Mongoose, { Schema } from '@ioc:Mongoose'
+import { IHealthInsurance } from 'Types/IHealthInsurance'
 
 const ProfSchema = new Schema({
 	value: {
@@ -8,7 +8,7 @@ const ProfSchema = new Schema({
 		ref: 'users',
 	},
 	label: { type: String, required: true },
-});
+})
 
 const HealthInsuranceSchema = new Schema<IHealthInsurance>(
 	{
@@ -24,11 +24,14 @@ const HealthInsuranceSchema = new Schema<IHealthInsurance>(
 		},
 	},
 	{
-		timestamps: true,
+		timestamps: {
+			createdAt: 'created_at',
+			updatedAt: 'updated_at',
+		},
 	},
-);
+)
 
 export default Mongoose.model<IHealthInsurance>(
 	'health_insurances',
 	HealthInsuranceSchema,
-);
+)

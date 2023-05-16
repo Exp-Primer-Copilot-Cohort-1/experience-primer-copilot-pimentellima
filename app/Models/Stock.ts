@@ -15,7 +15,12 @@ const StockSchema = new Schema<IStock>(
         active: { type: Boolean, required: true },
         unity_id: { type: Schema.Types.ObjectId, required: true },
     },
-    { timestamps: true }
+    {
+        timestamps: {
+            createdAt: 'created_at',
+            updatedAt: 'updated_at',
+        },
+    },
 );
 
 export default model<IStock>('stocks', StockSchema);
