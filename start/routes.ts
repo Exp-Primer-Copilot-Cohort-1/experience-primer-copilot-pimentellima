@@ -241,11 +241,11 @@ Route.group(() => {
 	Route.delete('cost-center/:id', 'AdonnisLegadoController.bridge')
 	Route.post('cost-center', 'AdonnisLegadoController.bridge')
 
-	Route.get('account', 'AccountController.findAllAccounts')
-	Route.get('account/:id', 'AccountController.findAccountById')
-	Route.put('account/:id', 'AccountController.updateAccountById')
-	Route.delete('account/:id', 'AccountController.deleteAccountById')
-	Route.post('account', 'AccountController.createAccount')
+	Route.get('accounts', 'AccountController.findAllAccounts')
+	Route.get('accounts/:id', 'AccountController.findAccountById')
+	Route.put('accounts/:id', 'AccountController.updateAccountById')
+	Route.delete('accounts/:id', 'AccountController.deleteAccountById')
+	Route.post('accounts', 'AccountController.createAccount')
 
 	Route.get('default-config', 'AdonnisLegadoController.bridge')
 	Route.get('default-config/:id', 'AdonnisLegadoController.bridge')
