@@ -1,3 +1,4 @@
+import { addDays } from 'date-fns'
 import DaysOfTrade from '../helpers/days-of-trade'
 import { AbstractUser } from './user.abstract'
 
@@ -27,7 +28,12 @@ export abstract class SystemUser extends AbstractUser {
 		return this._active
 	}
 
-	public defineDateExpiration(date_expiration: string): this {
+	public defineDateExpiration(date_expiration?: string): this {
+		if (!date_expiration) {
+			this._date_expiration = addDays(new Date(), 5).toISOString()
+			return this
+		}
+
 		this._date_expiration = date_expiration
 		return this
 	}
@@ -93,7 +99,7 @@ export abstract class SystemUser extends AbstractUser {
 		return this._dayOfTrade?.lunch_time_active
 	}
 
-	public defineExibMinutes(exib_minutes: number): this {
+	public defineExibMinutes(exib_minutes = 0): this {
 		this._dayOfTrade?.defineExibMinutes(exib_minutes)
 		return this
 	}

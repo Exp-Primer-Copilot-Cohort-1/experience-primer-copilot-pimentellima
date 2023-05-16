@@ -1,9 +1,8 @@
 import Mail from '@ioc:Adonis/Addons/Mail'
 import Application from '@ioc:Adonis/Core/Application'
 import Logger from '@ioc:Adonis/Core/Logger'
-import EDGE from '../constants/edge'
+import type { EdgeValues } from '../constants/edge'
 // tipagem que extrai os values de EDGE
-type EdgeValues = (typeof EDGE)[keyof typeof EDGE]
 
 type MailParams = {
 	edge: EdgeValues

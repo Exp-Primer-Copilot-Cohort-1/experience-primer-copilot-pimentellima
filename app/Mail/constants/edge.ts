@@ -8,5 +8,6 @@ const EDGE = {
 	new_account: 'emails/new-account',
 	welcome: 'emails/welcome',
 }
+export type EdgeValues = (typeof EDGE)[keyof typeof EDGE]
 
 export default EDGE

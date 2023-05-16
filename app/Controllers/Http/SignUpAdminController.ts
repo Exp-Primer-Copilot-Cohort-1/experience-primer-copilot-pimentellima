@@ -6,7 +6,7 @@ import User from 'App/Models/User'
 import { CREATE_USER_RULES } from '../../Rules'
 
 class SignUpAdminController {
-	constructor(private readonly userModel = User) { }
+	constructor(private readonly userModel = User) {}
 
 	public async store(ctx: HttpContextContract) {
 		ctx.request.validate({
@@ -20,6 +20,7 @@ class SignUpAdminController {
 				'document.unique': 'Este CNPJ/CPF já está cadastrado',
 				'document.cpfOrCnpjIsValid': 'Este CNPJ/CPF não é válido',
 				'name.required': 'O campo de nome é obrigatório',
+				'celphone.required': 'O campo de telefone é obrigatório',
 			},
 		})
 

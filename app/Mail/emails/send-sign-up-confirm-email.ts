@@ -1,7 +1,5 @@
 // Decorador de função
-import Env from '@ioc:Adonis/Core/Env'
 import { Either } from 'App/Core/shared'
-import EDGE from '../constants/edge'
 import Mail from '../entity/mail'
 
 export default function SendEmailSignUpConfirm(
@@ -17,6 +15,9 @@ export default function SendEmailSignUpConfirm(
 		if (result.isLeft() || process.env.NODE_ENV !== 'production') {
 			return result
 		}
+
+		const EDGE = (await import('../constants/edge')).default
+		const Env = (await import('@ioc:Adonis/Core/Env')).default
 
 		const user = result.extract()
 

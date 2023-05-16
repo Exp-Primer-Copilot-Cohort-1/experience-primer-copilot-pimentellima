@@ -3,7 +3,7 @@ import Document from 'App/Core/domain/entities/validations/document'
 import Email from 'App/Core/domain/entities/validations/email'
 import { IDaysOffice } from './IDaysOffice'
 
-export type IAdminUser = Nullable<{
+export type IAdminUser = {
 	_id: string | ObjectId
 	is_company: boolean
 	unity_id: string
@@ -16,4 +16,7 @@ export type IAdminUser = Nullable<{
 	celphone: string
 	dayOfTrade: IDaysOffice | null
 	type: 'admin' | 'admin_prof'
-}>
+	avatar: string
+	created_at: Date
+	updated_at: Date
+}

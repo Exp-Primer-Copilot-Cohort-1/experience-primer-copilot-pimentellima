@@ -1,6 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Unity from 'App/Models/Unity'
 import { CREATE_UNITY_RULES } from '../../Rules'
+import { UnityAlreadyExistException } from 'App/Exceptions'
 
 class SignUpUnityController {
 	constructor(private readonly unityModel = Unity) { }
@@ -21,11 +22,13 @@ class SignUpUnityController {
 
 		const data = request.all()
 
-		const unity = await this.unityModel.create({ ...data, active: true })
+		const unityExists = await this.unityModel.findOne({ name: data.name })
 
-		// const permissions = new PermissionEntity()
-		//   .defineAllPermissionByTrue()
-		//   .params();
+		if (unityExists) {
+			throw new UnityAlreadyExistException()
+		}
+
+		const unity = await this.unityModel.create({ ...data, active: true })
 
 		return unity
 	}

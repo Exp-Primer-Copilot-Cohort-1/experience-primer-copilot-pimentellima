@@ -28,7 +28,7 @@ export abstract class Entity implements IEntity {
 		return this._updated_at
 	}
 
-	public defineId(id: string): this {
+	public defineId(id = ''): this {
 		if (!id) {
 			return this
 		}
@@ -49,7 +49,7 @@ export abstract class Entity implements IEntity {
 		return date
 	}
 
-	public defineCreatedAt(created_at: Date | string): this {
+	public defineCreatedAt(created_at?: Date | string): this {
 		const date = this.generateDate(created_at)
 
 		if (!date) {
@@ -60,7 +60,7 @@ export abstract class Entity implements IEntity {
 		return this
 	}
 
-	public defineUpdatedAt(updated_at: Date | string): this {
+	public defineUpdatedAt(updated_at?: Date | string): this {
 		const date = this.generateDate(updated_at)
 
 		if (!date) {
