@@ -1,30 +1,30 @@
-import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { column, beforeSave, BaseModel } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeSave, column } from '@ioc:Adonis/Lucid/Orm'
+import { DateTime } from 'luxon'
 
 export default class Session extends BaseModel {
-  @column({ isPrimary: true })
-  public id: number
+	@column({ isPrimary: true })
+	public id: number
 
-  @column()
-  public email: string
+	@column()
+	public email: string
 
-  @column({ serializeAs: null })
-  public password: string
+	@column({ serializeAs: null })
+	public password: string
 
-  @column()
-  public rememberMeToken: string | null
+	@column()
+	public rememberMeToken: string | null
 
-  @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+	@column.dateTime({ autoCreate: true })
+	public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+	@column.dateTime({ autoCreate: true, autoUpdate: true })
+	public updatedAt: DateTime
 
-  @beforeSave()
-  public static async hashPassword (session: Session) {
-    if (session.$dirty.password) {
-      session.password = await Hash.make(session.password)
-    }
-  }
+	@beforeSave()
+	public static async hashPassword(session: Session) {
+		if (session.$dirty.password) {
+			session.password = await Hash.make(session.password)
+		}
+	}
 }

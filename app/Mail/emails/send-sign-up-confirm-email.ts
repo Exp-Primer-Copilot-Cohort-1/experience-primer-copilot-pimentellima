@@ -1,7 +1,5 @@
 // Decorador de função
-import Env from '@ioc:Adonis/Core/Env'
 import { Either } from 'App/Core/shared'
-import EDGE from '../constants/edge'
 import Mail from '../entity/mail'
 
 export default function SendEmailSignUpConfirm(
@@ -18,11 +16,14 @@ export default function SendEmailSignUpConfirm(
 			return result
 		}
 
+		const EDGE = (await import('../constants/edge')).default
+		const Env = (await import('@ioc:Adonis/Core/Env')).default
+
 		const user = result.extract()
 
 		await Promise.all([
 			Mail.send({
-				edge: EDGE.confirm_user,
+				edge: EDGE.confirm,
 				props: {
 					site_activation: `${Env.get('URL')}/account-activation/${user.id}`,
 					label: user.label || user.name,
@@ -37,8 +38,6 @@ export default function SendEmailSignUpConfirm(
 				email: Env.get('SMTP_USERNAME'),
 			}),
 		])
-
-		console.log('chega aki')
 
 		return result
 	}

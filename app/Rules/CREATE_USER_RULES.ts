@@ -16,4 +16,10 @@ export const CREATE_USER_RULES = schema.create({
 		rules.unique({ column: 'document', table: 'unities' }),
 		rules.cpfOrCnpjIsValid(),
 	]),
+	celphone: schema.string(
+		{
+			trim: true,
+		},
+		[],
+	),
 })

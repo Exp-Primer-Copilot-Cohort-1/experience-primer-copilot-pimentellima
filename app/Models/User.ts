@@ -108,6 +108,7 @@ const UserSchema = new Schema<IUser>(
 		unity_id: {
 			type: Mongoose.Schema.Types.ObjectId,
 			ref: 'unities',
+			required: true,
 		},
 		type: {
 			type: String,
@@ -124,14 +125,6 @@ const UserSchema = new Schema<IUser>(
 		due_date: {
 			type: String,
 			required: false,
-		},
-		created_at: {
-			type: Date,
-			default: Date.now,
-		},
-		updated_at: {
-			type: Date,
-			default: Date.now,
 		},
 		schedule_obs: {
 			type: String,
@@ -199,7 +192,10 @@ const UserSchema = new Schema<IUser>(
 		},
 	},
 	{
-		timestamps: true,
+		timestamps: {
+			createdAt: 'created_at',
+			updatedAt: 'updated_at',
+		},
 	},
 )
 

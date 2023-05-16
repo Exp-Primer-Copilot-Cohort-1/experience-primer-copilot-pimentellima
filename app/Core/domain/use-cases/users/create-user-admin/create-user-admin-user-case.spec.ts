@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it, vi } from 'vitest'
 import { CreateUserAdminUseCase } from './create-user-admin-use-case'
 
 import {
@@ -22,8 +22,11 @@ const user: IAdminUser = {
 	celphone: faker.phone.number('(99) 99999-9999'),
 	type: 'admin_prof',
 	dayOfTrade: null,
-	_id: null,
-	active: null,
+	_id: '',
+	active: false,
+	avatar: '',
+	created_at: new Date(),
+	updated_at: new Date(),
 }
 
 const makeSut = () => {
@@ -39,6 +42,19 @@ const makeSut = () => {
 }
 
 describe('Create User Admin Use Case (Unit)', () => {
+	beforeAll(() => {
+		vi.mock('App/Mail/entity/mail', () => {
+			return {
+				__esModule: true,
+				default: () => {
+					return (target: any) => {
+						// mock implementation here
+					}
+				},
+			}
+		})
+	})
+
 	it('should return right with user created', async () => {
 		const { sut } = makeSut()
 		const userOrErr = await sut.execute(user)
@@ -57,7 +73,7 @@ describe('Create User Admin Use Case (Unit)', () => {
 
 	it('should return right with user created if not passed password', async () => {
 		const { sut } = makeSut()
-		const userOrErr = await sut.execute({ ...user, password: null })
+		const userOrErr = await sut.execute({ ...user, password: '' })
 		expect(userOrErr.isRight()).toBeTruthy()
 		if (userOrErr.isLeft()) {
 			throw new Error('User not created')
