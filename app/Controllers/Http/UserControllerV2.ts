@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
-import User from 'App/Models/User';
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import User from 'App/Models/User'
 
-const SELECTS = require('../user-select');
+import SELECTS from '../user-select'
 
 const fetchUserByType = async (type, unityId, active = true) =>
 	await User.where({
@@ -12,73 +12,69 @@ const fetchUserByType = async (type, unityId, active = true) =>
 		type: {
 			$in: type,
 		},
-	});
+	})
 
 class UserControllerV2 {
 	public async findAllUsersClientsInative({ auth }) {
-		const userLogged = auth.user;
+		const userLogged = auth.user
 
-		const clients = await fetchUserByType(
-			['client'],
-			userLogged.unity_id,
-			false,
-		);
+		const clients = await fetchUserByType(['client'], userLogged.unity_id, false)
 
-		return clients || [];
+		return clients || []
 	}
 
 	public async findAllUsersClients({ auth }) {
-		const userLogged = auth.user;
+		const userLogged = auth.user
 
-		const clients = await fetchUserByType(['client'], userLogged.unity_id);
+		const clients = await fetchUserByType(['client'], userLogged.unity_id)
 
-		return clients || [];
+		return clients || []
 	}
 
 	public async findAllUsersProfs({ auth }) {
-		const userLogged = auth.user;
+		const userLogged = auth.user
 
 		const professionals = await fetchUserByType(
 			['prof', 'admin_prof'],
 			userLogged.unity_id,
-		);
+		)
 
-		return professionals || [];
+		return professionals || []
 	}
 
 	public async findAllUsersProfsInative({ auth }) {
-		const userLogged = auth.user;
+		const userLogged = auth.user
 
 		const professionals = await fetchUserByType(
 			['prof', 'admin_prof'],
 			userLogged.unity_id,
 			false,
-		);
+		)
 
-		return professionals || [];
+		return professionals || []
 	}
 
 	public async findAllUsersSecs({ auth }: HttpContextContract) {
-		const userLogged = auth.user;
+		const userLogged = auth.user
 
-		const secs = await fetchUserByType(['sec'], userLogged?.unity_id);
+		const secs = await fetchUserByType(['sec'], userLogged?.unity_id)
 
-		return secs || [];
+		return secs || []
 	}
 
 	public async findAllUsersSecsInative({ auth }) {
-		const userLogged = auth.user;
+		const userLogged = auth.user
 
-		const secs = await fetchUserByType(['sec'], userLogged.unity_id, false);
+		const secs = await fetchUserByType(['sec'], userLogged.unity_id, false)
 
-		return secs || [];
+		return secs || []
 	}
 
 	public async findUserProfsByID({ params }) {
-		const { id } = params;
+		const { id } = params
 
 		if (!id) {
-			return [];
+			return []
 		}
 
 		const user = await User.where({
@@ -88,26 +84,27 @@ class UserControllerV2 {
 			},
 		})
 			.select(SELECTS)
-			.with('unity')
-			.with('answer')
-			.with('activity')
-			.with('userLog')
-			.firstOrFail();
+			.populate('unities')
+			.populate('answer')
+			.populate('activity')
+			.populate('userLog')
+			.orFail()
 
-		return user;
+		return user
 	}
 
 	public async findUserClientByID({ params }) {
 		const user = await User.where({ _id: params.id, type: 'client' })
 			.select(SELECTS)
-			.with('unity')
-			.with('answer')
-			.with('activity')
-			.with('userLog')
-			.firstOrFail();
+			.populate('unities')
+			.populate('answer')
+			.populate('activity')
+			.populate('userLog')
+			.orFail()
+			.exec()
 
-		return user;
+		return user
 	}
 }
 
-export default UserControllerV2;
+export default UserControllerV2

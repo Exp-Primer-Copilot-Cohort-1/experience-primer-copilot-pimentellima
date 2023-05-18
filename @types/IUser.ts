@@ -11,7 +11,7 @@ export interface IUser extends IDaysOffice {
 	celphone: string
 	document: string
 	unity_id: ObjectId | string
-	type: 'admin' | 'admin_prof' | 'prof' | 'sec'
+	type: 'admin' | 'admin_prof' | 'prof' | 'sec' | 'client'
 	active: boolean
 	avatar: string
 	due_date: string
