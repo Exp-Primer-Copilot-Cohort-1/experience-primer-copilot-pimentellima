@@ -136,13 +136,13 @@ Route.group(() => {
 	Route.get('users-type', 'UserController.indexByType')
 	Route.post('users/client', 'ClientControllerV2.create')
 
-	Route.get('form/prof/:id', 'FormController.findFormByProfId')
-	Route.get('form/category/:id', 'FormController.findFormByCategoryId')
-	Route.post('form', 'FormController.createForm')
+	Route.get('form/prof/:prof_id', 'FormController.findFormByProfId')
+	Route.get('form/category/:category_id', 'AdonnisLegadoController.bridge')
+	Route.post('form', 'AdonnisLegadoController.bridge')
 	Route.get('form', 'FormController.findAllForms')
-	Route.get('form/:id', 'FormController.findFormById')
-	Route.put('form/:id', 'FormController.updateFormById')
-	Route.delete('form/:id', 'FormController.deleteFormById')
+	Route.get('form/:id', 'AdonnisLegadoController.bridge')
+	Route.put('form/:id', 'AdonnisLegadoController.bridge')
+	Route.delete('form/:id', 'AdonnisLegadoController.bridge')
 
 	Route.get('answer', 'AnswerController.index')
 	Route.get('answer/:id', 'AnswerController.show')
@@ -208,6 +208,12 @@ Route.group(() => {
 	Route.put('ingredients-list/:id', 'AdonnisLegadoController.bridge')
 	Route.delete('ingredients-list/:id', 'AdonnisLegadoController.bridge')
 	Route.post('ingredients-list', 'AdonnisLegadoController.bridge')
+
+	Route.get('sick-notes', 'AdonnisLegadoController.bridge')
+	Route.get('sick-notes/:id', 'AdonnisLegadoController.bridge')
+	Route.put('sick-notes/:id', 'AdonnisLegadoController.bridge')
+	Route.delete('sick-notes/:id', 'AdonnisLegadoController.bridge')
+	Route.post('sick-notes', 'AdonnisLegadoController.bridge')
 
 	Route.get('direct-mail', 'AdonnisLegadoController.bridge')
 	Route.get('direct-mail/:id', 'AdonnisLegadoController.bridge')
