@@ -203,26 +203,26 @@ const UserSchema = new Schema<IUser>(
 UserSchema.pre('save', async function (next) {
 	if (this.isNew) {
 		this.password = await Hash.make(this?.password)
-		this.document = encrypt(this.document.replace(/\D/g, ''))
+		this.document = await encrypt(this.document.replace(/\D/g, ''))
 	}
 	next()
 })
 
-UserSchema.post('find', function (docs) {
+UserSchema.post('find', async function (docs) {
 	for (const doc of docs) {
 		const numbers = doc?.document?.replace(/\D/g, '')
 
 		if (doc?.document && !(numbers.length === 11 || numbers.length === 14)) {
-			doc.document = decrypt(doc.document)
+			doc.document = await decrypt(doc.document)
 		}
 	}
 })
 
-UserSchema.post('findOne', function (doc) {
+UserSchema.post('findOne', async function (doc) {
 	const numbers = doc?.document?.replace(/\D/g, '')
 
 	if (doc?.document && !(numbers.length === 11 || numbers.length === 14)) {
-		doc.document = decrypt(doc.document)
+		doc.document = await decrypt(doc.document)
 	}
 })
 

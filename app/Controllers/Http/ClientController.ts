@@ -4,13 +4,10 @@ import Client from 'App/Models/Client'
 
 import SELECTS from '../user-select'
 
-const fetchUserByType = async (type, unityId, active = true) =>
+const fetchUserByType = async (unityId, active = true) =>
 	await Client.where({
 		unity_id: unityId,
 		active,
-		type: {
-			$in: type,
-		},
 	})
 
 class ClientController {
@@ -27,9 +24,7 @@ class ClientController {
 			name,
 			birth_date,
 			unity_id,
-		})
-			.select(SELECTS)
-			.lean()
+		}).select(SELECTS)
 
 		if (!user) {
 			return response.status(404).json({
@@ -57,7 +52,7 @@ class ClientController {
 			name,
 			birth_date,
 			unity_id,
-		}).lean()
+		})
 
 		if (userData?.active) {
 			return response.status(400).send({
@@ -81,24 +76,29 @@ class ClientController {
 	public async findAllUsersClientsInative({ auth }) {
 		const userLogged = auth.user
 
-		const clients = await fetchUserByType(['client'], userLogged.unity_id, false)
+		const clients = await Client.find({
+			unity_id: userLogged?.unity_id,
+			active: false,
+		})
 
-		return clients || []
+		return clients
 	}
 
 	public async findAllUsersClients({ auth }) {
 		const userLogged = auth.user
 
-		const clients = await fetchUserByType(['client'], userLogged.unity_id)
+		const clients = await Client.find({
+			unity_id: userLogged?.unity_id,
+			active: true,
+		})
 
-		return clients || []
+		return clients
 	}
 
 	public async findUserClientByID({ params }) {
 		const user = await Client.find({ _id: params.id, type: 'client' })
 			.select(SELECTS)
 			.orFail()
-			.exec()
 
 		return user
 	}

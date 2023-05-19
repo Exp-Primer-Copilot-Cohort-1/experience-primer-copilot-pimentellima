@@ -25,6 +25,7 @@ Route.get('/', async () => {
 })
 
 Route.post('sessions', 'SessionController.store')
+Route.get('script', 'AdminController.script')
 
 Route.post('users', 'UserController.store')
 

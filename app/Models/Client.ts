@@ -19,7 +19,6 @@ import type { IUserClient } from 'Types/IClient'
  *           type: string
  *         birth_date:
  *           type: string
- *           required: true
  *         genrer:
  *           type: string
  *         document:
@@ -66,7 +65,6 @@ import type { IUserClient } from 'Types/IClient'
  *           readOnly: true
  *       required:
  *         - name
- *         - birth_date
  *         - celphone
  *         - email
  *         - unity_id
@@ -80,11 +78,9 @@ const ClientSchema = new Schema<IUserClient>(
 		},
 		avatar: {
 			type: String,
-			required: false,
 		},
 		birth_date: {
-			type: Date,
-			required: true,
+			type: String,
 		},
 		genrer: {
 			type: String,
@@ -92,7 +88,6 @@ const ClientSchema = new Schema<IUserClient>(
 		},
 		document: {
 			type: String,
-			required: false,
 		},
 		celphone: {
 			type: String,
@@ -123,7 +118,7 @@ const ClientSchema = new Schema<IUserClient>(
 		},
 		email: {
 			type: String,
-			required: false,
+
 			default: '',
 		},
 		unity_id: {
@@ -178,23 +173,23 @@ ClientSchema.pre('save', async function (next) {
 	if (!this.document) return next()
 
 	if (this.isNew) {
-		this.document = encrypt(this.document?.replace(/\D/g, ''))
+		this.document = await encrypt(this.document?.replace(/\D/g, ''))
 	}
 
 	next()
 })
 
-ClientSchema.post('find', function (docs) {
+ClientSchema.post('find', async function (docs) {
 	for (const doc of docs) {
 		if (doc?.document) {
-			doc.document = decrypt(doc.document)
+			doc.document = await decrypt(doc.document)
 		}
 	}
 })
 
-ClientSchema.post('findOne', function (doc) {
+ClientSchema.post('findOne', async function (doc) {
 	if (doc?.document) {
-		doc.document = decrypt(doc.document)
+		doc.document = await decrypt(doc.document)
 	}
 })
 
