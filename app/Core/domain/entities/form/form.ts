@@ -86,7 +86,8 @@ export class FormEntity extends Entity implements IForm {
 	
 			schema.parse({
 				...params,
-				unity_id: params.unity_id.toString()
+				unity_id: params.unity_id.toString(),
+				category_id: params.category_id.toString()
 			})
             return right(new FormEntity()
 				.defineId(params._id?.toString())

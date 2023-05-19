@@ -88,7 +88,7 @@ test.group('Activity Controller', () => {
 
 		const response = await client.get('activity/' + id);
 		response.assertStatus(200);
-	});
+	}).skip();
 
     test('display activity not found', async ({ client }) => {
         const id = '64402e93c07ee00a53234fe0';

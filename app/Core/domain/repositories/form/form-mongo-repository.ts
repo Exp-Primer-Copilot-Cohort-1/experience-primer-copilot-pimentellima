@@ -22,11 +22,11 @@ export class FormMongoRepository implements FormManagerInterface {
 
     async findAllForms (unity_id: string) : PromiseEither<AbstractError, FormEntity[]> {
         if (!unity_id) return left(new MissingParamsError("unity id"));
-
+		
 		const data = await Form.find({ unity_id });
 		const forms = await Promise.all(
 			data.map(async (item) => {
-				const formOrErr = await FormEntity.build(item);
+				const formOrErr = await FormEntity.build(item.toObject());
 				if (formOrErr.isLeft()) {
 					return {} as FormEntity;
 				}
