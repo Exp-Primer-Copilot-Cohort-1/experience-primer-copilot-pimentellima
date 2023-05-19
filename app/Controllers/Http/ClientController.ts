@@ -4,12 +4,6 @@ import Client from 'App/Models/Client'
 
 import SELECTS from '../user-select'
 
-const fetchUserByType = async (unityId, active = true) =>
-	await Client.where({
-		unity_id: unityId,
-		active,
-	})
-
 class ClientController {
 	async verifyExistenceClient({ request, auth, response }: HttpContextContract) {
 		const { name, birth_date } = request.all()
@@ -96,10 +90,9 @@ class ClientController {
 	}
 
 	public async findUserClientByID({ params }) {
-		const user = await Client.find({ _id: params.id, type: 'client' })
-			.select(SELECTS)
-			.orFail()
+		const user = await Client.findById(params.id)
 
+		console.log(user)
 		return user
 	}
 
