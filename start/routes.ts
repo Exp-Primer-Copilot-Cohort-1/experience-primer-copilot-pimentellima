@@ -59,14 +59,21 @@ Route.group(() => {
 })
 
 Route.group(() => {
+	Route.get('', 'ClientController.findAllUsersClients')
+	Route.get('inative', 'ClientController.findAllUsersClientsInative')
+	Route.get(':id', 'ClientController.findUserClientByID')
+	Route.get('verify/client', 'ClientController.verifyExistenceClient')
+	Route.put(':id', 'ClientController.update')
+	Route.post('', 'ClientController.create')
+})
+	.prefix('clients')
+	.middleware('auth')
+
+Route.group(() => {
 	Route.get('professionals', 'UserControllerV2.findAllUsersProfs')
 	Route.get('secs', 'UserControllerV2.findAllUsersSecs')
-	Route.get('clients', 'UserControllerV2.findAllUsersClients')
 	Route.get('professionals/inative', 'UserControllerV2.findAllUsersProfsInative')
 	Route.get('secs/inative', 'UserControllerV2.findAllUsersSecsInative')
-	Route.get('clients/inative', 'UserControllerV2.findAllUsersClientsInative')
-	Route.get('verify/client', 'ClientController.verifyExistenceClient')
-	Route.get('clients/:id', 'AdonnisLegadoController.bridge')
 	Route.get('professionals/:id', 'AdonnisLegadoController.bridge')
 	Route.put(':id', 'AdonnisLegadoController.bridge')
 	Route.delete(':id', 'UserController.destroy')
@@ -134,7 +141,6 @@ Route.group(() => {
 Route.group(() => {
 	Route.get('users', 'UserController.index')
 	Route.get('users-type', 'UserController.indexByType')
-	Route.post('users/client', 'ClientController.create')
 
 	Route.get('form/prof/:prof_id', 'FormController.findFormByProfId')
 	Route.get('form/category/:category_id', 'AdonnisLegadoController.bridge')

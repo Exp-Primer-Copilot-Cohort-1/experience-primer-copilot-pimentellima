@@ -1,5 +1,6 @@
 import Hash from '@ioc:Adonis/Core/Hash'
 import Mongoose, { Schema } from '@ioc:Mongoose'
+import { decrypt, encrypt } from 'App/Helpers/encrypt'
 import type { IUser } from 'Types/IUser'
 
 /**
@@ -200,8 +201,29 @@ const UserSchema = new Schema<IUser>(
 )
 
 UserSchema.pre('save', async function (next) {
-	this.password = await Hash.make(this?.password)
+	if (this.isNew) {
+		this.password = await Hash.make(this?.password)
+		this.document = encrypt(this.document.replace(/\D/g, ''))
+	}
 	next()
+})
+
+UserSchema.post('find', function (docs) {
+	for (const doc of docs) {
+		const numbers = doc?.document?.replace(/\D/g, '')
+
+		if (doc?.document && !(numbers.length === 11 || numbers.length === 14)) {
+			doc.document = decrypt(doc.document)
+		}
+	}
+})
+
+UserSchema.post('findOne', function (doc) {
+	const numbers = doc?.document?.replace(/\D/g, '')
+
+	if (doc?.document && !(numbers.length === 11 || numbers.length === 14)) {
+		doc.document = decrypt(doc.document)
+	}
 })
 
 export default Mongoose.model<IUser>('users', UserSchema)

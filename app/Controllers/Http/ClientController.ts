@@ -1,9 +1,17 @@
 'use strict'
-import ENV from '@ioc:Adonis/Core/Env'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Client from 'App/Models/Client'
 
 import SELECTS from '../user-select'
+
+const fetchUserByType = async (type, unityId, active = true) =>
+	await Client.where({
+		unity_id: unityId,
+		active,
+		type: {
+			$in: type,
+		},
+	})
 
 class ClientController {
 	async verifyExistenceClient({ request, auth, response }: HttpContextContract) {
@@ -63,11 +71,43 @@ class ClientController {
 			...data,
 			unity_id: unity_id,
 			active: true,
-			password: ENV.get('APP_KEY'),
 			due_date: null,
 			email: data.email?.trim().toLowerCase() || '',
 		})
 
+		return user
+	}
+
+	public async findAllUsersClientsInative({ auth }) {
+		const userLogged = auth.user
+
+		const clients = await fetchUserByType(['client'], userLogged.unity_id, false)
+
+		return clients || []
+	}
+
+	public async findAllUsersClients({ auth }) {
+		const userLogged = auth.user
+
+		const clients = await fetchUserByType(['client'], userLogged.unity_id)
+
+		return clients || []
+	}
+
+	public async findUserClientByID({ params }) {
+		const user = await Client.find({ _id: params.id, type: 'client' })
+			.select(SELECTS)
+			.orFail()
+			.exec()
+
+		return user
+	}
+
+	public async update({ params, request }: HttpContextContract) {
+		const data = request.all()
+		const user = await Client.findByIdAndUpdate(params.id, data).orFail()
+
+		await user.save()
 		return user
 	}
 }

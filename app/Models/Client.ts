@@ -1,11 +1,12 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import type { IUser } from 'Types/IUser'
+import { decrypt, encrypt } from 'App/Helpers/encrypt'
+import type { IUserClient } from 'Types/IClient'
 
 /**
  * @swagger
  * components:
  *   schemas:
- *     User:
+ *     Client:
  *       type: object
  *       properties:
  *         _id:
@@ -14,23 +15,44 @@ import type { IUser } from 'Types/IUser'
  *         name:
  *           type: string
  *           required: true
+ *         avatar:
+ *           type: string
+ *         birth_date:
+ *           type: string
+ *           required: true
+ *         genrer:
+ *           type: string
+ *         document:
+ *           type: string
+ *           required: false
+ *         celphone:
+ *           type: string
+ *           required: true
+ *         phone:
+ *           type: string
+ *         naturalness:
+ *           type: string
+ *         nationality:
+ *           type: string
+ *         profession:
+ *           type: string
+ *         observation:
+ *           type: string
+ *         sms_checked:
+ *           type: boolean
+ *         mail_checked:
+ *           type: boolean
  *         email:
  *           type: string
  *           format: email
  *           required: true
- *         celphone:
- *           type: string
- *           required: true
- *         document:
- *           type: string
- *           required: false
  *         unity_id:
  *           type: string
  *           required: true
  *         active:
  *           type: boolean
  *           default: true
- *         avatar:
+ *         partner:
  *           type: string
  *         due_date:
  *           type: string
@@ -42,45 +64,106 @@ import type { IUser } from 'Types/IUser'
  *           type: string
  *           format: date-time
  *           readOnly: true
+ *       required:
+ *         - name
+ *         - birth_date
+ *         - celphone
+ *         - email
+ *         - unity_id
  */
-const ClientSchema = new Schema<IUser>(
+
+const ClientSchema = new Schema<IUserClient>(
 	{
 		name: {
 			type: String,
 			required: true,
 		},
-		email: {
+		avatar: {
 			type: String,
+			required: false,
+		},
+		birth_date: {
+			type: Date,
 			required: true,
 		},
-		password: {
+		genrer: {
 			type: String,
-			required: true,
+			default: 'not informed',
+		},
+		document: {
+			type: String,
+			required: false,
 		},
 		celphone: {
 			type: String,
 			required: true,
 		},
-		document: {
+		phone: {
+			type: String,
+		},
+		naturalness: {
+			type: String,
+		},
+		nationality: {
+			type: String,
+		},
+		profession: {
+			type: String,
+		},
+		observation: {
+			type: String,
+		},
+		sms_checked: {
+			type: Boolean,
+			default: false,
+		},
+		mail_checked: {
+			type: Boolean,
+			default: false,
+		},
+		email: {
 			type: String,
 			required: false,
+			default: '',
 		},
 		unity_id: {
 			type: Mongoose.Schema.Types.ObjectId,
 			ref: 'unities',
 			required: true,
 		},
-		type: {
-			type: String,
-			default: 'client',
-		},
 		active: {
 			type: Boolean,
 			default: true,
 		},
-		avatar: {
+		partner: {
 			type: String,
-			required: false,
+		},
+		due_date: {
+			type: Date,
+		},
+		cep: {
+			type: String,
+		},
+		street: {
+			type: String,
+		},
+		address_number: {
+			type: String,
+		},
+		complement: {
+			type: String,
+		},
+		neighborhood: {
+			type: String,
+		},
+		city: {
+			type: String,
+		},
+		state: {
+			type: String,
+		},
+		country: {
+			type: String,
 		},
 	},
 	{
@@ -91,4 +174,28 @@ const ClientSchema = new Schema<IUser>(
 	},
 )
 
-export default Mongoose.model<IUser>('clients', ClientSchema, 'users')
+ClientSchema.pre('save', async function (next) {
+	if (!this.document) return next()
+
+	if (this.isNew) {
+		this.document = encrypt(this.document?.replace(/\D/g, ''))
+	}
+
+	next()
+})
+
+ClientSchema.post('find', function (docs) {
+	for (const doc of docs) {
+		if (doc?.document) {
+			doc.document = decrypt(doc.document)
+		}
+	}
+})
+
+ClientSchema.post('findOne', function (doc) {
+	if (doc?.document) {
+		doc.document = decrypt(doc.document)
+	}
+})
+
+export default Mongoose.model<IUserClient>('clients', ClientSchema, 'clients')
