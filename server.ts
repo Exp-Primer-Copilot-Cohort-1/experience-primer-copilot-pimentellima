@@ -10,10 +10,10 @@
 |
 */
 
-import { Ignitor } from '@adonisjs/core/build/standalone';
-import 'reflect-metadata';
-import { install } from 'source-map-support';
+import { Ignitor } from '@adonisjs/core/build/standalone'
+import 'reflect-metadata'
+import { install } from 'source-map-support'
 
-install({ handleUncaughtExceptions: false });
+install({ handleUncaughtExceptions: false })
 
-new Ignitor(__dirname).httpServer().start();
+new Ignitor(__dirname).httpServer().start()

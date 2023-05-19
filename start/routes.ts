@@ -53,11 +53,9 @@ Route.group(() => {
 	.middleware('apiKey')
 
 Route.group(() => {
-	Route.post('unity', 'SingUpController.storeUnity')
-	Route.post('user', 'SingUpController.storeUserAdmin')
-	Route.post('existUnity', 'SingUpController.existUnity')
-	Route.post('existUser', 'SingUpController.existUser')
-	Route.put('users-confirm/:id', 'SingUpController.activeUser')
+	Route.post('unity', 'SignUpUnityController.store')
+	Route.post('user', 'SignUpAdminController.store')
+	Route.put('users-confirm/:id', 'SignUpAdminController.activeUser')
 })
 
 Route.group(() => {
@@ -67,10 +65,10 @@ Route.group(() => {
 	Route.get('professionals/inative', 'UserControllerV2.findAllUsersProfsInative')
 	Route.get('secs/inative', 'UserControllerV2.findAllUsersSecsInative')
 	Route.get('clients/inative', 'UserControllerV2.findAllUsersClientsInative')
-	Route.get('verify/client', 'ClientControllerV2.verifyExistenceClient')
-	Route.get('clients/:id', 'UserControllerV2.findUserClientByID')
-	Route.get('professionals/:id', 'UserControllerV2.findUserProfsByID')
-	Route.put(':id', 'UserController.update')
+	Route.get('verify/client', 'ClientController.verifyExistenceClient')
+	Route.get('clients/:id', 'AdonnisLegadoController.bridge')
+	Route.get('professionals/:id', 'AdonnisLegadoController.bridge')
+	Route.put(':id', 'AdonnisLegadoController.bridge')
 	Route.delete(':id', 'UserController.destroy')
 })
 	.prefix('users')
@@ -136,15 +134,15 @@ Route.group(() => {
 Route.group(() => {
 	Route.get('users', 'UserController.index')
 	Route.get('users-type', 'UserController.indexByType')
-	Route.post('users/client', 'ClientControllerV2.create')
+	Route.post('users/client', 'ClientController.create')
 
-	Route.get('form/prof/:id', 'FormController.findFormByProfId')
-	Route.get('form/category/:id', 'FormController.findFormByCategoryId')
-	Route.post('form', 'FormController.createForm')
+	Route.get('form/prof/:prof_id', 'FormController.findFormByProfId')
+	Route.get('form/category/:category_id', 'AdonnisLegadoController.bridge')
+	Route.post('form', 'AdonnisLegadoController.bridge')
 	Route.get('form', 'FormController.findAllForms')
-	Route.get('form/:id', 'FormController.findFormById')
-	Route.put('form/:id', 'FormController.updateFormById')
-	Route.delete('form/:id', 'FormController.deleteFormById')
+	Route.get('form/:id', 'AdonnisLegadoController.bridge')
+	Route.put('form/:id', 'AdonnisLegadoController.bridge')
+	Route.delete('form/:id', 'AdonnisLegadoController.bridge')
 
 	Route.post('answer', 'AnswerController.createAnswer')
 	Route.get('answer', 'AnswerController.findAllAnswers')
@@ -213,6 +211,12 @@ Route.group(() => {
 	Route.delete('ingredients-list/:id', 'AdonnisLegadoController.bridge')
 	Route.post('ingredients-list', 'AdonnisLegadoController.bridge')
 
+	Route.get('sick-notes', 'AdonnisLegadoController.bridge')
+	Route.get('sick-notes/:id', 'AdonnisLegadoController.bridge')
+	Route.put('sick-notes/:id', 'AdonnisLegadoController.bridge')
+	Route.delete('sick-notes/:id', 'AdonnisLegadoController.bridge')
+	Route.post('sick-notes', 'AdonnisLegadoController.bridge')
+
 	Route.get('direct-mail', 'AdonnisLegadoController.bridge')
 	Route.get('direct-mail/:id', 'AdonnisLegadoController.bridge')
 	Route.put('direct-mail/:id', 'AdonnisLegadoController.bridge')
@@ -245,11 +249,11 @@ Route.group(() => {
 	Route.delete('cost-center/:id', 'AdonnisLegadoController.bridge')
 	Route.post('cost-center', 'AdonnisLegadoController.bridge')
 
-	Route.get('account', 'AccountController.findAllAccounts')
-	Route.get('account/:id', 'AccountController.findAccountById')
-	Route.put('account/:id', 'AccountController.updateAccountById')
-	Route.delete('account/:id', 'AccountController.deleteAccountById')
-	Route.post('account', 'AccountController.createAccount')
+	Route.get('accounts', 'AccountController.findAllAccounts')
+	Route.get('accounts/:id', 'AccountController.findAccountById')
+	Route.put('accounts/:id', 'AccountController.updateAccountById')
+	Route.delete('accounts/:id', 'AccountController.deleteAccountById')
+	Route.post('accounts', 'AccountController.createAccount')
 
 	Route.get('default-config', 'AdonnisLegadoController.bridge')
 	Route.get('default-config/:id', 'AdonnisLegadoController.bridge')

@@ -1,6 +1,6 @@
-import Mongoose, { Schema } from '@ioc:Mongoose';
-import { PaymentStatus, PaymentType } from 'App/Helpers';
-import { IAccount } from 'Types/IAccount';
+import Mongoose, { Schema } from '@ioc:Mongoose'
+import { PaymentStatus, PaymentType } from 'App/Helpers'
+import { IAccount } from 'Types/IAccount'
 
 const AccountSchema = new Schema<IAccount>(
 	{
@@ -46,8 +46,12 @@ const AccountSchema = new Schema<IAccount>(
 		},
 		transaction_id: String,
 	},
+	{
+		timestamps: {
+			createdAt: 'created_at',
+			updatedAt: 'updated_at',
+		},
+	},
+)
 
-	{ timestamps: true },
-);
-
-export default Mongoose.model<IAccount>('accounts', AccountSchema);
+export default Mongoose.model<IAccount>('accounts', AccountSchema)

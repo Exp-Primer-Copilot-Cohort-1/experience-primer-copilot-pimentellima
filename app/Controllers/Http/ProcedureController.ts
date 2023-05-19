@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import { adaptRoute } from 'App/Core/adapters';
+import { makeProceduresDeleteByIdComposer } from 'App/Core/composers/procedures/make-procedures-delete-by-id-composer';
 import { makeProceduresFindAllComposer } from 'App/Core/composers/procedures/make-procedures-find-all-composer';
 import LogProcedure from 'App/Models/LogProcedure';
 import Procedure from 'App/Models/Procedure';
@@ -123,12 +124,9 @@ class ProcedureController {
 		return procedures;
 	}
 
-	async destroy({ params }) {
-		const procedures = await Procedure.where({
-			_id: params.id,
-		}).firstOrFail();
-		await procedures.delete();
+	async destroy(ctx: HttpContextContract) {
+		return adaptRoute(makeProceduresDeleteByIdComposer(), ctx);
 	}
 }
 
-module.exports = ProcedureController;
+export default ProcedureController;

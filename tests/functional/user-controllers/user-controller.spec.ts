@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { test } from '@japa/runner';
-import User from 'App/Models/User';
-import { assert } from 'chai';
+import { test } from '@japa/runner'
+import User from 'App/Models/User'
+import { assert } from 'chai'
 
-import { cpf } from 'cpf-cnpj-validator';
+import { cpf } from 'cpf-cnpj-validator'
 
 const user = {
 	is_company: false,
@@ -15,19 +15,19 @@ const user = {
 	document: cpf.generate(),
 	celphone: '(00) 00000-0000',
 	type: 'admin_prof',
-};
+}
 
 test.group('User Controller', () => {
 	test('display store user admin_prof', async ({ client }) => {
 		const response = await client.post('users').json({
 			...user,
-		});
+		})
 		// .headers({ Authorization: `Bearer ${token.token}` });
-		response.assertStatus(200);
+		response.assertStatus(200)
 
-		const { _id } = response.body() as any;
+		const { _id } = response.body() as any
 
-		const { deletedCount } = await User.deleteOne({ _id });
-		assert.equal(deletedCount, 1);
-	});
-});
+		const { deletedCount } = await User.deleteOne({ _id })
+		assert.equal(deletedCount, 1)
+	})
+})

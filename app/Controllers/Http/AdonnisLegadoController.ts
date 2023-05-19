@@ -27,18 +27,18 @@ const get = async (url: string, params: any) => {
 	return data
 }
 
-const post = async (url: string, body: any) => {
-	const { data } = await api.post(url, body)
+const post = async (url: string, body: any, params: any) => {
+	const { data } = await api.post(url, body, { params })
 	return data
 }
 
-const put = async (url: string, body: any) => {
-	const { data } = await api.put(url, body)
+const put = async (url: string, body: any, params: any) => {
+	const { data } = await api.put(url, body, { params })
 	return data
 }
 
-const del = async (url: string) => {
-	const { data } = await api.delete(url)
+const del = async (url: string, params: any) => {
+	const { data } = await api.delete(url, { params })
 	return data
 }
 
@@ -70,11 +70,11 @@ class AdonnisLegadoController {
 				case Methods.GET:
 					return await get(url, params)
 				case Methods.POST:
-					return await post(url, request.body())
+					return await post(url, request.body(), params)
 				case Methods.PUT:
-					return await put(url, request.body())
+					return await put(url, request.body(), params)
 				case Methods.DELETE:
-					return await del(url)
+					return await del(url, params)
 			}
 		} catch (error) {
 			console.log(error)

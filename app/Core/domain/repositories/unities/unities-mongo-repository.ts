@@ -42,4 +42,12 @@ export class UnitiesMongooseRepository implements UnitiesManagerInterface {
 		}
 		return right(unity);
 	}
+	public async deleteById(id: string): PromiseEither<AbstractError, IUnity> {
+		const unity = await Unity.findById(id);
+		if (!unity) {
+			return left(new UnitNotFoundError());
+		}
+		await unity.remove();
+		return right(unity);
+	}
 }

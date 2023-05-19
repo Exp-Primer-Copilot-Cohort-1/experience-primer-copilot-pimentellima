@@ -1,6 +1,6 @@
-import { Document, ObjectId } from '@ioc:Mongoose';
+import { ObjectId } from '@ioc:Mongoose';
 
-export interface IDirectmail extends Document {
+export interface IDirectmail {
 	_id: ObjectId;
 	name: string;
 	description: string;

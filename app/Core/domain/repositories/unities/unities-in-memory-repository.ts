@@ -38,22 +38,19 @@ const fabricateUnity = (qtd: number): IUnity[] => {
 }
 
 export class UnitiesInMemoryRepository implements UnitiesManagerInterface {
-	private items: IUnity[] = []
+	public items: IUnity[] = []
 
 	constructor() {
 		this.items = fabricateUnity(10)
 	}
-  
-  public async findByName(
-		name: string,
-	): PromiseEither<AbstractError, IUnity[]> {
-		return right(this.items);
-  }
-    
-	public async findAll(): PromiseEither<AbstractError, IUnity[]> {
+
+	public async findByName(name: string): PromiseEither<AbstractError, IUnity[]> {
 		return right(this.items)
 	}
 
+	public async findAll(): PromiseEither<AbstractError, IUnity[]> {
+		return right(this.items)
+	}
 	public async findById(id: string): PromiseEither<AbstractError, IUnity> {
 		const unity = this.items.find((item) => item._id === id)
 
@@ -65,6 +62,15 @@ export class UnitiesInMemoryRepository implements UnitiesManagerInterface {
 	}
 
 	public async findOne(id: string): PromiseEither<AbstractError, IUnity> {
+		const unity = this.items.find((item) => item._id === id)
+
+		if (!unity) {
+			return left(new UnitNotFoundError())
+		}
+
+		return right(unity)
+	}
+	public async deleteById(id: string): PromiseEither<AbstractError, IUnity> {
 		const unity = this.items.find((item) => item._id === id)
 
 		if (!unity) {

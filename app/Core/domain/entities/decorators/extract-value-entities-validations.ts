@@ -1,5 +1,4 @@
 // Decorador de função
-// Decorador de função
 export default function ExtractValueEntitiesValidations(
 	target: any,
 	propertyKey: string,

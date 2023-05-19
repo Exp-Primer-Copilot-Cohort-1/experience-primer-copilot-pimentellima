@@ -22,7 +22,8 @@ validator.rule('unique', async (value, props: UniqueProps) => {
 })
 
 validator.rule('cpfOrCnpjIsValid', async (value, _, { errorReporter, pointer }) => {
-	if (cpf.isValid(value) || cnpj.isValid(value)) {
+	const onlyNumber = value.replace(/\D/g, '')
+	if (!cpf.isValid(onlyNumber) && !cnpj.isValid(onlyNumber)) {
 		errorReporter.report(pointer, InvalidDocumentException.invoke())
 	}
 })

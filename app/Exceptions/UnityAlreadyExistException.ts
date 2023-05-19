@@ -1,7 +1,7 @@
-import { Exception } from '@adonisjs/core/build/standalone';
+import { Exception } from '@adonisjs/core/build/standalone'
 
 export class UnityAlreadyExistException extends Exception {
-    constructor() {
-        super('Unidade já existe.', 409);
-    }
+	constructor() {
+		super('Unidade já existe.', 409)
+	}
 }

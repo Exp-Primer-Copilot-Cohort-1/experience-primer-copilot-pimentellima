@@ -48,6 +48,6 @@ const SELECTS = [
 	'sms_checked',
 	'mail_checked',
 	'partner',
-];
+]
 
-module.exports = SELECTS;
+export default SELECTS
