@@ -50,7 +50,6 @@ Route.group(() => {
 	Route.get('inatives', 'AdminController.findAllInatives')
 	Route.get('unities', 'AdminController.findAllUnities')
 	Route.put('unity/:unity_id/:days', 'AdminController.addDateExpiration')
-	Route.get('redis/clear', 'RedisController.clear')
 })
 	.prefix('admin')
 	.middleware('apiKey')
