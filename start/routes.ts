@@ -62,7 +62,7 @@ Route.group(() => {
 
 Route.group(() => {
 	Route.get('', 'ClientController.findAllUsersClients')
-	Route.get('inative', 'ClientController.findAllUsersClientsInative')
+	Route.get('inactives', 'ClientController.findAllUsersClientsInative')
 	Route.get(':id', 'ClientController.findUserClientByID')
 	Route.get('verify/client', 'ClientController.verifyExistenceClient')
 	Route.put(':id', 'ClientController.update')
