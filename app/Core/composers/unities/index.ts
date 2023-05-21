@@ -1,4 +1,5 @@
-export * from './make-composer-unity-delete-by-id';
-export * from './make-composer-unity-find-by-name';
-export * from './make-composer-unity-show-by-id';
+export * from './make-unities-update-by-id-composer'
+export * from './make-unity-delete-by-id-composer'
+export * from './make-unity-find-by-name-composer'
+export * from './make-unity-show-by-id-composer'
 

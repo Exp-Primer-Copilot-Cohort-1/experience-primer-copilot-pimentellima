@@ -31,23 +31,28 @@ export class UnitiesMongooseRepository implements UnitiesManagerInterface {
 		}
 		return right(unity)
 	}
-	public async findByName(
-		name: string,
-	): PromiseEither<AbstractError, IUnity[]> {
+	public async findByName(name: string): PromiseEither<AbstractError, IUnity[]> {
 		const unity = await Unity.find({
 			name: { $regex: new RegExp(`.*${name}.*`) },
-		});
+		})
 		if (!unity) {
-			return left(new UnitNotFoundError());
+			return left(new UnitNotFoundError())
 		}
-		return right(unity);
+		return right(unity)
 	}
 	public async deleteById(id: string): PromiseEither<AbstractError, IUnity> {
-		const unity = await Unity.findById(id);
+		const unity = await Unity.findById(id)
 		if (!unity) {
-			return left(new UnitNotFoundError());
+			return left(new UnitNotFoundError())
 		}
-		await unity.remove();
-		return right(unity);
+		await unity.remove()
+		return right(unity)
+	}
+	async updateUnitiesById(id: string, data: any): PromiseEither<AbstractError, IUnity> {
+		const unity = await Unity.findByIdAndUpdate(id, data)
+		if (!unity) {
+			return left(new UnitNotFoundError())
+		}
+		return right(unity)
 	}
 }

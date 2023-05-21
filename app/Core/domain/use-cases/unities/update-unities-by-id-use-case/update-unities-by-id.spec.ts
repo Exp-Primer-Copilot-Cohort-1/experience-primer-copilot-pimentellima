@@ -1,22 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { UnitiesInMemoryRepository } from '../../../repositories'
-import { FindAllUnityByNameUseCase } from './find-all-unities-by-name-use-case'
+import { UpdateUnitiesByIdUseCase } from './update-unities-by-id-use-case'
 
 const makeSut = () => {
-	const sut = new FindAllUnityByNameUseCase(new UnitiesInMemoryRepository())
+	const sut = new UpdateUnitiesByIdUseCase(new UnitiesInMemoryRepository())
 
 	return { sut }
 }
 
-describe('FindAllUnityByNameUseCase (Unit)', () => {
-	it('should return array if right', async () => {
-		const { sut } = makeSut()
-		const unitiesOrErr = await sut.execute({ name: 'cara' })
-
-		expect(unitiesOrErr.isRight()).toBeTruthy()
-		expect(unitiesOrErr.extract()).toBeInstanceOf(Array)
-	})
-
+describe('UpdateUnitiesByIdUseCase (Unit)', () => {
 	it('should return is left', async () => {
 		const { sut } = makeSut()
 		const unitiesOrErr = await sut.execute({})

@@ -60,6 +60,15 @@ export class UnitiesInMemoryRepository implements UnitiesManagerInterface {
 
 		return right(unity)
 	}
+	public async updateUnitiesById(id: string): PromiseEither<AbstractError, IUnity> {
+		const unity = this.items.find((item) => item._id === id)
+
+		if (!unity) {
+			return left(new UnitNotFoundError())
+		}
+
+		return right(unity)
+	}
 
 	public async findOne(id: string): PromiseEither<AbstractError, IUnity> {
 		const unity = this.items.find((item) => item._id === id)
