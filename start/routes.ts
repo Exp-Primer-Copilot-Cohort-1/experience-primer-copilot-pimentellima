@@ -243,11 +243,12 @@ Route.group(() => {
 	Route.delete('payments-prof/:id', 'AdonnisLegadoController.bridge')
 	Route.post('payments-prof', 'AdonnisLegadoController.bridge')
 
-	Route.get('financial-category', 'AdonnisLegadoController.bridge')
-	Route.get('financial-category/:id', 'AdonnisLegadoController.bridge')
-	Route.put('financial-category/:id', 'AdonnisLegadoController.bridge')
-	Route.delete('financial-category/:id', 'AdonnisLegadoController.bridge')
-	Route.post('financial-category', 'AdonnisLegadoController.bridge')
+	Route.get('financial-categories', 'FinancialCategoryController.index')
+	Route.get('financial-categories/inactives', 'FinancialCategoryController.inactives')
+	Route.get('financial-categories/:id', 'FinancialCategoryController.show')
+	Route.put('financial-categories/:id', 'FinancialCategoryController.update')
+	Route.delete('financial-categories/:id', 'FinancialCategoryController.destroy')
+	Route.post('financial-categories', 'FinancialCategoryController.store')
 
 	Route.get('cost-center', 'AdonnisLegadoController.bridge')
 	Route.get('cost-center/:id', 'AdonnisLegadoController.bridge')

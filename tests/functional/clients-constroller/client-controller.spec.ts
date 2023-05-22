@@ -28,7 +28,7 @@ test.group('Client Controller', () => {
 	})
 	test('display get all clients inatives', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
-		const response = await client.get('clients/inative').bearerToken(token.token)
+		const response = await client.get('clients/inactives').bearerToken(token.token)
 
 		response.assertStatus(200)
 	})
