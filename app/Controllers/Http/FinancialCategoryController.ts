@@ -45,8 +45,11 @@ class FinancialCategoryController {
 
 	async update({ params, request }: HttpContextContract) {
 		const data = request.only(['name', 'type', 'sub_categories', 'active'])
-		const category = await FinancialCategory.findByIdAndUpdate(params.id, data)
-		return category
+		const category = await FinancialCategory.findByIdAndUpdate(
+			params.id,
+			data,
+		).orFail()
+		return { ...category, ...data }
 	}
 
 	async show({ params }: HttpContextContract) {
