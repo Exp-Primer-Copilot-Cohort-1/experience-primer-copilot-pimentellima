@@ -38,7 +38,7 @@ class FinancialCategoryController {
 		const category = await FinancialCategory.create({
 			...data,
 			active: true,
-			unity_id: mongoose.Types.ObjectId(userLogged?.unity_id),
+			unity_id: userLogged?.unity_id,
 		})
 		return category
 	}
