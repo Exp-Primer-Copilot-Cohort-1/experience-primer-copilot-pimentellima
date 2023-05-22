@@ -144,13 +144,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		params: IActivity
 	): PromiseEither<AbstractError, ActivityEntity> {
 		try {
-			activitySchema.parse({
-				...params,
-				user_id: params.user_id?.toString(),
-				unity_id: params.unity_id?.toString(),
-				client_id: params.client_id?.toString(),
-				prof_id: params.prof_id?.toString(),
-			});
+			
 			return right(
 				new ActivityEntity()
 					.defineId(params._id?.toString())
@@ -161,6 +155,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					.defineScheduleBlock(params.schedule_block)
 					.defineProcedures(params.procedures)
 					.defineClient(params.client)
+					.defineClientId(params.client_id.toString())
 					.defineObs(params.obs)
 					.defineProf(params.prof)
 					.definePhone(params.phone)
