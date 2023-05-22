@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { AbstractError } from "App/Core/errors/error.interface";
-import { PromiseEither, left, right } from "App/Core/shared";
-import { AppointmentStatus, PaymentStatus } from "App/Helpers";
-import { AbstractActivity } from "../abstract/activity-abstract";
-import { z } from "zod";
-import { IActivity } from "Types/IActivity";
-import { InvalidParamsError } from "../../errors/invalid-params-error";
+import { AbstractError } from 'App/Core/errors/error.interface'
+import { PromiseEither, left, right } from 'App/Core/shared'
+import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
+import { IActivity } from 'Types/IActivity'
+import { z } from 'zod'
+import { InvalidParamsError } from '../../errors/invalid-params-error'
+import { AbstractActivity } from '../abstract/activity-abstract'
 
 const activitySchema = z.object({
 	user_id: z.string().optional(),
@@ -37,96 +37,96 @@ const activitySchema = z.object({
 				})
 				.optional(),
 			status: z.nativeEnum(PaymentStatus),
-		})
+		}),
 	),
-});
+})
 
 export class ActivityEntity extends AbstractActivity implements IActivity {
-	private _date: Date;
-	private _hour_start: string;
-	private _hour_end: string;
-	private _schedule_block: boolean;
-	private _all_day: boolean;
-	private _is_recorrent: boolean;
-	private _user_id?: string;
-	private _scheduled: AppointmentStatus;
+	private _date: Date
+	private _hour_start: string
+	private _hour_end: string
+	private _schedule_block: boolean
+	private _all_day: boolean
+	private _is_recorrent: boolean
+	private _user_id?: string
+	private _scheduled: AppointmentStatus
 
 	private constructor() {
-		super();
+		super()
 	}
 
 	public get is_recorrent(): boolean {
-		return this._is_recorrent;
+		return this._is_recorrent
 	}
 
 	public get date(): Date {
-		return this._date;
+		return this._date
 	}
 
 	public get hour_start(): string {
-		return this._hour_start;
+		return this._hour_start
 	}
 
 	public get hour_end(): string {
-		return this._hour_end;
+		return this._hour_end
 	}
 
 	public get schedule_block(): boolean {
-		return this._schedule_block;
+		return this._schedule_block
 	}
 
 	public get all_day(): boolean {
-		return this._all_day;
+		return this._all_day
 	}
 
 	public get is_recurrent(): boolean {
-		return this._is_recorrent;
+		return this._is_recorrent
 	}
 
 	public get user_id(): string | undefined {
-		return this._user_id;
+		return this._user_id
 	}
 
 	public get scheduled(): AppointmentStatus {
-		return this._scheduled;
+		return this._scheduled
 	}
 
 	defineisRecorrent(is_recorrent: boolean): this {
-		this._is_recorrent = is_recorrent;
-		return this;
+		this._is_recorrent = is_recorrent
+		return this
 	}
 
 	defineDate(date: Date): this {
-		this._date = date;
-		return this;
+		this._date = date
+		return this
 	}
 	defineHourStart(date: string): this {
-		this._hour_start = date;
-		return this;
+		this._hour_start = date
+		return this
 	}
 	defineHourEnd(date: string): this {
-		this._hour_end = date;
-		return this;
+		this._hour_end = date
+		return this
 	}
 	defineScheduleBlock(schedule_block: boolean): this {
-		this._schedule_block = schedule_block;
-		return this;
+		this._schedule_block = schedule_block
+		return this
 	}
 	defineAllDay(all_day: boolean): this {
-		this._all_day = all_day;
-		return this;
+		this._all_day = all_day
+		return this
 	}
 	defineIsRecorrent(is_recorrent: boolean): this {
-		this._is_recorrent = is_recorrent;
-		return this;
+		this._is_recorrent = is_recorrent
+		return this
 	}
 	defineUserId(user_id?: string): this {
-		this._user_id = user_id;
-		return this;
+		this._user_id = user_id
+		return this
 	}
 	defineScheduled(scheduled: AppointmentStatus): this {
-		this._scheduled = scheduled;
-		return this;
+		this._scheduled = scheduled
+		return this
 	}
 
 	public updateStatus(activity: IActivity): ActivityEntity {
@@ -135,16 +135,15 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 			activity.hour_start !== this.hour_start ||
 			activity.hour_end !== this.hour_end
 		) {
-			return this.defineStatus(AppointmentStatus.RESCHEDULED);
+			return this.defineStatus(AppointmentStatus.RESCHEDULED)
 		}
-		return this;
+		return this
 	}
 
 	public static async build(
-		params: IActivity
+		params: IActivity,
 	): PromiseEither<AbstractError, ActivityEntity> {
 		try {
-			
 			return right(
 				new ActivityEntity()
 					.defineId(params._id?.toString())
@@ -155,22 +154,22 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					.defineScheduleBlock(params.schedule_block)
 					.defineProcedures(params.procedures)
 					.defineClient(params.client)
-					.defineClientId(params.client_id.toString())
+					.defineClientId(params.client_id?.toString())
 					.defineObs(params.obs)
 					.defineProf(params.prof)
 					.definePhone(params.phone)
 					.defineAllDay(params.all_day)
 					.defineIsRecorrent(params.is_recorrent)
 					.defineActive(params.active)
-					.defineUnityId(params.unity_id.toString())
+					.defineUnityId(params.unity_id?.toString())
 					.defineUserId(params.user_id?.toString())
 					.defineScheduled(params.scheduled)
-					.defineProfId(params.prof_id.toString())
-			);
+					.defineProfId(params.prof_id?.toString()),
+			)
 		} catch (err) {
-			return left(new InvalidParamsError(err));
+			return left(new InvalidParamsError(err))
 		}
 	}
 }
 
-export default ActivityEntity;
+export default ActivityEntity
