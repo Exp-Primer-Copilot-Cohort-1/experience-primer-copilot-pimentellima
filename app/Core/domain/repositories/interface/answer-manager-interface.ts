@@ -10,4 +10,5 @@ export interface AnswerManagerInterface {
     findAllAnswers: (unity_id: string) => PromiseEither<AbstractError, AnswerEntity[]>;
     findAnswerById: (id: string) => PromiseEither<AbstractError, AnswerEntity>;
     findAnswersByFormId: (unity_id: string, form_id: string) => PromiseEither<AbstractError, AnswerEntity[]>;
+    findAnswersByClientId: (unity_id: string, client_id: string) => PromiseEither<AbstractError, AnswerEntity[]>;
 }

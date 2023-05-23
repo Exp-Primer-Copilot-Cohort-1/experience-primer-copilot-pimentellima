@@ -1,6 +1,5 @@
-import { Schema } from '@ioc:Mongoose'
+import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IPaymentProf } from 'Types/IPaymentProf'
-import { model } from 'mongoose'
 
 const PaymentProfSchema = new Schema<IPaymentProf>(
 	{
@@ -33,4 +32,4 @@ const PaymentProfSchema = new Schema<IPaymentProf>(
 	},
 )
 
-export default model<IPaymentProf>('payment_profs', PaymentProfSchema)
+export default Mongoose.model<IPaymentProf>('payment_profs', PaymentProfSchema)

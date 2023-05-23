@@ -1,23 +1,23 @@
-import { Document, ObjectId } from 'mongoose';
+import { ObjectId } from 'mongoose';
 
-export interface IPaymentProf extends Document {
-  _id: ObjectId;
+export interface IPaymentProf {
+  _id: string | ObjectId;
   value: number;
   percent: number;
   procedure: {
     label: string;
-    value: ObjectId;
+    value: string | ObjectId;
   };
   health_insurance: {
     label: string;
-    value: ObjectId;
+    value: string | ObjectId;
   };
   prof: {
     label: string;
-    value: ObjectId;
+    value: string | ObjectId;
   };
   active: boolean;
-  unity_id: ObjectId;
+  unity_id: string | ObjectId;
   created_at: Date;
   updated_at: Date;
 }

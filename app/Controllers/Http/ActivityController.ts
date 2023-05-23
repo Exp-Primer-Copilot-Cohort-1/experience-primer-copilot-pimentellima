@@ -1,4 +1,3 @@
-'use strict'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import { makeCreateActivityComposer } from 'App/Core/composers/activities/make-create-activity-composer'
@@ -16,18 +15,17 @@ class ActivityController {
 		})
 	}
 
-	async findActivitiesByProf(ctx: HttpContextContract) {
-		return adaptRoute(makeFindActivitiesByProfComposer(), ctx, {
+	async findActivitiesByProfId(ctx: HttpContextContract) {
+		return adaptRoute(makeFindActivitiesByProfIdComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
-
-	async findActivitiesByClient(ctx: HttpContextContract) {
-		return adaptRoute(makeFindActivityByClientComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
-	}
-
+  
+  async findActivitiesByClientId(ctx: HttpContextContract) {
+		return adaptRoute(makeFindActivityByClientIdComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id
+		});
+  
 	async findActivityById(ctx: HttpContextContract) {
 		return adaptRoute(makeFindActivityByIdComposer(), ctx)
 	}
@@ -38,7 +36,7 @@ class ActivityController {
 		})
 	}
 
-	async updateActivity(ctx: HttpContextContract) {
+	async updateActivityById(ctx: HttpContextContract) {
 		return adaptRoute(makeUpdateActivityByIdComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})

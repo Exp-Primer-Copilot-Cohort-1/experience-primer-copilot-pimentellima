@@ -46,8 +46,8 @@ export const makeValidActivity = () => {
         all_day: false,
         is_recorrent: false,
         active: true,
-        unity_id: "63528c11c109b232759921d1",
         user_id: "635978cec109b232759921da",
+        unity_id: '1',
         scheduled: "scheduled",
         prof_id: "635978cec109b232759921da",
     };

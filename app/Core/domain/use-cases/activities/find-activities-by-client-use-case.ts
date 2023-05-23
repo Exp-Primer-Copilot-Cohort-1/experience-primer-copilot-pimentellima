@@ -9,7 +9,7 @@ type ActivityProps = {
     client_id: string
 };
 
-export class FindActivitiesByClientUseCase
+export class FindActivitiesByClientIdUseCase
 	implements UseCase<ActivityProps, ActivityEntity[]>
 {
 	constructor(

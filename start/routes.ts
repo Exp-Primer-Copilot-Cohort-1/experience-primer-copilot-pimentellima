@@ -152,23 +152,25 @@ Route.group(() => {
 	Route.put('form/:id', 'AdonnisLegadoController.bridge')
 	Route.delete('form/:id', 'AdonnisLegadoController.bridge')
 
-	Route.get('answer', 'AnswerController.index')
-	Route.get('answer/:id', 'AnswerController.show')
-	Route.get('answers/:client_id', 'AnswerAndFormsControllerV2.findAllAnswersByClient')
-	Route.get('answer-by-form/:form_id', 'AnswerController.showByFormId')
-	Route.get('answer-log-by-form/:form_id', 'LogAnswerController.showByFormId')
-	Route.put('answer/:id', 'AnswerController.update')
-	Route.delete('answer/:id', 'AnswerController.destroy')
-	Route.post('answer', 'AnswerController.store')
+	Route.post('answer', 'AnswerController.createAnswer')
+	Route.get('answer', 'AnswerController.findAllAnswers')
+	Route.get('answer/:id', 'AnswerController.findAnswerById')
+	Route.get('answer/form/:form_id', 'AnswerController.findAnswersByFormId')
+	Route.get('answer/client/:client_id', 'AnswerController.findAnswersByClientId')
+	Route.put('answer/:id', 'AnswerController.updateAnswerById')
+	Route.delete('answer/:id', 'AnswerController.deleteAnswerById')
 
+	Route.get('answer-log-by-form/:form_id', 'LogAnswerController.showByFormId')
+	
 	Route.get('activity-stock', 'AdonnisLegadoController.bridge')
 
 	Route.get('activity', 'ActivityController.findAllActivities')
 	Route.put('activity/:id', 'ActivityController.updateActivityById')
-	Route.get('activity/prof/:prof_id', 'ActivityController.findActivitiesByProf')
-	Route.get('activity/client/:client_id', 'ActivityController.findActivitiesByClient')
+	Route.get('activity/prof/:prof_id', 'ActivityController.findActivitiesByProfId')
+	Route.get('activity/client/:client_id', 'ActivityController.findActivitiesByClientId')
 	Route.delete('activity/:id', 'ActivityController.deleteActivityById')
 	Route.post('activity', 'ActivityController.createActivity')
+
 	Route.post('activity-pay', 'ActivityController.payment')
 
 	Route.get('procedure', 'ProcedureController.index')
@@ -237,11 +239,11 @@ Route.group(() => {
 
 	Route.get('activities-date', 'AdonnisLegadoController.bridge')
 
-	Route.get('payments-prof', 'AdonnisLegadoController.bridge')
-	Route.get('payments-prof/:id', 'AdonnisLegadoController.bridge')
-	Route.put('payments-prof/:id', 'AdonnisLegadoController.bridge')
-	Route.delete('payments-prof/:id', 'AdonnisLegadoController.bridge')
-	Route.post('payments-prof', 'AdonnisLegadoController.bridge')
+	Route.get('payments-prof', 'PaymentProfController.findAllPaymentProfs')
+	Route.get('payments-prof/:id', 'PaymentProfController.findPaymentProfById')
+	Route.put('payments-prof/:id', 'PaymentProfController.updatePaymentProfById')
+	Route.delete('payments-prof/:id', 'PaymentProfController.deletePaymentProfById')
+	Route.post('payments-prof', 'PaymentProfController.createPaymentProf')
 
 	Route.get('financial-categories', 'FinancialCategoryController.index')
 	Route.get('financial-categories/inactives', 'FinancialCategoryController.inactives')

@@ -32,12 +32,15 @@ class FormController {
 		})
 	}
 
-	async createForm(ctx: HttpContextContract) {
-		return adaptRoute(makeCreateFormComposer(), ctx)
-	}
-	async updateForm(ctx: HttpContextContract) {
-		return adaptRoute(makeUpdateFormComposer(), ctx)
-	}
+  async createForm(ctx: HttpContextContract) {
+    return adaptRoute(makeCreateFormComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		});
+  
+  }
+  async updateForm(ctx: HttpContextContract) {
+    return adaptRoute(makeUpdateFormComposer(), ctx);
+  }
 
 	async deleteFormById(ctx: HttpContextContract) {
 		return adaptRoute(makeDeleteFormByIdComposer(), ctx)

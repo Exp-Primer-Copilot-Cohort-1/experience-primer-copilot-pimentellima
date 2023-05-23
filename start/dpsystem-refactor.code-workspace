@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../dpsystem-back-bridge"
+		},
+		{
+			"path": "../../dpsystem-front"
+		}
+	],
+	"settings": {}
+}

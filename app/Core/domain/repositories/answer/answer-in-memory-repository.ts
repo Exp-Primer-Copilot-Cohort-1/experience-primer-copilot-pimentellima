@@ -6,10 +6,12 @@ import { AnswerEntity } from "../../entities/answer/answer";
 import { MissingParamsError } from "../../errors/missing-params";
 import { AnswerNotFoundError } from "../../errors/answer-not-found-error";
 
-export class AnswerMongoRepository implements AnswerManagerInterface {
-	public answers: IAnswer[] = [];
-
-	async createAnswer(answer: IAnswer): PromiseEither<AbstractError, IAnswer> {
+export class AnswerInMemoryRepository implements AnswerManagerInterface {
+	public answers: any[] = [];
+	findAnswersByClientId: (unity_id: string, client_id: string) => PromiseEither<AbstractError, AnswerEntity[]>;
+	
+	findAnswerById: (id: string) => PromiseEither<AbstractError, AnswerEntity>;
+	async createAnswer(answer: IAnswer): PromiseEither<AbstractError, AnswerEntity> {
 		const newAnswerOrErr = await AnswerEntity.build(answer);
 		if (newAnswerOrErr.isLeft()) return left(newAnswerOrErr.extract());
 		const newAnswer = newAnswerOrErr.extract();
@@ -19,7 +21,8 @@ export class AnswerMongoRepository implements AnswerManagerInterface {
 	async updateAnswerById(
 		answer: IAnswer,
 		id: string
-	): PromiseEither<AbstractError, IAnswer> {
+	): PromiseEither<AbstractError, AnswerEntity> {
+		if(!id) return left(new MissingParamsError(id));
 		const oldAnswer = this.answers.find((ans) => ans._id === id);
 		if (!oldAnswer) return left(new AnswerNotFoundError());
 		const answerOrErr = await AnswerEntity.build({
@@ -34,11 +37,11 @@ export class AnswerMongoRepository implements AnswerManagerInterface {
 		return right(updatedAnswer);
 	}
 
-	deleteAnswerById: (id: string) => PromiseEither<AbstractError, IAnswer>;
+	deleteAnswerById: (id: string) => PromiseEither<AbstractError, AnswerEntity>;
 
 	async findAllAnswers(
 		unity_id: string
-	): PromiseEither<AbstractError, IAnswer[]> {
+	): PromiseEither<AbstractError, AnswerEntity[]> {
 		if (!unity_id) return left(new MissingParamsError("unity id"));
 
 		const data = this.answers.filter(ans => ans.unity_id === unity_id)
@@ -57,7 +60,7 @@ export class AnswerMongoRepository implements AnswerManagerInterface {
 	async findAnswersByFormId(
 		unity_id: string,
 		form_id: string
-	): PromiseEither<AbstractError, IAnswer[]> {
+	): PromiseEither<AbstractError, AnswerEntity[]> {
 		if (!unity_id) return left(new MissingParamsError("unity id"));
 		if (!form_id) return left(new MissingParamsError("form id"));
 
