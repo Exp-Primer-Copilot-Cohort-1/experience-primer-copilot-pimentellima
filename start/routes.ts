@@ -250,11 +250,12 @@ Route.group(() => {
 	Route.delete('financial-categories/:id', 'FinancialCategoryController.destroy')
 	Route.post('financial-categories', 'FinancialCategoryController.store')
 
-	Route.get('cost-center', 'AdonnisLegadoController.bridge')
-	Route.get('cost-center/:id', 'AdonnisLegadoController.bridge')
-	Route.put('cost-center/:id', 'AdonnisLegadoController.bridge')
-	Route.delete('cost-center/:id', 'AdonnisLegadoController.bridge')
-	Route.post('cost-center', 'AdonnisLegadoController.bridge')
+	Route.get('cost-centers', 'CostCenterController.index')
+	Route.get('cost-centers/inactives', 'CostCenterController.inactives')
+	Route.get('cost-centers/:id', 'CostCenterController.show')
+	Route.put('cost-centers/:id', 'CostCenterController.update')
+	Route.delete('cost-centers/:id', 'CostCenterController.destroy')
+	Route.post('cost-centers', 'CostCenterController.store')
 
 	Route.get('accounts', 'AccountController.findAllAccounts')
 	Route.get('accounts/:id', 'AccountController.findAccountById')
