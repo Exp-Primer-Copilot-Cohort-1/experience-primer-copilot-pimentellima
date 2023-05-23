@@ -32,8 +32,8 @@ Route.post('users', 'UserController.store')
 Route.get('unity', 'UnityController.index')
 Route.get('unity/:id', 'UnityController.show')
 Route.delete('unity/:id', 'UnityController.destroy')
-Route.put('unity/:id', 'UnityController.update')
-Route.get('redis/clear', 'RedisController.clear')
+Route.put('unity/:_id', 'UnityController.update')
+
 
 Route.put('activity-stts/:id', 'ActivityController.updateStatus')
 Route.get('activity/:id', 'ActivityController.findActivityById')
@@ -173,7 +173,7 @@ Route.group(() => {
 
 	Route.get('procedure', 'ProcedureController.index')
 	Route.get('procedure/:id', 'ProcedureController.show')
-	Route.put('procedure/:id', 'ProcedureController.update')
+	Route.put('procedure/:_id', 'ProcedureController.update')
 	Route.delete('procedure/:id', 'ProcedureController.destroy')
 	Route.post('procedure', 'ProcedureController.store')
 
