@@ -9,4 +9,6 @@ export interface ProceduresManagerInterface {
 	) => PromiseEither<AbstractError, IProcedure[]>;
 	findById: (unity_id: string) => PromiseEither<AbstractError, IProcedure[]>;
 	deleteById(id: string) => PromiseEither<AbstractError, IProcedure>;
+	createProcedure(data: any) => PromiseEither<AbstractError, IProcedure>;
+	updateProceduresById(id: string, data: any) => PromiseEither<AbstractError, IProcedure>
 }

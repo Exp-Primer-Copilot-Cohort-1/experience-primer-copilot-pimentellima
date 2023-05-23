@@ -15,22 +15,6 @@ const fetchUserByType = async (type, unityId, active = true) =>
 	})
 
 class UserControllerV2 {
-	public async findAllUsersClientsInative({ auth }) {
-		const userLogged = auth.user
-
-		const clients = await fetchUserByType(['client'], userLogged.unity_id, false)
-
-		return clients || []
-	}
-
-	public async findAllUsersClients({ auth }) {
-		const userLogged = auth.user
-
-		const clients = await fetchUserByType(['client'], userLogged.unity_id)
-
-		return clients || []
-	}
-
 	public async findAllUsersProfs({ auth }) {
 		const userLogged = auth.user
 
@@ -92,19 +76,5 @@ class UserControllerV2 {
 
 		return user
 	}
-
-	public async findUserClientByID({ params }) {
-		const user = await User.where({ _id: params.id, type: "client" })
-			.select(SELECTS)
-			.populate('unities')
-			.populate('answer')
-			.populate('activity')
-			.populate('userLog')
-			.orFail()
-			.exec()
-
-		return user
-	}
 }
-
 export default UserControllerV2

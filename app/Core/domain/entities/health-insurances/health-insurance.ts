@@ -51,7 +51,10 @@ export class HealthInsuranceEntity extends Entity implements IHealthInsurance {
 	}
 
 	defineProfs(profs: IProf[] = []): HealthInsuranceEntity {
-		this._profs = profs
+		this._profs = profs?.map((prof) => ({
+			value: prof.value,
+			label: prof.label,
+		}))
 		return this
 	}
 

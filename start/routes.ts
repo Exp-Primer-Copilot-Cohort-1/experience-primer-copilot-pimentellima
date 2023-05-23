@@ -25,13 +25,15 @@ Route.get('/', async () => {
 })
 
 Route.post('sessions', 'SessionController.store')
+Route.get('script', 'AdminController.script')
 
 Route.post('users', 'UserController.store')
 
 Route.get('unity', 'UnityController.index')
 Route.get('unity/:id', 'UnityController.show')
 Route.delete('unity/:id', 'UnityController.destroy')
-Route.put('unity/:id', 'UnityController.update')
+Route.put('unity/:_id', 'UnityController.update')
+
 
 Route.put('activity-stts/:id', 'ActivityController.updateStatus')
 Route.get('activity/:id', 'ActivityController.findActivityById')
@@ -59,14 +61,21 @@ Route.group(() => {
 })
 
 Route.group(() => {
+	Route.get('', 'ClientController.findAllUsersClients')
+	Route.get('inactives', 'ClientController.findAllUsersClientsInative')
+	Route.get(':id', 'ClientController.findUserClientByID')
+	Route.get('verify/client', 'ClientController.verifyExistenceClient')
+	Route.put(':id', 'ClientController.update')
+	Route.post('', 'ClientController.create')
+})
+	.prefix('clients')
+	.middleware('auth')
+
+Route.group(() => {
 	Route.get('professionals', 'UserControllerV2.findAllUsersProfs')
 	Route.get('secs', 'UserControllerV2.findAllUsersSecs')
-	Route.get('clients', 'UserControllerV2.findAllUsersClients')
 	Route.get('professionals/inative', 'UserControllerV2.findAllUsersProfsInative')
 	Route.get('secs/inative', 'UserControllerV2.findAllUsersSecsInative')
-	Route.get('clients/inative', 'UserControllerV2.findAllUsersClientsInative')
-	Route.get('verify/client', 'ClientController.verifyExistenceClient')
-	Route.get('clients/:id', 'AdonnisLegadoController.bridge')
 	Route.get('professionals/:id', 'AdonnisLegadoController.bridge')
 	Route.put(':id', 'AdonnisLegadoController.bridge')
 	Route.delete(':id', 'UserController.destroy')
@@ -134,7 +143,6 @@ Route.group(() => {
 Route.group(() => {
 	Route.get('users', 'UserController.index')
 	Route.get('users-type', 'UserController.indexByType')
-	Route.post('users/client', 'ClientController.create')
 
 	Route.get('form/prof/:prof_id', 'FormController.findFormByProfId')
 	Route.get('form/category/:category_id', 'AdonnisLegadoController.bridge')
@@ -167,7 +175,7 @@ Route.group(() => {
 
 	Route.get('procedure', 'ProcedureController.index')
 	Route.get('procedure/:id', 'ProcedureController.show')
-	Route.put('procedure/:id', 'ProcedureController.update')
+	Route.put('procedure/:_id', 'ProcedureController.update')
 	Route.delete('procedure/:id', 'ProcedureController.destroy')
 	Route.post('procedure', 'ProcedureController.store')
 
@@ -237,17 +245,19 @@ Route.group(() => {
 	Route.delete('payments-prof/:id', 'PaymentProfController.deletePaymentProfById')
 	Route.post('payments-prof', 'PaymentProfController.createPaymentProf')
 
-	Route.get('financial-category', 'AdonnisLegadoController.bridge')
-	Route.get('financial-category/:id', 'AdonnisLegadoController.bridge')
-	Route.put('financial-category/:id', 'AdonnisLegadoController.bridge')
-	Route.delete('financial-category/:id', 'AdonnisLegadoController.bridge')
-	Route.post('financial-category', 'AdonnisLegadoController.bridge')
+	Route.get('financial-categories', 'FinancialCategoryController.index')
+	Route.get('financial-categories/inactives', 'FinancialCategoryController.inactives')
+	Route.get('financial-categories/:id', 'FinancialCategoryController.show')
+	Route.put('financial-categories/:id', 'FinancialCategoryController.update')
+	Route.delete('financial-categories/:id', 'FinancialCategoryController.destroy')
+	Route.post('financial-categories', 'FinancialCategoryController.store')
 
-	Route.get('cost-center', 'AdonnisLegadoController.bridge')
-	Route.get('cost-center/:id', 'AdonnisLegadoController.bridge')
-	Route.put('cost-center/:id', 'AdonnisLegadoController.bridge')
-	Route.delete('cost-center/:id', 'AdonnisLegadoController.bridge')
-	Route.post('cost-center', 'AdonnisLegadoController.bridge')
+	Route.get('cost-centers', 'CostCenterController.index')
+	Route.get('cost-centers/inactives', 'CostCenterController.inactives')
+	Route.get('cost-centers/:id', 'CostCenterController.show')
+	Route.put('cost-centers/:id', 'CostCenterController.update')
+	Route.delete('cost-centers/:id', 'CostCenterController.destroy')
+	Route.post('cost-centers', 'CostCenterController.store')
 
 	Route.get('accounts', 'AccountController.findAllAccounts')
 	Route.get('accounts/:id', 'AccountController.findAccountById')
