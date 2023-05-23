@@ -14,3 +14,4 @@ html
 .husky
 output.log
 pid.txt
+*.code-workspace

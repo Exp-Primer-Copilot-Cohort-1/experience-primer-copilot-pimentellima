@@ -92,7 +92,6 @@ class ClientController {
 	public async findUserClientByID({ params }) {
 		const user = await Client.findById(params.id)
 
-		console.log(user)
 		return user
 	}
 
