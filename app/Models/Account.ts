@@ -2,6 +2,67 @@ import Mongoose, { Schema } from '@ioc:Mongoose'
 import { PaymentStatus, PaymentType } from 'App/Helpers'
 import { IAccount } from 'Types/IAccount'
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Account:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: The account name.
+ *           required: true
+ *         value:
+ *           type: number
+ *           description: The account value.
+ *           required: true
+ *         date:
+ *           type: string
+ *           format: date
+ *           description: The account creation date.
+ *           required: true
+ *         bank:
+ *           type: string
+ *           description: The associated bank.
+ *           required: true
+ *         active:
+ *           type: boolean
+ *           description: Account status.
+ *           default: true
+ *         unity_id:
+ *           type: string
+ *           format: uuid
+ *           description: The associated unity id.
+ *           required: true
+ *         description:
+ *           type: string
+ *           description: The account description.
+ *         status:
+ *           type: string
+ *           description: The payment status.
+ *           enum: [PENDING, PAID]
+ *           default: PENDING
+ *         type:
+ *           type: string
+ *           description: The payment type.
+ *           enum: [OTHER, TYPE1, TYPE2]
+ *           default: OTHER
+ *         user_id:
+ *           type: string
+ *           format: uuid
+ *           description: The associated user id.
+ *         transaction_id:
+ *           type: string
+ *           description: The associated transaction id.
+ *       required:
+ *         - name
+ *         - value
+ *         - date
+ *         - bank
+ *         - unity_id
+ */
+
 const AccountSchema = new Schema<IAccount>(
 	{
 		name: {

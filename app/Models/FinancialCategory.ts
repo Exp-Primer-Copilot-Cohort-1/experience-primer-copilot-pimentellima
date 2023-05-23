@@ -1,7 +1,28 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
+import { IFinancialCategory } from 'Types/IFinancialCategory'
 
-const FinancialCategorySchema = new Schema<any>(
-	{},
+const FinancialCategorySchema = new Schema<IFinancialCategory>(
+	{
+		name: {
+			type: String,
+			required: true,
+		},
+		type: {
+			type: String,
+			enum: ['revenue', 'expense'],
+			required: true,
+		},
+		active: {
+			type: Boolean,
+			required: true,
+			default: true,
+		},
+		unity_id: {
+			type: Mongoose.Schema.Types.ObjectId,
+			ref: 'unities',
+			required: true,
+		},
+	},
 	{
 		timestamps: {
 			createdAt: 'created_at',
@@ -10,4 +31,7 @@ const FinancialCategorySchema = new Schema<any>(
 	},
 )
 
-export default Mongoose.model<any>('financial_categories', FinancialCategorySchema)
+export default Mongoose.model<IFinancialCategory>(
+	'financial_categories',
+	FinancialCategorySchema,
+)

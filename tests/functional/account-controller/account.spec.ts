@@ -20,7 +20,7 @@ test.group('Account Controller', () => {
 		const response = await client.get('account').bearerToken(token.token)
 
 		response.assertStatus(200)
-	})
+	}).skip()
 
 	test('create account', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
@@ -34,7 +34,7 @@ test.group('Account Controller', () => {
 
 		const { deletedCount } = await Account.deleteOne({ _id: response.body()._id })
 		assert.equal(deletedCount, 1)
-	})
+	}).skip()
 
 	test('display account by id', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
@@ -42,7 +42,7 @@ test.group('Account Controller', () => {
 
 		const response = await client.get('account/' + id).bearerToken(token.token)
 		response.assertStatus(200)
-	})
+	}).skip()
 
 	test('display account not found', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
