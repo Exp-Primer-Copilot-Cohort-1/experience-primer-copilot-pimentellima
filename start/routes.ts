@@ -34,10 +34,9 @@ Route.get('unity/:id', 'UnityController.show')
 Route.delete('unity/:id', 'UnityController.destroy')
 Route.put('unity/:_id', 'UnityController.update')
 
-
-Route.put('activity-stts/:id', 'ActivityController.updateStatus')
+Route.put('activity-stts/:id', 'AdonnisLegadoController.bridge')
 Route.get('activity/:id', 'ActivityController.findActivityById')
-Route.put('activity-user/:id', 'ActivityController.updateStatusUser')
+Route.put('activity-user/:id', 'AdonnisLegadoController.bridge')
 
 Route.get('permissions-default', 'PermissionController.defaultPermissions')
 
@@ -161,7 +160,7 @@ Route.group(() => {
 	Route.delete('answer/:id', 'AnswerController.deleteAnswerById')
 
 	Route.get('answer-log-by-form/:form_id', 'LogAnswerController.showByFormId')
-	
+
 	Route.get('activity-stock', 'AdonnisLegadoController.bridge')
 
 	Route.get('activity', 'ActivityController.findAllActivities')
@@ -271,10 +270,10 @@ Route.group(() => {
 	Route.delete('default-config/:id', 'AdonnisLegadoController.bridge')
 	Route.post('default-config', 'AdonnisLegadoController.bridge')
 
-	Route.get('payments-list', 'AdonnisLegadoController.bridge')
-	Route.put('payments-stts/:id', 'AdonnisLegadoController.bridge')
-	Route.put('payments-transaction/:id', 'AdonnisLegadoController.bridge')
-	Route.post('payments-transaction', 'AdonnisLegadoController.bridge')
+	Route.get('transactions', 'AdonnisLegadoController.bridge')
+	Route.put('transactions/stts/:id', 'AdonnisLegadoController.bridge')
+	Route.put('transactions/:id', 'AdonnisLegadoController.bridge')
+	Route.post('transactions', 'AdonnisLegadoController.bridge')
 
 	Route.post('import', 'ImportController.import')
 }).middleware('auth')
