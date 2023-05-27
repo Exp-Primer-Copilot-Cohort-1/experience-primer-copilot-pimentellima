@@ -1,14 +1,24 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IHealthInsurance } from 'Types/IHealthInsurance'
 
-const ProfSchema = new Schema({
-	value: {
-		type: Schema.Types.ObjectId,
-		required: true,
-		ref: 'users',
+const ProfSchema = new Schema(
+	{
+		value: {
+			type: Schema.Types.ObjectId,
+			required: true,
+			ref: 'users',
+		},
+		label: {
+			type: String,
+			required: true,
+		},
 	},
-	label: { type: String, required: true },
-})
+	{
+		collection: 'users',
+		timestamps: false,
+		_id: false,
+	},
+)
 
 const HealthInsuranceSchema = new Schema<IHealthInsurance>(
 	{
