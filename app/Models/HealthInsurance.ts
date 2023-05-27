@@ -15,7 +15,7 @@ const HealthInsuranceSchema = new Schema<IHealthInsurance>(
 		name: { type: String, required: true },
 		register_code: { type: String },
 		carence: { type: Number },
-		profs: [{ prof: ProfSchema }],
+		profs: [ProfSchema],
 		active: { type: Boolean, default: true },
 		unity_id: {
 			type: Schema.Types.ObjectId,
