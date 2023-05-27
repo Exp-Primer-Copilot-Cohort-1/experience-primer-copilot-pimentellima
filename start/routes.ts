@@ -71,11 +71,11 @@ Route.group(() => {
 	.middleware('auth')
 
 Route.group(() => {
-	Route.get('professionals', 'UserControllerV2.findAllUsersProfs')
+	Route.get('prof', 'UserControllerV2.findAllUsersProfs')
 	Route.get('secs', 'UserControllerV2.findAllUsersSecs')
-	Route.get('professionals/inative', 'UserControllerV2.findAllUsersProfsInative')
+	Route.get('prof/inactives', 'UserControllerV2.findAllUsersProfsInative')
 	Route.get('secs/inative', 'UserControllerV2.findAllUsersSecsInative')
-	Route.get('professionals/:id', 'AdonnisLegadoController.bridge')
+	Route.get('prof/:id', 'AdonnisLegadoController.bridge')
 	Route.put(':id', 'AdonnisLegadoController.bridge')
 	Route.delete(':id', 'UserController.destroy')
 })
