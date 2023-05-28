@@ -1,16 +1,12 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IProcedure } from 'Types/IProcedure'
+import { HealthInsuranceSchemaHelper, ProfSchemaHelper } from './helpers'
 
 const ProcedureSchema = new Schema<IProcedure>(
 	{
 		active: {
 			type: Boolean,
-			required: true,
 			default: true,
-		},
-		value: {
-			type: Number,
-			required: true,
 		},
 		color: {
 			type: String,
@@ -24,34 +20,8 @@ const ProcedureSchema = new Schema<IProcedure>(
 			type: Number,
 			required: true,
 		},
-		prof: [
-			{
-				value: {
-					type: Schema.Types.ObjectId,
-					required: true,
-				},
-				label: {
-					type: String,
-					required: true,
-				},
-			},
-		],
-		health_insurance: [
-			{
-				value: {
-					type: Schema.Types.ObjectId,
-					required: true,
-				},
-				label: {
-					type: String,
-					required: true,
-				},
-				price: {
-					type: String,
-					required: true,
-				},
-			},
-		],
+		prof: [ProfSchemaHelper],
+		health_insurance: [HealthInsuranceSchemaHelper],
 		unity_id: {
 			type: Schema.Types.ObjectId,
 			required: true,

@@ -120,6 +120,16 @@ Route.group(() => {
 	.middleware('auth')
 
 Route.group(() => {
+	Route.get('', 'ProcedureController.index')
+	Route.get(':id', 'ProcedureController.show')
+	Route.put(':_id', 'ProcedureController.update')
+	Route.delete(':id', 'ProcedureController.destroy')
+	Route.post('', 'ProcedureController.store')
+})
+	.prefix('procedures')
+	.middleware('auth')
+
+Route.group(() => {
 	Route.get('', 'AdonnisLegadoController.bridge')
 	Route.get(':id', 'AdonnisLegadoController.bridge')
 	Route.put(':id', 'AdonnisLegadoController.bridge')
