@@ -75,6 +75,12 @@ export class SessionUser extends SystemUser {
 				.defineUnityId(data.unity_id.toString())
 				.defineUpdatedAt(data.updated_at)
 				.defineRememberMeToken(data.rememberMeToken)
+				.defineReports(data?.reports)
+				.defineScreens(data?.screens)
+				.definePermissions(data?.permissions)
+				.defineBlackListPermissions(data?.blackListPermissions)
+				.defineBlackListReports(data?.blackListReports)
+				.defineBlackListScreens(data?.blackListScreens)
 
 			return right(user)
 		} catch (error) {

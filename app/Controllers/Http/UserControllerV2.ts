@@ -30,7 +30,7 @@ class UserControllerV2 {
 		const userLogged = auth.user
 
 		const professionals = await fetchUserByType(
-			["prof", "admin_prof"],
+			['prof', 'admin_prof'],
 			userLogged.unity_id,
 			false,
 		)
@@ -64,7 +64,7 @@ class UserControllerV2 {
 		const user = await User.where({
 			_id: params.id,
 			type: {
-				$in: ["prof", "admin_prof"],
+				$in: ['prof', 'admin_prof'],
 			},
 		})
 			.select(SELECTS)

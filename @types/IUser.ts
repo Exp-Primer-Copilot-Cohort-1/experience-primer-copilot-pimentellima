@@ -11,7 +11,7 @@ export interface IUser extends IDaysOffice {
 	celphone: string
 	document: string
 	unity_id: ObjectId | string
-	type: 'admin' | 'admin_prof' | 'prof' | 'sec' | 'client'
+	type: 'admin' | 'admin_prof' | 'prof' | 'sec' | 'client' | 'superadmin'
 	active: boolean
 	avatar: string
 	due_date: string
@@ -22,8 +22,6 @@ export interface IUser extends IDaysOffice {
 	rememberMeToken?: string
 	permissions?: string[]
 	screens?: string[]
-	reports?: string[]
 	blackListScreens?: string[]
-	blackListReports?: string[]
 	blackListPermissions?: string[]
 }

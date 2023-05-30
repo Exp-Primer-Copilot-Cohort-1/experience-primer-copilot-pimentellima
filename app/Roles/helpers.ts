@@ -1,6 +1,5 @@
-export enum ROLES {
-	ADMIN = 'admin',
-	ADMIN_PROF = 'admin_prof',
-	PROF = 'prof',
-	SEC = 'sec',
+import { TYPE_PERMISSIONS } from './types'
+
+export const createPermission = (name: string, type: TYPE_PERMISSIONS) => {
+	return `${name}.${type}`
 }

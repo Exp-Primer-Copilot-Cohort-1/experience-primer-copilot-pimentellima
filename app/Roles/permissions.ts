@@ -4,728 +4,926 @@
 // destroy => delete (specific)
 // store => create (specific)
 
-import { ROLES } from './helpers'
+import { ROLES, SCREENS, TYPE_PERMISSIONS } from './types'
 
 type Permission = {
-	[key: string]: {
-		roles: string[]
-		permissions: string[]
+	name: string
+	permissions: {
+		[key: string]: {
+			roles: ROLES[]
+			permissions: TYPE_PERMISSIONS[]
+			screens?: SCREENS[]
+		}
 	}
 }
 
 const PERMISSIONS_HEALTH_INSURANCES: Permission = {
-	'health-insurance.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_health_insurance'],
-	},
-	'health-insurance.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_specific_health_insurance'],
-	},
-	'health-insurance.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_health_insurance'],
-	},
-	'health-insurance.destroy': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['delete_health_insurance'],
-	},
-	'health-insurance.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['create_health_insurance'],
+	name: 'health-insurance',
+	permissions: {
+		'health-insurance.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_HEALTH_INSURANCE],
+		},
+		'health-insurance.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_HEALTH_INSURANCE],
+		},
+		'health-insurance.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_HEALTH_INSURANCE],
+		},
+		'health-insurance.destroy': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+			screens: [SCREENS.VIEW_HEALTH_INSURANCE],
+		},
+		'health-insurance.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_HEALTH_INSURANCE],
+		},
 	},
 }
 
 const PERMISSIONS_FORMS: Permission = {
-	'form.prof.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
-		permissions: ['view_form_by_prof'],
-	},
-	'form.category.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
-		permissions: ['view_form_by_category'],
-	},
-	'form.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['create_form'],
-	},
-	'form.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_all_forms'],
-	},
-	'form.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_specific_form'],
-	},
-	'form.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_form'],
-	},
-	'form.destroy': {
-		roles: [ROLES.ADMIN],
-		permissions: ['delete_form'],
+	name: 'form',
+	permissions: {
+		'form.prof.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_FORMS, SCREENS.VIEW_FORMS_UPDATE],
+		},
+		'form.category.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_FORMS, SCREENS.VIEW_FORMS_UPDATE],
+		},
+		'form.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_FORMS_CREATE],
+		},
+		'form.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_FORMS],
+		},
+		'form.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_FORMS_CREATE],
+		},
+		'form.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_FORMS_CREATE, SCREENS.VIEW_FORMS_UPDATE],
+		},
+		'form.destroy': {
+			roles: [ROLES.ADMIN],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+		},
 	},
 }
 
 const PERMISSIONS_ANSWERS: Permission = {
-	'answer.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
-		permissions: ['create_answer'],
-	},
-	'answer.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_all_answers'],
-	},
-	'answer.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_specific_answer'],
-	},
-	'answer.form.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
-		permissions: ['view_answers_by_form'],
-	},
-	'answer.client.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_answers_by_client'],
-	},
-	'answer.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_answer'],
-	},
-	'answer.destroy': {
-		roles: [ROLES.ADMIN],
-		permissions: ['delete_answer'],
+	name: 'answer',
+	permissions: {
+		'answer.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+		},
+		'answer.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+		},
+		'answer.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
+		'answer.form.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
+		'answer.client.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
+		'answer.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+		},
+		'answer.destroy': {
+			roles: [ROLES.ADMIN],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+		},
 	},
 }
 
 const PERMISSIONS_ACTIVITY_AWAIT: Permission = {
-	'activity-await.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_all_activity_awaits'],
-	},
-	'activity-await.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_specific_activity_await'],
-	},
-	'activity-await.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_activity_await'],
-	},
-	'activity-await.destroy': {
-		roles: [ROLES.ADMIN],
-		permissions: ['delete_activity_await'],
-	},
-	'activity-await.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['create_activity_await'],
+	name: 'activity-await',
+	permissions: {
+		'activity-await.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_ACTIVITIES_AWAIT],
+		},
+		'activity-await.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_ACTIVITIES_AWAIT],
+		},
+		'activity-await.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_ACTIVITIES_AWAIT],
+		},
+		'activity-await.destroy': {
+			roles: [ROLES.ADMIN],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+			screens: [SCREENS.VIEW_ACTIVITIES_AWAIT],
+		},
+		'activity-await.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_ACTIVITIES_AWAIT, SCREENS.VIEW_SCHEDULES],
+		},
 	},
 }
 
 const PERMISSIONS_STOCK: Permission = {
-	'stock.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_all_stocks'],
-	},
-	'stock.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_specific_stock'],
-	},
-	'stock.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_stock'],
-	},
-	'stock.update.id': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['custom_update_stock'],
-	},
-	'stock.destroy': {
-		roles: [ROLES.ADMIN],
-		permissions: ['delete_stock'],
-	},
-	'stock.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['create_stock'],
+	name: 'stock',
+	permissions: {
+		'stock.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_STOCK],
+		},
+		'stock.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_STOCK],
+		},
+		'stock.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_STOCK],
+		},
+		'stock.update.id': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_STOCK],
+		},
+		'stock.destroy': {
+			roles: [ROLES.ADMIN],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+			screens: [SCREENS.VIEW_STOCK],
+		},
+		'stock.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_STOCK],
+		},
 	},
 }
 
 const PERMISSIONS_PROCEDURES: Permission = {
-	'procedures.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
-		permissions: ['view_all_procedures'],
-	},
-	'procedures.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_specific_procedure'],
-	},
-	'procedures.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_procedure'],
-	},
-	'procedures.destroy': {
-		roles: [ROLES.ADMIN],
-		permissions: ['delete_procedure'],
-	},
-	'procedures.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['create_procedure'],
+	name: 'procedure',
+	permissions: {
+		'procedures.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_PROCEDURES],
+		},
+		'procedures.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_PROCEDURES],
+		},
+		'procedures.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_PROCEDURES],
+		},
+		'procedures.destroy': {
+			roles: [ROLES.ADMIN],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+			screens: [SCREENS.VIEW_PROCEDURES],
+		},
+		'procedures.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_PROCEDURES],
+		},
 	},
 }
 
 const PERMISSIONS_PARTNER: Permission = {
-	'partner.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_all_partners'],
-	},
-	'partner.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_specific_partner'],
-	},
-	'partner.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_partner'],
-	},
-	'partner.destroy': {
-		roles: [ROLES.ADMIN],
-		permissions: ['delete_partner'],
-	},
-	'partner.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['create_partner'],
+	name: 'partner',
+	permissions: {
+		'partner.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_PARTNER],
+		},
+		'partner.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_PARTNER],
+		},
+		'partner.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_PARTNER],
+		},
+		'partner.destroy': {
+			roles: [ROLES.ADMIN],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+			screens: [SCREENS.VIEW_PARTNER],
+		},
+		'partner.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_PARTNER],
+		},
 	},
 }
 
 const PERMISSIONS_CLIENTS: Permission = {
-	'clients.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_all_clients'],
-	},
-	'clients.inactives': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_all_inactive_clients'],
-	},
-	'clients.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_specific_client'],
-	},
-	'clients.verify': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['verify_client_existence'],
-	},
-	'clients.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['update_client'],
-	},
-	'clients.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['create_client'],
+	name: 'client',
+	permissions: {
+		'clients.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_CLIENTS],
+		},
+		'clients.inactives': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_CLIENTS],
+		},
+		'clients.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_CLIENTS],
+		},
+		'clients.verify': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [],
+		},
+		'clients.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_CLIENTS_UPDATE],
+		},
+		'clients.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_CLIENTS_CREATE],
+		},
 	},
 }
 
 const PERMISSIONS_USERS: Permission = {
-	'users.prof.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_all_prof_users'],
-	},
-	'users.secs.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_all_secs_users'],
-	},
-	'users.prof.inactives': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_all_inactive_prof_users'],
-	},
-	'users.secs.inactives': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_all_inactive_secs_users'],
-	},
-	'users.prof.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_specific_prof_user'],
-	},
-	'users.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_user'],
-	},
-	'users.destroy': {
-		roles: [ROLES.ADMIN],
-		permissions: ['delete_user'],
+	name: 'user',
+	permissions: {
+		'users.prof.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_PROFS],
+		},
+		'users.secs.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_SECS],
+		},
+		'users.prof.inactives': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_PROFS],
+		},
+		'users.secs.inactives': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_SECS],
+		},
+		'users.prof.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_PROFS],
+		},
+		'users.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_PROFS],
+		},
+		'users.destroy': {
+			roles: [ROLES.ADMIN],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+		},
 	},
 }
 
 const PERMISSIONS_CATEGORY: Permission = {
-	'category.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_all_categories'],
-	},
-	'category.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_specific_category'],
-	},
-	'category.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_category'],
-	},
-	'category.destroy': {
-		roles: [ROLES.ADMIN],
-		permissions: ['delete_category'],
-	},
-	'category.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['create_category'],
+	name: 'category',
+	permissions: {
+		'category.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_CATEGORIES],
+		},
+		'category.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_CATEGORIES],
+		},
+		'category.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_CATEGORIES],
+		},
+		'category.destroy': {
+			roles: [ROLES.ADMIN],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+			screens: [SCREENS.VIEW_CATEGORIES],
+		},
+		'category.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_CATEGORIES],
+		},
 	},
 }
 
 const PERMISSIONS_LOG_ANSWER: Permission = {
-	'logAnswer.byFormId': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_log_by_form_id'],
+	name: 'logAnswer',
+	permissions: {
+		'logAnswer.byFormId': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
 	},
 }
 
 const PERMISSIONS_ACTIVITY: Permission = {
-	'activity.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC, ROLES.PROF],
-		permissions: ['view_all_activities'],
-	},
-	'activity.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC, ROLES.PROF],
-		permissions: ['update_activity'],
-	},
-	'activity.byProfId': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_activities_by_prof_id'],
-	},
-	'activity.byClientId': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_activities_by_client_id'],
-	},
-	'activity.destroy': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['delete_activity'],
-	},
-	'activity.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['create_activity'],
-	},
-	'activity.payment': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['make_activity_payment'],
+	name: 'activity',
+	permissions: {
+		'activity.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC, ROLES.PROF],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_ACTIVITIES, SCREENS.VIEW_SCHEDULES],
+		},
+		'activity.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC, ROLES.PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_ACTIVITIES],
+		},
+		'activity.byProfId': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_ACTIVITIES],
+		},
+		'activity.byClientId': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_ACTIVITIES],
+		},
+		'activity.destroy': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+		},
+		'activity.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_ACTIVITIES, SCREENS.VIEW_SCHEDULES],
+		},
+		'activity.payment': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+		},
 	},
 }
 
 const PERMISSIONS_PROCEDURE: Permission = {
-	'procedure.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_all_procedures'],
-	},
-	'procedure.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_specific_procedure'],
-	},
-	'procedure.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
-		permissions: ['update_procedure'],
-	},
-	'procedure.destroy': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['delete_procedure'],
-	},
-	'procedure.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
-		permissions: ['create_procedure'],
+	name: 'procedure',
+	permissions: {
+		'procedure.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_PROCEDURES],
+		},
+		'procedure.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_PROCEDURES],
+		},
+		'procedure.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_PROCEDURES],
+		},
+		'procedure.destroy': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+			screens: [SCREENS.VIEW_PROCEDURES],
+		},
+		'procedure.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_PROCEDURES],
+		},
 	},
 }
 
 const PERMISSIONS_SCHEDULE: Permission = {
-	'schedule.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_all_schedules'],
-	},
-	'schedule.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_specific_schedule'],
-	},
-	'schedule.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['update_schedule'],
-	},
-	'schedule.destroy': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['delete_schedule'],
-	},
-	'schedule.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['create_schedule'],
+	name: 'schedule',
+	permissions: {
+		'schedule.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_SCHEDULES],
+		},
+		'schedule.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_SCHEDULES],
+		},
+		'schedule.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_SCHEDULES],
+		},
+		'schedule.destroy': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+			screens: [SCREENS.VIEW_SCHEDULES],
+		},
+		'schedule.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_SCHEDULES],
+		},
 	},
 }
 
 const PERMISSIONS_UPLOAD: Permission = {
-	'upload.image': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['upload_image'],
+	name: 'upload',
+	permissions: {
+		'upload.image': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [],
+		},
 	},
 }
 
 const PERMISSIONS_REPORTS: Permission = {
-	'reports.activities': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_activity_reports'],
-	},
-	'reports.activities.partner': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_partner_activity_reports'],
-	},
-	'reports.payment': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_payment_reports'],
-	},
-	'reports.payment.type': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_payment_type_reports'],
-	},
-	'reports.payment.prof': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_prof_payment_reports'],
-	},
-	'reports.payment.prof.date': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_datewise_prof_payment_reports'],
-	},
-	'reports.procedure': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_procedure_reports'],
-	},
-	'reports.canceled': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['view_canceled_reports'],
+	name: 'reports',
+	permissions: {
+		'reports.activities': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
+		'reports.activities.partner': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
+		'reports.payment': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
+		'reports.payment.type': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [],
+		},
+		'reports.payment.prof': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [],
+		},
+		'reports.payment.prof.date': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [],
+		},
+		'reports.procedure': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
+		'reports.canceled': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
 	},
 }
 
 const PERMISSIONS_ROOM: Permission = {
-	'room.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_all_rooms'],
-	},
-	'room.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_specific_room'],
-	},
-	'room.support': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['get_room_support'],
-	},
-	'room.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['create_room'],
-	},
-	'room.unread': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_unread_rooms'],
+	name: 'room',
+	permissions: {
+		'room.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+		},
+		'room.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
+		'room.support': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [],
+		},
+		'room.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+		},
+		'room.unread': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
 	},
 }
 
 const PERMISSIONS_INGREDIENTS: Permission = {
-	'ingredients.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_all_ingredients'],
-	},
-	'ingredients.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_specific_ingredient'],
-	},
-	'ingredients.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_ingredient'],
-	},
-	'ingredients.destroy': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['delete_ingredient'],
-	},
-	'ingredients.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['create_ingredient'],
+	name: 'ingredients',
+	permissions: {
+		'ingredients.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+		},
+		'ingredients.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
+		'ingredients.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+		},
+		'ingredients.destroy': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+		},
+		'ingredients.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+		},
 	},
 }
 
 const PERMISSIONS_INGREDIENTS_LIST: Permission = {
-	'ingredients-list.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_all_ingredients_list'],
-	},
-	'ingredients-list.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_specific_ingredients_list'],
-	},
-	'ingredients-list.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_ingredients_list'],
-	},
-	'ingredients-list.destroy': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['delete_ingredients_list'],
-	},
-	'ingredients-list.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['create_ingredients_list'],
+	name: 'ingredients-list',
+	permissions: {
+		'ingredients-list.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+		},
+		'ingredients-list.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
+		'ingredients-list.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+		},
+		'ingredients-list.destroy': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+		},
+		'ingredients-list.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+		},
 	},
 }
 
 const PERMISSIONS_SICK_NOTES: Permission = {
-	'sick-notes.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
-		permissions: ['view_all_sick_notes'],
-	},
-	'sick-notes.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
-		permissions: ['view_specific_sick_note'],
-	},
-	'sick-notes.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_sick_note'],
-	},
-	'sick-notes.destroy': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['delete_sick_note'],
-	},
-	'sick-notes.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
-		permissions: ['create_sick_note'],
+	name: 'sick-notes',
+	permissions: {
+		'sick-notes.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_SICK_NOTES],
+		},
+		'sick-notes.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_SICK_NOTES],
+		},
+		'sick-notes.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_SICK_NOTES],
+		},
+		'sick-notes.destroy': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+			screens: [SCREENS.VIEW_SICK_NOTES],
+		},
+		'sick-notes.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_SICK_NOTES],
+		},
 	},
 }
 
 const PERMISSIONS_DIRECT_MAIL: Permission = {
-	'directMail.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_all_direct_mail'],
-	},
-	'directMail.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_specific_direct_mail'],
-	},
-	'directMail.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_direct_mail'],
-	},
-	'directMail.destroy': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['delete_direct_mail'],
-	},
-	'directMail.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['create_direct_mail'],
+	name: 'direct-mail',
+	permissions: {
+		'directMail.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+		},
+		'directMail.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
+		'directMail.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+		},
+		'directMail.destroy': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+		},
+		'directMail.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+		},
 	},
 }
 
 const PERMISSIONS_PICTURES: Permission = {
-	'pictures.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_all_pictures'],
-	},
-	'pictures.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_specific_picture'],
-	},
-	'pictures.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['update_picture'],
-	},
-	'pictures.destroy': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['delete_picture'],
-	},
-	'pictures.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['create_picture'],
+	name: 'pictures',
+	permissions: {
+		'pictures.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+		},
+		'pictures.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
+		'pictures.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+		},
+		'pictures.destroy': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+		},
+		'pictures.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+		},
 	},
 }
 
 const PERMISSIONS_ACTIVITIES_DATE: Permission = {
-	'activities-date.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
-		permissions: ['view_activities_date'],
+	name: 'activities-date',
+	permissions: {
+		'activities-date.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+		},
 	},
 }
 
 const PERMISSIONS_PAYMENTS_PROF: Permission = {
-	'payments-prof.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_all_payment_profs'],
-	},
-	'payments-prof.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_specific_payment_prof'],
-	},
-	'payments-prof.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_payment_prof'],
-	},
-	'payments-prof.destroy': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['delete_payment_prof'],
-	},
-	'payments-prof.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['create_payment_prof'],
+	name: 'payments-prof',
+	permissions: {
+		'payments-prof.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_PAYMENTS_PROF],
+		},
+		'payments-prof.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_PAYMENTS_PROF],
+		},
+		'payments-prof.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_PAYMENTS_PROF],
+		},
+		'payments-prof.destroy': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+			screens: [SCREENS.VIEW_PAYMENTS_PROF],
+		},
+		'payments-prof.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_PAYMENTS_PROF],
+		},
 	},
 }
 
 const PERMISSIONS_FINANCIAL_CATEGORIES: Permission = {
-	'financial-categories.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_all_financial_categories'],
-	},
-	'financial-categories.inactives': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_all_inactive_financial_categories'],
-	},
-	'financial-categories.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_specific_financial_category'],
-	},
-	'financial-categories.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_financial_category'],
-	},
-	'financial-categories.destroy': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['delete_financial_category'],
-	},
-	'financial-categories.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['create_financial_category'],
+	name: 'financial-categories',
+	permissions: {
+		'financial-categories.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_FINANCIAL_CATEGORY],
+		},
+		'financial-categories.inactives': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_FINANCIAL_CATEGORY],
+		},
+		'financial-categories.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_FINANCIAL_CATEGORY],
+		},
+		'financial-categories.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_FINANCIAL_CATEGORY],
+		},
+		'financial-categories.destroy': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+			screens: [SCREENS.VIEW_FINANCIAL_CATEGORY],
+		},
+		'financial-categories.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_FINANCIAL_CATEGORY],
+		},
 	},
 }
 
 const PERMISSIONS_COST_CENTERS: Permission = {
-	'cost-centers.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_all_cost_centers'],
-	},
-	'cost-centers.inactives': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_all_inactive_cost_centers'],
-	},
-	'cost-centers.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_specific_cost_center'],
-	},
-	'cost-centers.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_cost_center'],
-	},
-	'cost-centers.destroy': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['delete_cost_center'],
-	},
-	'cost-centers.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['create_cost_center'],
+	name: 'cost-centers',
+	permissions: {
+		'cost-centers.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_COST_CENTER],
+		},
+		'cost-centers.inactives': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_COST_CENTER],
+		},
+		'cost-centers.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_COST_CENTER],
+		},
+		'cost-centers.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_COST_CENTER],
+		},
+		'cost-centers.destroy': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+			screens: [SCREENS.VIEW_COST_CENTER],
+		},
+		'cost-centers.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_COST_CENTER],
+		},
 	},
 }
 
 const PERMISSIONS_ACCOUNTS: Permission = {
-	'accounts.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_all_accounts'],
-	},
-	'accounts.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC, ROLES.SEC],
-		permissions: ['view_specific_account'],
-	},
-	'accounts.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_account'],
-	},
-	'accounts.destroy': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['delete_account'],
-	},
-	'accounts.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['create_account'],
+	name: 'accounts',
+	permissions: {
+		'accounts.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_ACCOUNTS],
+		},
+		'accounts.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_ACCOUNTS],
+		},
+		'accounts.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_ACCOUNTS],
+		},
+		'accounts.destroy': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+			screens: [SCREENS.VIEW_ACCOUNTS],
+		},
+		'accounts.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_ACCOUNTS],
+		},
 	},
 }
 
 const PERMISSIONS_DEFAULT_CONFIG: Permission = {
-	'default-config.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_all_default_configs'],
-	},
-	'default-config.show': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_specific_default_config'],
-	},
-	'default-config.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_default_config'],
-	},
-	'default-config.destroy': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['delete_default_config'],
-	},
-	'default-config.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['create_default_config'],
+	name: 'default-config',
+	permissions: {
+		'default-config.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_DEFAULT_CONFIG],
+		},
+		'default-config.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [SCREENS.VIEW_DEFAULT_CONFIG],
+		},
+		'default-config.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_DEFAULT_CONFIG],
+		},
+		'default-config.destroy': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.DELETE],
+			screens: [SCREENS.VIEW_DEFAULT_CONFIG],
+		},
+		'default-config.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_DEFAULT_CONFIG],
+		},
 	},
 }
 
 const PERMISSIONS_TRANSACTIONS: Permission = {
-	'transactions.index': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['view_all_transactions'],
-	},
-	'transactions.updateStatus': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['update_transaction_status'],
-	},
-	'transactions.update': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['update_transaction'],
-	},
-	'transactions.store': {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
-		permissions: ['create_transaction'],
+	name: 'transactions',
+	permissions: {
+		'transactions.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [SCREENS.VIEW_TRANSACTIONS],
+		},
+		'transactions.updateStatus': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_TRANSACTIONS],
+		},
+		'transactions.update': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+			screens: [SCREENS.VIEW_TRANSACTIONS],
+		},
+		'transactions.store': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+			screens: [SCREENS.VIEW_TRANSACTIONS],
+		},
 	},
 }
 
 const PERMISSIONS_IMPORT: Permission = {
-	import: {
-		roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
-		permissions: ['import_data'],
+	name: 'import',
+	permissions: {
+		import: {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.CREATE],
+		},
 	},
 }
 
-export default {
-	...PERMISSIONS_ACCOUNTS,
-	...PERMISSIONS_ACTIVITIES_DATE,
-	...PERMISSIONS_ACTIVITY,
-	...PERMISSIONS_ACTIVITY_AWAIT,
-	...PERMISSIONS_ANSWERS,
-	...PERMISSIONS_CATEGORY,
-	...PERMISSIONS_CLIENTS,
-	...PERMISSIONS_COST_CENTERS,
-	...PERMISSIONS_DEFAULT_CONFIG,
-	...PERMISSIONS_DIRECT_MAIL,
-	...PERMISSIONS_FINANCIAL_CATEGORIES,
-	...PERMISSIONS_FORMS,
-	...PERMISSIONS_HEALTH_INSURANCES,
-	...PERMISSIONS_IMPORT,
-	...PERMISSIONS_INGREDIENTS,
-	...PERMISSIONS_INGREDIENTS_LIST,
-	...PERMISSIONS_LOG_ANSWER,
-	...PERMISSIONS_PARTNER,
-	...PERMISSIONS_PAYMENTS_PROF,
-	...PERMISSIONS_PICTURES,
-	...PERMISSIONS_PROCEDURES,
-	...PERMISSIONS_PROCEDURE,
-	...PERMISSIONS_REPORTS,
-	...PERMISSIONS_ROOM,
-	...PERMISSIONS_SCHEDULE,
-	...PERMISSIONS_SICK_NOTES,
-	...PERMISSIONS_STOCK,
-	...PERMISSIONS_TRANSACTIONS,
-	...PERMISSIONS_PROCEDURES,
-	...PERMISSIONS_PARTNER,
-	...PERMISSIONS_USERS,
-	...PERMISSIONS_UPLOAD,
+type ALL_PERMISSIONS = {
+	[key: string]: Permission
 }
+
+const PERMISSIONS: ALL_PERMISSIONS = {
+	[PERMISSIONS_ACCOUNTS.name]: PERMISSIONS_ACCOUNTS,
+	[PERMISSIONS_ACTIVITIES_DATE.name]: PERMISSIONS_ACTIVITIES_DATE,
+	[PERMISSIONS_ACTIVITY.name]: PERMISSIONS_ACTIVITY,
+	[PERMISSIONS_ACTIVITY_AWAIT.name]: PERMISSIONS_ACTIVITY_AWAIT,
+	[PERMISSIONS_ANSWERS.name]: PERMISSIONS_ANSWERS,
+	[PERMISSIONS_CATEGORY.name]: PERMISSIONS_CATEGORY,
+	[PERMISSIONS_CLIENTS.name]: PERMISSIONS_CLIENTS,
+	[PERMISSIONS_COST_CENTERS.name]: PERMISSIONS_COST_CENTERS,
+	[PERMISSIONS_DEFAULT_CONFIG.name]: PERMISSIONS_DEFAULT_CONFIG,
+	[PERMISSIONS_DIRECT_MAIL.name]: PERMISSIONS_DIRECT_MAIL,
+	[PERMISSIONS_FINANCIAL_CATEGORIES.name]: PERMISSIONS_FINANCIAL_CATEGORIES,
+	[PERMISSIONS_FORMS.name]: PERMISSIONS_FORMS,
+	[PERMISSIONS_HEALTH_INSURANCES.name]: PERMISSIONS_HEALTH_INSURANCES,
+	[PERMISSIONS_IMPORT.name]: PERMISSIONS_IMPORT,
+	[PERMISSIONS_INGREDIENTS.name]: PERMISSIONS_INGREDIENTS,
+	[PERMISSIONS_INGREDIENTS_LIST.name]: PERMISSIONS_INGREDIENTS_LIST,
+	[PERMISSIONS_LOG_ANSWER.name]: PERMISSIONS_LOG_ANSWER,
+	[PERMISSIONS_PARTNER.name]: PERMISSIONS_PARTNER,
+	[PERMISSIONS_PAYMENTS_PROF.name]: PERMISSIONS_PAYMENTS_PROF,
+	[PERMISSIONS_PICTURES.name]: PERMISSIONS_PICTURES,
+	[PERMISSIONS_PROCEDURES.name]: PERMISSIONS_PROCEDURES,
+	[PERMISSIONS_PROCEDURE.name]: PERMISSIONS_PROCEDURE,
+	[PERMISSIONS_REPORTS.name]: PERMISSIONS_REPORTS,
+	[PERMISSIONS_ROOM.name]: PERMISSIONS_ROOM,
+	[PERMISSIONS_SCHEDULE.name]: PERMISSIONS_SCHEDULE,
+	[PERMISSIONS_SICK_NOTES.name]: PERMISSIONS_SICK_NOTES,
+	[PERMISSIONS_STOCK.name]: PERMISSIONS_STOCK,
+	[PERMISSIONS_TRANSACTIONS.name]: PERMISSIONS_TRANSACTIONS,
+	[PERMISSIONS_PROCEDURE.name]: PERMISSIONS_PROCEDURE,
+	[PERMISSIONS_USERS.name]: PERMISSIONS_USERS,
+	[PERMISSIONS_UPLOAD.name]: PERMISSIONS_UPLOAD,
+}
+
+export default PERMISSIONS

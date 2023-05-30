@@ -1,6 +1,8 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-import ROLES from '../Roles/permissions'
+import { createPermission } from 'App/Roles/helpers'
+import { ROLES } from 'App/Roles/types'
+import PERMISSIONS from '../Roles/permissions'
 
 export default class Role {
 	public async handle(
@@ -8,7 +10,13 @@ export default class Role {
 		next: () => Promise<void>,
 	) {
 		const type = auth.user?.type
-		const permissions = auth.user?.permissions
+
+		if (type === ROLES.SUPERADMIN) {
+			return await next()
+		}
+
+		const permissions = auth.user?.permissions || []
+		const blackListPermissions = auth.user?.blackListPermissions || []
 
 		if (!type) {
 			return response
@@ -17,19 +25,30 @@ export default class Role {
 		}
 
 		const routeName = route?.name
+		const name = routeName?.split('.')[0]
 
-		if (!routeName) {
+		if (!routeName || !name) {
 			return await next()
 		}
 
-		const routePermissions = ROLES[routeName]
+		const routePermissions = PERMISSIONS[name]?.permissions?.[routeName]
 
-		const hasRole = routePermissions.roles.includes(type)
-		const hasPermission = routePermissions.permissions.some((permission) =>
+		if (!routePermissions) {
+			return await next()
+		}
+
+		const hasRole = routePermissions.roles?.includes(type as ROLES)
+		const hasPermission = routePermissions.permissions?.some((permission) =>
 			permissions?.includes(permission),
 		)
+		const hasBlackListPermission = routePermissions.permissions?.some(
+			(permission) => {
+				const p = createPermission(name, permission)
+				return blackListPermissions?.includes(p)
+			},
+		)
 
-		if (!hasRole && !hasPermission) {
+		if (hasBlackListPermission || (!hasRole && !hasPermission)) {
 			return response
 				.status(403)
 				.send({ message: 'Você não tem permissão para acessar este recurso.' })
