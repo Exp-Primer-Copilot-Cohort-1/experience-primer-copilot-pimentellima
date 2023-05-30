@@ -20,4 +20,10 @@ export interface IUser extends IDaysOffice {
 	schedule_obs: string
 	show_lack: boolean
 	rememberMeToken?: string
+	permissions?: string[]
+	screens?: string[]
+	reports?: string[]
+	blackListScreens?: string[]
+	blackListReports?: string[]
+	blackListPermissions?: string[]
 }
