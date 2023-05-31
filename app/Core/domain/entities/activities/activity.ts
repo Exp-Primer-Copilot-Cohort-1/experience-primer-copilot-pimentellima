@@ -150,7 +150,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					.defineDate(params.date)
 					.defineHourStart(params.hour_start)
 					.defineHourEnd(params.hour_end)
-					.defineStatus(params.status)
+					.defineStatus(AppointmentStatus.SCHEDULED)
 					.defineScheduleBlock(params.schedule_block)
 					.defineProcedures(params.procedures)
 					.defineClient(params.client)
