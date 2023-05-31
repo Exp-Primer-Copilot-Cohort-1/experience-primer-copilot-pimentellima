@@ -403,6 +403,10 @@ const PERMISSIONS_ACTIVITY: Permission = {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
 			permissions: [TYPE_PERMISSIONS.UPDATE],
 		},
+		'activity.status': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
+			permissions: [TYPE_PERMISSIONS.UPDATE],
+		},
 	},
 }
 

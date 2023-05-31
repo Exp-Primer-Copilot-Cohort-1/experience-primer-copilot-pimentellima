@@ -184,6 +184,9 @@ Route.group(() => {
 	Route.get('activity-stock', 'AdonnisLegadoController.bridge').as('activity.stock')
 
 	Route.group(() => {
+		Route.put('status/:id', 'ActivityController.updateActivityStatusById').as(
+			'activity.status',
+		)
 		Route.get('', 'ActivityController.findAllActivities').as('activity.index')
 		Route.put(':id', 'ActivityController.updateActivityById').as('activity.update')
 		Route.get('prof/:prof_id', 'ActivityController.findActivitiesByProfId').as(
@@ -214,14 +217,6 @@ Route.group(() => {
 		Route.delete(':id', 'ScheduleController.destroy').as('schedule.destroy')
 		Route.post('', 'ScheduleController.store').as('schedule.store')
 	}).prefix('schedule')
-
-	Route.get('activity', 'ActivityController.findAllActivities')
-	Route.put('activity/:id', 'ActivityController.updateActivityById')
-	Route.put('activity/status/:id', 'ActivityController.updateActivityStatusById')
-	Route.get('activity/prof/:prof_id', 'ActivityController.findActivitiesByProfId')
-	Route.get('activity/client/:client_id', 'ActivityController.findActivitiesByClientId')
-	Route.delete('activity/:id', 'ActivityController.deleteActivityById')
-	Route.post('activity', 'ActivityController.createActivity')
 
 	Route.post('/upload', 'AdonnisLegadoController.bridge').as('upload.image')
 
