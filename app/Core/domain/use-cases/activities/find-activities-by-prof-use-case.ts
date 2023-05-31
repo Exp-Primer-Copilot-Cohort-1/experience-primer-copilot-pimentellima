@@ -2,7 +2,7 @@ import { ActivitiesManagerInterface } from "App/Core/domain/repositories/interfa
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import ActivityEntity from "../../entities/activities/activity";
+import { IActivity } from "Types/IActivity";
 
 type ActivityProps = {
 	unity_id: string;
@@ -10,7 +10,7 @@ type ActivityProps = {
 };
 
 export class FindActivitiesByProfIdUseCase
-	implements UseCase<ActivityProps, ActivityEntity[]>
+	implements UseCase<ActivityProps, IActivity[]>
 {
 	constructor(
 		private readonly activitiesManager: ActivitiesManagerInterface
@@ -18,7 +18,7 @@ export class FindActivitiesByProfIdUseCase
 
 	public async execute(
 		params: ActivityProps
-	): PromiseEither<AbstractError, ActivityEntity[]> {
+	): PromiseEither<AbstractError, IActivity[]> {
 
 		const activityOrErr =
 			await this.activitiesManager.findActivitiesByProf(

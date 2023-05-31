@@ -6,7 +6,7 @@ import { z } from "zod";
 import { ConflictingScheduleError } from "../../errors/ conflicting-schedule-error";
 import { InvalidScheduleError } from "../../errors/invalid-schedule-error";
 import { IActivity } from "Types/IActivity";
-import { format, isBefore, isWithinInterval, startOfToday } from "date-fns";
+import { format, isBefore, isWithinInterval, startOfToday, startOfYesterday } from "date-fns";
 
 type appointment = {
 	hour_start: Date;
@@ -48,7 +48,7 @@ export class ScheduleEntity extends Entity {
 			appointmentSchema.parse(appointment);
 
 			if (
-				isBefore(appointment.date, startOfToday())||
+				isBefore(appointment.date, startOfYesterday())||
 				format(appointment.hour_start, "HH:mm") >=
 					format(appointment.hour_end, "HH:mm")
 			) {
