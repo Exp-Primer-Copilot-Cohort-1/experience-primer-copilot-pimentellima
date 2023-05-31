@@ -16,7 +16,7 @@ export default class Role {
 		}
 
 		const permissions = auth.user?.permissions || []
-		const blackListPermissions = auth.user?.blackListPermissions || []
+		const blackListPermissions = auth.user?.blacklist || []
 
 		if (!type) {
 			return response

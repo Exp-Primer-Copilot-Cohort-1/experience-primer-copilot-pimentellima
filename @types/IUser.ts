@@ -21,7 +21,5 @@ export interface IUser extends IDaysOffice {
 	show_lack: boolean
 	rememberMeToken?: string
 	permissions?: string[]
-	screens?: string[]
-	blackListScreens?: string[]
-	blackListPermissions?: string[]
+	blacklist?: string[]
 }

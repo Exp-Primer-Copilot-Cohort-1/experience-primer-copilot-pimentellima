@@ -11,25 +11,15 @@ export abstract class AbstractUser extends Entity {
 	private _avatar: string
 	private _email: Email
 	private _document: Document
-	private _blackListPermissions: string[]
-	private _blackListScreens: string[]
+	private _blacklist: string[]
 	private _permissions: string[]
-	private _screens: string[]
 
-	public get blackListPermissions(): string[] {
-		return this._blackListPermissions
-	}
-
-	public get blackListScreens(): string[] {
-		return this._blackListScreens
+	public get blacklist(): string[] {
+		return this._blacklist
 	}
 
 	public get permissions(): string[] {
 		return this._permissions
-	}
-
-	public get screens(): string[] {
-		return this._screens
 	}
 
 	public get email(): string {
@@ -109,23 +99,13 @@ export abstract class AbstractUser extends Entity {
 		return this
 	}
 
-	public defineBlackListPermissions(blackListPermissions: string[] = []): this {
-		this._blackListPermissions = blackListPermissions
-		return this
-	}
-
-	public defineBlackListScreens(blackListScreens: string[] = []): this {
-		this._blackListScreens = blackListScreens
+	public defineBlacklist(blackListPermissions: string[] = []): this {
+		this._blacklist = blackListPermissions
 		return this
 	}
 
 	public definePermissions(permissions: string[] = []): this {
 		this._permissions = permissions
-		return this
-	}
-
-	public defineScreens(screens: string[] = []): this {
-		this._screens = screens
 		return this
 	}
 }
