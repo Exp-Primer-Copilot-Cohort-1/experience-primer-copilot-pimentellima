@@ -135,7 +135,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 			activity.hour_start !== this.hour_start ||
 			activity.hour_end !== this.hour_end
 		) {
-			return this.defineStatus(AppointmentStatus.RESCHEDULED)
+			return this.defineScheduled(AppointmentStatus.RESCHEDULED)
 		}
 		return this
 	}
@@ -150,7 +150,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					.defineDate(params.date)
 					.defineHourStart(params.hour_start)
 					.defineHourEnd(params.hour_end)
-					.defineStatus(AppointmentStatus.SCHEDULED)
+					.defineStatus(PaymentStatus.PENDING)
 					.defineScheduleBlock(params.schedule_block)
 					.defineProcedures(params.procedures)
 					.defineClient(params.client)

@@ -51,7 +51,7 @@ describe("Update activity (Unit)", () => {
 
 		const respOrErr = await sut.execute(query);
 		if (respOrErr.isLeft()) throw Error();
-		expect(respOrErr.extract().status).toBe(AppointmentStatus.RESCHEDULED);
+		expect(respOrErr.extract().scheduled).toBe(AppointmentStatus.RESCHEDULED);
 	});
 
 	it("should throw ConflictingScheduleError", async () => {

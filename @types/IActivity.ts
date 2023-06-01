@@ -1,5 +1,5 @@
 import { ObjectId } from '@ioc:Mongoose';
-import { AppointmentStatus, STATUS } from '../app/Helpers';
+import { AppointmentStatus, PaymentStatus, STATUS } from '../app/Helpers';
 import { IProcedure } from './IProcedure';
 import { IClient } from './IClient';
 import { IProf } from "Types/IProf";
@@ -10,7 +10,7 @@ export interface IActivity
 	date: Date;
 	hour_start: string;
 	hour_end: string;
-	status: AppointmentStatus;
+	status: PaymentStatus;
 	schedule_block: boolean;
 	procedures: IProcedure[];
 	client_id: string | ObjectId,

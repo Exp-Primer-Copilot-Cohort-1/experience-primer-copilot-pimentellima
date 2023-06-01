@@ -7,12 +7,13 @@ import { ScheduleEntity } from "../../entities/schedule/schedule";
 import { ActivityNotFoundError } from "../../errors/activity-not-found";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ActivitiesManagerInterface } from "../interface/activity-manager.interface";
+import { AppointmentStatus } from "App/Helpers";
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() {}
 	async updateActivityStatusById(
 		id: string,
-		status: string
+		status: AppointmentStatus
 	): PromiseEither<AbstractError, IActivity> {
 		const activity = await Activity.findOneAndUpdate({ _id: id }, {
 			$set: {
