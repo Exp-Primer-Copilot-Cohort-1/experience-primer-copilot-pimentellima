@@ -6,15 +6,12 @@ const ActivitySchema = new Schema<IActivity>(
 	{
 		date: {
 			type: Date,
-			required: true,
 		},
 		hour_start: {
 			type: String,
-			required: true,
 		},
 		hour_end: {
 			type: String,
-			required: true,
 		},
 		status: {
 			enum: Object.values(PaymentStatus),

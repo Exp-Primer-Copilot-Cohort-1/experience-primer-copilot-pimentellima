@@ -31,6 +31,16 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		return right(activityOrErr.extract().params());
 	}
 
+	async createActivityInAwait(activity: IActivity): PromiseEither<AbstractError, IActivity> {
+		const newActivityOrErr = await ActivityEntity.build(activity);
+		if (newActivityOrErr.isLeft()) return left(newActivityOrErr.extract());
+		const newActivity = newActivityOrErr.extract();
+
+		const { _id } = await Activity.create(newActivity.params());
+		newActivity.defineId(_id.toString());
+		return right(newActivity);
+	}
+
 	async createActivity(
 		activity: IActivity
 	): PromiseEither<AbstractError, IActivity> {

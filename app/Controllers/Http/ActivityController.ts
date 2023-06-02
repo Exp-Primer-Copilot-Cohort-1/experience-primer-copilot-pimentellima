@@ -2,6 +2,7 @@ import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import { adaptRoute } from "App/Core/adapters";
 import {
 	makeCreateActivityComposer,
+	makeCreateActivityInAwaitComposer,
 	makeDeleteActivityByIdComposer,
 	makeFindActivitiesByProfIdComposer,
 	makeFindActivityByClientIdComposer,
@@ -41,6 +42,12 @@ class ActivityController {
 
 	async createActivity(ctx: HttpContextContract) {
 		return adaptRoute(makeCreateActivityComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		});
+	}
+
+	async createActivityInAwait(ctx: HttpContextContract) {
+		return adaptRoute(makeCreateActivityInAwaitComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		});
 	}

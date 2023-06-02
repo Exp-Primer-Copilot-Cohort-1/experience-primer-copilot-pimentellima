@@ -198,6 +198,7 @@ Route.group(() => {
 		Route.delete(':id', 'ActivityController.deleteActivityById').as(
 			'activity.destroy',
 		)
+		Route.post('await', 'ActivityController.createActivityInAwait').as('activity.await')
 		Route.post('', 'ActivityController.createActivity').as('activity.store')
 		Route.post('payment', 'ActivityController.payment').as('activity.payment')
 	}).prefix('activity')
