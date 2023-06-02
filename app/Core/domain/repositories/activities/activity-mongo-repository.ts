@@ -38,7 +38,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 		const { _id } = await Activity.create(newActivity.params());
 		newActivity.defineId(_id.toString());
-		return right(newActivity);
+		return right(newActivity.params());
 	}
 
 	async createActivity(
@@ -71,7 +71,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 		const { _id } = await Activity.create(newActivity.params());
 		newActivity.defineId(_id.toString());
-		return right(newActivity);
+		return right(newActivity.params());
 	}
 
 	async findActivityById(
