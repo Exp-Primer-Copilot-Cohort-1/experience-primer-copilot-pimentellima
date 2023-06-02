@@ -4,9 +4,8 @@ import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import { IActivity } from "Types/IActivity";
 
-type ActivityProps = {
-	id: string;
-	activity: IActivity;
+type ActivityProps = IActivity & {
+	id: string
 };
 
 export class UpdateActivityByIdUseCase
@@ -22,12 +21,11 @@ export class UpdateActivityByIdUseCase
 		const updatedActivityOrErr =
 			await this.activitiesManager.updateActivityById(
 				params.id,
-				params.activity
+				params
 			);
 
 		if (updatedActivityOrErr.isLeft())
 			return left(updatedActivityOrErr.extract());
-		const activity = updatedActivityOrErr.extract();
-		return right(activity);
+		return right(updatedActivityOrErr.extract());
 	}
 }

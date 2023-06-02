@@ -144,13 +144,25 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		params: IActivity,
 	): PromiseEither<AbstractError, ActivityEntity> {
 		try {
+			const hour_start = new Date(params.hour_start)
+			const hour_end = new Date(params.hour_end)
+			hour_start.setFullYear(
+				new Date(params.date).getFullYear(),
+				new Date(params.date).getMonth(),
+				new Date(params.date).getDate()
+			)
+			hour_end.setFullYear(
+				new Date(params.date).getFullYear(),
+				new Date(params.date).getMonth(),
+				new Date(params.date).getDate()
+			)
 			return right(
 				new ActivityEntity()
 					.defineId(params._id?.toString())
 					.defineDate(params.date)
-					.defineHourStart(params.hour_start)
-					.defineHourEnd(params.hour_end)
-					.defineStatus(PaymentStatus.PENDING)
+					.defineHourStart(hour_start.toString())
+					.defineHourEnd(hour_end.toString())
+					.defineStatus(params.status)
 					.defineScheduleBlock(params.schedule_block)
 					.defineProcedures(params.procedures)
 					.defineClient(params.client)

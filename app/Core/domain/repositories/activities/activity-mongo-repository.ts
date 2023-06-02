@@ -178,12 +178,12 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		const activities = (
 			await Activity.find({ prof_id: activity.prof_id })
 		).filter((act) => {
-			act.date.setHours(0, 0, 0, 0);
-			activity.date.setHours(0, 0, 0, 0);
+			const dateAct = new Date(act.date);
+			dateAct.setHours(0, 0, 0, 0);
+			const dateActivity = new Date(activity.date);
+			dateActivity.setHours(0, 0, 0, 0);
 
-			return (
-				act.date.getDate() === activity.date.getDate() && act._id !== id
-			);
+			return dateAct === dateActivity && act._id !== id;
 		});
 
 		const scheduleOrErr = await ScheduleEntity.build(activities);
