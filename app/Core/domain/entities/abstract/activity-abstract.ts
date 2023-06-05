@@ -1,11 +1,11 @@
-import { AppointmentStatus, STATUS } from "App/Helpers";
+import { AppointmentStatus, PaymentStatus, STATUS } from "App/Helpers";
 import { Entity } from "./entity.abstract";
 import { IProcedure } from "Types/IProcedure";
 import { IClient } from "Types/IClient";
 import { IProf } from "Types/IProf";
 
 export abstract class AbstractActivity extends Entity {
-	private _status: AppointmentStatus;
+	private _status: PaymentStatus;
 	private _procedures: IProcedure[];
 	private _client_id: string;
 	private _client: IClient;
@@ -66,7 +66,7 @@ export abstract class AbstractActivity extends Entity {
 		return this;
 	}
 
-	public defineStatus(status: AppointmentStatus): this {
+	public defineStatus(status: PaymentStatus): this {
 		this._status = status;
 		return this;
 	}

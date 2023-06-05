@@ -3,12 +3,12 @@ import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import ActivityEntity from "../../entities/activities/activity";
-import { STATUS } from "App/Helpers";
+import { AppointmentStatus, STATUS } from "App/Helpers";
 import { IActivity } from "Types/IActivity";
 
 type Props = {
 	id: string;
-	status: STATUS;
+	status: AppointmentStatus;
 };
 
 export class UpdateActivityStatusByIdUseCase

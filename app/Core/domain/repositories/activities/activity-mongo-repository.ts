@@ -7,12 +7,13 @@ import { ScheduleEntity } from "../../entities/schedule/schedule";
 import { ActivityNotFoundError } from "../../errors/activity-not-found";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ActivitiesManagerInterface } from "../interface/activity-manager.interface";
+import { AppointmentStatus } from "App/Helpers";
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() {}
 	async updateActivityStatusById(
 		id: string,
-		status: string
+		status: AppointmentStatus
 	): PromiseEither<AbstractError, IActivity> {
 		const activity = await Activity.findOneAndUpdate({ _id: id }, {
 			$set: {
@@ -28,6 +29,16 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			return left(new AbstractError("Internal Error", 500));
 
 		return right(activityOrErr.extract().params());
+	}
+
+	async createActivityInAwait(activity: IActivity): PromiseEither<AbstractError, IActivity> {
+		const newActivityOrErr = await ActivityEntity.build(activity);
+		if (newActivityOrErr.isLeft()) return left(newActivityOrErr.extract());
+		const newActivity = newActivityOrErr.extract();
+
+		const { _id } = await Activity.create(newActivity.params());
+		newActivity.defineId(_id.toString());
+		return right(newActivity.params());
 	}
 
 	async createActivity(
@@ -60,7 +71,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 		const { _id } = await Activity.create(newActivity.params());
 		newActivity.defineId(_id.toString());
-		return right(newActivity);
+		return right(newActivity.params());
 	}
 
 	async findActivityById(
@@ -167,12 +178,12 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		const activities = (
 			await Activity.find({ prof_id: activity.prof_id })
 		).filter((act) => {
-			act.date.setHours(0, 0, 0, 0);
-			activity.date.setHours(0, 0, 0, 0);
+			const dateAct = new Date(act.date);
+			dateAct.setHours(0, 0, 0, 0);
+			const dateActivity = new Date(activity.date);
+			dateActivity.setHours(0, 0, 0, 0);
 
-			return (
-				act.date.getDate() === activity.date.getDate() && act._id !== id
-			);
+			return dateAct === dateActivity && act._id !== id;
 		});
 
 		const scheduleOrErr = await ScheduleEntity.build(activities);

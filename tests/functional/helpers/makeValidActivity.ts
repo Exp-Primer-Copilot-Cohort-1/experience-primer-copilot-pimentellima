@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { AppointmentStatus } from "App/Helpers";
+import { AppointmentStatus, PaymentStatus } from "App/Helpers";
 
 export const makeValidActivity = () => {
 	const date = faker.date.future();
@@ -13,7 +13,8 @@ export const makeValidActivity = () => {
         date,
         hour_start,
         hour_end,
-        status: AppointmentStatus.SCHEDULED,
+        scheduled: AppointmentStatus.SCHEDULED,
+        status: PaymentStatus.PENDING,
         schedule_block: false,
         procedures: [
             {
@@ -48,7 +49,6 @@ export const makeValidActivity = () => {
         active: true,
         user_id: "635978cec109b232759921da",
         unity_id: '1',
-        scheduled: "scheduled",
         prof_id: "635978cec109b232759921da",
     };
     return validActivity;

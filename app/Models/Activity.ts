@@ -6,18 +6,15 @@ const ActivitySchema = new Schema<IActivity>(
 	{
 		date: {
 			type: Date,
-			required: true,
 		},
 		hour_start: {
 			type: String,
-			required: true,
 		},
 		hour_end: {
 			type: String,
-			required: true,
 		},
 		status: {
-			enum: Object.values(AppointmentStatus),
+			enum: Object.values(PaymentStatus),
 		},
 		schedule_block: {
 			type: Boolean,
@@ -140,7 +137,7 @@ const ActivitySchema = new Schema<IActivity>(
 			type: String,
 			required: true,
 			enum: Object.values(AppointmentStatus),
-			default: AppointmentStatus.AWAITING,
+			default: AppointmentStatus.SCHEDULED,
 		},
 		prof_id: {
 			type: Schema.Types.ObjectId,
