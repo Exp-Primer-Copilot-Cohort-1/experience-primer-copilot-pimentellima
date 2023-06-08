@@ -34,7 +34,6 @@ Route.get('unity/:id', 'UnityController.show')
 Route.delete('unity/:id', 'UnityController.destroy')
 Route.put('unity/:_id', 'UnityController.update')
 
-
 Route.put('activity-stts/:id', 'ActivityController.updateStatus')
 Route.get('activity/:id', 'ActivityController.findActivityById')
 Route.put('activity-user/:id', 'ActivityController.updateStatusUser')
@@ -129,6 +128,15 @@ Route.group(() => {
 })
 	.prefix('category')
 	.middleware('auth')
+Route.group(() => {
+	Route.get('', 'CategoryController.index')
+	Route.get(':id', 'CategoryController.show')
+	Route.put(':_id', 'CategoryController.update')
+	Route.delete(':id', 'CategoryController.destroy')
+	Route.post('', 'CategoryController.store')
+})
+	.prefix('categories')
+	.middleware('auth')
 
 Route.group(() => {
 	Route.get('', 'AdonnisLegadoController.bridge')
@@ -138,6 +146,15 @@ Route.group(() => {
 	Route.post('', 'AdonnisLegadoController.bridge')
 })
 	.prefix('partner')
+	.middleware('auth')
+Route.group(() => {
+	Route.get('', 'PartnerController.index')
+	Route.get(':id', 'AdonnisLegadoController.bridge')
+	Route.put(':_id', 'PartnerController.update')
+	Route.delete(':id', 'PartnerController.destroy')
+	Route.post('', 'PartnerController.store')
+})
+	.prefix('partners')
 	.middleware('auth')
 
 Route.group(() => {
@@ -161,7 +178,7 @@ Route.group(() => {
 	Route.delete('answer/:id', 'AnswerController.deleteAnswerById')
 
 	Route.get('answer-log-by-form/:form_id', 'LogAnswerController.showByFormId')
-	
+
 	Route.get('activity-stock', 'AdonnisLegadoController.bridge')
 
 	Route.get('activity', 'ActivityController.findAllActivities')
@@ -231,6 +248,12 @@ Route.group(() => {
 	Route.delete('direct-mail/:id', 'AdonnisLegadoController.bridge')
 	Route.post('direct-mail', 'AdonnisLegadoController.bridge')
 
+	Route.get('direct-mails', 'DirectmailController.index')
+	Route.get('direct-mails/:id', 'DirectmailController.show')
+	Route.put('direct-mails/:_id', 'DirectmailController.update')
+	Route.delete('direct-mails/:id', 'DirectmailController.destroy')
+	Route.post('direct-mails', 'DirectmailController.store')
+
 	Route.get('pictures', 'AdonnisLegadoController.bridge')
 	Route.get('pictures/:id', 'AdonnisLegadoController.bridge')
 	Route.put('pictures/:id', 'AdonnisLegadoController.bridge')
@@ -270,6 +293,12 @@ Route.group(() => {
 	Route.put('default-config/:id', 'AdonnisLegadoController.bridge')
 	Route.delete('default-config/:id', 'AdonnisLegadoController.bridge')
 	Route.post('default-config', 'AdonnisLegadoController.bridge')
+
+	Route.get('default-configs', 'DefaultConfigController.index')
+	Route.get('default-configs/:id', 'DefaultConfigController.show')
+	Route.put('default-configs/:_id', 'DefaultConfigController.update')
+	Route.delete('default-configs/:id', 'DefaultConfigController.destroy')
+	Route.post('default-configs', 'DefaultConfigController.store')
 
 	Route.get('payments-list', 'AdonnisLegadoController.bridge')
 	Route.put('payments-stts/:id', 'AdonnisLegadoController.bridge')
