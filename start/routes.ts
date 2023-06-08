@@ -155,6 +155,16 @@ Route.group(() => {
 		Route.delete(':id', 'AdonnisLegadoController.bridge').as('form.destroy')
 	}).prefix('form')
 
+	Route.get('answer-log-by-form/:form_id', 'AdonnisLegadoController.bridge').as(
+		'logAnswer.byFormId',
+	)
+	Route.get('answer', 'AdonnisLegadoController.bridge')
+	Route.get('answer/:id', 'AdonnisLegadoController.bridge')
+	Route.get('answer-by-form/:form_id', 'AdonnisLegadoController.bridge')
+	Route.put('answer/:id', 'AdonnisLegadoController.bridge')
+	Route.delete('answer/:id', 'AdonnisLegadoController.bridge')
+	Route.post('answer', 'AdonnisLegadoController.bridge')
+
 	Route.group(() => {
 		Route.post('', 'AnswerController.createAnswer').as('answer.store')
 		Route.get('', 'AnswerController.findAllAnswers').as('answer.index')
@@ -167,7 +177,7 @@ Route.group(() => {
 		)
 		Route.put(':id', 'AnswerController.updateAnswerById').as('answer.update')
 		Route.delete(':id', 'AnswerController.deleteAnswerById').as('answer.destroy')
-	}).prefix('answer')
+	}).prefix('answers')
 
 	Route.group(() => {
 		Route.get(':id', 'UnityController.show')
@@ -177,10 +187,6 @@ Route.group(() => {
 }).middleware(['auth', 'role'])
 
 Route.group(() => {
-	Route.get('answer-log-by-form/:form_id', 'LogAnswerController.showByFormId').as(
-		'logAnswer.byFormId',
-	)
-
 	Route.get('activity-stock', 'AdonnisLegadoController.bridge').as('activity.stock')
 
 	Route.group(() => {
@@ -198,7 +204,9 @@ Route.group(() => {
 		Route.delete(':id', 'ActivityController.deleteActivityById').as(
 			'activity.destroy',
 		)
-		Route.post('await', 'ActivityController.createActivityInAwait').as('activity.await')
+		Route.post('await', 'ActivityController.createActivityInAwait').as(
+			'activity.await',
+		)
 		Route.post('', 'ActivityController.createActivity').as('activity.store')
 		Route.post('payment', 'ActivityController.payment').as('activity.payment')
 	}).prefix('activity')
