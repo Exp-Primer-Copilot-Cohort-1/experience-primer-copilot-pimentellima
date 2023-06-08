@@ -1,5 +1,5 @@
-import { model, Schema } from '@ioc:Mongoose'
-import { ICategory } from 'Types/ICategory'
+import Mongoose, { Schema } from '@ioc:Mongoose'
+import type { ICategory } from 'Types/ICategory'
 
 const CategorySchema = new Schema<ICategory>(
 	{
@@ -24,6 +24,7 @@ const CategorySchema = new Schema<ICategory>(
 		unity_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
+			ref: 'unities',
 		},
 	},
 	{
@@ -34,4 +35,4 @@ const CategorySchema = new Schema<ICategory>(
 	},
 )
 
-export default model<ICategory>('categories', CategorySchema)
+export default Mongoose.model<ICategory>('categories', CategorySchema)
