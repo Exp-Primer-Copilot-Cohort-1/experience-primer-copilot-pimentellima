@@ -11,16 +11,7 @@ export class ProceduresInMemoryRepository implements ProceduresManagerInterface 
 		{ name: 'name3', unity_id: 'unity_id', _id: 'idtest3' },
 	]
 
-	deleteById(id: string): PromiseEither<AbstractError, IProcedure> {
-		throw new Error('Method not implemented.')
-	}
 	constructor() { }
-	updateProceduresById(
-		id: string,
-		data: any,
-	): PromiseEither<AbstractError, IProcedure> {
-		throw new Error('Method not implemented.')
-	}
 	createProcedure(data: any): PromiseEither<AbstractError, IProcedure> {
 		throw new Error('Method not implemented.')
 	}
@@ -38,9 +29,9 @@ export class ProceduresInMemoryRepository implements ProceduresManagerInterface 
 			return left(new UnitNotFoundError())
 		}
 
-		return right(procedure)
+		return right(this.items)
 	}
-	public async deleteById(id: string): PromiseEither<AbstractError, IProcedures> {
+	public async deleteById(id: string): PromiseEither<AbstractError, IProcedure> {
 		const procedure = this.items.find((item) => item._id === id)
 
 		if (!procedure) {

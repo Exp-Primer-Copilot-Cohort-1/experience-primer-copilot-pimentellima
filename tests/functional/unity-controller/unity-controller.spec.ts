@@ -31,6 +31,7 @@ test.group('Unity Controller', () => {
 			.get('unity?name=myUnity')
 			.headers({ Authorization: `Bearer ${token.token}` })
 		response.assertStatus(200)
+		assert.isArray(response.body())
 	})
 
 	test('display store unity', async ({ client }) => {

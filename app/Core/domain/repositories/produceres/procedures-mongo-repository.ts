@@ -46,7 +46,7 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 	}
 	public async updateProceduresById(
 		id: string,
-		data: any,
+		data: Partial<IProcedure>,
 	): PromiseEither<AbstractError, IProcedure> {
 		const procedures = await Procedure.findByIdAndUpdate(id, data)
 		if (!procedures) {

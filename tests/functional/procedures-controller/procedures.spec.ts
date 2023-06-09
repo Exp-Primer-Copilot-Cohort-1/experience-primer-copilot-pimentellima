@@ -50,8 +50,8 @@ test.group('Procedure Controller', async () => {
 		const response = await client
 			.get('procedure')
 			.headers({ Authorization: `Bearer ${token.token}` })
-
 		response.assertStatus(200)
+		assert.isArray(response.body())
 	})
 	test('display store procedure', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
