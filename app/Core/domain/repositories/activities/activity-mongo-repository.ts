@@ -214,9 +214,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 		const data = await Activity.find({
 			unity_id,
-			client_id: {
-				value: client_id,
-			},
+			'client.value': client_id
 		});
 
 		const activities = await Promise.all(
