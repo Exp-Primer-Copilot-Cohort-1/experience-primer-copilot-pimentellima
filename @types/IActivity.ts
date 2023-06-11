@@ -25,6 +25,8 @@ export interface IActivity
 	user_id?: string | ObjectId;
 	scheduled: AppointmentStatus;
 	prof_id: string | ObjectId;
+	started_at: Date;
+	finished_at: Date;
 	created_at: Date;
 	updated_at: Date;
 }

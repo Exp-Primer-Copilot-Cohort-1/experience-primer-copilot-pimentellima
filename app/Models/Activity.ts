@@ -1,6 +1,6 @@
-import Mongoose, { Schema } from '@ioc:Mongoose'
-import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
-import type { IActivity } from 'Types/IActivity'
+import Mongoose, { Schema } from "@ioc:Mongoose";
+import { AppointmentStatus, PaymentStatus } from "App/Helpers";
+import type { IActivity } from "Types/IActivity";
 
 const ActivitySchema = new Schema<IActivity>(
 	{
@@ -143,13 +143,21 @@ const ActivitySchema = new Schema<IActivity>(
 			type: Schema.Types.ObjectId,
 			required: true,
 		},
+		started_at: {
+			type: Date,
+			required: false,
+		},
+		finished_at: {
+			type: Date,
+			required: false,
+		},
 	},
 	{
 		timestamps: {
-			createdAt: 'created_at',
-			updatedAt: 'updated_at',
+			createdAt: "created_at",
+			updatedAt: "updated_at",
 		},
-	},
-)
+	}
+);
 
-export default Mongoose.model<IActivity>('activities', ActivitySchema)
+export default Mongoose.model<IActivity>("activities", ActivitySchema);

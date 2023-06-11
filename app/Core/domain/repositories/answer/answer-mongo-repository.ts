@@ -10,7 +10,7 @@ import { AnswerNotFoundError } from "../../errors/answer-not-found-error";
 export class AnswerMongoRepository implements AnswerManagerInterface {
 	async findAnswerById(
 		id: string
-	): PromiseEither<AbstractError, AnswerEntity> {
+	): PromiseEither<AbstractError, IAnswer> {
 		if (!id) return left(new MissingParamsError("id"));
 
 		const item = await Answer.findById(id);
@@ -20,24 +20,24 @@ export class AnswerMongoRepository implements AnswerManagerInterface {
 		if (answerOrErr.isLeft())
 			return left(new AbstractError("Internal Error", 500));
 
-		return right(answerOrErr.extract());
+		return right(answerOrErr.extract().params());
 	}
 
 	async createAnswer(
 		answer: IAnswer
-	): PromiseEither<AbstractError, AnswerEntity> {
+	): PromiseEither<AbstractError, IAnswer> {
 		const newAnswerOrErr = await AnswerEntity.build(answer);
 		if (newAnswerOrErr.isLeft()) return left(newAnswerOrErr.extract());
 		const newAnswer = newAnswerOrErr.extract();
 
 		const { _id } = await Answer.create(newAnswer.params());
 		newAnswer.defineId(_id.toString());
-		return right(newAnswer);
+		return right(newAnswer.params());
 	}
 	async updateAnswerById(
 		answer: IAnswer,
 		id: string
-	): PromiseEither<AbstractError, AnswerEntity> {
+	): PromiseEither<AbstractError, IAnswer> {
 		const oldAnswer = await Answer.findById(id);
 		if (!oldAnswer) return left(new AnswerNotFoundError());
 		const answerOrErr = await AnswerEntity.build({
@@ -50,12 +50,12 @@ export class AnswerMongoRepository implements AnswerManagerInterface {
 		const updatedAnswer = answerOrErr.extract();
 
 		await Answer.findByIdAndUpdate(id, updatedAnswer);
-		return right(updatedAnswer);
+		return right(updatedAnswer.params());
 	}
 
 	async deleteAnswerById(
 		id: string
-	): PromiseEither<AbstractError, AnswerEntity> {
+	): PromiseEither<AbstractError, IAnswer> {
 		if (!id) return left(new MissingParamsError("id"));
 
 		const item = await Answer.findByIdAndDelete(id);
@@ -65,12 +65,12 @@ export class AnswerMongoRepository implements AnswerManagerInterface {
 		if (answerOrErr.isLeft())
 			return left(new AbstractError("Internal Error", 500));
 
-		return right(answerOrErr.extract());
+		return right(answerOrErr.extract().params());
 	}
 
 	async findAllAnswers(
 		unity_id: string
-	): PromiseEither<AbstractError, AnswerEntity[]> {
+	): PromiseEither<AbstractError, IAnswer[]> {
 		if (!unity_id) return left(new MissingParamsError("unity id"));
 
 		const data = await Answer.find({ unity_id });
@@ -80,7 +80,7 @@ export class AnswerMongoRepository implements AnswerManagerInterface {
 				if (answerOrErr.isLeft()) {
 					return {} as AnswerEntity;
 				}
-				return answerOrErr.extract();
+				return answerOrErr.extract().params();
 			})
 		);
 		return right(answers);
@@ -89,7 +89,7 @@ export class AnswerMongoRepository implements AnswerManagerInterface {
 	async findAnswersByClientId(
 		unity_id: string,
 		client_id: string
-	): PromiseEither<AbstractError, AnswerEntity[]> {
+	): PromiseEither<AbstractError, IAnswer[]> {
 		if (!unity_id) return left(new MissingParamsError("unity id"));
 		if (!client_id) return left(new MissingParamsError("client id"));
 
@@ -100,7 +100,7 @@ export class AnswerMongoRepository implements AnswerManagerInterface {
 				if (answerOrErr.isLeft()) {
 					return {} as AnswerEntity;
 				}
-				return answerOrErr.extract();
+				return answerOrErr.extract().params();
 			})
 		);
 		return right(answers);
@@ -109,7 +109,7 @@ export class AnswerMongoRepository implements AnswerManagerInterface {
 	async findAnswersByFormId(
 		unity_id: string,
 		form_id: string
-	): PromiseEither<AbstractError, AnswerEntity[]> {
+	): PromiseEither<AbstractError, IAnswer[]> {
 		if (!unity_id) return left(new MissingParamsError("unity id"));
 		if (!form_id) return left(new MissingParamsError("form id"));
 
@@ -120,7 +120,7 @@ export class AnswerMongoRepository implements AnswerManagerInterface {
 				if (answerOrErr.isLeft()) {
 					return {} as AnswerEntity;
 				}
-				return answerOrErr.extract();
+				return answerOrErr.extract().params();
 			})
 		);
 		return right(answers);

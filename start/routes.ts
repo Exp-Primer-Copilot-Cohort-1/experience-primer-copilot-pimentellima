@@ -193,6 +193,12 @@ Route.group(() => {
 		Route.put('status/:id', 'ActivityController.updateActivityStatusById').as(
 			'activity.status',
 		)
+		Route.put('started_at/:id', 'ActivityController.updateActivityStartedAt').as(
+			'activity.startedAt',
+		)
+		Route.put('finished_at/:id', 'ActivityController.updateActivityFinishedAt').as(
+			'activity.finishedAt',
+		)
 		Route.get('', 'ActivityController.findAllActivities').as('activity.index')
 		Route.put(':id', 'ActivityController.updateActivityById').as('activity.update')
 		Route.get('prof/:prof_id', 'ActivityController.findActivitiesByProfId').as(

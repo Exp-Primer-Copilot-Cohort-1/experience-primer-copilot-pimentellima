@@ -117,6 +117,7 @@ export class AnswerEntity extends Entity implements IAnswer {
 				.defineProfId(params.prof_id)
 				.defineActivityId(params.activity_id)
                 .defineFormId(params.form_id)
+				.defineAnswers(params.answers)
                 .defineActive(params.active)
                 .defineCategoryId(params.category_id)
                 .defineUnityId(params.unity_id)

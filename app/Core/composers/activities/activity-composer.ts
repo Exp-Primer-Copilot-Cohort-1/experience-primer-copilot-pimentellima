@@ -9,7 +9,9 @@ import { FindActivitiesByClientIdUseCase } from "App/Core/domain/use-cases/activ
 import { FindActivitiesByProfIdUseCase } from "App/Core/domain/use-cases/activities/find-activities-by-prof-use-case";
 import { FindActivityByIdUseCase } from "App/Core/domain/use-cases/activities/find-activity-by-id-use-case";
 import { UpdateActivityStatusByIdUseCase } from "App/Core/domain/use-cases/activities/update-activity-status-by-use-case";
+import { UpdateActivityStartedAtUseCase } from "App/Core/domain/use-cases/activities/update-activity-started-at-use-case";
 import { UpdateActivityByIdUseCase } from "App/Core/domain/use-cases/activities/update-activity-use-case";
+import { UpdateActivityFinishedAtUseCase } from "App/Core/domain/use-cases/activities/update-activity-finished-at-use-case";
 
 export const makeCreateActivityComposer = (): ControllerGeneric => {
 	return new Controller(
@@ -57,4 +59,17 @@ export const makeUpdateActivityStatusComposer = (): ControllerGeneric => {
 		new UpdateActivityStatusByIdUseCase(new ActivityMongoRepository()),
 	);
 };
+
+export const makeUpdateActivityStartedAtComposer = (): ControllerGeneric => {
+	return new Controller(
+		new UpdateActivityStartedAtUseCase(new ActivityMongoRepository()),
+	);
+};
+
+export const makeUpdateActivityFinishedAtComposer = (): ControllerGeneric => {
+	return new Controller(
+		new UpdateActivityFinishedAtUseCase(new ActivityMongoRepository()),
+	);
+};
+
 
