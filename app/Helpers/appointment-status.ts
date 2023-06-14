@@ -1,8 +1,8 @@
 export enum AppointmentStatus {
 	AWAITING = 'awaiting',
-	MARKED = 'marked',
+	IN_PROGRESS = 'in_progress',
 	SCHEDULED = 'scheduled',
-	RESCHEDULED = 'rescheduled',
-	CANCELED = 'canceled',
 	COMPLETED = 'completed',
+	CANCELED = 'canceled',
+	RESCHEDULED = 'rescheduled'
 }

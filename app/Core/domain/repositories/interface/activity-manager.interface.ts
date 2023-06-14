@@ -12,6 +12,8 @@ export interface ActivitiesManagerInterface {
 		activity: IActivity,
 	) => PromiseEither<AbstractError, IActivity>
 	updateActivityStatusById: (id: string, status: AppointmentStatus) => PromiseEither<AbstractError, IActivity>
+	updateActivityStartedAt: (id: string, started_at: Date) => PromiseEither<AbstractError, IActivity>
+	updateActivityFinishedAt: (id: string, finished_at: Date) => PromiseEither<AbstractError, IActivity>
 	findActivitiesByProf: (
 		unity_id: string,
 		prof_id: string,

@@ -11,18 +11,74 @@ import { AppointmentStatus } from "App/Helpers";
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() {}
+
+	async updateActivityStartedAt(
+		id: string,
+		started_at: Date
+	): PromiseEither<AbstractError, IActivity> {
+		const activity = await Activity.findOneAndUpdate(
+			{ _id: id },
+			{
+				$set: {
+					started_at,
+					scheduled: AppointmentStatus.IN_PROGRESS,
+				},
+			},
+			{
+				returnDocument: "after",
+			}
+		);
+		if (!activity)
+			return left(new AbstractError("Error updating activity", 500));
+
+		const activityOrErr = await ActivityEntity.build(activity.toObject());
+		if (activityOrErr.isLeft())
+			return left(new AbstractError("Internal Error", 500));
+		return right(activityOrErr.extract().params());
+	}
+
+	async updateActivityFinishedAt(
+		id: string,
+		finished_at: Date
+	): PromiseEither<AbstractError, IActivity> {
+		const activity = await Activity.findOneAndUpdate(
+			{ _id: id },
+			{
+				$set: {
+					finished_at,
+					scheduled: AppointmentStatus.COMPLETED,
+				},
+			},
+			{
+				returnDocument: "after",
+			}
+		);
+		if (!activity)
+			return left(new AbstractError("Error updating activity", 500));
+
+		const activityOrErr = await ActivityEntity.build(activity.toObject());
+		if (activityOrErr.isLeft())
+			return left(new AbstractError("Internal Error", 500));
+		return right(activityOrErr.extract().params());
+	}
+
 	async updateActivityStatusById(
 		id: string,
 		status: AppointmentStatus
 	): PromiseEither<AbstractError, IActivity> {
-		const activity = await Activity.findOneAndUpdate({ _id: id }, {
-			$set: {
-				scheduled: status,
-			}, 
-		}, {
-			returnDocument: 'after'
-		})
-		if (!activity) return left(new AbstractError('Error updating activity', 500));
+		const activity = await Activity.findOneAndUpdate(
+			{ _id: id },
+			{
+				$set: {
+					scheduled: status,
+				},
+			},
+			{
+				returnDocument: "after",
+			}
+		);
+		if (!activity)
+			return left(new AbstractError("Error updating activity", 500));
 
 		const activityOrErr = await ActivityEntity.build(activity.toObject());
 		if (activityOrErr.isLeft())
@@ -31,7 +87,9 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		return right(activityOrErr.extract().params());
 	}
 
-	async createActivityInAwait(activity: IActivity): PromiseEither<AbstractError, IActivity> {
+	async createActivityInAwait(
+		activity: IActivity
+	): PromiseEither<AbstractError, IActivity> {
 		const newActivityOrErr = await ActivityEntity.build(activity);
 		if (newActivityOrErr.isLeft()) return left(newActivityOrErr.extract());
 		const newActivity = newActivityOrErr.extract();
@@ -154,7 +212,11 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		if (!unity_id) return left(new MissingParamsError("unity id"));
 		if (!client_id) return left(new MissingParamsError("client id"));
 
-		const data = await Activity.find({ unity_id, client_id });
+		const data = await Activity.find({
+			unity_id,
+			'client.value': client_id
+		});
+
 		const activities = await Promise.all(
 			data.map(async (item) => {
 				const activityOrErr = await ActivityEntity.build(

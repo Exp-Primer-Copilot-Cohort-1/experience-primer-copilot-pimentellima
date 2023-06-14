@@ -9,6 +9,8 @@ import {
 	makeFindActivityByIdComposer,
 	makeFindAllActivitiesComposer,
 	makeUpdateActivityByIdComposer,
+	makeUpdateActivityFinishedAtComposer,
+	makeUpdateActivityStartedAtComposer,
 	makeUpdateActivityStatusComposer,
 } from "App/Core/composers/activities/activity-composer";
 
@@ -21,6 +23,18 @@ class ActivityController {
 
 	async updateActivityStatusById(ctx: HttpContextContract) {
 		return adaptRoute(makeUpdateActivityStatusComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		});
+	}
+
+	async updateActivityStartedAt(ctx: HttpContextContract) {
+		return adaptRoute(makeUpdateActivityStartedAtComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		});
+	}
+
+	async updateActivityFinishedAt(ctx: HttpContextContract) {
+		return adaptRoute(makeUpdateActivityFinishedAtComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		});
 	}
