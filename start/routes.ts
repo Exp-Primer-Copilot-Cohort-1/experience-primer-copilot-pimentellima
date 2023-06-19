@@ -103,11 +103,11 @@ Route.group(() => {
 	}).prefix('health-insurance')
 
 	Route.group(() => {
-		Route.get('', 'AdonnisLegadoController.bridge').as('activity-await.index')
-		Route.get(':id', 'AdonnisLegadoController.bridge').as('activity-await.show')
-		Route.put(':id', 'AdonnisLegadoController.bridge').as('activity-await.update')
-		Route.delete(':id', 'AdonnisLegadoController.bridge').as('activity-await.destroy')
-		Route.post('', 'AdonnisLegadoController.bridge').as('activity-await.store')
+		Route.get('', 'ActivityAwaitController.findAllActivitiesAwait').as('activity-await.index')
+		Route.get(':id', 'ActivityAwaitController.findActivityAwaitById').as('activity-await.show')
+		Route.put(':id', 'ActivityAwaitController.updateActivityAwaitById').as('activity-await.update')
+		Route.delete(':id', 'ActivityAwaitController.deleteActivityAwaitById').as('activity-await.destroy')
+		Route.post('', 'ActivityAwaitController.createActivityAwait').as('activity-await.store')
 	}).prefix('activity-await')
 
 	Route.group(() => {
@@ -209,9 +209,6 @@ Route.group(() => {
 		)
 		Route.delete(':id', 'ActivityController.deleteActivityById').as(
 			'activity.destroy',
-		)
-		Route.post('await', 'ActivityController.createActivityInAwait').as(
-			'activity.await',
 		)
 		Route.post('', 'ActivityController.createActivity').as('activity.store')
 		Route.post('payment', 'ActivityController.payment').as('activity.payment')
