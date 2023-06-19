@@ -5,7 +5,6 @@ import { AppointmentStatus } from 'App/Helpers'
 
 export interface ActivitiesManagerInterface {
 	createActivity: (activity: IActivity) => PromiseEither<AbstractError, IActivity>
-	createActivityInAwait: (activity: IActivity) => PromiseEither<AbstractError, IActivity>
 	findAllActivities: (unity_id: string) => PromiseEither<AbstractError, IActivity[]>
 	updateActivityById: (
 		id: string,

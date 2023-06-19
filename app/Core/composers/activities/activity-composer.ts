@@ -2,25 +2,19 @@ import { Controller } from "App/Core/adapters/controller";
 import { ControllerGeneric } from "App/Core/adapters/controller/helpers";
 import { ActivityMongoRepository } from "App/Core/domain/repositories/activities/activity-mongo-repository";
 import { FindAllActivitiesUseCase } from "App/Core/domain/use-cases";
-import { CreateActivityInAwaitUseCase } from "App/Core/domain/use-cases/activities/create-activity-in-await-use-case";
 import { CreateActivityUseCase } from "App/Core/domain/use-cases/activities/create-activity-use-case";
 import { DeleteActivityByIdUseCase } from "App/Core/domain/use-cases/activities/delete-activity-by-id-use-case";
 import { FindActivitiesByClientIdUseCase } from "App/Core/domain/use-cases/activities/find-activities-by-client-use-case";
 import { FindActivitiesByProfIdUseCase } from "App/Core/domain/use-cases/activities/find-activities-by-prof-use-case";
 import { FindActivityByIdUseCase } from "App/Core/domain/use-cases/activities/find-activity-by-id-use-case";
-import { UpdateActivityStatusByIdUseCase } from "App/Core/domain/use-cases/activities/update-activity-status-by-use-case";
-import { UpdateActivityStartedAtUseCase } from "App/Core/domain/use-cases/activities/update-activity-started-at-use-case";
-import { UpdateActivityByIdUseCase } from "App/Core/domain/use-cases/activities/update-activity-use-case";
 import { UpdateActivityFinishedAtUseCase } from "App/Core/domain/use-cases/activities/update-activity-finished-at-use-case";
+import { UpdateActivityStartedAtUseCase } from "App/Core/domain/use-cases/activities/update-activity-started-at-use-case";
+import { UpdateActivityStatusByIdUseCase } from "App/Core/domain/use-cases/activities/update-activity-status-by-use-case";
+import { UpdateActivityByIdUseCase } from "App/Core/domain/use-cases/activities/update-activity-use-case";
 
 export const makeCreateActivityComposer = (): ControllerGeneric => {
 	return new Controller(
 		new CreateActivityUseCase(new ActivityMongoRepository())
-	);
-};
-export const makeCreateActivityInAwaitComposer = (): ControllerGeneric => {
-	return new Controller(
-		new CreateActivityInAwaitUseCase(new ActivityMongoRepository())
 	);
 };
 export const makeDeleteActivityByIdComposer = (): ControllerGeneric => {

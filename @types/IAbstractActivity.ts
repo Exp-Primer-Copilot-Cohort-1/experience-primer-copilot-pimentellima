@@ -1,13 +1,13 @@
 import { ObjectId } from "@ioc:Mongoose";
-import { AppointmentStatus, PaymentStatus } from "../app/Helpers";
+import { PaymentStatus } from "App/Helpers";
 
-type HealthInsurance = {
+export type HealthInsurance = {
 	value: string;
 	label: string;
 	price: number;
 };
 
-type Procedure = {
+export type Procedure = {
 	value: string;
 	label: string;
 	minutes: number;
@@ -17,7 +17,7 @@ type Procedure = {
 	status: string;
 };
 
-type Client = {
+export type Client = {
 	value: string;
 	label: string;
 	celphone: string;
@@ -25,30 +25,21 @@ type Client = {
 	partner?: string;
 };
 
-type Prof = {
+export type Prof = {
 	value: string;
 	label: string;
 };
 
-export interface IActivity {
-	_id?: string | ObjectId;
-	date: Date;
-	hour_start: string;
-	hour_end: string;
-	status: PaymentStatus;
-	schedule_block: boolean;
+export interface IAbstractActivity {
+	_id: string;
 	procedures: Procedure[];
 	client: Client;
 	obs?: string;
 	prof: Prof;
-	all_day: boolean;
-	is_recorrent: boolean;
 	active: boolean;
-	unity_id: string | ObjectId;
-	scheduled: AppointmentStatus;
-	prof_id: string | ObjectId;
-	started_at?: Date;
-	finished_at?: Date;
+	status: PaymentStatus;
+	unity_id: string;
+	prof_id: string;
 	created_at: Date;
 	updated_at: Date;
 }

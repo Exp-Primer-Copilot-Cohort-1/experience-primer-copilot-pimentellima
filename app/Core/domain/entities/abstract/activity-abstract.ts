@@ -1,18 +1,14 @@
-import { AppointmentStatus, PaymentStatus, STATUS } from "App/Helpers";
+import { PaymentStatus } from "App/Helpers";
+import { Client, IAbstractActivity, Procedure, Prof } from "Types/IAbstractActivity";
 import { Entity } from "./entity.abstract";
-import { IProcedure } from "Types/IProcedure";
-import { IClient } from "Types/IClient";
-import { IProf } from "Types/IProf";
 
-export abstract class AbstractActivity extends Entity {
+export abstract class AbstractActivity extends Entity implements IAbstractActivity {
 	private _status: PaymentStatus;
-	private _procedures: IProcedure[];
-	private _client_id: string;
-	private _client: IClient;
+	private _procedures: Procedure[];
+	private _client: Client;
 	private _partner: string;
 	private _obs?: string;
-	private _prof: IProf;
-	private _phone?: string;
+	private _prof: Prof;
 	private _active: boolean;
 	private _unity_id: string;
 	private _prof_id: string;
@@ -25,10 +21,6 @@ export abstract class AbstractActivity extends Entity {
 		return this._procedures;
 	}
 
-	public get client_id() {
-		return this._client_id;
-	}
-	
 	public get client() {
 		return this._client;
 	}
@@ -45,10 +37,6 @@ export abstract class AbstractActivity extends Entity {
 		return this._prof;
 	}
 
-	public get phone() {
-		return this._phone;
-	}
-
 	public get active() {
 		return this._active;
 	}
@@ -61,22 +49,17 @@ export abstract class AbstractActivity extends Entity {
 		return this._prof_id;
 	}
 
-	public defineClientId(client_id: string) : this {
-		this._client_id = client_id;
-		return this;
-	}
-
 	public defineStatus(status: PaymentStatus): this {
 		this._status = status;
 		return this;
 	}
 
-	public defineProcedures(procedures: IProcedure[]): this {
+	public defineProcedures(procedures: Procedure[]): this {
 		this._procedures = procedures;
 		return this;
 	}
 
-	public defineClient(client: IClient): this {
+	public defineClient(client: Client): this {
 		this._client = client;
 		return this;
 	}
@@ -91,13 +74,8 @@ export abstract class AbstractActivity extends Entity {
 		return this;
 	}
 
-	public defineProf(prof: IProf): this {
+	public defineProf(prof: Prof): this {
 		this._prof = prof;
-		return this;
-	}
-
-	public definePhone(phone?: string): this {
-		this._phone = phone;
 		return this;
 	}
 

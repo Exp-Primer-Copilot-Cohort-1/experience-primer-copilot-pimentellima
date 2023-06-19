@@ -105,11 +105,6 @@ const ActivitySchema = new Schema<IActivity>(
 				required: true,
 			},
 		},
-		phone: {
-			type: String,
-			required: false,
-			default: null,
-		},
 		all_day: {
 			type: Boolean,
 			required: true,
@@ -128,10 +123,6 @@ const ActivitySchema = new Schema<IActivity>(
 		unity_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
-		},
-		user_id: {
-			type: Schema.Types.ObjectId,
-			required: false,
 		},
 		scheduled: {
 			type: String,

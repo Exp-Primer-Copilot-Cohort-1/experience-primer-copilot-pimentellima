@@ -1,13 +1,12 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
+import { AppointmentStatus } from "App/Helpers";
 import Activity from "App/Models/Activity";
 import { IActivity } from "Types/IActivity";
 import ActivityEntity from "../../entities/activities/activity";
-import { ScheduleEntity } from "../../entities/schedule/schedule";
 import { ActivityNotFoundError } from "../../errors/activity-not-found";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ActivitiesManagerInterface } from "../interface/activity-manager.interface";
-import { AppointmentStatus } from "App/Helpers";
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() {}
@@ -31,10 +30,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		if (!activity)
 			return left(new AbstractError("Error updating activity", 500));
 
-		const activityOrErr = await ActivityEntity.build(activity.toObject());
-		if (activityOrErr.isLeft())
-			return left(new AbstractError("Internal Error", 500));
-		return right(activityOrErr.extract().params());
+		return right(activity);
 	}
 
 	async updateActivityFinishedAt(
@@ -55,11 +51,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		);
 		if (!activity)
 			return left(new AbstractError("Error updating activity", 500));
-
-		const activityOrErr = await ActivityEntity.build(activity.toObject());
-		if (activityOrErr.isLeft())
-			return left(new AbstractError("Internal Error", 500));
-		return right(activityOrErr.extract().params());
+		return right(activity);
 	}
 
 	async updateActivityStatusById(
@@ -80,56 +72,31 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		if (!activity)
 			return left(new AbstractError("Error updating activity", 500));
 
-		const activityOrErr = await ActivityEntity.build(activity.toObject());
-		if (activityOrErr.isLeft())
-			return left(new AbstractError("Internal Error", 500));
-
-		return right(activityOrErr.extract().params());
+		return right(activity);
 	}
 
 	async createActivityInAwait(
 		activity: IActivity
 	): PromiseEither<AbstractError, IActivity> {
-		const newActivityOrErr = await ActivityEntity.build(activity);
-		if (newActivityOrErr.isLeft()) return left(newActivityOrErr.extract());
-		const newActivity = newActivityOrErr.extract();
+		const activityOrErr = await ActivityEntity.build(activity);
+		if (activityOrErr.isLeft()) return left(activityOrErr.extract());
 
-		const { _id } = await Activity.create(newActivity.params());
-		newActivity.defineId(_id.toString());
-		return right(newActivity.params());
+		const newActivity = await Activity.create(
+			activityOrErr.extract().params()
+		);
+		return right(newActivity);
 	}
 
 	async createActivity(
 		activity: IActivity
 	): PromiseEither<AbstractError, IActivity> {
-		const activities = (
-			await Activity.find({ prof_id: activity.prof_id })
-		).filter((act) => {
-			const dateAct = new Date(act.date);
-			dateAct.setHours(0, 0, 0, 0);
-			const dateActivity = new Date(activity.date);
-			dateActivity.setHours(0, 0, 0, 0);
+		const activityOrErr = await ActivityEntity.build(activity);
+		if (activityOrErr.isLeft()) return left(activityOrErr.extract());
 
-			return dateAct === dateActivity;
-		});
-
-		const scheduleOrErr = await ScheduleEntity.build(activities);
-		if (scheduleOrErr.isLeft()) return left(scheduleOrErr.extract());
-
-		const newAppointmentOrErr = await scheduleOrErr
-			.extract()
-			.addAppointment(activity);
-
-		if (newAppointmentOrErr.isLeft())
-			return left(newAppointmentOrErr.extract());
-
-		const newActivityOrErr = await ActivityEntity.build(activity);
-		if (newActivityOrErr.isLeft()) return left(newActivityOrErr.extract());
-		const newActivity = newActivityOrErr.extract();
-
-		const { _id } = await Activity.create(newActivity.params());
-		newActivity.defineId(_id.toString());
-		return right(newActivity.params());
+		const newActivity = await Activity.create(
+			activityOrErr.extract().params()
+		);
+		return right(newActivity);
 	}
 
 	async findActivityById(
@@ -137,14 +104,10 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new MissingParamsError("id"));
 
-		const item = await Activity.findById(id);
-		if (!item) return left(new ActivityNotFoundError());
+		const activity = await Activity.findById(id);
+		if (!activity) return left(new ActivityNotFoundError());
 
-		const activityOrErr = await ActivityEntity.build(item.toObject());
-		if (activityOrErr.isLeft())
-			return left(new AbstractError("Internal Error", 500));
-
-		return right(activityOrErr.extract().params());
+		return right(activity);
 	}
 
 	async deleteActivityById(
@@ -152,14 +115,10 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new MissingParamsError("id"));
 
-		const item = await Activity.findByIdAndDelete(id);
-		if (!item) return left(new ActivityNotFoundError());
+		const activity = await Activity.findByIdAndDelete(id);
+		if (!activity) return left(new ActivityNotFoundError());
 
-		const activityOrErr = await ActivityEntity.build(item.toObject());
-		if (activityOrErr.isLeft())
-			return left(new AbstractError("Internal Error", 500));
-
-		return right(activityOrErr.extract().params());
+		return right(activity);
 	}
 
 	async findAllActivities(
@@ -167,19 +126,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	): PromiseEither<AbstractError, IActivity[]> {
 		if (!unity_id) return left(new MissingParamsError("unity id"));
 
-		const data = await Activity.find({ unity_id });
-		const activities = await Promise.all(
-			data.map(async (item) => {
-				const activityOrErr = await ActivityEntity.build(
-					item.toObject()
-				);
-
-				if (activityOrErr.isLeft()) {
-					return {} as ActivityEntity;
-				}
-				return activityOrErr.extract().params() as IActivity;
-			})
-		);
+		const activities = await Activity.find({ unity_id });
 		return right(activities);
 	}
 
@@ -190,18 +137,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		if (!unity_id) return left(new MissingParamsError("unity id"));
 		if (!prof_id) return left(new MissingParamsError("prof id"));
 
-		const data = await Activity.find({ unity_id, prof_id });
-		const activities = await Promise.all(
-			data.map(async (item) => {
-				const activityOrErr = await ActivityEntity.build(
-					item.toObject()
-				);
-				if (activityOrErr.isLeft()) {
-					return {} as ActivityEntity;
-				}
-				return activityOrErr.extract().params();
-			})
-		);
+		const activities = await Activity.find({ unity_id, prof_id });
 		return right(activities);
 	}
 
@@ -212,22 +148,11 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		if (!unity_id) return left(new MissingParamsError("unity id"));
 		if (!client_id) return left(new MissingParamsError("client id"));
 
-		const data = await Activity.find({
+		const activities = await Activity.find({
 			unity_id,
-			'client.value': client_id
+			"client.value": client_id,
 		});
 
-		const activities = await Promise.all(
-			data.map(async (item) => {
-				const activityOrErr = await ActivityEntity.build(
-					item.toObject()
-				);
-				if (activityOrErr.isLeft()) {
-					return {} as ActivityEntity;
-				}
-				return activityOrErr.extract().params();
-			})
-		);
 		return right(activities);
 	}
 
@@ -236,41 +161,17 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		activity: IActivity
 	): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new MissingParamsError("id"));
-
-		const activities = (
-			await Activity.find({ prof_id: activity.prof_id })
-		).filter((act) => {
-			const dateAct = new Date(act.date);
-			dateAct.setHours(0, 0, 0, 0);
-			const dateActivity = new Date(activity.date);
-			dateActivity.setHours(0, 0, 0, 0);
-
-			return dateAct === dateActivity && act._id !== id;
-		});
-
-		const scheduleOrErr = await ScheduleEntity.build(activities);
-		if (scheduleOrErr.isLeft()) return left(scheduleOrErr.extract());
-
-		const newAppointmentOrErr = await scheduleOrErr
-			.extract()
-			.addAppointment(activity);
-
-		if (newAppointmentOrErr.isLeft())
-			return left(newAppointmentOrErr.extract());
-
 		const oldActivity = await Activity.findById(id);
 		if (!oldActivity) return left(new ActivityNotFoundError());
 		const activityOrErr = await ActivityEntity.build({
-			...oldActivity.toObject(),
+			...oldActivity,
 			...activity,
 		});
 		if (activityOrErr.isLeft())
-			return left(new AbstractError("Internal Error", 500));
+			return left(activityOrErr.extract());
 
-		const updatedActivity = activityOrErr
-			.extract()
-			.updateStatus(oldActivity)
-			.params();
+		
+		const updatedActivity = activityOrErr.extract().params();
 
 		await Activity.findByIdAndUpdate(id, updatedActivity);
 		return right(updatedActivity);
