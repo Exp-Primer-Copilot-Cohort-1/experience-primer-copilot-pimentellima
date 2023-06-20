@@ -1,7 +1,11 @@
-export * from './activity-manager.interface';
-export * from './admin-manager.interface';
-export * from './health-insurance-manager.interface';
-export * from './procedures-manager.interface';
-export * from './session-manager.interface';
-export * from './unities-manager.interface';
+export * from './activity-manager.interface'
+export * from './admin-manager.interface'
+export * from './categories-manager.interface'
+export * from './default-config-manager.interface'
+export * from './directmail-manager.interface'
+export * from './health-insurance-manager.interface'
+export * from './partner-manage-interface'
+export * from './procedures-manager.interface'
+export * from './session-manager.interface'
+export * from './unities-manager.interface'
 

@@ -103,11 +103,21 @@ Route.group(() => {
 	}).prefix('health-insurance')
 
 	Route.group(() => {
-		Route.get('', 'ActivityAwaitController.findAllActivitiesAwait').as('activity-await.index')
-		Route.get(':id', 'ActivityAwaitController.findActivityAwaitById').as('activity-await.show')
-		Route.put(':id', 'ActivityAwaitController.updateActivityAwaitById').as('activity-await.update')
-		Route.delete(':id', 'ActivityAwaitController.deleteActivityAwaitById').as('activity-await.destroy')
-		Route.post('', 'ActivityAwaitController.createActivityAwait').as('activity-await.store')
+		Route.get('', 'ActivityAwaitController.findAllActivitiesAwait').as(
+			'activity-await.index',
+		)
+		Route.get(':id', 'ActivityAwaitController.findActivityAwaitById').as(
+			'activity-await.show',
+		)
+		Route.put(':id', 'ActivityAwaitController.updateActivityAwaitById').as(
+			'activity-await.update',
+		)
+		Route.delete(':id', 'ActivityAwaitController.deleteActivityAwaitById').as(
+			'activity-await.destroy',
+		)
+		Route.post('', 'ActivityAwaitController.createActivityAwait').as(
+			'activity-await.store',
+		)
 	}).prefix('activity-await')
 
 	Route.group(() => {

@@ -1,7 +1,9 @@
-export * from './activities';
-export * from './health-insurances';
-export * from './session';
-export * from './unities';
-export * from './users';
-export * from './validations';
+export * from './activities'
+export * from './default-configs'
+export * from './directmail'
+export * from './health-insurances'
+export * from './session'
+export * from './unities'
+export * from './users'
+export * from './validations'
 

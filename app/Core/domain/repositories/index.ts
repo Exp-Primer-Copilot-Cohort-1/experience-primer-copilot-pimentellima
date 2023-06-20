@@ -1,4 +1,10 @@
+export * from './categories'
+export * from './default-configs'
+export * from './directmails'
 export * from './health-insurance'
+export * from './partner'
+export * from './produceres'
 export * from './session'
 export * from './unities'
 export * from './users'
+

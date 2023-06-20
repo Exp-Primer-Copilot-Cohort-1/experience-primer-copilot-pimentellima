@@ -1,4 +1,4 @@
-import { model, Schema } from '@ioc:Mongoose'
+import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IDefaultConfig } from 'Types/IDefaultConfig'
 
 const DefaultConfigSchema = new Schema<IDefaultConfig>(
@@ -25,4 +25,4 @@ const DefaultConfigSchema = new Schema<IDefaultConfig>(
 	},
 )
 
-export default model<IDefaultConfig>('default_configs', DefaultConfigSchema)
+export default Mongoose.model<IDefaultConfig>('default_configs', DefaultConfigSchema)

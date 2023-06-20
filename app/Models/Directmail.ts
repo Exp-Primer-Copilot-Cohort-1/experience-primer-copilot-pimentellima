@@ -1,4 +1,4 @@
-import { model, Schema } from '@ioc:Mongoose'
+import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IDirectmail } from 'Types/IDirectmail'
 
 const DirectmailSchema = new Schema<IDirectmail>(
@@ -20,4 +20,4 @@ const DirectmailSchema = new Schema<IDirectmail>(
 	},
 )
 
-export default model<IDirectmail>('directmails', DirectmailSchema)
+export default Mongoose.model<IDirectmail>('directmails', DirectmailSchema)
