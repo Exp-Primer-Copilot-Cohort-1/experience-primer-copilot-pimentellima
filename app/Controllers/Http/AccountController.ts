@@ -25,12 +25,11 @@ class AccountController {
 		return adaptRoute(makeDeleteAccountComposer(), ctx)
 	}
 
-  async createAccount(ctx: HttpContextContract) {
-    return adaptRoute(makeCreateAccountComposer(), ctx, {
+	async createAccount(ctx: HttpContextContract) {
+		return adaptRoute(makeCreateAccountComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
-		});
-  } 
-  
+		})
+	}
 }
 
 export default AccountController

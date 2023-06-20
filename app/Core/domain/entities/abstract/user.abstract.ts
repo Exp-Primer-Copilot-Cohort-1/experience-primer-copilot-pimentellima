@@ -11,6 +11,16 @@ export abstract class AbstractUser extends Entity {
 	private _avatar: string
 	private _email: Email
 	private _document: Document
+	private _blacklist: string[]
+	private _permissions: string[]
+
+	public get blacklist(): string[] {
+		return this._blacklist
+	}
+
+	public get permissions(): string[] {
+		return this._permissions
+	}
 
 	public get email(): string {
 		return this._email?.value
@@ -86,6 +96,16 @@ export abstract class AbstractUser extends Entity {
 
 	public defineAvatar(avatar: string): this {
 		this._avatar = avatar
+		return this
+	}
+
+	public defineBlacklist(blackListPermissions: string[] = []): this {
+		this._blacklist = blackListPermissions
+		return this
+	}
+
+	public definePermissions(permissions: string[] = []): this {
+		this._permissions = permissions
 		return this
 	}
 }

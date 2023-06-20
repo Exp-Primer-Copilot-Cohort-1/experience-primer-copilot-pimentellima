@@ -71,10 +71,12 @@ export class SessionUser extends SystemUser {
 				.defineCelphone(data.celphone)
 				.defineScheduleObs(data.schedule_obs)
 				.defineShowLack(data.show_lack)
-				.defineType(data.type)
+				.defineType(data.type as any)
 				.defineUnityId(data.unity_id.toString())
 				.defineUpdatedAt(data.updated_at)
 				.defineRememberMeToken(data.rememberMeToken)
+				.definePermissions(data?.permissions)
+				.defineBlacklist(data?.blacklist)
 
 			return right(user)
 		} catch (error) {

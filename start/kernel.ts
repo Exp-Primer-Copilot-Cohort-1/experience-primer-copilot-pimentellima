@@ -9,7 +9,7 @@
 |
 */
 
-import Server from '@ioc:Adonis/Core/Server';
+import Server from '@ioc:Adonis/Core/Server'
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +24,7 @@ import Server from '@ioc:Adonis/Core/Server';
 Server.middleware.register([
 	() => import('@ioc:Adonis/Core/BodyParser'),
 	() => import('App/Middleware/LogMiddleware'),
-]);
+])
 
 /*
 |--------------------------------------------------------------------------
@@ -47,4 +47,5 @@ Server.middleware.registerNamed({
 	apiKey: 'App/Middleware/AuthAdminApiKey',
 	permission: 'App/Middleware/AuthPermission',
 	createPermissionFirstLogin: 'App/Middleware/LoginCreatePermission',
-});
+	role: 'App/Middleware/Role',
+})

@@ -191,6 +191,14 @@ const UserSchema = new Schema<IUser>(
 			type: String,
 			required: false,
 		},
+		permissions: {
+			type: Array,
+			required: false,
+		},
+		blacklist: {
+			type: Array,
+			required: false,
+		},
 	},
 	{
 		timestamps: {

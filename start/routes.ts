@@ -30,13 +30,10 @@ Route.get('script', 'AdminController.script')
 Route.post('users', 'UserController.store')
 
 Route.get('unity', 'UnityController.index')
-Route.get('unity/:id', 'UnityController.show')
-Route.delete('unity/:id', 'UnityController.destroy')
-Route.put('unity/:_id', 'UnityController.update')
 
-Route.put('activity-stts/:id', 'ActivityController.updateStatus')
+Route.put('activity-stts/:id', 'AdonnisLegadoController.bridge')
 Route.get('activity/:id', 'ActivityController.findActivityById')
-Route.put('activity-user/:id', 'ActivityController.updateStatusUser')
+Route.put('activity-user/:id', 'AdonnisLegadoController.bridge')
 
 Route.get('permissions-default', 'PermissionController.defaultPermissions')
 
@@ -60,250 +57,342 @@ Route.group(() => {
 })
 
 Route.group(() => {
-	Route.get('', 'ClientController.findAllUsersClients')
-	Route.get('inactives', 'ClientController.findAllUsersClientsInative')
-	Route.get(':id', 'ClientController.findUserClientByID')
-	Route.get('verify/client', 'ClientController.verifyExistenceClient')
-	Route.put(':id', 'ClientController.update')
-	Route.post('', 'ClientController.create')
-})
-	.prefix('clients')
-	.middleware('auth')
-
-Route.group(() => {
-	Route.get('professionals', 'UserControllerV2.findAllUsersProfs')
-	Route.get('secs', 'UserControllerV2.findAllUsersSecs')
-	Route.get('professionals/inative', 'UserControllerV2.findAllUsersProfsInative')
-	Route.get('secs/inative', 'UserControllerV2.findAllUsersSecsInative')
-	Route.get('professionals/:id', 'AdonnisLegadoController.bridge')
-	Route.put(':id', 'AdonnisLegadoController.bridge')
-	Route.delete(':id', 'UserController.destroy')
-})
-	.prefix('users')
-	.middleware('auth')
-
-Route.group(() => {
 	Route.get('sessions/user', 'SessionController.getUser')
 	Route.post('sessions/refresh', 'SessionController.refreshToken')
 	Route.get('sessions/check', 'SessionController.checkToken')
 }).middleware('auth')
 
 Route.group(() => {
-	Route.get('', 'HealthInsuranceController.index')
-	Route.get(':id', 'HealthInsuranceController.show')
-	Route.put(':_id', 'HealthInsuranceController.update')
-	Route.delete(':id', 'HealthInsuranceController.destroy')
-	Route.post('', 'HealthInsuranceController.store')
-})
-	.prefix('health-insurance')
-	.middleware('auth')
+	Route.group(() => {
+		Route.get('', 'ClientController.findAllUsersClients').as('clients.index')
+		Route.get('inactives', 'ClientController.findAllUsersClientsInative').as(
+			'clients.inactives',
+		)
+		Route.get(':id', 'ClientController.findUserClientByID').as('clients.show')
+		Route.get('verify/client', 'ClientController.verifyExistenceClient').as(
+			'clients.verify',
+		)
+		Route.put(':id', 'ClientController.update').as('clients.update')
+		Route.post('', 'ClientController.create').as('clients.store')
+	}).prefix('clients')
+
+	Route.group(() => {
+		Route.get('prof', 'UserControllerV2.findAllUsersProfs').as('users.prof.index')
+		Route.get('secs', 'UserControllerV2.findAllUsersSecs').as('users.secs.index')
+		Route.get('prof/inactives', 'UserControllerV2.findAllUsersProfsInative').as(
+			'users.prof.inactives',
+		)
+		Route.get('secs/inative', 'UserControllerV2.findAllUsersSecsInative').as(
+			'users.secs.inactives',
+		)
+		Route.get('prof/:id', 'AdonnisLegadoController.bridge').as('users.prof.show')
+		Route.put(':id', 'AdonnisLegadoController.bridge').as('users.update')
+		Route.delete(':id', 'UserController.destroy').as('users.destroy')
+	}).prefix('users')
+
+	Route.group(() => {
+		Route.get('', 'HealthInsuranceController.index').as('health-insurance.index')
+		Route.get(':id', 'HealthInsuranceController.show').as('health-insurance.show')
+		Route.put(':_id', 'HealthInsuranceController.update').as(
+			'health-insurance.update',
+		)
+		Route.delete(':id', 'HealthInsuranceController.destroy').as(
+			'health-insurance.destroy',
+		)
+		Route.post('', 'HealthInsuranceController.store').as('health-insurance.store')
+	}).prefix('health-insurance')
+
+	Route.group(() => {
+		Route.get('', 'ActivityAwaitController.findAllActivitiesAwait').as(
+			'activity-await.index',
+		)
+		Route.get(':id', 'ActivityAwaitController.findActivityAwaitById').as(
+			'activity-await.show',
+		)
+		Route.put(':id', 'ActivityAwaitController.updateActivityAwaitById').as(
+			'activity-await.update',
+		)
+		Route.delete(':id', 'ActivityAwaitController.deleteActivityAwaitById').as(
+			'activity-await.destroy',
+		)
+		Route.post('', 'ActivityAwaitController.createActivityAwait').as(
+			'activity-await.store',
+		)
+	}).prefix('activity-await')
+
+	Route.group(() => {
+		Route.get('', 'AdonnisLegadoController.bridge').as('stock.index')
+		Route.get(':id', 'AdonnisLegadoController.bridge').as('stock.show')
+		Route.put(':id', 'AdonnisLegadoController.bridge').as('stock.update')
+		Route.put('update/:id', 'AdonnisLegadoController.bridge').as('stock.update.id')
+		Route.delete(':id', 'AdonnisLegadoController.bridge').as('stock.destroy')
+		Route.post('', 'AdonnisLegadoController.bridge').as('stock.store')
+	}).prefix('stock')
+
+	Route.group(() => {
+		Route.get('', 'ProcedureController.index').as('procedures.index')
+		Route.get(':id', 'ProcedureController.show').as('procedures.show')
+		Route.put(':_id', 'ProcedureController.update').as('procedures.update')
+		Route.delete(':id', 'ProcedureController.destroy').as('procedures.destroy')
+		Route.post('', 'ProcedureController.store').as('procedures.store')
+	}).prefix('procedures')
+
+	Route.group(() => {
+		Route.get('', 'AdonnisLegadoController.bridge').as('category.index')
+		Route.get(':id', 'AdonnisLegadoController.bridge').as('category.show')
+		Route.put(':id', 'AdonnisLegadoController.bridge').as('category.update')
+		Route.delete(':id', 'AdonnisLegadoController.bridge').as('category.destroy')
+		Route.post('', 'AdonnisLegadoController.bridge').as('category.store')
+	}).prefix('category')
+
+	Route.group(() => {
+		Route.get('', 'AdonnisLegadoController.bridge').as('partner.index')
+		Route.get(':id', 'AdonnisLegadoController.bridge').as('partner.show')
+		Route.put(':id', 'AdonnisLegadoController.bridge').as('partner.update')
+		Route.delete(':id', 'AdonnisLegadoController.bridge').as('partner.destroy')
+		Route.post('', 'AdonnisLegadoController.bridge').as('partner.store')
+	}).prefix('partner')
+
+	Route.group(() => {
+		Route.get('prof/:prof_id', 'FormController.findFormByProfId').as('form.prof.show')
+		Route.get('category/:category_id', 'AdonnisLegadoController.bridge').as(
+			'form.category.show',
+		)
+		Route.post('', 'AdonnisLegadoController.bridge').as('form.store')
+		Route.get('', 'FormController.findAllForms').as('form.index')
+		Route.get(':id', 'AdonnisLegadoController.bridge').as('form.show')
+		Route.put(':id', 'AdonnisLegadoController.bridge').as('form.update')
+		Route.delete(':id', 'AdonnisLegadoController.bridge').as('form.destroy')
+	}).prefix('form')
+
+	Route.get('answer-log-by-form/:form_id', 'AdonnisLegadoController.bridge').as(
+		'logAnswer.byFormId',
+	)
+	Route.get('answer', 'AdonnisLegadoController.bridge')
+	Route.get('answer/:id', 'AdonnisLegadoController.bridge')
+	Route.get('answer-by-form/:form_id', 'AdonnisLegadoController.bridge')
+	Route.put('answer/:id', 'AdonnisLegadoController.bridge')
+	Route.delete('answer/:id', 'AdonnisLegadoController.bridge')
+	Route.post('answer', 'AdonnisLegadoController.bridge')
+
+	Route.group(() => {
+		Route.post('', 'AnswerController.createAnswer').as('answer.store')
+		Route.get('', 'AnswerController.findAllAnswers').as('answer.index')
+		Route.get(':id', 'AnswerController.findAnswerById').as('answer.show')
+		Route.get('form/:form_id', 'AnswerController.findAnswersByFormId').as(
+			'answer.form.show',
+		)
+		Route.get('client/:client_id', 'AnswerController.findAnswersByClientId').as(
+			'answer.client.show',
+		)
+		Route.put(':id', 'AnswerController.updateAnswerById').as('answer.update')
+		Route.delete(':id', 'AnswerController.deleteAnswerById').as('answer.destroy')
+	}).prefix('answers')
+
+	Route.group(() => {
+		Route.get(':id', 'UnityController.show')
+		// Route.delete('unity/:id', 'UnityController.destroy')
+		Route.put(':_id', 'UnityController.update')
+	}).prefix('unity')
+}).middleware(['auth', 'role'])
 
 Route.group(() => {
-	Route.get('', 'AdonnisLegadoController.bridge')
-	Route.get(':id', 'AdonnisLegadoController.bridge')
-	Route.put(':id', 'AdonnisLegadoController.bridge')
-	Route.delete(':id', 'AdonnisLegadoController.bridge')
-	Route.post('', 'AdonnisLegadoController.bridge')
-})
-	.prefix('activity-await')
-	.middleware('auth')
+	Route.get('activity-stock', 'AdonnisLegadoController.bridge').as('activity.stock')
 
-Route.group(() => {
-	Route.get('', 'AdonnisLegadoController.bridge')
-	Route.get(':id', 'AdonnisLegadoController.bridge')
-	Route.put(':id', 'AdonnisLegadoController.bridge')
-	Route.put('update/:id', 'AdonnisLegadoController.bridge')
-	Route.delete(':id', 'AdonnisLegadoController.bridge')
-	Route.post('', 'AdonnisLegadoController.bridge')
-})
-	.prefix('stock')
-	.middleware('auth')
+	Route.group(() => {
+		Route.put('status/:id', 'ActivityController.updateActivityStatusById').as(
+			'activity.status',
+		)
+		Route.put('started_at/:id', 'ActivityController.updateActivityStartedAt').as(
+			'activity.startedAt',
+		)
+		Route.put('finished_at/:id', 'ActivityController.updateActivityFinishedAt').as(
+			'activity.finishedAt',
+		)
+		Route.get('', 'ActivityController.findAllActivities').as('activity.index')
+		Route.put(':id', 'ActivityController.updateActivityById').as('activity.update')
+		Route.get('prof/:prof_id', 'ActivityController.findActivitiesByProfId').as(
+			'activity.byProfId',
+		)
+		Route.get('client/:client_id', 'ActivityController.findActivitiesByClientId').as(
+			'activity.byClientId',
+		)
+		Route.delete(':id', 'ActivityController.deleteActivityById').as(
+			'activity.destroy',
+		)
+		Route.post('', 'ActivityController.createActivity').as('activity.store')
+		Route.post('payment', 'ActivityController.payment').as('activity.payment')
+	}).prefix('activity')
 
-Route.group(() => {
-	Route.get('', 'AdonnisLegadoController.bridge')
-	Route.get(':id', 'AdonnisLegadoController.bridge')
-	Route.put(':id', 'AdonnisLegadoController.bridge')
-	Route.delete(':id', 'AdonnisLegadoController.bridge')
-	Route.post('', 'AdonnisLegadoController.bridge')
-})
-	.prefix('category')
-	.middleware('auth')
-Route.group(() => {
-	Route.get('', 'CategoryController.index')
-	Route.get(':id', 'CategoryController.show')
-	Route.put(':_id', 'CategoryController.update')
-	Route.delete(':id', 'CategoryController.destroy')
-	Route.post('', 'CategoryController.store')
-})
-	.prefix('categories')
-	.middleware('auth')
+	Route.group(() => {
+		Route.get('', 'ProcedureController.index').as('procedure.index')
+		Route.get(':id', 'ProcedureController.show').as('procedure.show')
+		Route.put(':_id', 'ProcedureController.update').as('procedure.update')
+		Route.delete(':id', 'ProcedureController.destroy').as('procedure.destroy')
+		Route.post('', 'ProcedureController.store').as('procedure.store')
+	}).prefix('procedure')
 
-Route.group(() => {
-	Route.get('', 'AdonnisLegadoController.bridge')
-	Route.get(':id', 'AdonnisLegadoController.bridge')
-	Route.put(':id', 'AdonnisLegadoController.bridge')
-	Route.delete(':id', 'AdonnisLegadoController.bridge')
-	Route.post('', 'AdonnisLegadoController.bridge')
-})
-	.prefix('partner')
-	.middleware('auth')
-Route.group(() => {
-	Route.get('', 'PartnerController.index')
-	Route.get(':id', 'AdonnisLegadoController.bridge')
-	Route.put(':_id', 'PartnerController.update')
-	Route.delete(':id', 'PartnerController.destroy')
-	Route.post('', 'PartnerController.store')
-})
-	.prefix('partners')
-	.middleware('auth')
+	Route.group(() => {
+		Route.get('', 'ScheduleController.index').as('schedule.index')
+		Route.get(':id', 'ScheduleController.show').as('schedule.show')
+		Route.put(':id', 'ScheduleController.update').as('schedule.update')
+		Route.delete(':id', 'ScheduleController.destroy').as('schedule.destroy')
+		Route.post('', 'ScheduleController.store').as('schedule.store')
+	}).prefix('schedule')
 
-Route.group(() => {
-	Route.get('users', 'UserController.index')
-	Route.get('users-type', 'UserController.indexByType')
+	Route.post('/upload', 'AdonnisLegadoController.bridge').as('upload.image')
 
-	Route.get('form/prof/:prof_id', 'FormController.findFormByProfId')
-	Route.get('form/category/:category_id', 'AdonnisLegadoController.bridge')
-	Route.post('form', 'AdonnisLegadoController.bridge')
-	Route.get('form', 'FormController.findAllForms')
-	Route.get('form/:id', 'AdonnisLegadoController.bridge')
-	Route.put('form/:id', 'AdonnisLegadoController.bridge')
-	Route.delete('form/:id', 'AdonnisLegadoController.bridge')
+	Route.get('reports-activities', 'AdonnisLegadoController.bridge').as(
+		'reports.activities',
+	)
+	Route.get('reports-activities-partner', 'AdonnisLegadoController.bridge').as(
+		'reports.activities.partner',
+	)
+	Route.get('reports-payment', 'AdonnisLegadoController.bridge').as('reports.payment')
+	Route.get('reports-payment-type', 'AdonnisLegadoController.bridge').as(
+		'reports.payment.type',
+	)
+	Route.get('reports-payment-prof', 'AdonnisLegadoController.bridge').as(
+		'reports.payment.prof',
+	)
+	Route.get('reports-payment-prof-date', 'AdonnisLegadoController.bridge').as(
+		'reports.payment.prof.date',
+	)
+	Route.get('reports-procedure', 'AdonnisLegadoController.bridge').as(
+		'reports.procedure',
+	)
+	Route.get('reports-canceled', 'AdonnisLegadoController.bridge').as('reports.canceled')
 
-	Route.post('answer', 'AnswerController.createAnswer')
-	Route.get('answer', 'AnswerController.findAllAnswers')
-	Route.get('answer/:id', 'AnswerController.findAnswerById')
-	Route.get('answer/form/:form_id', 'AnswerController.findAnswersByFormId')
-	Route.get('answer/client/:client_id', 'AnswerController.findAnswersByClientId')
-	Route.put('answer/:id', 'AnswerController.updateAnswerById')
-	Route.delete('answer/:id', 'AnswerController.deleteAnswerById')
+	Route.group(() => {
+		Route.get('', 'AdonnisLegadoController.bridge').as('room.index')
+		Route.get('/:userId', 'AdonnisLegadoController.bridge').as('room.show')
+		Route.get('support', 'AdonnisLegadoController.bridge').as('room.support')
+		Route.post('/:id', 'AdonnisLegadoController.bridge').as('room.store')
+		Route.get('unread', 'AdonnisLegadoController.bridge').as('room.unread')
+	}).prefix('room')
 
-	Route.get('answer-log-by-form/:form_id', 'LogAnswerController.showByFormId')
+	Route.group(() => {
+		Route.get('', 'AdonnisLegadoController.bridge').as('ingredients.index')
+		Route.get('/:id', 'AdonnisLegadoController.bridge').as('ingredients.show')
+		Route.put('/:id', 'AdonnisLegadoController.bridge').as('ingredients.update')
+		Route.delete('/:id', 'AdonnisLegadoController.bridge').as('ingredients.destroy')
+		Route.post('', 'AdonnisLegadoController.bridge').as('ingredients.store')
+	}).prefix('ingredients')
 
-	Route.get('activity-stock', 'AdonnisLegadoController.bridge')
+	Route.group(() => {
+		Route.get('', 'AdonnisLegadoController.bridge').as('ingredients-list.index')
+		Route.get('/:id', 'AdonnisLegadoController.bridge').as('ingredients-list.show')
+		Route.put('/:id', 'AdonnisLegadoController.bridge').as('ingredients-list.update')
+		Route.delete('/:id', 'AdonnisLegadoController.bridge').as(
+			'ingredients-list.destroy',
+		)
+		Route.post('', 'AdonnisLegadoController.bridge').as('ingredients-list.store')
+	}).prefix('ingredients-list')
 
-	Route.get('activity', 'ActivityController.findAllActivities')
-	Route.put('activity/:id', 'ActivityController.updateActivityById')
-	Route.get('activity/prof/:prof_id', 'ActivityController.findActivitiesByProfId')
-	Route.get('activity/client/:client_id', 'ActivityController.findActivitiesByClientId')
-	Route.delete('activity/:id', 'ActivityController.deleteActivityById')
-	Route.post('activity', 'ActivityController.createActivity')
+	Route.group(() => {
+		Route.get('', 'AdonnisLegadoController.bridge').as('sick-notes.index')
+		Route.get('/:id', 'AdonnisLegadoController.bridge').as('sick-notes.show')
+		Route.put('/:id', 'AdonnisLegadoController.bridge').as('sick-notes.update')
+		Route.delete('/:id', 'AdonnisLegadoController.bridge').as('sick-notes.destroy')
+		Route.post('', 'AdonnisLegadoController.bridge').as('sick-notes.store')
+	}).prefix('sick-notes')
 
-	Route.post('activity-pay', 'ActivityController.payment')
+	Route.group(() => {
+		Route.get('', 'AdonnisLegadoController.bridge').as('directMail.index')
+		Route.get('/:id', 'AdonnisLegadoController.bridge').as('directMail.show')
+		Route.put('/:id', 'AdonnisLegadoController.bridge').as('directMail.update')
+		Route.delete('/:id', 'AdonnisLegadoController.bridge').as('directMail.destroy')
+		Route.post('', 'AdonnisLegadoController.bridge').as('directMail.store')
+	}).prefix('direct-mail')
 
-	Route.get('procedure', 'ProcedureController.index')
-	Route.get('procedure/:id', 'ProcedureController.show')
-	Route.put('procedure/:_id', 'ProcedureController.update')
-	Route.delete('procedure/:id', 'ProcedureController.destroy')
-	Route.post('procedure', 'ProcedureController.store')
+	Route.group(() => {
+		Route.get('', 'AdonnisLegadoController.bridge').as('pictures.index')
+		Route.get('/:id', 'AdonnisLegadoController.bridge').as('pictures.show')
+		Route.put('/:id', 'AdonnisLegadoController.bridge').as('pictures.update')
+		Route.delete('/:id', 'AdonnisLegadoController.bridge').as('pictures.destroy')
+		Route.post('', 'AdonnisLegadoController.bridge').as('pictures.store')
+	}).prefix('pictures')
 
-	Route.get('schedule', 'ScheduleController.index')
-	Route.get('schedule/:id', 'ScheduleController.show')
-	Route.put('schedule/:id', 'ScheduleController.update')
-	Route.delete('schedule/:id', 'ScheduleController.destroy')
-	Route.post('schedule', 'ScheduleController.store')
+	Route.get('activities-date', 'AdonnisLegadoController.bridge').as(
+		'activities-date.index',
+	)
 
-	Route.get('permissions', 'AdonnisLegadoController.bridge')
-	Route.get('permissions/:id', 'AdonnisLegadoController.bridge')
-	Route.put('permissions/:id', 'AdonnisLegadoController.bridge')
-	Route.post('permissions', 'AdonnisLegadoController.bridge')
+	Route.group(() => {
+		Route.get('', 'PaymentProfController.findAllPaymentProfs').as(
+			'payments-prof.index',
+		)
+		Route.get('/:id', 'PaymentProfController.findPaymentProfById').as(
+			'payments-prof.show',
+		)
+		Route.put('/:id', 'PaymentProfController.updatePaymentProfById').as(
+			'payments-prof.update',
+		)
+		Route.delete('/:id', 'PaymentProfController.deletePaymentProfById').as(
+			'payments-prof.destroy',
+		)
+		Route.post('', 'PaymentProfController.createPaymentProf').as(
+			'payments-prof.store',
+		)
+	}).prefix('payments-prof')
 
-	Route.post('/upload', 'AdonnisLegadoController.bridge')
+	Route.group(() => {
+		Route.get('', 'FinancialCategoryController.index').as(
+			'financial-categories.index',
+		)
+		Route.get('/inactives', 'FinancialCategoryController.inactives').as(
+			'financial-categories.inactives',
+		)
+		Route.get('/:id', 'FinancialCategoryController.show').as(
+			'financial-categories.show',
+		)
+		Route.put('/:id', 'FinancialCategoryController.update').as(
+			'financial-categories.update',
+		)
+		Route.delete('/:id', 'FinancialCategoryController.destroy').as(
+			'financial-categories.destroy',
+		)
+		Route.post('', 'FinancialCategoryController.store').as(
+			'financial-categories.store',
+		)
+	}).prefix('financial-categories')
 
-	Route.get('reports-activities', 'AdonnisLegadoController.bridge')
-	Route.get('reports-activities-partner', 'AdonnisLegadoController.bridge')
-	Route.get('reports-payment', 'AdonnisLegadoController.bridge')
-	Route.get('reports-payment-type', 'AdonnisLegadoController.bridge')
-	Route.get('reports-payment-prof', 'AdonnisLegadoController.bridge')
-	Route.get('reports-payment-prof-date', 'AdonnisLegadoController.bridge')
-	Route.get('reports-procedure', 'AdonnisLegadoController.bridge')
-	Route.get('reports-canceled', 'AdonnisLegadoController.bridge')
+	Route.group(() => {
+		Route.get('', 'CostCenterController.index').as('cost-centers.index')
+		Route.get('/inactives', 'CostCenterController.inactives').as(
+			'cost-centers.inactives',
+		)
+		Route.get('/:id', 'CostCenterController.show').as('cost-centers.show')
+		Route.put('/:id', 'CostCenterController.update').as('cost-centers.update')
+		Route.delete('/:id', 'CostCenterController.destroy').as('cost-centers.destroy')
+		Route.post('', 'CostCenterController.store').as('cost-centers.store')
+	}).prefix('cost-centers')
 
-	Route.get('rooms', 'AdonnisLegadoController.bridge')
-	Route.get('room/:userId', 'AdonnisLegadoController.bridge')
-	Route.get('room-support', 'AdonnisLegadoController.bridge')
-	Route.post('room/:id', 'AdonnisLegadoController.bridge')
-	Route.get('room-unread', 'AdonnisLegadoController.bridge')
+	Route.group(() => {
+		Route.get('', 'AccountController.findAllAccounts').as('accounts.index')
+		Route.get('/:id', 'AccountController.findAccountById').as('accounts.show')
+		Route.put('/:id', 'AccountController.updateAccountById').as('accounts.update')
+		Route.delete('/:id', 'AccountController.deleteAccountById').as('accounts.destroy')
+		Route.post('', 'AccountController.createAccount').as('accounts.store')
+	}).prefix('accounts')
 
-	Route.get('ingredients', 'AdonnisLegadoController.bridge')
-	Route.get('ingredients/:id', 'AdonnisLegadoController.bridge')
-	Route.put('ingredients/:id', 'AdonnisLegadoController.bridge')
-	Route.delete('ingredients/:id', 'AdonnisLegadoController.bridge')
-	Route.post('ingredients', 'AdonnisLegadoController.bridge')
+	Route.group(() => {
+		Route.get('', 'AdonnisLegadoController.bridge').as('default-config.index')
+		Route.get('/:id', 'AdonnisLegadoController.bridge').as('default-config.show')
+		Route.put('/:id', 'AdonnisLegadoController.bridge').as('default-config.update')
+		Route.delete('/:id', 'AdonnisLegadoController.bridge').as(
+			'default-config.destroy',
+		)
+		Route.post('', 'AdonnisLegadoController.bridge').as('default-config.store')
+	}).prefix('default-config')
 
-	Route.get('ingredients-list', 'AdonnisLegadoController.bridge')
-	Route.get('ingredients-list/:id', 'AdonnisLegadoController.bridge')
-	Route.put('ingredients-list/:id', 'AdonnisLegadoController.bridge')
-	Route.delete('ingredients-list/:id', 'AdonnisLegadoController.bridge')
-	Route.post('ingredients-list', 'AdonnisLegadoController.bridge')
+	Route.group(() => {
+		Route.get('', 'AdonnisLegadoController.bridge').as('transactions.index')
+		Route.put('/stts/:id', 'AdonnisLegadoController.bridge').as(
+			'transactions.updateStatus',
+		)
+		Route.put('/:id', 'AdonnisLegadoController.bridge').as('transactions.update')
+		Route.post('', 'AdonnisLegadoController.bridge').as('transactions.store')
+	}).prefix('transactions')
 
-	Route.get('sick-notes', 'AdonnisLegadoController.bridge')
-	Route.get('sick-notes/:id', 'AdonnisLegadoController.bridge')
-	Route.put('sick-notes/:id', 'AdonnisLegadoController.bridge')
-	Route.delete('sick-notes/:id', 'AdonnisLegadoController.bridge')
-	Route.post('sick-notes', 'AdonnisLegadoController.bridge')
-
-	Route.get('direct-mail', 'AdonnisLegadoController.bridge')
-	Route.get('direct-mail/:id', 'AdonnisLegadoController.bridge')
-	Route.put('direct-mail/:id', 'AdonnisLegadoController.bridge')
-	Route.delete('direct-mail/:id', 'AdonnisLegadoController.bridge')
-	Route.post('direct-mail', 'AdonnisLegadoController.bridge')
-
-	Route.get('direct-mails', 'DirectmailController.index')
-	Route.get('direct-mails/:id', 'DirectmailController.show')
-	Route.put('direct-mails/:_id', 'DirectmailController.update')
-	Route.delete('direct-mails/:id', 'DirectmailController.destroy')
-	Route.post('direct-mails', 'DirectmailController.store')
-
-	Route.get('pictures', 'AdonnisLegadoController.bridge')
-	Route.get('pictures/:id', 'AdonnisLegadoController.bridge')
-	Route.put('pictures/:id', 'AdonnisLegadoController.bridge')
-	Route.delete('pictures/:id', 'AdonnisLegadoController.bridge')
-	Route.post('pictures', 'AdonnisLegadoController.bridge')
-
-	Route.get('activities-date', 'AdonnisLegadoController.bridge')
-
-	Route.get('payments-prof', 'PaymentProfController.findAllPaymentProfs')
-	Route.get('payments-prof/:id', 'PaymentProfController.findPaymentProfById')
-	Route.put('payments-prof/:id', 'PaymentProfController.updatePaymentProfById')
-	Route.delete('payments-prof/:id', 'PaymentProfController.deletePaymentProfById')
-	Route.post('payments-prof', 'PaymentProfController.createPaymentProf')
-
-	Route.get('financial-categories', 'FinancialCategoryController.index')
-	Route.get('financial-categories/inactives', 'FinancialCategoryController.inactives')
-	Route.get('financial-categories/:id', 'FinancialCategoryController.show')
-	Route.put('financial-categories/:id', 'FinancialCategoryController.update')
-	Route.delete('financial-categories/:id', 'FinancialCategoryController.destroy')
-	Route.post('financial-categories', 'FinancialCategoryController.store')
-
-	Route.get('cost-centers', 'CostCenterController.index')
-	Route.get('cost-centers/inactives', 'CostCenterController.inactives')
-	Route.get('cost-centers/:id', 'CostCenterController.show')
-	Route.put('cost-centers/:id', 'CostCenterController.update')
-	Route.delete('cost-centers/:id', 'CostCenterController.destroy')
-	Route.post('cost-centers', 'CostCenterController.store')
-
-	Route.get('accounts', 'AccountController.findAllAccounts')
-	Route.get('accounts/:id', 'AccountController.findAccountById')
-	Route.put('accounts/:id', 'AccountController.updateAccountById')
-	Route.delete('accounts/:id', 'AccountController.deleteAccountById')
-	Route.post('accounts', 'AccountController.createAccount')
-
-	Route.get('default-config', 'AdonnisLegadoController.bridge')
-	Route.get('default-config/:id', 'AdonnisLegadoController.bridge')
-	Route.put('default-config/:id', 'AdonnisLegadoController.bridge')
-	Route.delete('default-config/:id', 'AdonnisLegadoController.bridge')
-	Route.post('default-config', 'AdonnisLegadoController.bridge')
-
-	Route.get('default-configs', 'DefaultConfigController.index')
-	Route.get('default-configs/:id', 'DefaultConfigController.show')
-	Route.put('default-configs/:_id', 'DefaultConfigController.update')
-	Route.delete('default-configs/:id', 'DefaultConfigController.destroy')
-	Route.post('default-configs', 'DefaultConfigController.store')
-
-	Route.get('payments-list', 'AdonnisLegadoController.bridge')
-	Route.put('payments-stts/:id', 'AdonnisLegadoController.bridge')
-	Route.put('payments-transaction/:id', 'AdonnisLegadoController.bridge')
-	Route.post('payments-transaction', 'AdonnisLegadoController.bridge')
-
-	Route.post('import', 'ImportController.import')
-}).middleware('auth')
+	Route.post('import', 'ImportController.import').as('import')
+}).middleware(['auth', 'role'])

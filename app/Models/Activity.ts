@@ -1,23 +1,20 @@
-import Mongoose, { Schema } from '@ioc:Mongoose'
-import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
-import type { IActivity } from 'Types/IActivity'
+import Mongoose, { Schema } from "@ioc:Mongoose";
+import { AppointmentStatus, PaymentStatus } from "App/Helpers";
+import type { IActivity } from "Types/IActivity";
 
 const ActivitySchema = new Schema<IActivity>(
 	{
 		date: {
 			type: Date,
-			required: true,
 		},
 		hour_start: {
 			type: String,
-			required: true,
 		},
 		hour_end: {
 			type: String,
-			required: true,
 		},
 		status: {
-			enum: Object.values(AppointmentStatus),
+			enum: Object.values(PaymentStatus),
 		},
 		schedule_block: {
 			type: Boolean,
@@ -108,11 +105,6 @@ const ActivitySchema = new Schema<IActivity>(
 				required: true,
 			},
 		},
-		phone: {
-			type: String,
-			required: false,
-			default: null,
-		},
 		all_day: {
 			type: Boolean,
 			required: true,
@@ -132,27 +124,31 @@ const ActivitySchema = new Schema<IActivity>(
 			type: Schema.Types.ObjectId,
 			required: true,
 		},
-		user_id: {
-			type: Schema.Types.ObjectId,
-			required: false,
-		},
 		scheduled: {
 			type: String,
 			required: true,
 			enum: Object.values(AppointmentStatus),
-			default: AppointmentStatus.AWAITING,
+			default: AppointmentStatus.SCHEDULED,
 		},
 		prof_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
 		},
+		started_at: {
+			type: Date,
+			required: false,
+		},
+		finished_at: {
+			type: Date,
+			required: false,
+		},
 	},
 	{
 		timestamps: {
-			createdAt: 'created_at',
-			updatedAt: 'updated_at',
+			createdAt: "created_at",
+			updatedAt: "updated_at",
 		},
-	},
-)
+	}
+);
 
-export default Mongoose.model<IActivity>('activities', ActivitySchema)
+export default Mongoose.model<IActivity>("activities", ActivitySchema);
