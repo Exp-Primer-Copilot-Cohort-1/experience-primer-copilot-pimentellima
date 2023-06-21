@@ -2,7 +2,7 @@ import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import { AppointmentStatus } from "App/Helpers";
 import Activity from "App/Models/Activity";
-import { IActivity } from "Types/IActivity";
+import { ActivityParams, IActivity } from "Types/IActivity";
 import ActivityEntity from "../../entities/activities/activity";
 import { ActivityNotFoundError } from "../../errors/activity-not-found";
 import { MissingParamsError } from "../../errors/missing-params";
@@ -15,8 +15,8 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		id: string,
 		started_at: Date
 	): PromiseEither<AbstractError, IActivity> {
-		const activity = await Activity.findOneAndUpdate(
-			{ _id: id },
+		const activity = await Activity.findByIdAndUpdate(
+			id,
 			{
 				$set: {
 					started_at,
@@ -37,8 +37,8 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		id: string,
 		finished_at: Date
 	): PromiseEither<AbstractError, IActivity> {
-		const activity = await Activity.findOneAndUpdate(
-			{ _id: id },
+		const activity = await Activity.findByIdAndUpdate(
+			id,
 			{
 				$set: {
 					finished_at,
@@ -58,8 +58,8 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		id: string,
 		status: AppointmentStatus
 	): PromiseEither<AbstractError, IActivity> {
-		const activity = await Activity.findOneAndUpdate(
-			{ _id: id },
+		const activity = await Activity.findByIdAndUpdate(
+			id,
 			{
 				$set: {
 					scheduled: status,
@@ -75,26 +75,16 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		return right(activity);
 	}
 
-	async createActivityInAwait(
-		activity: IActivity
-	): PromiseEither<AbstractError, IActivity> {
-		const activityOrErr = await ActivityEntity.build(activity);
-		if (activityOrErr.isLeft()) return left(activityOrErr.extract());
-
-		const newActivity = await Activity.create(
-			activityOrErr.extract().params()
-		);
-		return right(newActivity);
-	}
-
 	async createActivity(
-		activity: IActivity
+		unity_id: string,
+		activity: ActivityParams
 	): PromiseEither<AbstractError, IActivity> {
+		if (!unity_id) return left(new MissingParamsError("unity_id"));
 		const activityOrErr = await ActivityEntity.build(activity);
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract());
 
 		const newActivity = await Activity.create(
-			activityOrErr.extract().params()
+			activityOrErr.extract().defineUnityId(unity_id).params()
 		);
 		return right(newActivity);
 	}
@@ -158,22 +148,23 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 	async updateActivityById(
 		id: string,
-		activity: IActivity
+		activity: ActivityParams
 	): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new MissingParamsError("id"));
 		const oldActivity = await Activity.findById(id);
 		if (!oldActivity) return left(new ActivityNotFoundError());
-		const activityOrErr = await ActivityEntity.build({
-			...oldActivity,
-			...activity,
-		});
-		if (activityOrErr.isLeft())
-			return left(activityOrErr.extract());
+		const activityOrErr = await ActivityEntity.build(activity);
+		if (activityOrErr.isLeft()) return left(activityOrErr.extract());
 
-		
-		const updatedActivity = activityOrErr.extract().params();
-
-		await Activity.findByIdAndUpdate(id, updatedActivity);
+		const updatedActivity = await Activity.findByIdAndUpdate(
+			id,
+			activityOrErr.extract().params(),
+			{
+				returnDocument: "after",
+			}
+		);
+		if (!updatedActivity)
+			return left(new AbstractError("Error updating activity", 500));
 		return right(updatedActivity);
 	}
 }

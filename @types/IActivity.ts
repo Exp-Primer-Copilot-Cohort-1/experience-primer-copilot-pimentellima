@@ -22,7 +22,7 @@ type Client = {
 	label: string;
 	celphone: string;
 	email?: string;
-	partner?: string;
+	partner?: string | null;
 };
 
 type Prof = {
@@ -30,18 +30,37 @@ type Prof = {
 	label: string;
 };
 
+export type ActivityParams = {
+	_id?: string
+	date: string
+	hour_start: string
+	hour_end: string
+	procedures: ProcedureParams[]
+	client: Client
+	obs?: string
+	prof: Prof
+	prof_id: string
+}
+
+type ProcedureParams = {
+	value: string;
+	label: string;
+	minutes: number;
+	color: string;
+	val: number;
+	health_insurance: HealthInsurance;
+}
+
 export interface IActivity {
 	_id?: string | ObjectId;
 	date: Date;
 	hour_start: string;
 	hour_end: string;
 	status: PaymentStatus;
-	schedule_block: boolean;
 	procedures: Procedure[];
 	client: Client;
 	obs?: string;
 	prof: Prof;
-	all_day: boolean;
 	is_recorrent: boolean;
 	active: boolean;
 	unity_id: string | ObjectId;

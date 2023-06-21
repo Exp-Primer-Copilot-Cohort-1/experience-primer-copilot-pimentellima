@@ -16,11 +16,6 @@ const ActivitySchema = new Schema<IActivity>(
 		status: {
 			enum: Object.values(PaymentStatus),
 		},
-		schedule_block: {
-			type: Boolean,
-			required: true,
-			default: false,
-		},
 		procedures: [
 			{
 				value: {
@@ -104,11 +99,6 @@ const ActivitySchema = new Schema<IActivity>(
 				type: String,
 				required: true,
 			},
-		},
-		all_day: {
-			type: Boolean,
-			required: true,
-			default: false,
 		},
 		is_recorrent: {
 			type: Boolean,

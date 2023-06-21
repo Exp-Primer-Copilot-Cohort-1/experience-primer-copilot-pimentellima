@@ -1,13 +1,16 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import { AppointmentStatus } from "App/Helpers";
+import { AppointmentStatus, PaymentStatus } from "App/Helpers";
+import Activity from "App/Models/Activity";
 import User from "App/Models/User";
-import { IActivity } from "Types/IActivity";
+import { ActivityParams, IActivity } from "Types/IActivity";
 import { IUser } from "Types/IUser";
-import { format, getDay, isAfter, startOfYesterday } from "date-fns";
+import { format, getDay, isAfter, isSameDay, startOfYesterday } from "date-fns";
 import { z } from "zod";
 import { AbstractActivity } from "../abstract/activity-abstract";
+import ScheduleBlock from "App/Models/ScheduleBlock";
+import { IScheduleBlock } from "Types/IScheduleBlock";
 
 export class ActivityEntity extends AbstractActivity implements IActivity {
 	private _date: Date;
@@ -24,7 +27,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		return this._started_at;
 	}
 
-	public get finished_at(): Date | undefined{
+	public get finished_at(): Date | undefined {
 		return this._finished_at;
 	}
 
@@ -109,148 +112,246 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 	}
 
 	public static async build(
-		params: IActivity
+		params: ActivityParams
 	): PromiseEither<AbstractError, ActivityEntity> {
 		try {
-			const profData = await User.findById(params.prof_id) as IUser
+			const profData = (await User.findById(params.prof_id)) as IUser;
+			const activities = (
+				(await Activity.find({
+					prof_id: params.prof_id,
+				})) as IActivity[]
+			).filter(
+				(activity) =>
+					isSameDay(activity.date, new Date(params.date)) &&
+					activity.scheduled !== AppointmentStatus.COMPLETED &&
+					activity.scheduled !== AppointmentStatus.CANCELED &&
+					activity.scheduled !== AppointmentStatus.CANCELED_CLIENT
+			);
+			const scheduleBlocks = (
+				(await ScheduleBlock.find({
+					prof_id: params.prof_id,
+				})) as IScheduleBlock[]
+			).filter((scheduleBlock) =>
+				isSameDay(scheduleBlock.date, new Date(params.date))
+			);
+
+			const profSchedule = [...activities, ...scheduleBlocks];
+
 			const startLunch = format(
 				new Date(profData.hour_start_lunch),
 				"HH:mm"
 			);
-			const endLunch = format(
-				new Date(profData.hour_end_lunch),
-				"HH:mm"
-			);
+			const endLunch = format(new Date(profData.hour_end_lunch), "HH:mm");
 			const startDay = format(new Date(profData.hour_start), "HH:mm");
 			const endDay = format(new Date(profData.hour_end), "HH:mm");
-
-			z.object({
-				prof: z.object({}),
-				client: z.object({}),
-				procedures: z
-					.array(
-						z.object({
-							value: z.string(),
-							health_insurance: z.object({
+			const parsedParams = z
+				.object({
+					prof: z.object({
+						value: z.string(),
+						label: z.string(),
+					}),
+					prof_id: z.string(),
+					client: z.object({
+						value: z.string(),
+						label: z.string(),
+						celphone: z.string(),
+						email: z.string().optional(),
+						partner: z.string().nullable().optional(),
+					}),
+					procedures: z.array(
+						z
+							.object({
 								value: z.string(),
-								price: z.number(),
+								health_insurance: z.object({
+									value: z.string(),
+									price: z.number(),
+									label: z.string(),
+								}),
+								val: z.number(),
+								minutes: z.number(),
 								label: z.string(),
-							}),
-							val: z.number(),
-							minutes: z.number(),
-							label: z.string(),
-						})
-					).min(1),
-				date: z
-					.string()
-					.refine(
-						(val) => {
+								color: z.string(),
+							})
+							.transform((val) => ({
+								...val,
+								status: "A RECEBER",
+							}))
+					),
+					date: z
+						.string()
+						.refine((val) => {
 							const yesterday = startOfYesterday();
 							return isAfter(new Date(val), yesterday);
-						},
-					)
-					.refine(
-						(val) => {
-							const day = getDay(new Date(val));
-							if (
-								(day === 0 && !profData.is_sunday) ||
-								(day === 1 && !profData.is_monday) ||
-								(day === 2 && !profData.is_tuesday) ||
-								(day === 3 && !profData.is_thursday) ||
-								(day === 4 && !profData.is_wednesday) ||
-								(day === 5 && !profData.is_friday) ||
-								(day === 6 && !profData.is_saturday)
-							) {
-								return false;
-							}
-							return true;
-						},
-						{ message: "O profissional selecionado não atende nesse dia" }
-					),
-				hour_start: z 
-					.string()
-					.refine(
-						(val) => {
-							const formattedVal = format(new Date(val), "HH:mm");
-							if (
-								(formattedVal >= startLunch && formattedVal <= endLunch) ||
-								formattedVal < startDay ||
-								formattedVal > endDay
-							) {
-								return false;
-							}
-							return true;
-						},
-						{ message: "O profissional selecionado não atende nesse horário" }
-					)
-					.refine(
-						(val) => {
-							const hour_end = params.hour_end;
-							if (!hour_end || !val) {
+						})
+						.refine(
+							(val) => {
+								const day = getDay(new Date(val));
+								if (
+									(day === 0 && !profData.is_sunday) ||
+									(day === 1 && !profData.is_monday) ||
+									(day === 2 && !profData.is_tuesday) ||
+									(day === 3 && !profData.is_thursday) ||
+									(day === 4 && !profData.is_wednesday) ||
+									(day === 5 && !profData.is_friday) ||
+									(day === 6 && !profData.is_saturday)
+								) {
+									return false;
+								}
 								return true;
+							},
+							{
+								message:
+									"O profissional selecionado não atende nesse dia",
 							}
-							return (
+						)
+						.transform((val) => new Date(val)),
+					hour_start: z
+						.string()
+						.refine(
+							(val) => {
+								const formattedVal = format(
+									new Date(val),
+									"HH:mm"
+								);
+								if (
+									(formattedVal >= startLunch &&
+										formattedVal <= endLunch) ||
+									formattedVal < startDay ||
+									formattedVal > endDay
+								) {
+									return false;
+								}
+								return true;
+							},
+							{
+								message:
+									"O profissional selecionado não atende nesse horário",
+							}
+						)
+						.refine(
+							(val) => {
+								for (const activity of profSchedule) {
+									const formattedVal = format(
+										new Date(val),
+										"HH:mm"
+									);
+									const formattedHourStart = format(
+										new Date(activity.hour_start),
+										"HH:mm"
+									);
+									const formattedHourEnd = format(
+										new Date(activity.hour_end),
+										"HH:mm"
+									);
+									if (
+										formattedVal >= formattedHourStart &&
+										formattedVal <= formattedHourEnd
+									)
+										return false;
+								}
+								return true;
+							},
+							{
+								message:
+									"O profissional selecionado está com a agenda indisponivel nesse horário",
+							}
+						)
+						.refine(
+							(val) =>
 								format(new Date(val), "HH:mm") <
-								format(new Date(hour_end), "HH:mm")
+								format(new Date(params.hour_end), "HH:mm")
+						)
+						.transform((val) => {
+							const correctedVal = new Date(val);
+							const date = new Date(params.date);
+							correctedVal.setFullYear(
+								date.getFullYear(),
+								date.getMonth(),
+								date.getDate()
 							);
-						},
-					),
-				hour_end: z
-					.string()
-					.refine(
-						(val) => {
-							const formattedVal = format(new Date(val), "HH:mm");
-							if (
-								(formattedVal >= startLunch && formattedVal <= endLunch) ||
-								formattedVal < startDay ||
-								formattedVal > endDay
-							) {
-								return false;
+							return correctedVal.toISOString();
+						}),
+					hour_end: z
+						.string()
+						.refine(
+							(val) => {
+								const formattedVal = format(
+									new Date(val),
+									"HH:mm"
+								);
+								if (
+									(formattedVal >= startLunch &&
+										formattedVal <= endLunch) ||
+									formattedVal < startDay ||
+									formattedVal > endDay
+								) {
+									return false;
+								}
+								return true;
+							},
+							{
+								message:
+									"O profissional selecionado não atende nesse horário",
 							}
-							return true;
-						},
-						{ message: "O profissional selecionado não atende nesse horário" }
-					),
-				obs: z.string(),
-			}).parse(params)
-
-			const hour_start = new Date(params.hour_start);
-			const hour_end = new Date(params.hour_end);
-
-			hour_start.setFullYear(
-				new Date(params.date).getFullYear(),
-				new Date(params.date).getMonth(),
-				new Date(params.date).getDate()
-			);
-			hour_end.setFullYear(
-				new Date(params.date).getFullYear(),
-				new Date(params.date).getMonth(),
-				new Date(params.date).getDate()
-			);
-
+						)
+						.refine(
+							(val) => {
+								for (const activity of profSchedule) {
+									const formattedVal = format(
+										new Date(val),
+										"HH:mm"
+									);
+									const formattedHourStart = format(
+										new Date(activity.hour_start),
+										"HH:mm"
+									);
+									const formattedHourEnd = format(
+										new Date(activity.hour_end),
+										"HH:mm"
+									);
+									if (
+										formattedVal >= formattedHourStart &&
+										formattedVal <= formattedHourEnd
+									)
+										return false;
+								}
+								return true;
+							},
+							{
+								message:
+									"O profissional selecionado está com a agenda indisponivel nesse horário",
+							}
+						)
+						.transform((val) => {
+							const correctedVal = new Date(val);
+							const date = new Date(params.date);
+							correctedVal.setFullYear(
+								date.getFullYear(),
+								date.getMonth(),
+								date.getDate()
+							);
+							return correctedVal.toISOString();
+						}),
+					obs: z.string().optional(),
+				})
+				.parse(params);
 			return right(
 				new ActivityEntity()
-					.defineId(params._id?.toString())
-					.defineDate(params.date)
-					.defineHourStart(hour_start.toISOString())
-					.defineHourEnd(hour_end.toISOString())
-					.defineStatus(params.status)
-					.defineScheduleBlock(params.schedule_block)
-					.defineProcedures(params.procedures)
-					.defineClient(params.client)
-					.defineObs(params.obs)
-					.defineProf(params.prof)
-					.defineAllDay(params.all_day)
-					.defineIsRecorrent(params.is_recorrent)
-					.defineActive(params.active)
-					.defineUnityId(params.unity_id.toString())
-					.defineScheduled(params.scheduled)
-					.defineProfId(params.prof_id?.toString())
-					.defineStartedAt(params.started_at)
-					.defineFinishedAt(params.finished_at)
+					.defineDate(parsedParams.date)
+					.defineHourStart(parsedParams.hour_start)
+					.defineHourEnd(parsedParams.hour_end)
+					.defineStatus(PaymentStatus.PENDING)
+					.defineProcedures(parsedParams.procedures)
+					.defineClient(parsedParams.client)
+					.defineObs(parsedParams.obs)
+					.defineProf(parsedParams.prof)
+					.defineIsRecorrent(false)
+					.defineActive(true)
+					.defineScheduled(AppointmentStatus.SCHEDULED)
+					.defineProfId(parsedParams.prof_id)
 			);
 		} catch (err) {
-			console.log(err)
+			console.log(err);
 			return left(err);
 		}
 	}
