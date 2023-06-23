@@ -4,7 +4,7 @@ import { AppointmentStatus, PaymentStatus } from "../app/Helpers";
 type HealthInsurance = {
 	value: string;
 	label: string;
-	price: number;
+	price: string;
 };
 
 type Procedure = {
@@ -12,7 +12,7 @@ type Procedure = {
 	label: string;
 	minutes: number;
 	color: string;
-	val: number;
+	val: string;
 	health_insurance: HealthInsurance;
 	status: string;
 };
@@ -47,7 +47,7 @@ type ProcedureParams = {
 	label: string;
 	minutes: number;
 	color: string;
-	val: number;
+	val: string;
 	health_insurance: HealthInsurance;
 }
 

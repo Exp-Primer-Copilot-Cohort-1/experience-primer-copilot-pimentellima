@@ -4,7 +4,7 @@ import { PaymentStatus } from "App/Helpers";
 export type HealthInsurance = {
 	value: string;
 	label: string;
-	price: number;
+	price: string;
 };
 
 export type Procedure = {
@@ -12,7 +12,7 @@ export type Procedure = {
 	label: string;
 	minutes: number;
 	color: string;
-	val: number;
+	val: string;
 	health_insurance: HealthInsurance;
 	status: string;
 };

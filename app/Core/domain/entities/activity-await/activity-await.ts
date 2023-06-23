@@ -34,10 +34,10 @@ export class ActivityAwaitEntity
 								value: z.string(),
 								health_insurance: z.object({
 									value: z.string(),
-									price: z.number(),
+									price: z.string(),
 									label: z.string(),
 								}),
-								val: z.number(),
+								val: z.string().regex(/\d{0,2}(\,\d{1,2})?/),
 								minutes: z.number(),
 								label: z.string(),
 								color: z.string(),

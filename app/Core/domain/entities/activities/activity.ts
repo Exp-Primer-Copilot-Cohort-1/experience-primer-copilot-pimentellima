@@ -115,7 +115,6 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		params: ActivityParams
 	): PromiseEither<AbstractError, ActivityEntity> {
 		try {
-
 			const profData = (await User.findById(params.prof_id)) as IUser;
 			const activities = (
 				(await Activity.find({
@@ -163,10 +162,10 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 								value: z.string(),
 								health_insurance: z.object({
 									value: z.string(),
-									price: z.number(),
+									price: z.string(),
 									label: z.string(),
 								}),
-								val: z.number(),
+								val: z.string().regex(/\d{0,2}(\,\d{1,2})?/),
 								minutes: z.number(),
 								label: z.string(),
 								color: z.string(),

@@ -35,7 +35,7 @@ const ActivitySchema = new Schema<IActivity>(
 					required: true,
 				},
 				val: {
-					type: Number,
+					type: String,
 					required: true,
 				},
 				health_insurance: {
@@ -48,7 +48,7 @@ const ActivitySchema = new Schema<IActivity>(
 						required: false,
 					},
 					price: {
-						type: Number,
+						type: String,
 						required: false,
 					},
 				},
