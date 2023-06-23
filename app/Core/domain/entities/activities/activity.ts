@@ -115,6 +115,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		params: ActivityParams
 	): PromiseEither<AbstractError, ActivityEntity> {
 		try {
+
 			const profData = (await User.findById(params.prof_id)) as IUser;
 			const activities = (
 				(await Activity.find({
@@ -123,13 +124,11 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 			).filter(
 				(activity) =>
 					isSameDay(activity.date, new Date(params.date)) &&
-					activity.scheduled !== AppointmentStatus.COMPLETED &&
-					activity.scheduled !== AppointmentStatus.CANCELED &&
-					activity.scheduled !== AppointmentStatus.CANCELED_CLIENT
+					activity._id !== params._id
 			);
 			const scheduleBlocks = (
 				(await ScheduleBlock.find({
-					prof_id: params.prof_id,
+					"prof.value": params.prof_id,
 				})) as IScheduleBlock[]
 			).filter((scheduleBlock) =>
 				isSameDay(scheduleBlock.date, new Date(params.date))
@@ -281,7 +280,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 								);
 								if (
 									(formattedVal >= startLunch &&
-										formattedVal <= endLunch) ||
+										formattedVal < endLunch) ||
 									formattedVal < startDay ||
 									formattedVal > endDay
 								) {

@@ -25,11 +25,26 @@ export class ScheduleBlockMongoRepository
 		);
 		return right(newActivity);
 	}
+
 	async findAllScheduleBlock(
 		unity_id: string
 	): PromiseEither<AbstractError, IScheduleBlock[]> {
 		if (!unity_id) return left(new MissingParamsError("unity_id"));
 		const scheduleBlocks = await ScheduleBlock.find({ unity_id });
+		return right(scheduleBlocks);
+	}
+
+	async findScheduleBlocksByProfId(
+		unity_id: string,
+		prof_id: string
+	): PromiseEither<AbstractError, IScheduleBlock[]> {
+		if (!unity_id) return left(new MissingParamsError("unity_id"));
+		if (!prof_id) return left(new MissingParamsError("prof_id"));
+		const scheduleBlocks = await ScheduleBlock.find({
+			unity_id,
+			"prof.value": prof_id,
+		});
+		console.log(scheduleBlocks);
 		return right(scheduleBlocks);
 	}
 

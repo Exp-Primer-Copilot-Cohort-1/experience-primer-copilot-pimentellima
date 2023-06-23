@@ -4,6 +4,7 @@ import { ScheduleBlockMongoRepository } from "App/Core/domain/repositories/sched
 import { CreateScheduleBlockUseCase } from "App/Core/domain/use-cases/schedule_blocks/create-schedule-block-use-case";
 import { DeleteScheduleBlockUseCase } from "App/Core/domain/use-cases/schedule_blocks/delete-schedule-block-use-case";
 import { FindAllScheduleBlockUseCase } from "App/Core/domain/use-cases/schedule_blocks/find-all-schedule-block-use-case";
+import { FindScheduleBlocksByProfIdUseCase } from "App/Core/domain/use-cases/schedule_blocks/find-schedule-blocks-by-prof-id-use-case";
 
 export const makeCreateScheduleBlockComposer = (): ControllerGeneric => {
 	return new Controller(
@@ -18,5 +19,11 @@ export const makeDeleteScheduleBlockByIdComposer = (): ControllerGeneric => {
 export const makeFindAllScheduleBlocksComposer = (): ControllerGeneric => {
 	return new Controller(
 		new FindAllScheduleBlockUseCase(new ScheduleBlockMongoRepository())
+	);
+};
+
+export const makeFindScheduleBlocksByProfIdComposer = (): ControllerGeneric => {
+	return new Controller(
+		new FindScheduleBlocksByProfIdUseCase(new ScheduleBlockMongoRepository())
 	);
 };

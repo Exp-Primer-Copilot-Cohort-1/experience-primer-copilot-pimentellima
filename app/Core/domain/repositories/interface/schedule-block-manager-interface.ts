@@ -10,6 +10,10 @@ export interface ScheduleBlockManagerInterface {
 	findAllScheduleBlock: (
 		unity_id: string
 	) => PromiseEither<AbstractError, IScheduleBlock[]>;
+	findScheduleBlocksByProfId: (
+		unity_id: string,
+		prof_id: string
+	) => PromiseEither<AbstractError, IScheduleBlock[]>;
 	deleteScheduleBlock: (
 		id: string
 	) => PromiseEither<AbstractError, IScheduleBlock>;

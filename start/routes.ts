@@ -144,6 +144,9 @@ Route.group(() => {
 		Route.get("", "ScheduleBlockController.findAllScheduleBlocks").as(
 			"schedule-block.index"
 		);
+		Route.get("prof/:prof_id", "ScheduleBlockController.findScheduleBlocksByProfId").as(
+			"schedule-block.profId"
+		);
 		Route.delete(
 			":id",
 			"ScheduleBlockController.deleteScheduleBlockById"

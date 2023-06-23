@@ -4,11 +4,18 @@ import {
 	makeCreateScheduleBlockComposer,
 	makeDeleteScheduleBlockByIdComposer,
 	makeFindAllScheduleBlocksComposer,
+	makeFindScheduleBlocksByProfIdComposer,
 } from "App/Core/composers/schedule_block/schedule_block-composer";
 
 class ScheduleBlockController {
 	async findAllScheduleBlocks(ctx: HttpContextContract) {
 		return adaptRoute(makeFindAllScheduleBlocksComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		});
+	}
+
+	async findScheduleBlocksByProfId(ctx: HttpContextContract) {
+		return adaptRoute(makeFindScheduleBlocksByProfIdComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		});
 	}
