@@ -43,7 +43,7 @@ export class ScheduleMongoRepository implements ScheduleManagerInterface {
 							const formattedVal = format(new Date(val), "HH:mm");
 							return !(
 								formattedVal >= startLunch &&
-								formattedVal <= endLunch
+								formattedVal < endLunch
 							);
 						},
 						{
@@ -70,7 +70,7 @@ export class ScheduleMongoRepository implements ScheduleManagerInterface {
 							const formattedVal = format(new Date(val), "HH:mm");
 							return !(
 								formattedVal >= startLunch &&
-								formattedVal <= endLunch
+								formattedVal < endLunch
 							);
 						},
 						{
