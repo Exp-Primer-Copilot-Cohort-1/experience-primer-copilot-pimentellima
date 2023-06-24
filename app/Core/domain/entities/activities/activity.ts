@@ -3,14 +3,14 @@ import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import { AppointmentStatus, PaymentStatus } from "App/Helpers";
 import Activity from "App/Models/Activity";
+import ScheduleBlock from "App/Models/ScheduleBlock";
 import User from "App/Models/User";
 import { ActivityParams, IActivity } from "Types/IActivity";
+import { IScheduleBlock } from "Types/IScheduleBlock";
 import { IUser } from "Types/IUser";
 import { format, getDay, isAfter, isSameDay, startOfYesterday } from "date-fns";
 import { z } from "zod";
 import { AbstractActivity } from "../abstract/activity-abstract";
-import ScheduleBlock from "App/Models/ScheduleBlock";
-import { IScheduleBlock } from "Types/IScheduleBlock";
 
 export class ActivityEntity extends AbstractActivity implements IActivity {
 	private _date: Date;
@@ -123,7 +123,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 			).filter(
 				(activity) =>
 					isSameDay(activity.date, new Date(params.date)) &&
-					activity._id !== params._id
+					activity._id?.toString() !== params._id
 			);
 			const scheduleBlocks = (
 				(await ScheduleBlock.find({
@@ -135,13 +135,6 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 
 			const profSchedule = [...activities, ...scheduleBlocks];
 
-			const startLunch = format(
-				new Date(profData.hour_start_lunch),
-				"HH:mm"
-			);
-			const endLunch = format(new Date(profData.hour_end_lunch), "HH:mm");
-			const startDay = format(new Date(profData.hour_start), "HH:mm");
-			const endDay = format(new Date(profData.hour_end), "HH:mm");
 			const parsedParams = z
 				.object({
 					prof: z.object({
@@ -207,27 +200,6 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 						.string()
 						.refine(
 							(val) => {
-								const formattedVal = format(
-									new Date(val),
-									"HH:mm"
-								);
-								if (
-									(formattedVal >= startLunch &&
-										formattedVal <= endLunch) ||
-									formattedVal < startDay ||
-									formattedVal > endDay
-								) {
-									return false;
-								}
-								return true;
-							},
-							{
-								message:
-									"O profissional selecionado não atende nesse horário",
-							}
-						)
-						.refine(
-							(val) => {
 								for (const activity of profSchedule) {
 									const formattedVal = format(
 										new Date(val),
@@ -271,27 +243,6 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 						}),
 					hour_end: z
 						.string()
-						.refine(
-							(val) => {
-								const formattedVal = format(
-									new Date(val),
-									"HH:mm"
-								);
-								if (
-									(formattedVal >= startLunch &&
-										formattedVal < endLunch) ||
-									formattedVal < startDay ||
-									formattedVal > endDay
-								) {
-									return false;
-								}
-								return true;
-							},
-							{
-								message:
-									"O profissional selecionado não atende nesse horário",
-							}
-						)
 						.refine(
 							(val) => {
 								for (const activity of profSchedule) {
