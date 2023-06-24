@@ -308,13 +308,7 @@ Route.group(() => {
 	}).prefix("procedure");
 
 	Route.group(() => {
-		Route.get("", "ScheduleController.index").as("schedule.index");
-		Route.get(":id", "ScheduleController.show").as("schedule.show");
-		Route.put(":id", "ScheduleController.update").as("schedule.update");
-		Route.delete(":id", "ScheduleController.destroy").as(
-			"schedule.destroy"
-		);
-		Route.post("", "ScheduleController.store").as("schedule.store");
+		Route.get(":prof_id", "ScheduleController.verifySchedule").as("schedule.show");
 	}).prefix("schedule");
 
 	Route.post("/upload", "AdonnisLegadoController.bridge").as("upload.image");

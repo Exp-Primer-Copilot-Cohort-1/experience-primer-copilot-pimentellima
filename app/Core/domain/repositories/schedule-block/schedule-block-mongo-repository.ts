@@ -44,7 +44,6 @@ export class ScheduleBlockMongoRepository
 			unity_id,
 			"prof.value": prof_id,
 		});
-		console.log(scheduleBlocks);
 		return right(scheduleBlocks);
 	}
 
