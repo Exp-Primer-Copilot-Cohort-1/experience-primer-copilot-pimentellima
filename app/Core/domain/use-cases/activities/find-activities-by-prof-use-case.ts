@@ -22,8 +22,8 @@ export class FindActivitiesByProfIdUseCase
 
 		const activityOrErr =
 			await this.activitiesManager.findActivitiesByProf(
-				params?.unity_id,
-                params?.prof_id
+				params.unity_id,
+                params.prof_id
 			);
 
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract());

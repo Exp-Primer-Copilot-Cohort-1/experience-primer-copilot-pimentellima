@@ -4,7 +4,7 @@ import { PaymentStatus } from "App/Helpers";
 export type HealthInsurance = {
 	value: string;
 	label: string;
-	price: number;
+	price: string;
 };
 
 export type Procedure = {
@@ -12,7 +12,7 @@ export type Procedure = {
 	label: string;
 	minutes: number;
 	color: string;
-	val: number;
+	val: string;
 	health_insurance: HealthInsurance;
 	status: string;
 };
@@ -22,7 +22,7 @@ export type Client = {
 	label: string;
 	celphone: string;
 	email?: string;
-	partner?: string;
+	partner?: string | null;
 };
 
 export type Prof = {
@@ -31,15 +31,15 @@ export type Prof = {
 };
 
 export interface IAbstractActivity {
-	_id: string;
+	_id: string | ObjectId;
 	procedures: Procedure[];
 	client: Client;
 	obs?: string;
 	prof: Prof;
 	active: boolean;
 	status: PaymentStatus;
-	unity_id: string;
-	prof_id: string;
+	unity_id: string | ObjectId;
+	prof_id: string | ObjectId;
 	created_at: Date;
 	updated_at: Date;
 }
