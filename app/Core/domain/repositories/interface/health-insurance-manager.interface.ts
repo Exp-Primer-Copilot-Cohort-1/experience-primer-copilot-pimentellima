@@ -1,8 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
-import { IHealthInsurance } from 'Types/IHealthInsurance'
-import { Entity } from '../../entities/abstract/entity.abstract'
-import { HealtInsuranceEntity } from '../../entities/health-insurances/health-insurance'
+import { HealthInsuranceParams, IHealthInsurance } from 'Types/IHealthInsurance'
+import { HealthInsuranceEntity } from '../../entities/health-insurances/health-insurance'
 
 export interface HealthInsuranceManagerInterface {
 	findAllByUnityId: (
@@ -12,11 +11,11 @@ export interface HealthInsuranceManagerInterface {
 		name: string,
 		unity_id: string,
 	) => PromiseEither<AbstractError, IHealthInsurance[]>
-	findById: (id: string) => PromiseEither<AbstractError, HealtInsuranceEntity>
+	findById: (id: string) => PromiseEither<AbstractError, HealthInsuranceEntity>
 	update: (
 		id: string,
 		entity: Partial<IHealthInsurance>,
-	) => PromiseEither<AbstractError, HealtInsuranceEntity>
-	delete: (id: string) => PromiseEither<AbstractError, HealtInsuranceEntity>
-	create: (entity: Entity) => PromiseEither<AbstractError, HealtInsuranceEntity>
+	) => PromiseEither<AbstractError, HealthInsuranceEntity>
+	delete: (id: string) => PromiseEither<AbstractError, HealthInsuranceEntity>
+	create: (unity_id: string, params: HealthInsuranceParams) => PromiseEither<AbstractError, IHealthInsurance>
 }
