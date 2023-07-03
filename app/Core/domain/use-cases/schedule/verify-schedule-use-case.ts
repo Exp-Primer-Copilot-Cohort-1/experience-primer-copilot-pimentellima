@@ -17,12 +17,12 @@ export class VerifyScheduleUseCase
 				AbstractError,
 				SafeParseReturnType<
 					{
-						hour_end: string;
-						hour_start: string;
+						hourEnd: string;
+						hourStart: string;
 					},
 					{
-						hour_end: string;
-						hour_start: string;
+						hourEnd: string;
+						hourStart: string;
 					}
 				>
 			>
@@ -34,12 +34,12 @@ export class VerifyScheduleUseCase
 		AbstractError,
 		SafeParseReturnType<
 			{
-				hour_end: string;
-				hour_start: string;
+				hourEnd: string;
+				hourStart: string;
 			},
 			{
-				hour_end: string;
-				hour_start: string;
+				hourEnd: string;
+				hourStart: string;
 			}
 		>
 	> {
@@ -47,6 +47,8 @@ export class VerifyScheduleUseCase
 			params.prof_id,
 			params
 		);
+
+		
 
 		if (scheduleOrErr.isLeft()) return left(scheduleOrErr.extract());
 		return right(scheduleOrErr.extract());

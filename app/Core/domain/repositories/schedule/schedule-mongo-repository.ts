@@ -16,12 +16,12 @@ export class ScheduleMongoRepository implements ScheduleManagerInterface {
 		AbstractError,
 		z.SafeParseReturnType<
 			{
-				hour_end: string;
-				hour_start: string;
+				hourEnd: string;
+				hourStart: string;
 			},
 			{
-				hour_end: string;
-				hour_start: string;
+				hourEnd: string;
+				hourStart: string;
 			}
 		>
 	> {
@@ -36,60 +36,26 @@ export class ScheduleMongoRepository implements ScheduleManagerInterface {
 
 		const parsedSchedule = z
 			.object({
-				hour_start: z
+				hourStart: z
 					.string()
-					.refine(
-						(val) => {
-							const formattedVal = format(new Date(val), "HH:mm");
-							return !(
-								formattedVal >= startLunch &&
-								formattedVal < endLunch
-							);
-						},
-						{
-							message:
-								"O horário inicial está reservado para o almoço do profissional",
-						}
-					)
-					.refine(
-						(val) => {
-							const formattedVal = format(new Date(val), "HH:mm");
-							return !(
-								formattedVal < startDay || formattedVal > endDay
-							);
-						},
-						{
-							message:
-								"O horário inicial está fora do expediente do profissional",
-						}
-					),
-				hour_end: z
+					.refine((val) => !(val >= startLunch && val < endLunch), {
+						message:
+							"O horário inicial está reservado para o almoço do profissional",
+					})
+					.refine((val) => !(val < startDay || val > endDay), {
+						message:
+							"O horário inicial está fora do expediente do profissional",
+					}),
+				hourEnd: z
 					.string()
-					.refine(
-						(val) => {
-							const formattedVal = format(new Date(val), "HH:mm");
-							return !(
-								formattedVal >= startLunch &&
-								formattedVal < endLunch
-							);
-						},
-						{
-							message:
-								"O horário final está reservado para o almoço do profissional",
-						}
-					)
-					.refine(
-						(val) => {
-							const formattedVal = format(new Date(val), "HH:mm");
-							return !(
-								formattedVal < startDay || formattedVal > endDay
-							);
-						},
-						{
-							message:
-								"O horário final está fora do expediente do profissional",
-						}
-					),
+					.refine((val) => !(val >= startLunch && val < endLunch), {
+						message:
+							"O horário final está reservado para o almoço do profissional",
+					})
+					.refine((val) => !(val < startDay || val > endDay), {
+						message:
+							"O horário final está fora do expediente do profissional",
+					}),
 			})
 			.safeParse(schedule);
 		return right(parsedSchedule);

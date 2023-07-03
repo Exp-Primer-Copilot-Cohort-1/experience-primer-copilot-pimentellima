@@ -2,15 +2,18 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import { AppointmentStatus, PaymentStatus } from "App/Helpers";
-import Activity from "App/Models/Activity";
-import ScheduleBlock from "App/Models/ScheduleBlock";
+import Client from "App/Models/Client";
+import HealthInsurance from "App/Models/HealthInsurance";
+import Procedure from "App/Models/Procedure";
 import User from "App/Models/User";
-import { ActivityParams, IActivity } from "Types/IActivity";
-import { IScheduleBlock } from "Types/IScheduleBlock";
+import { IActivity } from "Types/IActivity";
 import { IUser } from "Types/IUser";
-import { format, getDay, isAfter, isSameDay, startOfYesterday } from "date-fns";
-import { z } from "zod";
+import { ZodError, z } from "zod";
 import { AbstractActivity } from "../abstract/activity-abstract";
+import Activity from "App/Models/Activity";
+import { format, getDay, isAfter, isSameDay, startOfYesterday } from "date-fns";
+import ScheduleBlock from "App/Models/ScheduleBlock";
+import { IScheduleBlock } from "Types/IScheduleBlock";
 
 export class ActivityEntity extends AbstractActivity implements IActivity {
 	private _date: Date;
@@ -111,193 +114,186 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		return this;
 	}
 
-	public static async build(
-		params: ActivityParams
-	): PromiseEither<AbstractError, ActivityEntity> {
+	public static async build(params: {
+		activityId?: string;
+		unity_id: string;
+		profId: string;
+		clientId: string;
+		procedures: {
+			procedureId: string;
+			healthInsuranceId: string;
+			val: string;
+		}[];
+		date: string;
+		hourStart: string;
+		hourEnd: string;
+		obs?: string;
+	}): PromiseEither<AbstractError, ActivityEntity> {
 		try {
-			const profData = (await User.findById(params.prof_id)) as IUser;
-			const activities = (
-				(await Activity.find({
-					prof_id: params.prof_id,
-				})) as IActivity[]
-			).filter(
-				(activity) =>
-					isSameDay(activity.date, new Date(params.date)) &&
-					activity._id?.toString() !== params._id
-			);
-			const scheduleBlocks = (
-				(await ScheduleBlock.find({
-					"prof.value": params.prof_id,
-				})) as IScheduleBlock[]
-			).filter((scheduleBlock) =>
-				isSameDay(scheduleBlock.date, new Date(params.date))
-			);
+			const profData = (await User.findById(params.profId)) as IUser;
+			if (!profData)
+				return left(new AbstractError("Could not find prof", 404));
 
-			const profSchedule = [...activities, ...scheduleBlocks];
+			const activities = (await Activity.find({
+				prof_id: params.profId,
+			})) as IActivity[];
 
-			const parsedParams = z
-				.object({
-					prof: z.object({
-						value: z.string(),
-						label: z.string(),
+			const scheduleBlocks = (await ScheduleBlock.find({
+				"prof.value": params.profId,
+			})) as IScheduleBlock[];
+			const [year, month, day] = params.date
+				.split("-")
+				.map((i) => parseInt(i));
+			const dateVal = new Date(year, month - 1, day);
+			const profSchedule = [
+				...activities.filter(
+					(activity) =>
+						!(activity._id?.toString() === params.activityId)
+				),
+				...scheduleBlocks,
+			].filter(({ date }) => {
+				return isSameDay(dateVal, new Date(date));
+			});
+
+			z.object({
+				profId: z.string(),
+				clientId: z.string(),
+				date: z
+					.string()
+					.refine((val) => isAfter(new Date(val), startOfYesterday()))
+					.refine((val) => {
+						const weekDay = getDay(dateVal);
+						if (
+							(weekDay === 0 && !profData.is_sunday) ||
+							(weekDay === 1 && !profData.is_monday) ||
+							(weekDay === 2 && !profData.is_tuesday) ||
+							(weekDay === 3 && !profData.is_thursday) ||
+							(weekDay === 4 && !profData.is_wednesday) ||
+							(weekDay === 5 && !profData.is_friday) ||
+							(weekDay === 6 && !profData.is_saturday)
+						) {
+							return false;
+						}
+						return true;
 					}),
-					prof_id: z.string(),
-					client: z.object({
-						value: z.string(),
-						label: z.string(),
-						celphone: z.string(),
-						email: z.string().optional(),
-						partner: z.string().nullable().optional(),
-					}),
-					procedures: z.array(
-						z
-							.object({
-								value: z.string(),
-								health_insurance: z.object({
-									value: z.string(),
-									price: z.string(),
-									label: z.string(),
-								}),
-								val: z.string().regex(/\d{0,2}(\,\d{1,2})?/),
-								minutes: z.number(),
-								label: z.string(),
-								color: z.string(),
-							})
-							.transform((val) => ({
-								...val,
-								status: "A RECEBER",
-							}))
-					),
-					date: z
-						.string()
-						.refine((val) => {
-							const yesterday = startOfYesterday();
-							return isAfter(new Date(val), yesterday);
-						})
-						.refine(
-							(val) => {
-								const day = getDay(new Date(val));
-								if (
-									(day === 0 && !profData.is_sunday) ||
-									(day === 1 && !profData.is_monday) ||
-									(day === 2 && !profData.is_tuesday) ||
-									(day === 3 && !profData.is_thursday) ||
-									(day === 4 && !profData.is_wednesday) ||
-									(day === 5 && !profData.is_friday) ||
-									(day === 6 && !profData.is_saturday)
-								) {
-									return false;
-								}
-								return true;
-							},
-							{
-								message:
-									"O profissional selecionado não atende nesse dia",
-							}
+				hourStart: z.string().refine((val) => {
+					for (const { hour_end, hour_start } of profSchedule) {
+						const formattedHourStart = format(
+							new Date(hour_start),
+							"HH:mm"
+						);
+						const formattedHourEnd = format(
+							new Date(hour_end),
+							"HH:mm"
+						);
+						if (
+							val >= formattedHourStart &&
+							val <= formattedHourEnd
 						)
-						.transform((val) => new Date(val)),
-					hour_start: z
-						.string()
-						.refine(
-							(val) => {
-								for (const activity of profSchedule) {
-									const formattedVal = format(
-										new Date(val),
-										"HH:mm"
-									);
-									const formattedHourStart = format(
-										new Date(activity.hour_start),
-										"HH:mm"
-									);
-									const formattedHourEnd = format(
-										new Date(activity.hour_end),
-										"HH:mm"
-									);
-									if (
-										formattedVal >= formattedHourStart &&
-										formattedVal <= formattedHourEnd
-									)
-										return false;
-								}
-								return true;
-							},
-							{
-								message:
-									"O profissional selecionado está com a agenda indisponivel nesse horário",
-							}
+							return false;
+					}
+					return true;
+				}),
+				hourEnd: z.string().refine((val) => {
+					for (const { hour_end, hour_start } of profSchedule) {
+						const formattedHourStart = format(
+							new Date(hour_start),
+							"HH:mm"
+						);
+						const formattedHourEnd = format(
+							new Date(hour_end),
+							"HH:mm"
+						);
+						if (
+							val >= formattedHourStart &&
+							val <= formattedHourEnd
 						)
-						.refine(
-							(val) =>
-								format(new Date(val), "HH:mm") <
-								format(new Date(params.hour_end), "HH:mm")
-						)
-						.transform((val) => {
-							const correctedVal = new Date(val);
-							const date = new Date(params.date);
-							correctedVal.setFullYear(
-								date.getFullYear(),
-								date.getMonth(),
-								date.getDate()
-							);
-							return correctedVal.toISOString();
-						}),
-					hour_end: z
-						.string()
-						.refine(
-							(val) => {
-								for (const activity of profSchedule) {
-									const formattedVal = format(
-										new Date(val),
-										"HH:mm"
-									);
-									const formattedHourStart = format(
-										new Date(activity.hour_start),
-										"HH:mm"
-									);
-									const formattedHourEnd = format(
-										new Date(activity.hour_end),
-										"HH:mm"
-									);
-									if (
-										formattedVal >= formattedHourStart &&
-										formattedVal <= formattedHourEnd
-									)
-										return false;
-								}
-								return true;
-							},
-							{
-								message:
-									"O profissional selecionado está com a agenda indisponivel nesse horário",
-							}
-						)
-						.transform((val) => {
-							const correctedVal = new Date(val);
-							const date = new Date(params.date);
-							correctedVal.setFullYear(
-								date.getFullYear(),
-								date.getMonth(),
-								date.getDate()
-							);
-							return correctedVal.toISOString();
-						}),
-					obs: z.string().optional(),
+							return false;
+					}
+					return true;
+				}),
+				procedures: z.array(
+					z.object({
+						procedureId: z.string(),
+						healthInsuranceId: z.string(),
+						val: z.string().regex(/\d{0,2}(\,\d{1,2})?/),
+					})
+				),
+				obs: z.string().optional(),
+			}).parse(params);
+
+			let [hh, mm] = params.hourStart.split(":").map((i) => parseInt(i));
+
+			const hourStartDate = new Date(dateVal);
+			hourStartDate.setHours(hh);
+			hourStartDate.setMinutes(mm);
+			const hour_start = hourStartDate.toISOString();
+
+			[hh, mm] = params.hourEnd.split(":").map((i) => parseInt(i));
+			const hourEndDate = new Date(dateVal);
+			hourEndDate.setHours(hh);
+			hourEndDate.setMinutes(mm);
+			const hour_end = hourEndDate.toISOString();
+
+			const procedures = await Promise.all(
+				params.procedures.map(async (procedure) => {
+					const { procedureId, healthInsuranceId, val } = procedure;
+					const procedureData = await Procedure.findById(procedureId);
+					const healthInsuranceData = await HealthInsurance.findById(
+						healthInsuranceId
+					);
+					if (!procedureData || !healthInsuranceData) throw ZodError;
+					const healthInsurancePrice =
+						procedureData.health_insurance.find(
+							(i) => i.value === healthInsuranceId
+						)?.price || "";
+					return {
+						value: procedureId,
+						label: procedureData.name,
+						color: procedureData.color,
+						minutes: procedureData.minutes,
+						val,
+						status: PaymentStatus.PENDING,
+						health_insurance: {
+							value: healthInsuranceId,
+							label: healthInsuranceData.name,
+							price: healthInsurancePrice,
+						},
+					};
 				})
-				.parse(params);
+			);
+
+			const clientData = await Client.findById(params.clientId);
+			if (!clientData)
+				return left(new AbstractError("Could not find client", 404));
+			const client = {
+				value: params.clientId,
+				label: clientData.name,
+				celphone: clientData.celphone,
+				email: clientData.email,
+				partner: clientData.partner,
+			};
+
+			const prof = {
+				value: params.profId,
+				label: profData.name,
+			};
+
 			return right(
 				new ActivityEntity()
-					.defineDate(parsedParams.date)
-					.defineHourStart(parsedParams.hour_start)
-					.defineHourEnd(parsedParams.hour_end)
+					.defineDate(dateVal)
+					.defineUnityId(params.unity_id)
+					.defineHourStart(hour_start)
+					.defineHourEnd(hour_end)
 					.defineStatus(PaymentStatus.PENDING)
-					.defineProcedures(parsedParams.procedures)
-					.defineClient(parsedParams.client)
-					.defineObs(parsedParams.obs)
-					.defineProf(parsedParams.prof)
+					.defineProcedures(procedures)
+					.defineClient(client)
+					.defineObs(params.obs)
+					.defineProf(prof)
 					.defineIsRecorrent(false)
 					.defineActive(true)
 					.defineScheduled(AppointmentStatus.SCHEDULED)
-					.defineProfId(parsedParams.prof_id)
+					.defineProfId(params.profId)
 			);
 		} catch (err) {
 			console.log(err);

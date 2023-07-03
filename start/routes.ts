@@ -292,6 +292,9 @@ Route.group(() => {
 		Route.post("", "ActivityController.createActivity").as(
 			"activity.store"
 		);
+		Route.post("/recurrent", "ActivityController.createRecurrentActivity").as(
+			"activity.storeRecurrent"
+		);
 		Route.post("payment", "ActivityController.payment").as(
 			"activity.payment"
 		);

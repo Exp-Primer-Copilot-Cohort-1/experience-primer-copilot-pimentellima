@@ -30,26 +30,38 @@ type Prof = {
 	label: string;
 };
 
-export type ActivityParams = {
-	_id?: string
-	date: string
-	hour_start: string
-	hour_end: string
-	procedures: ProcedureParams[]
-	client: Client
-	obs?: string
-	prof: Prof
-	prof_id: string
-}
+export type RecurrentActivityParams = {
+	values: {
+		profId: string;
+		clientId: string;
+		procedures: {
+			procedureId: string;
+			healthInsuranceId: string;
+			val: string;
+		}[];
+		obs?: string;
+	};
+	dates: {
+		date: string;
+		hourStart: string;
+		hourEnd: string;
+	}[];
+};
 
-type ProcedureParams = {
-	value: string;
-	label: string;
-	minutes: number;
-	color: string;
-	val: string;
-	health_insurance: HealthInsurance;
-}
+export type ActivityParams = {
+	activityId?: string;
+	profId: string;
+	clientId: string;
+	procedures: {
+		procedureId: string;
+		healthInsuranceId: string;
+		val: string;
+	}[];
+	date: string;
+	hourStart: string;
+	hourEnd: string;
+	obs?: string;
+};
 
 export interface IActivity {
 	_id?: string | ObjectId;
