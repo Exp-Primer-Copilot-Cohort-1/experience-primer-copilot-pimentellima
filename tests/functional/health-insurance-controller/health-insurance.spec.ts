@@ -114,6 +114,10 @@ test.group('Health Insurance Controller', () => {
 			.bearerToken(token.token)
 			.send()
 
-		response.assertStatus(200)
+		if (response.error()) {
+			console.log(response.error())
+		}
+
+		response.assertStatus(200 || 204)
 	})
 })

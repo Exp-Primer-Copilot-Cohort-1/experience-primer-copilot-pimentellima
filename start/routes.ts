@@ -146,12 +146,28 @@ Route.group(() => {
 	}).prefix('category')
 
 	Route.group(() => {
+		Route.get('', 'CategoryController.index').as('categories.index')
+		Route.get(':id', 'CategoryController.show').as('categories.show')
+		Route.put(':id', 'CategoryController.update').as('categories.update')
+		Route.delete(':id', 'CategoryController.destroy').as('categories.destroy')
+		Route.post('', 'CategoryController.store').as('categories.store')
+	}).prefix('categories')
+
+	Route.group(() => {
 		Route.get('', 'AdonnisLegadoController.bridge').as('partner.index')
 		Route.get(':id', 'AdonnisLegadoController.bridge').as('partner.show')
 		Route.put(':id', 'AdonnisLegadoController.bridge').as('partner.update')
 		Route.delete(':id', 'AdonnisLegadoController.bridge').as('partner.destroy')
 		Route.post('', 'AdonnisLegadoController.bridge').as('partner.store')
 	}).prefix('partner')
+
+	Route.group(() => {
+		Route.get('', 'PartnerController.index').as('partners.index')
+		Route.get(':id', 'PartnerController.show').as('partners.show')
+		Route.put(':id', 'PartnerController.update').as('partners.update')
+		Route.delete(':id', 'PartnerController.destroy').as('partners.destroy')
+		Route.post('', 'PartnerController.store').as('partners.store')
+	}).prefix('partners')
 
 	Route.group(() => {
 		Route.get('prof/:prof_id', 'FormController.findFormByProfId').as('form.prof.show')
@@ -306,6 +322,14 @@ Route.group(() => {
 	}).prefix('direct-mail')
 
 	Route.group(() => {
+		Route.get('', 'DirectmailController.index').as('directMails.index')
+		Route.get('/:id', 'DirectmailController.show').as('directMails.show')
+		Route.put('/:id', 'DirectmailController.update').as('directMails.update')
+		Route.delete('/:id', 'DirectmailController.destroy').as('directMails.destroy')
+		Route.post('', 'DirectmailController.store').as('directMails.store')
+	}).prefix('direct-mails')
+
+	Route.group(() => {
 		Route.get('', 'AdonnisLegadoController.bridge').as('pictures.index')
 		Route.get('/:id', 'AdonnisLegadoController.bridge').as('pictures.show')
 		Route.put('/:id', 'AdonnisLegadoController.bridge').as('pictures.update')
@@ -384,6 +408,16 @@ Route.group(() => {
 		)
 		Route.post('', 'AdonnisLegadoController.bridge').as('default-config.store')
 	}).prefix('default-config')
+
+	Route.group(() => {
+		Route.get('', 'DefaultConfigController.index').as('default-configs.index')
+		Route.get('/:id', 'DefaultConfigController.show').as('default-configs.show')
+		Route.put('/:id', 'DefaultConfigController.update').as('default-configs.update')
+		Route.delete('/:id', 'DefaultConfigController.destroy').as(
+			'default-configs.destroy',
+		)
+		Route.post('', 'DefaultConfigController.store').as('default-configs.store')
+	}).prefix('default-configs')
 
 	Route.group(() => {
 		Route.get('', 'AdonnisLegadoController.bridge').as('transactions.index')

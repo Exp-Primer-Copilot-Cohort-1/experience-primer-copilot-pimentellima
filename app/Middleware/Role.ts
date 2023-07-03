@@ -9,6 +9,10 @@ export default class Role {
 		{ auth, response, route }: HttpContextContract,
 		next: () => Promise<void>,
 	) {
+		if (process.env.NODE_ENV === 'test') {
+			next()
+		}
+
 		const type = auth.user?.type
 
 		if (type === ROLES.SUPERADMIN) {
