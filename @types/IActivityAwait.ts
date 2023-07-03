@@ -4,7 +4,7 @@ import { PaymentStatus } from "App/Helpers";
 export type HealthInsurance = {
 	value: string;
 	label: string;
-	price: number;
+	price: string;
 };
 
 export type Procedure = {
@@ -12,7 +12,7 @@ export type Procedure = {
 	label: string;
 	minutes: number;
 	color: string;
-	val: number;
+	val: string;
 	health_insurance: HealthInsurance;
 	status: string;
 };
@@ -22,7 +22,7 @@ export type Client = {
 	label: string;
 	celphone: string;
 	email?: string;
-	partner?: string;
+	partner?: string | null;
 };
 
 export type Prof = {
@@ -31,7 +31,7 @@ export type Prof = {
 };
 
 export interface IActivityAwait {
-	_id?: string | ObjectId;
+	_id: string | ObjectId;
 	procedures: Procedure[];
 	client: Client;
 	obs?: string;
@@ -42,4 +42,22 @@ export interface IActivityAwait {
 	prof_id: string | ObjectId;
 	created_at: Date;
 	updated_at: Date;
+}
+
+export type ActivityAwaitParams = {
+	_id?: string
+	procedures: ProcedureParams[]
+	client: Client
+	obs?: string
+	prof: Prof
+	prof_id: string
+}
+
+type ProcedureParams = {
+	value: string;
+	label: string;
+	minutes: number;
+	color: string;
+	val: string;
+	health_insurance: HealthInsurance;
 }

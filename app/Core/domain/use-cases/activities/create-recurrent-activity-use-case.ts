@@ -2,27 +2,26 @@ import { ActivitiesManagerInterface } from "App/Core/domain/repositories/interfa
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import { ActivityParams, IActivity } from "Types/IActivity";
+import { IActivity, RecurrentActivityParams } from "Types/IActivity";
 
-type Props = ActivityParams & {
+type Props = RecurrentActivityParams & {
 	unity_id: string;
 };
 
-export class CreateActivityUseCase implements UseCase<Props, IActivity> {
+export class CreateRecurrentActivityUseCase implements UseCase<Props, IActivity[]> {
 	constructor(
 		private readonly activitiesManager: ActivitiesManagerInterface
 	) {}
 
 	public async execute(
 		params: Props
-	): PromiseEither<AbstractError, IActivity> {
-		const newActivityOrErr = await this.activitiesManager.createActivity(
+	): PromiseEither<AbstractError, IActivity[]> {
+		const activitiesOrErr = await this.activitiesManager.createRecurrentActivity(
 			params.unity_id,
 			params,
 		);
-
-		if (newActivityOrErr.isLeft()) return left(newActivityOrErr.extract());
-		const newActivity = newActivityOrErr.extract();
-		return right(newActivity);
+            
+		if (activitiesOrErr.isLeft()) return left(activitiesOrErr.extract());
+		return right(activitiesOrErr.extract());
 	}
 }

@@ -1,35 +1,31 @@
-import { InvalidParamsError } from 'App/Core/domain/errors/invalid-params-error'
-import { HealthInsuranceManagerInterface } from 'App/Core/domain/repositories/interface'
-import { AbstractError } from 'App/Core/errors/error.interface'
-import { UseCase } from 'App/Core/interfaces/use-case.interface'
-import { PromiseEither, left, right } from 'App/Core/shared'
-import { IHealthInsurance } from 'Types/IHealthInsurance'
-import { HealthInsuranceEntity } from '../../entities/health-insurances/health-insurance'
+import { HealthInsuranceManagerInterface } from "App/Core/domain/repositories/interface";
+import { AbstractError } from "App/Core/errors/error.interface";
+import { UseCase } from "App/Core/interfaces/use-case.interface";
+import { PromiseEither, left, right } from "App/Core/shared";
+import {
+	HealthInsuranceParams,
+	IHealthInsurance,
+} from "Types/IHealthInsurance";
+
+type Props = HealthInsuranceParams & {
+	unity_id: string;
+};
 
 export class CreateHealthInsuranceUseCase
-	implements UseCase<IHealthInsurance, IHealthInsurance>
+	implements UseCase<Props, IHealthInsurance>
 {
-	constructor(private readonly manager: HealthInsuranceManagerInterface) { }
+	constructor(private readonly manager: HealthInsuranceManagerInterface) {}
 
 	public async execute(
-		params: IHealthInsurance,
+		params: Props
 	): PromiseEither<AbstractError, IHealthInsurance> {
-		if (!params) {
-			return left(new InvalidParamsError())
-		}
+		const healthInsuranceOrErr = await this.manager.create(
+			params.unity_id,
+			params
+		);
 
-		const entityOrErr = await HealthInsuranceEntity.build(params)
-
-		if (entityOrErr.isLeft()) return entityOrErr
-
-		const entity = entityOrErr.extract()
-
-		const healthOrErr = await this.manager.create(entity)
-
-		if (healthOrErr.isLeft()) return healthOrErr as any
-
-		const health = healthOrErr.extract().params() as unknown as IHealthInsurance
-
-		return right(health)
+		if (healthInsuranceOrErr.isLeft())
+			return left(healthInsuranceOrErr.extract());
+		return right(healthInsuranceOrErr.extract());
 	}
 }

@@ -1,6 +1,6 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import { IActivityAwait } from "Types/IActivityAwait";
+import { ActivityAwaitParams, IActivityAwait } from "Types/IActivityAwait";
 import { ActivityAwaitManagerInterface } from "../interface/activity-await-manager-interface";
 import ActivityAwaitEntity from "../../entities/activity-await/activity-await";
 import ActivityAwait from "App/Models/ActivityAwait";
@@ -11,13 +11,14 @@ export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterfa
 	constructor() {}
 
 	async createActivity(
-		activity: IActivityAwait
+		unity_id: string,
+		activity: ActivityAwaitParams
 	): PromiseEither<AbstractError, IActivityAwait> {
 		const activityOrErr = await ActivityAwaitEntity.build(activity);
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract());
 
 		const newActivity = await ActivityAwait.create(
-			activityOrErr.extract().params()
+			activityOrErr.extract().defineUnityId(unity_id).params()
 		);
 		return right(newActivity);
 	}
@@ -32,19 +33,15 @@ export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterfa
 
 	async updateActivityById(
 		id: string,
-		activity: IActivityAwait
+		activity: ActivityAwaitParams
 	): PromiseEither<AbstractError, IActivityAwait> {
 		const oldActivity = await ActivityAwait.findById(id);
 		if (!oldActivity) return left(new ActivityNotFoundError());
-		const activityOrErr = await ActivityAwaitEntity.build({
-			...oldActivity,
-			...activity,
-		});
+		const activityOrErr = await ActivityAwaitEntity.build(activity);
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract());
 
-		const updatedActivity = activityOrErr.extract().params();
-
-		await ActivityAwait.findByIdAndUpdate(id, updatedActivity);
+		const updatedActivity = await ActivityAwait.findByIdAndUpdate(id, activityOrErr.extract().params());
+		if(!updatedActivity) return left(new AbstractError('Error updating activity', 500))
 		return right(updatedActivity);
 	}
 

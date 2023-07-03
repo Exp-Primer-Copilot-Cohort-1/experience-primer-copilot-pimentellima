@@ -121,6 +121,22 @@ Route.group(() => {
 	}).prefix('activity-await')
 
 	Route.group(() => {
+		Route.get('', 'ScheduleBlockController.findAllScheduleBlocks').as(
+			'schedule-block.index',
+		)
+		Route.get(
+			'prof/:prof_id',
+			'ScheduleBlockController.findScheduleBlocksByProfId',
+		).as('schedule-block.profId')
+		Route.delete(':id', 'ScheduleBlockController.deleteScheduleBlockById').as(
+			'schedule-block.destroy',
+		)
+		Route.post('', 'ScheduleBlockController.createScheduleBlock').as(
+			'schedule-block.store',
+		)
+	}).prefix('schedule-block')
+
+	Route.group(() => {
 		Route.get('', 'AdonnisLegadoController.bridge').as('stock.index')
 		Route.get(':id', 'AdonnisLegadoController.bridge').as('stock.show')
 		Route.put(':id', 'AdonnisLegadoController.bridge').as('stock.update')
@@ -136,14 +152,6 @@ Route.group(() => {
 		Route.delete(':id', 'ProcedureController.destroy').as('procedures.destroy')
 		Route.post('', 'ProcedureController.store').as('procedures.store')
 	}).prefix('procedures')
-
-	Route.group(() => {
-		Route.get('', 'AdonnisLegadoController.bridge').as('category.index')
-		Route.get(':id', 'AdonnisLegadoController.bridge').as('category.show')
-		Route.put(':id', 'AdonnisLegadoController.bridge').as('category.update')
-		Route.delete(':id', 'AdonnisLegadoController.bridge').as('category.destroy')
-		Route.post('', 'AdonnisLegadoController.bridge').as('category.store')
-	}).prefix('category')
 
 	Route.group(() => {
 		Route.get('', 'CategoryController.index').as('categories.index')
@@ -168,6 +176,28 @@ Route.group(() => {
 		Route.delete(':id', 'PartnerController.destroy').as('partners.destroy')
 		Route.post('', 'PartnerController.store').as('partners.store')
 	}).prefix('partners')
+
+	Route.group(() => {
+		Route.get('prof/:prof_id', 'FormController.findFormByProfId').as('form.prof.show')
+		Route.get('category/:category_id', 'AdonnisLegadoController.bridge').as(
+			'form.category.show',
+		)
+		Route.post('', 'AdonnisLegadoController.bridge').as('form.store')
+		Route.get('', 'FormController.findAllForms').as('form.index')
+		Route.get(':id', 'AdonnisLegadoController.bridge').as('form.show')
+		Route.put(':id', 'AdonnisLegadoController.bridge').as('form.update')
+		Route.delete(':id', 'AdonnisLegadoController.bridge').as('form.destroy')
+	}).prefix('form')
+
+	Route.get('answer-log-by-form/:form_id', 'AdonnisLegadoController.bridge').as(
+		'logAnswer.byFormId',
+	)
+	Route.get('answer', 'AdonnisLegadoController.bridge')
+	Route.get('answer/:id', 'AdonnisLegadoController.bridge')
+	Route.get('answer-by-form/:form_id', 'AdonnisLegadoController.bridge')
+	Route.put('answer/:id', 'AdonnisLegadoController.bridge')
+	Route.delete('answer/:id', 'AdonnisLegadoController.bridge')
+	Route.post('answer', 'AdonnisLegadoController.bridge')
 
 	Route.group(() => {
 		Route.get('prof/:prof_id', 'FormController.findFormByProfId').as('form.prof.show')
@@ -237,6 +267,9 @@ Route.group(() => {
 			'activity.destroy',
 		)
 		Route.post('', 'ActivityController.createActivity').as('activity.store')
+		Route.post('/recurrent', 'ActivityController.createRecurrentActivity').as(
+			'activity.storeRecurrent',
+		)
 		Route.post('payment', 'ActivityController.payment').as('activity.payment')
 	}).prefix('activity')
 
@@ -249,11 +282,7 @@ Route.group(() => {
 	}).prefix('procedure')
 
 	Route.group(() => {
-		Route.get('', 'ScheduleController.index').as('schedule.index')
-		Route.get(':id', 'ScheduleController.show').as('schedule.show')
-		Route.put(':id', 'ScheduleController.update').as('schedule.update')
-		Route.delete(':id', 'ScheduleController.destroy').as('schedule.destroy')
-		Route.post('', 'ScheduleController.store').as('schedule.store')
+		Route.get(':prof_id', 'ScheduleController.verifySchedule').as('schedule.show')
 	}).prefix('schedule')
 
 	Route.post('/upload', 'AdonnisLegadoController.bridge').as('upload.image')

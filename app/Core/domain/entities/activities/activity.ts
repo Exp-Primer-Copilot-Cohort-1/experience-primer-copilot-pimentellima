@@ -1,13 +1,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import { AppointmentStatus } from "App/Helpers";
+import { AppointmentStatus, PaymentStatus } from "App/Helpers";
+import Client from "App/Models/Client";
+import HealthInsurance from "App/Models/HealthInsurance";
+import Procedure from "App/Models/Procedure";
 import User from "App/Models/User";
 import { IActivity } from "Types/IActivity";
 import { IUser } from "Types/IUser";
-import { format, getDay, isAfter, startOfYesterday } from "date-fns";
-import { z } from "zod";
+import { ZodError, z } from "zod";
 import { AbstractActivity } from "../abstract/activity-abstract";
+import Activity from "App/Models/Activity";
+import { format, getDay, isAfter, isSameDay, startOfYesterday } from "date-fns";
+import ScheduleBlock from "App/Models/ScheduleBlock";
+import { IScheduleBlock } from "Types/IScheduleBlock";
 
 export class ActivityEntity extends AbstractActivity implements IActivity {
 	private _date: Date;
@@ -24,7 +30,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		return this._started_at;
 	}
 
-	public get finished_at(): Date | undefined{
+	public get finished_at(): Date | undefined {
 		return this._finished_at;
 	}
 
@@ -108,149 +114,189 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		return this;
 	}
 
-	public static async build(
-		params: IActivity
-	): PromiseEither<AbstractError, ActivityEntity> {
+	public static async build(params: {
+		activityId?: string;
+		unity_id: string;
+		profId: string;
+		clientId: string;
+		procedures: {
+			procedureId: string;
+			healthInsuranceId: string;
+			val: string;
+		}[];
+		date: string;
+		hourStart: string;
+		hourEnd: string;
+		obs?: string;
+	}): PromiseEither<AbstractError, ActivityEntity> {
 		try {
-			const profData = await User.findById(params.prof_id) as IUser
-			const startLunch = format(
-				new Date(profData.hour_start_lunch),
-				"HH:mm"
-			);
-			const endLunch = format(
-				new Date(profData.hour_end_lunch),
-				"HH:mm"
-			);
-			const startDay = format(new Date(profData.hour_start), "HH:mm");
-			const endDay = format(new Date(profData.hour_end), "HH:mm");
+			const profData = (await User.findById(params.profId)) as IUser;
+			if (!profData)
+				return left(new AbstractError("Could not find prof", 404));
+
+			const activities = (await Activity.find({
+				prof_id: params.profId,
+			})) as IActivity[];
+
+			const scheduleBlocks = (await ScheduleBlock.find({
+				"prof.value": params.profId,
+			})) as IScheduleBlock[];
+			const [year, month, day] = params.date
+				.split("-")
+				.map((i) => parseInt(i));
+			const dateVal = new Date(year, month - 1, day);
+			const profSchedule = [
+				...activities.filter(
+					(activity) =>
+						!(activity._id?.toString() === params.activityId)
+				),
+				...scheduleBlocks,
+			].filter(({ date }) => {
+				return isSameDay(dateVal, new Date(date));
+			});
 
 			z.object({
-				prof: z.object({}),
-				client: z.object({}),
-				procedures: z
-					.array(
-						z.object({
-							value: z.string(),
-							health_insurance: z.object({
-								value: z.string(),
-								price: z.number(),
-								label: z.string(),
-							}),
-							val: z.number(),
-							minutes: z.number(),
-							label: z.string(),
-						})
-					).min(1),
+				profId: z.string(),
+				clientId: z.string(),
 				date: z
 					.string()
-					.refine(
-						(val) => {
-							const yesterday = startOfYesterday();
-							return isAfter(new Date(val), yesterday);
-						},
-					)
-					.refine(
-						(val) => {
-							const day = getDay(new Date(val));
-							if (
-								(day === 0 && !profData.is_sunday) ||
-								(day === 1 && !profData.is_monday) ||
-								(day === 2 && !profData.is_tuesday) ||
-								(day === 3 && !profData.is_thursday) ||
-								(day === 4 && !profData.is_wednesday) ||
-								(day === 5 && !profData.is_friday) ||
-								(day === 6 && !profData.is_saturday)
-							) {
-								return false;
-							}
-							return true;
-						},
-						{ message: "O profissional selecionado não atende nesse dia" }
-					),
-				hour_start: z 
-					.string()
-					.refine(
-						(val) => {
-							const formattedVal = format(new Date(val), "HH:mm");
-							if (
-								(formattedVal >= startLunch && formattedVal <= endLunch) ||
-								formattedVal < startDay ||
-								formattedVal > endDay
-							) {
-								return false;
-							}
-							return true;
-						},
-						{ message: "O profissional selecionado não atende nesse horário" }
-					)
-					.refine(
-						(val) => {
-							const hour_end = params.hour_end;
-							if (!hour_end || !val) {
-								return true;
-							}
-							return (
-								format(new Date(val), "HH:mm") <
-								format(new Date(hour_end), "HH:mm")
-							);
-						},
-					),
-				hour_end: z
-					.string()
-					.refine(
-						(val) => {
-							const formattedVal = format(new Date(val), "HH:mm");
-							if (
-								(formattedVal >= startLunch && formattedVal <= endLunch) ||
-								formattedVal < startDay ||
-								formattedVal > endDay
-							) {
-								return false;
-							}
-							return true;
-						},
-						{ message: "O profissional selecionado não atende nesse horário" }
-					),
-				obs: z.string(),
-			}).parse(params)
+					.refine((val) => isAfter(new Date(val), startOfYesterday()))
+					.refine((val) => {
+						const weekDay = getDay(dateVal);
+						if (
+							(weekDay === 0 && !profData.is_sunday) ||
+							(weekDay === 1 && !profData.is_monday) ||
+							(weekDay === 2 && !profData.is_tuesday) ||
+							(weekDay === 3 && !profData.is_thursday) ||
+							(weekDay === 4 && !profData.is_wednesday) ||
+							(weekDay === 5 && !profData.is_friday) ||
+							(weekDay === 6 && !profData.is_saturday)
+						) {
+							return false;
+						}
+						return true;
+					}),
+				hourStart: z.string().refine((val) => {
+					for (const { hour_end, hour_start } of profSchedule) {
+						const formattedHourStart = format(
+							new Date(hour_start),
+							"HH:mm"
+						);
+						const formattedHourEnd = format(
+							new Date(hour_end),
+							"HH:mm"
+						);
+						if (
+							val >= formattedHourStart &&
+							val <= formattedHourEnd
+						)
+							return false;
+					}
+					return true;
+				}),
+				hourEnd: z.string().refine((val) => {
+					for (const { hour_end, hour_start } of profSchedule) {
+						const formattedHourStart = format(
+							new Date(hour_start),
+							"HH:mm"
+						);
+						const formattedHourEnd = format(
+							new Date(hour_end),
+							"HH:mm"
+						);
+						if (
+							val >= formattedHourStart &&
+							val <= formattedHourEnd
+						)
+							return false;
+					}
+					return true;
+				}),
+				procedures: z.array(
+					z.object({
+						procedureId: z.string(),
+						healthInsuranceId: z.string(),
+						val: z.string().regex(/\d{0,2}(\,\d{1,2})?/),
+					})
+				),
+				obs: z.string().optional(),
+			}).parse(params);
 
-			const hour_start = new Date(params.hour_start);
-			const hour_end = new Date(params.hour_end);
+			let [hh, mm] = params.hourStart.split(":").map((i) => parseInt(i));
 
-			hour_start.setFullYear(
-				new Date(params.date).getFullYear(),
-				new Date(params.date).getMonth(),
-				new Date(params.date).getDate()
+			const hourStartDate = new Date(dateVal);
+			hourStartDate.setHours(hh);
+			hourStartDate.setMinutes(mm);
+			const hour_start = hourStartDate.toISOString();
+
+			[hh, mm] = params.hourEnd.split(":").map((i) => parseInt(i));
+			const hourEndDate = new Date(dateVal);
+			hourEndDate.setHours(hh);
+			hourEndDate.setMinutes(mm);
+			const hour_end = hourEndDate.toISOString();
+
+			const procedures = await Promise.all(
+				params.procedures.map(async (procedure) => {
+					const { procedureId, healthInsuranceId, val } = procedure;
+					const procedureData = await Procedure.findById(procedureId);
+					const healthInsuranceData = await HealthInsurance.findById(
+						healthInsuranceId
+					);
+					if (!procedureData || !healthInsuranceData) throw ZodError;
+					const healthInsurancePrice =
+						procedureData.health_insurance.find(
+							(i) => i.value === healthInsuranceId
+						)?.price || "";
+					return {
+						value: procedureId,
+						label: procedureData.name,
+						color: procedureData.color,
+						minutes: procedureData.minutes,
+						val,
+						status: PaymentStatus.PENDING,
+						health_insurance: {
+							value: healthInsuranceId,
+							label: healthInsuranceData.name,
+							price: healthInsurancePrice,
+						},
+					};
+				})
 			);
-			hour_end.setFullYear(
-				new Date(params.date).getFullYear(),
-				new Date(params.date).getMonth(),
-				new Date(params.date).getDate()
-			);
+
+			const clientData = await Client.findById(params.clientId);
+			if (!clientData)
+				return left(new AbstractError("Could not find client", 404));
+			const client = {
+				value: params.clientId,
+				label: clientData.name,
+				celphone: clientData.celphone,
+				email: clientData.email,
+				partner: clientData.partner,
+			};
+
+			const prof = {
+				value: params.profId,
+				label: profData.name,
+			};
 
 			return right(
 				new ActivityEntity()
-					.defineId(params._id?.toString())
-					.defineDate(params.date)
-					.defineHourStart(hour_start.toISOString())
-					.defineHourEnd(hour_end.toISOString())
-					.defineStatus(params.status)
-					.defineScheduleBlock(params.schedule_block)
-					.defineProcedures(params.procedures)
-					.defineClient(params.client)
+					.defineDate(dateVal)
+					.defineUnityId(params.unity_id)
+					.defineHourStart(hour_start)
+					.defineHourEnd(hour_end)
+					.defineStatus(PaymentStatus.PENDING)
+					.defineProcedures(procedures)
+					.defineClient(client)
 					.defineObs(params.obs)
-					.defineProf(params.prof)
-					.defineAllDay(params.all_day)
-					.defineIsRecorrent(params.is_recorrent)
-					.defineActive(params.active)
-					.defineUnityId(params.unity_id.toString())
-					.defineScheduled(params.scheduled)
-					.defineProfId(params.prof_id?.toString())
-					.defineStartedAt(params.started_at)
-					.defineFinishedAt(params.finished_at)
+					.defineProf(prof)
+					.defineIsRecorrent(false)
+					.defineActive(true)
+					.defineScheduled(AppointmentStatus.SCHEDULED)
+					.defineProfId(params.profId)
 			);
 		} catch (err) {
-			console.log(err)
+			console.log(err);
 			return left(err);
 		}
 	}

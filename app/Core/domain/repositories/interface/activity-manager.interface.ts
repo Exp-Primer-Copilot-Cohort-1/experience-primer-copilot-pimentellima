@@ -1,14 +1,21 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
 import { AppointmentStatus } from 'App/Helpers'
-import { IActivity } from 'Types/IActivity'
+import { ActivityParams, IActivity, RecurrentActivityParams } from 'Types/IActivity'
 
 export interface ActivitiesManagerInterface {
-	createActivity: (activity: IActivity) => PromiseEither<AbstractError, IActivity>
+	createActivity: (
+		unity_id: string,
+		values: ActivityParams,
+	) => PromiseEither<AbstractError, IActivity>
+	createRecurrentActivity: (
+		unity_id: string,
+		values: RecurrentActivityParams,
+	) => PromiseEither<AbstractError, IActivity[]>
 	findAllActivities: (unity_id: string) => PromiseEither<AbstractError, IActivity[]>
 	updateActivityById: (
 		id: string,
-		activity: IActivity,
+		values: ActivityParams,
 	) => PromiseEither<AbstractError, IActivity>
 	updateActivityStatusById: (
 		id: string,

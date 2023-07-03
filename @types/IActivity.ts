@@ -4,7 +4,7 @@ import { AppointmentStatus, PaymentStatus } from "../app/Helpers";
 type HealthInsurance = {
 	value: string;
 	label: string;
-	price: number;
+	price: string;
 };
 
 type Procedure = {
@@ -12,7 +12,7 @@ type Procedure = {
 	label: string;
 	minutes: number;
 	color: string;
-	val: number;
+	val: string;
 	health_insurance: HealthInsurance;
 	status: string;
 };
@@ -22,12 +22,45 @@ type Client = {
 	label: string;
 	celphone: string;
 	email?: string;
-	partner?: string;
+	partner?: string | null;
 };
 
 type Prof = {
 	value: string;
 	label: string;
+};
+
+export type RecurrentActivityParams = {
+	values: {
+		profId: string;
+		clientId: string;
+		procedures: {
+			procedureId: string;
+			healthInsuranceId: string;
+			val: string;
+		}[];
+		obs?: string;
+	};
+	dates: {
+		date: string;
+		hourStart: string;
+		hourEnd: string;
+	}[];
+};
+
+export type ActivityParams = {
+	activityId?: string;
+	profId: string;
+	clientId: string;
+	procedures: {
+		procedureId: string;
+		healthInsuranceId: string;
+		val: string;
+	}[];
+	date: string;
+	hourStart: string;
+	hourEnd: string;
+	obs?: string;
 };
 
 export interface IActivity {
@@ -36,12 +69,10 @@ export interface IActivity {
 	hour_start: string;
 	hour_end: string;
 	status: PaymentStatus;
-	schedule_block: boolean;
 	procedures: Procedure[];
 	client: Client;
 	obs?: string;
 	prof: Prof;
-	all_day: boolean;
 	is_recorrent: boolean;
 	active: boolean;
 	unity_id: string | ObjectId;

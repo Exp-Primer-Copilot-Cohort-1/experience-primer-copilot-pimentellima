@@ -1,5 +1,4 @@
 import { ObjectId } from '@ioc:Mongoose'
-import { IHealthInsurance } from './IHealthInsurance'
 import { IProf } from './IProf'
 
 export interface IProcedure {
@@ -10,7 +9,11 @@ export interface IProcedure {
 	prof: IProf[]
 	name: string
 	minutes: number
-	health_insurance: IHealthInsurance[]
+	health_insurance: {
+		value: string,
+		label: string,
+		price: string
+	}[]
 	unity_id: string | ObjectId
 	created_at: Date | string
 	updated_at: Date | string
