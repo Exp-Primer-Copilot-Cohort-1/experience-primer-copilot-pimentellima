@@ -3,6 +3,7 @@ import { ControllerGeneric } from "App/Core/adapters/controller/helpers";
 import { ActivityMongoRepository } from "App/Core/domain/repositories/activities/activity-mongo-repository";
 import { FindAllActivitiesUseCase } from "App/Core/domain/use-cases";
 import { CreateActivityUseCase } from "App/Core/domain/use-cases/activities/create-activity-use-case";
+import { CreateRecurrentActivityUseCase } from "App/Core/domain/use-cases/activities/create-recurrent-activity-use-case";
 import { DeleteActivityByIdUseCase } from "App/Core/domain/use-cases/activities/delete-activity-by-id-use-case";
 import { FindActivitiesByClientIdUseCase } from "App/Core/domain/use-cases/activities/find-activities-by-client-use-case";
 import { FindActivitiesByProfIdUseCase } from "App/Core/domain/use-cases/activities/find-activities-by-prof-use-case";
@@ -15,6 +16,11 @@ import { UpdateActivityByIdUseCase } from "App/Core/domain/use-cases/activities/
 export const makeCreateActivityComposer = (): ControllerGeneric => {
 	return new Controller(
 		new CreateActivityUseCase(new ActivityMongoRepository())
+	);
+};
+export const makeCreateRecurrentActivityComposer = (): ControllerGeneric => {
+	return new Controller(
+		new CreateRecurrentActivityUseCase(new ActivityMongoRepository())
 	);
 };
 export const makeDeleteActivityByIdComposer = (): ControllerGeneric => {
