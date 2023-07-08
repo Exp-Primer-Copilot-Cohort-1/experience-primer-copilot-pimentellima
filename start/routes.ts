@@ -200,28 +200,6 @@ Route.group(() => {
 	Route.post('answer', 'AdonnisLegadoController.bridge')
 
 	Route.group(() => {
-		Route.get('prof/:prof_id', 'FormController.findFormByProfId').as('form.prof.show')
-		Route.get('category/:category_id', 'AdonnisLegadoController.bridge').as(
-			'form.category.show',
-		)
-		Route.post('', 'AdonnisLegadoController.bridge').as('form.store')
-		Route.get('', 'FormController.findAllForms').as('form.index')
-		Route.get(':id', 'AdonnisLegadoController.bridge').as('form.show')
-		Route.put(':id', 'AdonnisLegadoController.bridge').as('form.update')
-		Route.delete(':id', 'AdonnisLegadoController.bridge').as('form.destroy')
-	}).prefix('form')
-
-	Route.get('answer-log-by-form/:form_id', 'AdonnisLegadoController.bridge').as(
-		'logAnswer.byFormId',
-	)
-	Route.get('answer', 'AdonnisLegadoController.bridge')
-	Route.get('answer/:id', 'AdonnisLegadoController.bridge')
-	Route.get('answer-by-form/:form_id', 'AdonnisLegadoController.bridge')
-	Route.put('answer/:id', 'AdonnisLegadoController.bridge')
-	Route.delete('answer/:id', 'AdonnisLegadoController.bridge')
-	Route.post('answer', 'AdonnisLegadoController.bridge')
-
-	Route.group(() => {
 		Route.post('', 'AnswerController.createAnswer').as('answer.store')
 		Route.get('', 'AnswerController.findAllAnswers').as('answer.index')
 		Route.get(':id', 'AnswerController.findAnswerById').as('answer.show')
@@ -458,4 +436,8 @@ Route.group(() => {
 	}).prefix('transactions')
 
 	Route.post('import', 'ImportController.import').as('import')
+
+	Route.group(() => {
+		Route.get('', 'HolidaysController.index').as('holidays.index')
+	}).prefix('holidays')
 }).middleware(['auth', 'role'])

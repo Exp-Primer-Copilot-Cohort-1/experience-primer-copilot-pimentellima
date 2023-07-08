@@ -1,3 +1,6 @@
+import { IBilling } from './IBilling'
+import { IHoliday } from './IHoliday'
+
 /* eslint-disable @typescript-eslint/naming-convention */
 export type IUnity = Nullable<{
 	_id: string
@@ -23,6 +26,11 @@ export type IUnity = Nullable<{
 	phones: IPhone[]
 	site: string
 	state: string
+	revenue_report: {
+		[key: number]: IBilling[]
+	}
+	holidays: Array<IHoliday>
+	findRevenueReportByYear?: (year: number) => IBilling[]
 }>
 
 export type IPhone = Nullable<{
