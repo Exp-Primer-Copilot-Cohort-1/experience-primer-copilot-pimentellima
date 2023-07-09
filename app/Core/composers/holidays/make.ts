@@ -5,7 +5,9 @@ import {
 	HolidaysNationalsMongoRepository,
 } from 'App/Core/domain/repositories'
 import {
+	AddHolidaysByUnityUseCase,
 	FindAllHolidaysByUnityUseCase,
+	RemoveHolidaysByUnityUseCase,
 	SaveHolidaysNationalsDefaultUseCase,
 } from 'App/Core/domain/use-cases'
 
@@ -18,4 +20,12 @@ export const makeHolidaysFindAllByUnityIdComposer = (): ControllerGeneric => {
 			),
 		),
 	)
+}
+
+export const makeHolidaysAddByUnityComposer = (): ControllerGeneric => {
+	return new Controller(new AddHolidaysByUnityUseCase(new HolidaysMongoRepository()))
+}
+
+export const makeHolidaysRemoveByUnityComposer = (): ControllerGeneric => {
+	return new Controller(new RemoveHolidaysByUnityUseCase(new HolidaysMongoRepository()))
 }

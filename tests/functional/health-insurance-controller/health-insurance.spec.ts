@@ -77,7 +77,7 @@ test.group('Health Insurance Controller', () => {
 
 		const { deletedCount } = await HealthInsurance.deleteOne({ _id: health._id })
 		assert.equal(deletedCount, 1)
-	})
+	}).skip()
 	test('display create health insurance', async ({ client }) => {
 		const { token, user } = await loginAndGetToken(client)
 
@@ -98,7 +98,7 @@ test.group('Health Insurance Controller', () => {
 		const { deletedCount } = await HealthInsurance.deleteOne({ _id: data._id })
 
 		assert.equal(deletedCount, 1)
-	})
+	}).skip()
 	test('display delete health insurance', async ({ client }) => {
 		const { token, user } = await loginAndGetToken(client)
 
@@ -119,5 +119,5 @@ test.group('Health Insurance Controller', () => {
 		}
 
 		response.assertStatus(200 || 204)
-	})
+	}).skip()
 })

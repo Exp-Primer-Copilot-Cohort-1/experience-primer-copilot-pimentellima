@@ -4,11 +4,10 @@ import { IHoliday } from 'Types/IHoliday'
 
 export interface HolidaysManagerInterface {
 	findAllHolidays: (unity_id: string) => PromiseEither<AbstractError, IHoliday[]>
-	saveHolidays: (
+	deleteHoliday: (
 		unity_id: string,
-		holidays: IHoliday[],
+		id: string,
 	) => PromiseEither<AbstractError, IHoliday[]>
-	deleteHoliday: (unity_id: string, id: string) => PromiseEither<AbstractError, void>
 	addHoliday: (
 		unity_id: string,
 		holiday: IHoliday,

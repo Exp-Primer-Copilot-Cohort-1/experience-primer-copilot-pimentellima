@@ -439,5 +439,7 @@ Route.group(() => {
 
 	Route.group(() => {
 		Route.get('', 'HolidaysController.index').as('holidays.index')
+		Route.post('', 'HolidaysController.store').as('holidays.store')
+		Route.delete('/:_id', 'HolidaysController.destroy').as('holidays.destroy')
 	}).prefix('holidays')
 }).middleware(['auth', 'role'])

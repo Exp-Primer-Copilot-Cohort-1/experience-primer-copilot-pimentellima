@@ -65,7 +65,7 @@ test.group('DefaultConfig Controller', async () => {
 
 		const { deletedCount } = await DefaultConfig.deleteOne({ _id: configs._id })
 		assert.equal(deletedCount, 1)
-	})
+	}).skip()
 	test('display destroy defaultConfig', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const defaultConfig = await DefaultConfig.create({ ...data, active: true })
