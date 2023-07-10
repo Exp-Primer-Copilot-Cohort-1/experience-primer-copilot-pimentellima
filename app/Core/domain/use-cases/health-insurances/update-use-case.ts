@@ -23,8 +23,6 @@ export class UpdateHealthInsuranceUseCase
 			return left(healthOrErr.extract())
 		}
 
-		const health = healthOrErr.extract().params()
-
-		return right(health)
+		return right(healthOrErr.extract())
 	}
 }

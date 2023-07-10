@@ -15,7 +15,10 @@ export interface HealthInsuranceManagerInterface {
 	update: (
 		id: string,
 		entity: Partial<IHealthInsurance>,
-	) => PromiseEither<AbstractError, HealthInsuranceEntity>
+	) => PromiseEither<AbstractError, IHealthInsurance>
 	delete: (id: string) => PromiseEither<AbstractError, HealthInsuranceEntity>
-	create: (unity_id: string, params: HealthInsuranceParams) => PromiseEither<AbstractError, IHealthInsurance>
+	create: (
+		unity_id: string,
+		params: HealthInsuranceParams,
+	) => PromiseEither<AbstractError, IHealthInsurance>
 }
