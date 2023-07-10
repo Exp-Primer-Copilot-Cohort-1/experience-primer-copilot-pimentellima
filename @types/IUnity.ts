@@ -26,11 +26,10 @@ export type IUnity = Nullable<{
 	phones: IPhone[]
 	site: string
 	state: string
-	revenue_report: {
-		[key: number]: IBilling[]
+	revenue_reports: {
+		[key: number]: IBilling
 	}
 	holidays: Array<IHoliday>
-	findRevenueReportByYear?: (year: number) => IBilling[]
 }>
 
 export type IPhone = Nullable<{

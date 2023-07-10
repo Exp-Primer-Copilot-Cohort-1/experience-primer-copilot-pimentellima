@@ -7,30 +7,22 @@ import { ReportsUnitiesManagerInterface } from '../interface/reports-unities-man
 
 export class BillingMongooseRepository implements ReportsUnitiesManagerInterface {
 	constructor() { }
-	async findByDesirableBillingByMonth(
-		unity_id: string,
-		month: string,
-		year: number = new Date().getFullYear(),
-	): PromiseEither<AbstractError, IBilling> {
-		const unity = await Unity.findById(unity_id)
 
-		if (!unity) {
-			return left(new UnitNotFoundError())
-		}
-
-		return right({} as IBilling)
-	}
 	async findAllBillingByYear(
 		unity_id: string,
 		year: number,
-	): PromiseEither<AbstractError, IBilling[]> {
-		const unity = await Unity.findById(unity_id)
+	): PromiseEither<AbstractError, IBilling> {
+		const unity = await Unity.findById(unity_id).select('revenue_reports')
 
 		if (!unity) {
 			return left(new UnitNotFoundError())
 		}
 
-		const revenueReports = unity.findRevenueReportByYear?.(year) || []
+		const revenueReports = unity.revenue_reports?.[year]
+
+		if (!revenueReports) {
+			return left(new AbstractError('Revenue report not found', 404))
+		}
 
 		return right(revenueReports)
 	}
@@ -40,65 +32,43 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 		attr: 'desirable' | 'expected' | 'current',
 		value: number,
 		month: number,
+		year = new Date().getFullYear(),
 	): PromiseEither<AbstractError, IBilling> {
-		const year = new Date().getFullYear()
-		const unity = await Unity.findById(unity_id)
+		const unity = await Unity.findByIdAndUpdate(
+			unity_id,
+			{
+				[`revenue_reports.${year}.${attr}.${month}`]: value,
+			},
+			{ new: true, useFindAndModify: false },
+		).select('revenue_reports')
 
 		if (!unity) {
 			return left(new UnitNotFoundError())
 		}
 
-		const revenueReports = unity.findRevenueReportByYear?.(year) ?? []
-
-		const revenueMonthIndex = revenueReports.findIndex(
-			(revenueReport) => revenueReport.month === month,
-		)
-
-		if (!revenueMonthIndex) {
-			return left(new AbstractError('Revenue report not found', 404))
-		}
-
-		const newRevenueReport = { ...revenueReports[revenueMonthIndex], [attr]: value }
-
-		await unity.update({
-			[`revenue_report.${year}.${revenueMonthIndex}`]: newRevenueReport,
-		})
-
-		await unity.save()
-
-		return right(newRevenueReport)
+		return right(unity.revenue_reports?.[year] as any)
 	}
 
-	async updateBillingByMonth(
+	async addDefaultBilling(
 		unity_id: string,
-		billing: IBilling,
-		month: number,
+		year: number,
 	): PromiseEither<AbstractError, IBilling> {
-		const year = new Date().getFullYear()
-		const unity = await Unity.findById(unity_id)
+		const unity = await Unity.findByIdAndUpdate(
+			unity_id,
+			{
+				[`revenue_reports.${year}`]: {
+					desirable: Array.from({ length: 12 }, () => 0),
+					expected: Array.from({ length: 12 }, () => 0),
+					current: Array.from({ length: 12 }, () => 0),
+				},
+			},
+			{ new: true, useFindAndModify: false },
+		).select('revenue_reports')
 
 		if (!unity) {
 			return left(new UnitNotFoundError())
 		}
 
-		const revenueReports = unity.findRevenueReportByYear?.(year) ?? []
-
-		const revenueMonthIndex = revenueReports.findIndex(
-			(revenueReport) => revenueReport.month === month,
-		)
-
-		if (!revenueMonthIndex) {
-			return left(new AbstractError('Revenue report not found', 404))
-		}
-
-		const newRevenueReport = { ...revenueReports[revenueMonthIndex], ...billing }
-
-		await unity.update({
-			[`revenue_report.${year}.${revenueMonthIndex}`]: newRevenueReport,
-		})
-
-		await unity.save()
-
-		return right(newRevenueReport)
+		return right(unity.revenue_reports?.[year] as any)
 	}
 }

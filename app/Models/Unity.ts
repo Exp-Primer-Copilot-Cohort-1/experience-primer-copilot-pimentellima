@@ -82,7 +82,7 @@ export const UnitySchema = new Schema<IUnity>(
 			type: String,
 			required: false,
 		},
-		revenue_report: {
+		revenue_reports: {
 			type: Object,
 			required: false,
 		},
@@ -95,20 +95,6 @@ export const UnitySchema = new Schema<IUnity>(
 		timestamps: {
 			createdAt: 'created_at',
 			updatedAt: 'updated_at',
-		},
-		methods: {
-			findRevenueReportByYear: function (year: number) {
-				if (!this.revenue_report) {
-					return []
-				}
-
-				const yearRevenue = this.revenue_report[year]
-				if (!yearRevenue) {
-					return []
-				}
-
-				return yearRevenue
-			},
 		},
 	},
 )

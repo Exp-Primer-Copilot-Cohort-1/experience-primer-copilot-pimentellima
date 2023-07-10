@@ -162,6 +162,14 @@ Route.group(() => {
 	}).prefix('categories')
 
 	Route.group(() => {
+		Route.get('', 'CategoryController.index').as('category.index')
+		Route.get(':id', 'CategoryController.show').as('category.show')
+		Route.put(':id', 'CategoryController.update').as('category.update')
+		Route.delete(':id', 'CategoryController.destroy').as('category.destroy')
+		Route.post('', 'CategoryController.store').as('category.store')
+	}).prefix('category')
+
+	Route.group(() => {
 		Route.get('', 'AdonnisLegadoController.bridge').as('partner.index')
 		Route.get(':id', 'AdonnisLegadoController.bridge').as('partner.show')
 		Route.put(':id', 'AdonnisLegadoController.bridge').as('partner.update')
@@ -442,4 +450,11 @@ Route.group(() => {
 		Route.post('', 'HolidaysController.store').as('holidays.store')
 		Route.delete('/:_id', 'HolidaysController.destroy').as('holidays.destroy')
 	}).prefix('holidays')
+
+	Route.group(() => {
+		Route.get('', 'RevenuesController.index').as('revenues.index')
+		Route.put('/desirable', 'RevenuesController.updateDesirable').as(
+			'revenues.updateDesirable',
+		)
+	}).prefix('revenues')
 }).middleware(['auth', 'role'])
