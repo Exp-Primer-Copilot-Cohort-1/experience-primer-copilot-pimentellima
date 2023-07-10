@@ -1,6 +1,6 @@
-import Mongoose, { Schema } from "@ioc:Mongoose";
-import { PaymentStatus } from "App/Helpers";
-import type { IActivity } from "Types/IActivity";
+import Mongoose, { Schema } from '@ioc:Mongoose'
+import { PaymentStatus } from 'App/Helpers'
+import type { IActivity } from 'Types/IActivity'
 
 const ActivityAwaitSchema = new Schema<IActivity>(
 	{
@@ -104,10 +104,10 @@ const ActivityAwaitSchema = new Schema<IActivity>(
 	},
 	{
 		timestamps: {
-			createdAt: "created_at",
-			updatedAt: "updated_at",
+			createdAt: 'created_at',
+			updatedAt: 'updated_at',
 		},
-	}
-);
+	},
+)
 
-export default Mongoose.model<IActivity>("activity_awaits", ActivityAwaitSchema);
+export default Mongoose.model<IActivity>('activity_awaits', ActivityAwaitSchema)
