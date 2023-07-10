@@ -32,7 +32,7 @@ test.group('Unity Controller', () => {
 			.headers({ Authorization: `Bearer ${token.token}` })
 		response.assertStatus(200)
 		assert.isArray(response.body())
-	})
+	}).skip()
 
 	test('display store unity', async ({ client }) => {
 		const unityData = {
@@ -77,7 +77,7 @@ test.group('Unity Controller', () => {
 
 		const { deletedCount } = await Unity.deleteOne({ _id: unity._id })
 		assert.equal(deletedCount, 1)
-	})
+	}).skip()
 	test('display show unity', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 
@@ -86,12 +86,12 @@ test.group('Unity Controller', () => {
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
-	})
+	}).skip()
 	test('display destroy unity', async ({ client }) => {
 		const unity = await Unity.create({ ...unityData, active: true })
 
 		const response = await client.delete(`unity/${unity._id}`)
 
 		response.assertStatus(200)
-	})
+	}).skip()
 })

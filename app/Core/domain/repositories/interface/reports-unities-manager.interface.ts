@@ -1,0 +1,22 @@
+import { AbstractError } from 'App/Core/errors/error.interface'
+import { PromiseEither } from 'App/Core/shared/either'
+import { IBilling } from 'Types/IBilling'
+
+export interface ReportsUnitiesManagerInterface {
+	findAllBillingByYear: (
+		unity_id: string,
+		year: number,
+	) => PromiseEither<AbstractError, IBilling>
+
+	updateAttrBilling: (
+		unity_id: string,
+		attr: 'desirable' | 'expected' | 'current',
+		value: number,
+		month: number,
+	) => PromiseEither<AbstractError, IBilling>
+
+	addDefaultBilling: (
+		unity_id: string,
+		year: number,
+	) => PromiseEither<AbstractError, IBilling>
+}

@@ -18,7 +18,7 @@ export class SessionRepository implements SessionManagerInterface {
 		)
 
 		if (err) {
-			return left(new InvalidCredentialsError())
+			return left(new InvalidCredentialsError(err))
 		}
 
 		const sessionOrErr = await SessionUser.build(userAuth.user)

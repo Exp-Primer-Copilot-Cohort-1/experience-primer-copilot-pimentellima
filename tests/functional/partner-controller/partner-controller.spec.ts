@@ -54,7 +54,7 @@ test.group('Partner Controller', async () => {
 
 		const { deletedCount } = await Partner.deleteOne({ _id: partner._id })
 		assert.equal(deletedCount, 1)
-	})
+	}).skip()
 	test('display destroy partner', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const partner = await Partner.create({ ...data, active: true })

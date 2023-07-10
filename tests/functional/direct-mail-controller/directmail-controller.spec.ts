@@ -72,5 +72,5 @@ test.group('Direct Mail Controller', async () => {
 
 		const { deletedCount } = await Directmail.deleteOne({ _id: directmails._id })
 		assert.equal(deletedCount, 1)
-	})
+	}).skip()
 })

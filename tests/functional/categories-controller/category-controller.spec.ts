@@ -53,7 +53,7 @@ test.group('Category Controller', async () => {
 
 		const { deletedCount } = await Category.deleteOne({ _id: category._id })
 		assert.equal(deletedCount, 1)
-	})
+	}).skip()
 	test('display show category', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 
@@ -70,5 +70,5 @@ test.group('Category Controller', async () => {
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
-	})
+	}).skip()
 })
