@@ -141,10 +141,12 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 			const scheduleBlocks = (await ScheduleBlock.find({
 				"prof.value": params.profId,
 			})) as IScheduleBlock[];
+			
 			const [year, month, day] = params.date
 				.split("-")
 				.map((i) => parseInt(i));
 			const dateVal = new Date(year, month - 1, day);
+			
 			const profSchedule = [
 				...activities.filter(
 					(activity) =>
