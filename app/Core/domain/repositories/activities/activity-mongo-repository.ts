@@ -1,16 +1,18 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import { AppointmentStatus } from "App/Helpers";
+import { AppointmentStatus, PaymentStatus } from "App/Helpers";
 import Activity from "App/Models/Activity";
 import {
 	ActivityParams,
 	IActivity,
+	PaymentValues,
 	RecurrentActivityParams,
 } from "Types/IActivity";
 import ActivityEntity from "../../entities/activities/activity";
 import { ActivityNotFoundError } from "../../errors/activity-not-found";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ActivitiesManagerInterface } from "../interface/activity-manager.interface";
+import { ActivityPaymentEntity } from "../../entities/activity-payment/ActivityPaymentEntity";
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() {}
@@ -77,6 +79,37 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			return left(new AbstractError("Error updating activity", 500));
 
 		return right(activity);
+	}
+
+	async updateActivityPayment(
+		id: string,
+		values: PaymentValues
+	): PromiseEither<AbstractError, IActivity> {
+		const { paid, ...other } = values;
+		if (!id) return left(new MissingParamsError("activity id"));
+
+		const paymentOrErr = await ActivityPaymentEntity.build(other);
+		if (paymentOrErr.isLeft()) return left(paymentOrErr.extract());
+
+		const oldActivity = await Activity.findById(id);
+		if (!oldActivity)
+			return left(new AbstractError("Could not find activity", 404));
+
+		const updatedActivity = await Activity.findByIdAndUpdate(
+			id,
+			{
+				$set: {
+					payment: paymentOrErr.extract(),
+					status: paid ? PaymentStatus.PAID : oldActivity.status,
+				},
+			},
+			{
+				returnDocument: "after",
+			}
+		);
+		if (!updatedActivity)
+		return left(new AbstractError("Error updating activity", 500));
+		return right(updatedActivity);
 	}
 
 	async createRecurrentActivity(
@@ -193,7 +226,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		const activityOrErr = await ActivityEntity.build({
 			...params,
 			unity_id: oldActivity.unity_id.toString(),
-			activityId: id
+			activityId: id,
 		});
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract());
 

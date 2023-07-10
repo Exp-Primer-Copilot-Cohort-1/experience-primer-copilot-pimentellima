@@ -9,6 +9,7 @@ import { FindActivitiesByClientIdUseCase } from "App/Core/domain/use-cases/activ
 import { FindActivitiesByProfIdUseCase } from "App/Core/domain/use-cases/activities/find-activities-by-prof-use-case";
 import { FindActivityByIdUseCase } from "App/Core/domain/use-cases/activities/find-activity-by-id-use-case";
 import { UpdateActivityFinishedAtUseCase } from "App/Core/domain/use-cases/activities/update-activity-finished-at-use-case";
+import { UpdateActivityPaymentUseCase } from "App/Core/domain/use-cases/activities/update-activity-payment-use-case";
 import { UpdateActivityStartedAtUseCase } from "App/Core/domain/use-cases/activities/update-activity-started-at-use-case";
 import { UpdateActivityStatusByIdUseCase } from "App/Core/domain/use-cases/activities/update-activity-status-by-use-case";
 import { UpdateActivityByIdUseCase } from "App/Core/domain/use-cases/activities/update-activity-use-case";
@@ -16,6 +17,12 @@ import { UpdateActivityByIdUseCase } from "App/Core/domain/use-cases/activities/
 export const makeCreateActivityComposer = (): ControllerGeneric => {
 	return new Controller(
 		new CreateActivityUseCase(new ActivityMongoRepository())
+	);
+};
+
+export const makeUpdateActivityPaymentComposer = (): ControllerGeneric => {
+	return new Controller(
+		new UpdateActivityPaymentUseCase(new ActivityMongoRepository())
 	);
 };
 export const makeCreateRecurrentActivityComposer = (): ControllerGeneric => {

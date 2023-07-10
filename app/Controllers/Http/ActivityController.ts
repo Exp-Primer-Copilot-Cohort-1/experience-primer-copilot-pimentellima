@@ -10,6 +10,7 @@ import {
 	makeFindAllActivitiesComposer,
 	makeUpdateActivityByIdComposer,
 	makeUpdateActivityFinishedAtComposer,
+	makeUpdateActivityPaymentComposer,
 	makeUpdateActivityStartedAtComposer,
 	makeUpdateActivityStatusComposer,
 } from "App/Core/composers/activities/activity-composer";
@@ -52,6 +53,10 @@ class ActivityController {
 	}
 	async findActivityById(ctx: HttpContextContract) {
 		return adaptRoute(makeFindActivityByIdComposer(), ctx);
+	}
+
+	async updateActivityPayment(ctx: HttpContextContract) {
+		return adaptRoute(makeUpdateActivityPaymentComposer(), ctx);
 	}
 
 	async createActivity(ctx: HttpContextContract) {

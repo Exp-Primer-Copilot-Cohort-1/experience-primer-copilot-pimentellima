@@ -60,6 +60,10 @@ const ActivitySchema = new Schema<IActivity>(
 				},
 			},
 		],
+		payment: {
+			required: false,
+			default: {}
+		},
 		client: {
 			value: {
 				type: String,
@@ -99,11 +103,6 @@ const ActivitySchema = new Schema<IActivity>(
 				type: String,
 				required: true,
 			},
-		},
-		is_recorrent: {
-			type: Boolean,
-			required: true,
-			default: false,
 		},
 		active: {
 			type: Boolean,

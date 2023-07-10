@@ -144,9 +144,10 @@ Route.group(() => {
 		Route.get("", "ScheduleBlockController.findAllScheduleBlocks").as(
 			"schedule-block.index"
 		);
-		Route.get("prof/:prof_id", "ScheduleBlockController.findScheduleBlocksByProfId").as(
-			"schedule-block.profId"
-		);
+		Route.get(
+			"prof/:prof_id",
+			"ScheduleBlockController.findScheduleBlocksByProfId"
+		).as("schedule-block.profId");
 		Route.delete(
 			":id",
 			"ScheduleBlockController.deleteScheduleBlockById"
@@ -260,6 +261,9 @@ Route.group(() => {
 	);
 
 	Route.group(() => {
+		Route.put("payment/:id", "ActivityController.updateActivityPayment").as(
+			"activity.payment"
+		);
 		Route.put(
 			"status/:id",
 			"ActivityController.updateActivityStatusById"
@@ -292,12 +296,10 @@ Route.group(() => {
 		Route.post("", "ActivityController.createActivity").as(
 			"activity.store"
 		);
-		Route.post("/recurrent", "ActivityController.createRecurrentActivity").as(
-			"activity.storeRecurrent"
-		);
-		Route.post("payment", "ActivityController.payment").as(
-			"activity.payment"
-		);
+		Route.post(
+			"/recurrent",
+			"ActivityController.createRecurrentActivity"
+		).as("activity.storeRecurrent");
 	}).prefix("activity");
 
 	Route.group(() => {
@@ -311,7 +313,9 @@ Route.group(() => {
 	}).prefix("procedure");
 
 	Route.group(() => {
-		Route.get(":prof_id", "ScheduleController.verifySchedule").as("schedule.show");
+		Route.get(":prof_id", "ScheduleController.verifySchedule").as(
+			"schedule.show"
+		);
 	}).prefix("schedule");
 
 	Route.post("/upload", "AdonnisLegadoController.bridge").as("upload.image");

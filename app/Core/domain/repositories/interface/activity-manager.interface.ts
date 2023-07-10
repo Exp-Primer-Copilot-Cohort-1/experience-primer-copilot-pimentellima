@@ -3,6 +3,7 @@ import { PromiseEither } from "App/Core/shared/either";
 import {
 	ActivityParams,
 	IActivity,
+	PaymentValues,
 	RecurrentActivityParams,
 } from "Types/IActivity";
 import { AppointmentStatus } from "App/Helpers";
@@ -22,6 +23,10 @@ export interface ActivitiesManagerInterface {
 	updateActivityById: (
 		id: string,
 		values: ActivityParams
+	) => PromiseEither<AbstractError, IActivity>;
+	updateActivityPayment: (
+		id: string,
+		values: PaymentValues
 	) => PromiseEither<AbstractError, IActivity>;
 	updateActivityStatusById: (
 		id: string,
