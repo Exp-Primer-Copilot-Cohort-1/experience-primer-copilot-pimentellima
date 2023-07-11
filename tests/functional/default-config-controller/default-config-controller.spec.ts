@@ -74,13 +74,17 @@ test.group('DefaultConfig Controller', async () => {
 			.bearerToken(token.token)
 		response.assertStatus(200)
 	})
-	test('display show defaltConfig', async ({ client }) => {
+	test('display show defaultConfig', async ({ client }) => {
+		const { _id } = await DefaultConfig.create({ ...data })
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('default-configs/642f1244d0e3bb29c2463982')
+			.get(`default-configs/${_id}`)
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
+
+		const { deletedCount } = await DefaultConfig.deleteOne({ _id: _id.toString() })
+		assert.equal(deletedCount, 1)
 	})
 })

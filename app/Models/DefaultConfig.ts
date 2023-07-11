@@ -3,8 +3,26 @@ import { IDefaultConfig } from 'Types/IDefaultConfig'
 
 const DefaultConfigSchema = new Schema<IDefaultConfig>(
 	{
-		days: {
-			type: Number,
+		bank: {
+			type: {
+				value: Schema.Types.ObjectId,
+				label: String,
+			},
+			required: true,
+		},
+		cost_center: {
+			type: {
+				value: Schema.Types.ObjectId,
+				label: String,
+			},
+			required: true,
+		},
+		payment_form: {
+			type: {
+				value: Schema.Types.ObjectId,
+				label: String,
+				key: String,
+			},
 			required: true,
 		},
 		active: {
@@ -15,6 +33,7 @@ const DefaultConfigSchema = new Schema<IDefaultConfig>(
 			type: Schema.Types.ObjectId,
 			required: true,
 			ref: 'unities',
+			unique: true,
 		},
 	},
 	{
