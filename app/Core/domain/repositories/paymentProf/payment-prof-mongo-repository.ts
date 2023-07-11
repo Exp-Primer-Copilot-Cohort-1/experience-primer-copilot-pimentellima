@@ -70,20 +70,21 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 
 	async findAllPaymentProfs(
 		unity_id: string,
-	): PromiseEither<AbstractError, PaymentProfEntity[]> {
+	): PromiseEither<AbstractError, IPaymentProf[]> {
 		if (!unity_id) return left(new MissingParamsError('unity id'))
 
 		const data = await PaymentProf.find({ unity_id })
-		console.log(data)
+
 		const paymentProfs = await Promise.all(
 			data.map(async (item) => {
 				const paymentProfOrErr = await PaymentProfEntity.build(item.toObject())
 				if (paymentProfOrErr.isLeft()) {
 					return {} as PaymentProfEntity
 				}
-				return paymentProfOrErr.extract()
+				return paymentProfOrErr.extract().params()
 			}),
 		)
+
 		return right(paymentProfs)
 	}
 }
