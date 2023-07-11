@@ -30,7 +30,7 @@ type Prof = {
 	label: string;
 };
 
-export type RecurrentActivityParams = {
+export type RecurrentActivity2 = {
 	values: {
 		profId: string;
 		clientId: string;
@@ -52,15 +52,17 @@ export type ActivityParams = {
 	activityId?: string;
 	profId: string;
 	clientId: string;
-	procedures: {
-		procedureId: string;
-		healthInsuranceId: string;
-		val: string;
-	}[];
+	procedures: ProcedureParams[];
 	date: string;
 	hourStart: string;
 	hourEnd: string;
 	obs?: string;
+};
+
+export type ProcedureParams = {
+	procedureId: string;
+	healthInsuranceId: string;
+	val: string;
 };
 
 export interface IActivity {
@@ -78,7 +80,7 @@ export interface IActivity {
 	unity_id: string | ObjectId;
 	scheduled: AppointmentStatus;
 	prof_id: string | ObjectId;
-	payment?: ActivityPayment
+	payment?: ActivityPayment;
 	started_at?: Date;
 	finished_at?: Date;
 	created_at: Date;
@@ -87,52 +89,52 @@ export interface IActivity {
 
 export type ActivityPayment = {
 	cost_center: {
-		id: string | ObjectId,
-		name: string
-	},
+		id: string | ObjectId;
+		name: string;
+	};
 	category: {
-		id: string | ObjectId,
-		name: string
-	},
-	value: string,
-	paymentForm: string,
-	date: string
-	description?: string
-	installment: boolean,
-	installments?: string,
-}
+		id: string | ObjectId;
+		name: string;
+	};
+	value: string;
+	paymentForm: string;
+	date: string;
+	description?: string;
+	installment: boolean;
+	installments?: string;
+};
 
 export interface IActivityPayment {
 	bank: {
-		id: string | ObjectId
-		name: string,
-	}
+		id: string | ObjectId;
+		name: string;
+	};
 	cost_center: {
-		id: string | ObjectId,
-		name: string
-	},
+		id: string | ObjectId;
+		name: string;
+	};
 	category: {
-		id: string | ObjectId,
-		name: string
-	},
-	value: string,
-	paymentForm: string,
-	date: string
-	description?: string
-	installment: boolean,
-	installments?: number,
+		id: string | ObjectId;
+		name: string;
+	};
+	value: string;
+	paymentForm: string;
+	date: string;
+	description?: string;
+	installment: boolean;
+	installments?: number;
 }
 
 export type PaymentValues = {
-	activityId: string
-	bankAccountId: string
-	costCenterId: string
-	categoryId: string
-	paid: boolean
-	paymentDate: string
-	paymentForm: string
-	installment: boolean
-	installmentsNumber: number
-	value: string
-	description?: string
-}
+	activityId: string;
+	bankAccountId: string;
+	costCenterId: string;
+	categoryId: string;
+	paid: boolean;
+	paymentDate: string;
+	paymentForm: string;
+	installment: boolean;
+	installmentsNumber: number;
+	value: string;
+	description?: string;
+};
