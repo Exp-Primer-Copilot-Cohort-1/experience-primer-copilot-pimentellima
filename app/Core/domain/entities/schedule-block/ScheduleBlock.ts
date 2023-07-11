@@ -6,8 +6,14 @@ import {
 	Prof,
 	ScheduleBlockParams,
 } from "Types/IScheduleBlock";
-import { format, isAfter, startOfYesterday } from "date-fns";
+import { format, getDay, isAfter, isSameDay, startOfYesterday } from "date-fns";
 import { Entity } from "../abstract/entity.abstract";
+import User from "App/Models/User";
+import { IUser } from "Types/IUser";
+import Activity from "App/Models/Activity";
+import { IActivity } from "Types/IActivity";
+import ScheduleBlock from "App/Models/ScheduleBlock";
+import Client from "App/Models/Client";
 
 export class ScheduleBlockEntity extends Entity implements IScheduleBlock {
 	_prof: Prof;
@@ -85,58 +91,114 @@ export class ScheduleBlockEntity extends Entity implements IScheduleBlock {
 		params: ScheduleBlockParams
 	): PromiseEither<AbstractError, ScheduleBlockEntity> {
 		try {
-			const parsedParams = z
-				.object({
-					prof: z.object({
-						value: z.string(),
-						label: z.string(),
+			const profData = (await User.findById(params.profId)) as IUser;
+			if (!profData)
+				return left(new AbstractError("Could not find prof", 404));
+
+			const activities = (await Activity.find({
+				prof_id: params.profId,
+			})) as IActivity[];
+
+			const scheduleBlocks = (await ScheduleBlock.find({
+				"prof.value": params.profId,
+			})) as IScheduleBlock[];
+			
+			const [year, month, day] = params.date
+				.split("-")
+				.map((i) => parseInt(i));
+			const dateVal = new Date(year, month - 1, day);
+			
+			const profSchedule = [
+				...activities,
+				...scheduleBlocks,
+			].filter(({ date }) => {
+				return isSameDay(dateVal, new Date(date));
+			});
+
+			z.object({
+				profId: z.string(),
+				date: z
+					.string()
+					.refine((val) => isAfter(new Date(val), startOfYesterday()))
+					.refine((val) => {
+						const weekDay = getDay(dateVal);
+						if (
+							(weekDay === 0 && !profData.is_sunday) ||
+							(weekDay === 1 && !profData.is_monday) ||
+							(weekDay === 2 && !profData.is_tuesday) ||
+							(weekDay === 3 && !profData.is_thursday) ||
+							(weekDay === 4 && !profData.is_wednesday) ||
+							(weekDay === 5 && !profData.is_friday) ||
+							(weekDay === 6 && !profData.is_saturday)
+						) {
+							return false;
+						}
+						return true;
 					}),
-					date: z
-						.string()
-						.refine((val) => {
-							const yesterday = startOfYesterday();
-							return isAfter(new Date(val), yesterday);
-						})
-						.transform((val) => new Date(val)),
-					hour_start: z
-						.string()
-						.refine(
-							(val) =>
-								format(new Date(val), "HH:mm") <
-								format(new Date(params.hour_end), "HH:mm")
-						)
-						.transform((val) => {
-							const correctedVal = new Date(val);
-							const date = new Date(params.date);
-							correctedVal.setFullYear(
-								date.getFullYear(),
-								date.getMonth(),
-								date.getDate()
-							);
-							return correctedVal.toISOString();
-						}),
-					hour_end: z.string().transform((val) => {
-						const correctedVal = new Date(val);
-						const date = new Date(params.date);
-						correctedVal.setFullYear(
-							date.getFullYear(),
-							date.getMonth(),
-							date.getDate()
+				hourStart: z.string().refine((val) => {
+					for (const { hour_end, hour_start } of profSchedule) {
+						const formattedHourStart = format(
+							new Date(hour_start),
+							"HH:mm"
 						);
-						return correctedVal.toISOString();
-					}),
-					all_day: z.boolean(),
-					obs: z.string().optional(),
-				})
-				.parse(params);
+						const formattedHourEnd = format(
+							new Date(hour_end),
+							"HH:mm"
+						);
+						if (
+							val >= formattedHourStart &&
+							val <= formattedHourEnd
+						)
+							return false;
+					}
+					return true;
+				}),
+				hourEnd: z.string().refine((val) => {
+					for (const { hour_end, hour_start } of profSchedule) {
+						const formattedHourStart = format(
+							new Date(hour_start),
+							"HH:mm"
+						);
+						const formattedHourEnd = format(
+							new Date(hour_end),
+							"HH:mm"
+						);
+						if (
+							val >= formattedHourStart &&
+							val <= formattedHourEnd
+						)
+							return false;
+					}
+					return true;
+				}),
+			}).parse(params);
+
+			let [hh, mm] = params.hourStart.split(":").map((i) => parseInt(i));
+
+			const hourStartDate = new Date(dateVal);
+			hourStartDate.setHours(hh);
+			hourStartDate.setMinutes(mm);
+			const hour_start = hourStartDate.toISOString();
+
+			[hh, mm] = params.hourEnd.split(":").map((i) => parseInt(i));
+			const hourEndDate = new Date(dateVal);
+			hourEndDate.setHours(hh);
+			hourEndDate.setMinutes(mm);
+			const hour_end = hourEndDate.toISOString();
+
+			const prof = {
+				value: params.profId,
+				label: profData.name,
+			};
+
+
 			return right(
 				new ScheduleBlockEntity()
-					.defineProf(parsedParams.prof)
-					.defineDate(parsedParams.date)
-					.defineHourStart(parsedParams.hour_start)
-					.defineHourEnd(parsedParams.hour_end)
-					.defineAllDay(parsedParams.all_day)
-					.defineObs(parsedParams.obs)
+					.defineProf(prof)
+					.defineDate(dateVal)
+					.defineHourStart(hour_start)
+					.defineHourEnd(hour_end)
+					.defineAllDay(params.allDay)
 			);
 		} catch (err) {
 			return left(err);
