@@ -11,12 +11,11 @@ export interface IScheduleBlock {
 }
 
 export type ScheduleBlockParams = {
-    prof: Prof,
-    date: string,
-	hour_start: string,
-	hour_end: string,
-    all_day: boolean,
-    obs?: string,
+	profId: string
+	date: string
+	hourStart: string
+	hourEnd: string
+	allDay: boolean
 }
 
 export type Prof = {
