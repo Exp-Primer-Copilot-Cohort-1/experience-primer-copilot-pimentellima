@@ -12,9 +12,9 @@ export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterfa
 
 	async createActivity(
 		unity_id: string,
-		activity: ActivityAwaitParams,
+		values: ActivityAwaitParams,
 	): PromiseEither<AbstractError, IActivityAwait> {
-		const activityOrErr = await ActivityAwaitEntity.build(activity)
+		const activityOrErr = await ActivityAwaitEntity.build(values)
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract())
 
 		const newActivity = await ActivityAwait.create(

@@ -45,19 +45,15 @@ export interface IActivityAwait {
 }
 
 export type ActivityAwaitParams = {
-	_id?: string
-	procedures: ProcedureParams[]
-	client: Client
-	obs?: string
-	prof: Prof
-	prof_id: string
-}
+	activityId?: string;
+	profId: string;
+	clientId: string;
+	procedures: ProcedureParams[];
+	obs?: string;
+};
 
-type ProcedureParams = {
-	value: string;
-	label: string;
-	minutes: number;
-	color: string;
+export type ProcedureParams = {
+	procedureId: string;
+	healthInsuranceId: string;
 	val: string;
-	health_insurance: HealthInsurance;
-}
+};
