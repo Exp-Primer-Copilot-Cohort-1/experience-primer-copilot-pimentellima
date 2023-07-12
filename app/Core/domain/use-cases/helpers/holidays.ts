@@ -1,6 +1,11 @@
 import { IHoliday } from 'Types/IHoliday'
 import axios from 'axios'
 
+export type FindAllHolidaysByUnityParams = {
+	unity_id: string
+	year?: number
+}
+
 type Holiday = {
 	date: string
 	name: string

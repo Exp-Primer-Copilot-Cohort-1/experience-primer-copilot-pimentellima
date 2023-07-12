@@ -3,15 +3,10 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IBilling } from 'Types/IBilling'
 import { ReportsUnitiesManagerInterface } from '../../repositories/interface/reports-unities-manager.interface'
-
-type UnityReportsRevenues = {
-	unity_id: string
-	value: number
-	month?: number
-}
+import { UpdateAttrReportsRevenues } from '../helpers/reports'
 
 export class UpdateAttrBillingInMonthUseCase
-	implements UseCase<UnityReportsRevenues, IBilling>
+	implements UseCase<UpdateAttrReportsRevenues, IBilling>
 {
 	constructor(
 		private readonly manager: ReportsUnitiesManagerInterface,
@@ -22,7 +17,7 @@ export class UpdateAttrBillingInMonthUseCase
 		value,
 		unity_id,
 		month = new Date().getMonth(),
-	}: UnityReportsRevenues): PromiseEither<AbstractError, IBilling> {
+	}: UpdateAttrReportsRevenues): PromiseEither<AbstractError, IBilling> {
 		const billingOrErr = await this.manager.updateAttrBilling(
 			unity_id,
 			this.attr,

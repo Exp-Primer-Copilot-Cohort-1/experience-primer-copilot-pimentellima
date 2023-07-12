@@ -453,6 +453,7 @@ Route.group(() => {
 
 	Route.group(() => {
 		Route.get('', 'RevenuesController.index').as('revenues.index')
+		Route.get('/minimum', 'RevenuesController.updateMinimum').as('revenues.minimum')
 		Route.put('/desirable', 'RevenuesController.updateDesirable').as(
 			'revenues.updateDesirable',
 		)

@@ -8,10 +8,11 @@ export interface IProcedure {
 	color: string
 	prof: IProf[]
 	name: string
+	avgPrice?: number
 	minutes: number
 	health_insurance: {
-		value: string,
-		label: string,
+		value: string
+		label: string
 		price: string
 	}[]
 	unity_id: string | ObjectId

@@ -3,13 +3,11 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IHoliday } from 'Types/IHoliday'
 import { HolidaysManagerInterface } from '../../repositories/interface/holidays.interface'
+import { FindAllHolidaysByUnityParams } from '../helpers/holidays'
 
-type Unity = {
-	unity_id: string
-	year?: number
-}
-
-export class FindAllHolidaysByUnityUseCase implements UseCase<Unity, IHoliday[]> {
+export class FindAllHolidaysByUnityUseCase
+	implements UseCase<FindAllHolidaysByUnityParams, IHoliday[]>
+{
 	constructor(
 		private readonly holidaysRepository: HolidaysManagerInterface,
 		private readonly SaveHolidayNationalsUseCase: UseCase<number, IHoliday[]>,
@@ -18,7 +16,7 @@ export class FindAllHolidaysByUnityUseCase implements UseCase<Unity, IHoliday[]>
 	public async execute({
 		unity_id,
 		year = new Date().getFullYear(),
-	}: Unity): PromiseEither<AbstractError, IHoliday[]> {
+	}: FindAllHolidaysByUnityParams): PromiseEither<AbstractError, IHoliday[]> {
 		const holidaysOrErr = await this.holidaysRepository.findAllHolidays(unity_id)
 
 		if (holidaysOrErr.isLeft()) {

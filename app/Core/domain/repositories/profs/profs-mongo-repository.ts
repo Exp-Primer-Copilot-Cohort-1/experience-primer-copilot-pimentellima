@@ -11,7 +11,7 @@ export class ProfsMongooseRepository implements ProfManagerInterface {
 		const prof = await Prof.findOne({
 			_id: id,
 			unity_id,
-			type: ['prof', 'admin_prof'],
+			type: ['prof', 'admin_prof', 'admin'],
 		})
 		if (!prof) return left(new UserNotFoundError())
 		return right(prof)

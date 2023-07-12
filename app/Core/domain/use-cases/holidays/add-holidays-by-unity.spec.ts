@@ -39,7 +39,7 @@ describe('Add Holidays By Unity Use Case (Integration)', () => {
 
 		expect(holidayOrErr.isRight()).toBeTruthy()
 
-		const count = await Unity.updateMany(
+		await Unity.updateMany(
 			{},
 			{
 				$pull: {
@@ -49,7 +49,5 @@ describe('Add Holidays By Unity Use Case (Integration)', () => {
 				},
 			},
 		).exec()
-
-		console.log(count)
 	})
 })
