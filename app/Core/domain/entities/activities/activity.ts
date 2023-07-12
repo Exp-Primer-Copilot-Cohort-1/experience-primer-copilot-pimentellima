@@ -2,18 +2,24 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import { AppointmentStatus, PaymentStatus } from "App/Helpers";
+import Activity from "App/Models/Activity";
 import Client from "App/Models/Client";
 import HealthInsurance from "App/Models/HealthInsurance";
 import Procedure from "App/Models/Procedure";
+import ScheduleBlock from "App/Models/ScheduleBlock";
 import User from "App/Models/User";
 import { IActivity } from "Types/IActivity";
-import { IUser } from "Types/IUser";
-import { ZodError, z } from "zod";
-import { AbstractActivity } from "../abstract/activity-abstract";
-import Activity from "App/Models/Activity";
-import { format, getDay, isAfter, isSameDay, startOfYesterday } from "date-fns";
-import ScheduleBlock from "App/Models/ScheduleBlock";
 import { IScheduleBlock } from "Types/IScheduleBlock";
+import { IUser } from "Types/IUser";
+import {
+	getDay,
+	isAfter,
+	isBefore,
+	isSameDay,
+	startOfYesterday,
+} from "date-fns";
+import { z } from "zod";
+import { AbstractActivity } from "../abstract/activity-abstract";
 
 export class ActivityEntity extends AbstractActivity implements IActivity {
 	private _date: Date;
@@ -141,12 +147,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 			const scheduleBlocks = (await ScheduleBlock.find({
 				"prof.value": params.profId,
 			})) as IScheduleBlock[];
-			
-			const [year, month, day] = params.date
-				.split("-")
-				.map((i) => parseInt(i));
-			const dateVal = new Date(year, month - 1, day);
-			
+
 			const profSchedule = [
 				...activities.filter(
 					(activity) =>
@@ -154,7 +155,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 				),
 				...scheduleBlocks,
 			].filter(({ date }) => {
-				return isSameDay(dateVal, new Date(date));
+				return isSameDay(new Date(params.date), new Date(date));
 			});
 
 			z.object({
@@ -164,7 +165,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					.string()
 					.refine((val) => isAfter(new Date(val), startOfYesterday()))
 					.refine((val) => {
-						const weekDay = getDay(dateVal);
+						const weekDay = getDay(new Date(val));
 						if (
 							(weekDay === 0 && !profData.is_sunday) ||
 							(weekDay === 1 && !profData.is_monday) ||
@@ -180,39 +181,23 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					}),
 				hourStart: z.string().refine((val) => {
 					for (const { hour_end, hour_start } of profSchedule) {
-						const formattedHourStart = format(
-							new Date(hour_start),
-							"HH:mm"
-						);
-						const formattedHourEnd = format(
-							new Date(hour_end),
-							"HH:mm"
-						);
 						if (
-							val >= formattedHourStart &&
-							val <= formattedHourEnd
+							isAfter(new Date(val), new Date(hour_start)) &&
+							isBefore(new Date(val), new Date(hour_end))
 						)
 							return false;
+						else return true;
 					}
-					return true;
 				}),
 				hourEnd: z.string().refine((val) => {
 					for (const { hour_end, hour_start } of profSchedule) {
-						const formattedHourStart = format(
-							new Date(hour_start),
-							"HH:mm"
-						);
-						const formattedHourEnd = format(
-							new Date(hour_end),
-							"HH:mm"
-						);
 						if (
-							val >= formattedHourStart &&
-							val <= formattedHourEnd
+							isAfter(new Date(val), new Date(hour_start)) &&
+							isBefore(new Date(val), new Date(hour_end))
 						)
 							return false;
+						else return true;
 					}
-					return true;
 				}),
 				procedures: z.array(
 					z.object({
@@ -224,19 +209,6 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 				obs: z.string().optional(),
 			}).parse(params);
 
-			let [hh, mm] = params.hourStart.split(":").map((i) => parseInt(i));
-
-			const hourStartDate = new Date(dateVal);
-			hourStartDate.setHours(hh);
-			hourStartDate.setMinutes(mm);
-			const hour_start = hourStartDate.toISOString();
-
-			[hh, mm] = params.hourEnd.split(":").map((i) => parseInt(i));
-			const hourEndDate = new Date(dateVal);
-			hourEndDate.setHours(hh);
-			hourEndDate.setMinutes(mm);
-			const hour_end = hourEndDate.toISOString();
-
 			const procedures = await Promise.all(
 				params.procedures.map(async (procedure) => {
 					const { procedureId, healthInsuranceId, val } = procedure;
@@ -244,7 +216,8 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					const healthInsuranceData = await HealthInsurance.findById(
 						healthInsuranceId
 					);
-					if (!procedureData || !healthInsuranceData) throw ZodError;
+					if (!procedureData || !healthInsuranceData)
+						throw new AbstractError("Error creating activity", 500);
 					const healthInsurancePrice =
 						procedureData.health_insurance.find(
 							(i) => i.value === healthInsuranceId
@@ -283,10 +256,10 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 
 			return right(
 				new ActivityEntity()
-					.defineDate(dateVal)
+					.defineDate(new Date(params.date))
 					.defineUnityId(params.unity_id)
-					.defineHourStart(hour_start)
-					.defineHourEnd(hour_end)
+					.defineHourStart(params.hourStart)
+					.defineHourEnd(params.hourEnd)
 					.defineStatus(PaymentStatus.PENDING)
 					.defineProcedures(procedures)
 					.defineClient(client)
