@@ -7,7 +7,6 @@ import FinancialCategory from "App/Models/FinancialCategory";
 import { IActivityPayment } from "Types/IActivity";
 import { Schema } from "mongoose";
 import * as z from "zod";
-import { Entity } from "../abstract/entity.abstract";
 
 export class ActivityPaymentEntity implements IActivityPayment {
 	bank: { id: string | Schema.Types.ObjectId; name: string };
@@ -65,20 +64,18 @@ export class ActivityPaymentEntity implements IActivityPayment {
 		return this;
 	}
 
-	public static async build(
-		values: {
-			activityId: string
-			bankAccountId: string
-			costCenterId: string
-			categoryId: string
-			paymentDate: string
-			paymentForm: string
-			installment: boolean
-			installmentsNumber: number
-			value: string
-			description?: string
-		}
-	): PromiseEither<AbstractError, ActivityPaymentEntity> {
+	public static async build(values: {
+		activityId: string;
+		bankAccountId: string;
+		costCenterId: string;
+		categoryId: string;
+		paymentDate: string;
+		paymentForm: string;
+		installment: boolean;
+		installmentsNumber: number;
+		value: string;
+		description?: string;
+	}): PromiseEither<AbstractError, ActivityPaymentEntity> {
 		try {
 			z.object({
 				bankAccountId: z.string(),
@@ -98,11 +95,6 @@ export class ActivityPaymentEntity implements IActivityPayment {
 			if (!bank || !category || !costCenter)
 				return left(new AbstractError("Internal error", 500));
 
-			const [year, month, day] = values.paymentDate
-				.split("-")
-				.map((i) => parseInt(i));
-			const date = new Date(year, month - 1, day).toISOString();
-
 			return right(
 				new ActivityPaymentEntity()
 					.defineBank({
@@ -117,7 +109,7 @@ export class ActivityPaymentEntity implements IActivityPayment {
 						id: values.categoryId,
 						name: category.name,
 					})
-					.defineDate(date)
+					.defineDate(values.paymentDate)
 					.defineValue(values.value)
 					.definePaymentForm(values.paymentForm)
 					.defineInstallment(values.installment)
@@ -125,7 +117,7 @@ export class ActivityPaymentEntity implements IActivityPayment {
 					.defineDescription(values.description)
 			);
 		} catch (err) {
-			console.log(err)
+			console.log(err);
 			return left(new AbstractError("Error validating payment", 500));
 		}
 	}
