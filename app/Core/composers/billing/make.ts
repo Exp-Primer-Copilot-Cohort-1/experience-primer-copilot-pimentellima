@@ -5,6 +5,7 @@ import {
 	FindAllByYearRevenueReportsUseCase,
 	MinimumDesirableUseCase,
 	UpdateAttrBillingInMonthUseCase,
+	UpdateDesirableBillingInMonthUseCase,
 } from 'App/Core/domain/use-cases'
 import { AveragePriceProceduresUseCase } from 'App/Core/domain/use-cases/procedures/average-price-procedures-group-by-prof'
 import { dayTradeSut } from './day-trade-sut'
@@ -17,7 +18,7 @@ export const makeFindBiliingYearByUnityIdComposer = (): ControllerGeneric => {
 
 export const makeUpdateBillingDesirableByUnityComposer = (): ControllerGeneric => {
 	return new Controller(
-		new UpdateAttrBillingInMonthUseCase(new BillingMongooseRepository(), 'desirable'),
+		new UpdateDesirableBillingInMonthUseCase(new BillingMongooseRepository()),
 	)
 }
 
