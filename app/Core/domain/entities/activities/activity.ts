@@ -140,23 +140,25 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 			if (!profData)
 				return left(new AbstractError("Could not find prof", 404));
 
-			const activities = (await Activity.find({
-				prof_id: params.profId,
-			})) as IActivity[];
+			const activities = (
+				await Activity.find({
+					prof_id: params.profId,
+				})
+			).filter(
+				(activity) => !(activity._id?.toString() === params.activityId)
+			) as IActivity[];
 
 			const scheduleBlocks = (await ScheduleBlock.find({
 				"prof.value": params.profId,
 			})) as IScheduleBlock[];
 
-			const profSchedule = [
-				...activities.filter(
-					(activity) =>
-						!(activity._id?.toString() === params.activityId)
-				),
-				...scheduleBlocks,
-			].filter(({ date }) => {
-				return isSameDay(new Date(params.date), new Date(date));
-			});
+			const profSchedule = [...activities, ...scheduleBlocks].filter(
+				({ date }) => {
+					console.log(new Date(params.date))
+					console.log(new Date(date))
+					return isSameDay(new Date(params.date), new Date(date));
+				}
+			);
 
 			z.object({
 				profId: z.string(),
@@ -180,6 +182,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 						return true;
 					}),
 				hourStart: z.string().refine((val) => {
+					if(profSchedule.length === 0) return true
 					for (const { hour_end, hour_start } of profSchedule) {
 						if (
 							isAfter(new Date(val), new Date(hour_start)) &&
@@ -190,6 +193,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					}
 				}),
 				hourEnd: z.string().refine((val) => {
+					if(profSchedule.length === 0) return true
 					for (const { hour_end, hour_start } of profSchedule) {
 						if (
 							isAfter(new Date(val), new Date(hour_start)) &&
