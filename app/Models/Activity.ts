@@ -14,7 +14,10 @@ const ActivitySchema = new Schema<IActivity>(
 			type: String,
 		},
 		status: {
+			type: String,
+			required: true,
 			enum: Object.values(PaymentStatus),
+			default: PaymentStatus.PENDING,
 		},
 		procedures: [
 			{
@@ -51,12 +54,6 @@ const ActivitySchema = new Schema<IActivity>(
 						type: String,
 						required: false,
 					},
-				},
-				status: {
-					type: String,
-					required: true,
-					enum: Object.values(PaymentStatus),
-					default: PaymentStatus.PENDING,
 				},
 			},
 		],

@@ -1,5 +1,5 @@
 export type ScheduleParams = {
-    hour_start: string,
-    hour_end: string,
+    hourStart: string,
+    hourEnd: string,
     date: string
 }

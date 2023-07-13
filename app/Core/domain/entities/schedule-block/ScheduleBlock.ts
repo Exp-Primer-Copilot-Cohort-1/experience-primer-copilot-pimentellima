@@ -6,7 +6,7 @@ import {
 	Prof,
 	ScheduleBlockParams,
 } from "Types/IScheduleBlock";
-import { format, getDay, isAfter, isSameDay, startOfYesterday } from "date-fns";
+import { format, getDay, isAfter, isBefore, isSameDay, startOfYesterday } from "date-fns";
 import { Entity } from "../abstract/entity.abstract";
 import User from "App/Models/User";
 import { IUser } from "Types/IUser";
@@ -121,7 +121,7 @@ export class ScheduleBlockEntity extends Entity implements IScheduleBlock {
 					.string()
 					.refine((val) => isAfter(new Date(val), startOfYesterday()))
 					.refine((val) => {
-						const weekDay = getDay(dateVal);
+						const weekDay = getDay(new Date(val));
 						if (
 							(weekDay === 0 && !profData.is_sunday) ||
 							(weekDay === 1 && !profData.is_monday) ||
@@ -137,54 +137,25 @@ export class ScheduleBlockEntity extends Entity implements IScheduleBlock {
 					}),
 				hourStart: z.string().refine((val) => {
 					for (const { hour_end, hour_start } of profSchedule) {
-						const formattedHourStart = format(
-							new Date(hour_start),
-							"HH:mm"
-						);
-						const formattedHourEnd = format(
-							new Date(hour_end),
-							"HH:mm"
-						);
 						if (
-							val >= formattedHourStart &&
-							val <= formattedHourEnd
+							isAfter(new Date(val), new Date(hour_start)) &&
+							isBefore(new Date(val), new Date(hour_end))
 						)
 							return false;
+						else return true;
 					}
-					return true;
 				}),
 				hourEnd: z.string().refine((val) => {
 					for (const { hour_end, hour_start } of profSchedule) {
-						const formattedHourStart = format(
-							new Date(hour_start),
-							"HH:mm"
-						);
-						const formattedHourEnd = format(
-							new Date(hour_end),
-							"HH:mm"
-						);
 						if (
-							val >= formattedHourStart &&
-							val <= formattedHourEnd
+							isAfter(new Date(val), new Date(hour_start)) &&
+							isBefore(new Date(val), new Date(hour_end))
 						)
 							return false;
+						else return true;
 					}
-					return true;
 				}),
 			}).parse(params);
-
-			let [hh, mm] = params.hourStart.split(":").map((i) => parseInt(i));
-
-			const hourStartDate = new Date(dateVal);
-			hourStartDate.setHours(hh);
-			hourStartDate.setMinutes(mm);
-			const hour_start = hourStartDate.toISOString();
-
-			[hh, mm] = params.hourEnd.split(":").map((i) => parseInt(i));
-			const hourEndDate = new Date(dateVal);
-			hourEndDate.setHours(hh);
-			hourEndDate.setMinutes(mm);
-			const hour_end = hourEndDate.toISOString();
 
 			const prof = {
 				value: params.profId,
@@ -195,9 +166,9 @@ export class ScheduleBlockEntity extends Entity implements IScheduleBlock {
 			return right(
 				new ScheduleBlockEntity()
 					.defineProf(prof)
-					.defineDate(dateVal)
-					.defineHourStart(hour_start)
-					.defineHourEnd(hour_end)
+					.defineDate(new Date(params.date))
+					.defineHourStart(params.hourStart)
+					.defineHourEnd(params.hourEnd)
 					.defineAllDay(params.allDay)
 			);
 		} catch (err) {

@@ -1,12 +1,12 @@
 import { AbstractError } from "App/Core/errors/error.interface";
-import * as z from "zod";
 import { PromiseEither, left, right } from "App/Core/shared";
-import { ScheduleManagerInterface } from "../interface/schedule-manager-interface";
-import { MissingParamsError } from "../../errors/missing-params";
-import { format } from "date-fns";
 import User from "App/Models/User";
-import { IUser } from "Types/IUser";
 import { ScheduleParams } from "Types/ISchedule";
+import { IUser } from "Types/IUser";
+import { format } from "date-fns";
+import * as z from "zod";
+import { MissingParamsError } from "../../errors/missing-params";
+import { ScheduleManagerInterface } from "../interface/schedule-manager-interface";
 
 export class ScheduleMongoRepository implements ScheduleManagerInterface {
 	async verifySchedule(
@@ -29,30 +29,31 @@ export class ScheduleMongoRepository implements ScheduleManagerInterface {
 		const prof = (await User.findById(prof_id)) as IUser;
 		if (!prof)
 			return left(new AbstractError("Could not find professional", 404));
-		const startLunch = format(new Date(prof.hour_start_lunch), "HH:mm");
-		const endLunch = format(new Date(prof.hour_end_lunch), "HH:mm");
-		const startDay = format(new Date(prof.hour_start), "HH:mm");
-		const endDay = format(new Date(prof.hour_end), "HH:mm");
+
+		const startLunch = format(new Date(prof.hour_start_lunch), 'HH:mm')
+		const endLunch = format(new Date(prof.hour_end_lunch), 'HH:mm')
+		const startDay = format(new Date(prof.hour_start), 'HH:mm')
+		const endDay = format(new Date(prof.hour_end), 'HH:mm')
 
 		const parsedSchedule = z
 			.object({
 				hourStart: z
 					.string()
-					.refine((val) => !(val >= startLunch && val < endLunch), {
+					.refine((val) => !(format(new Date(val), 'HH:mm') >= startLunch && format(new Date(val), 'HH:mm') <= endLunch), {
 						message:
 							"O horário inicial está reservado para o almoço do profissional",
 					})
-					.refine((val) => !(val < startDay || val > endDay), {
+					.refine((val) => !(format(new Date(val), 'HH:mm') < startDay || format(new Date(val), 'HH:mm') > endDay), {
 						message:
 							"O horário inicial está fora do expediente do profissional",
 					}),
 				hourEnd: z
 					.string()
-					.refine((val) => !(val >= startLunch && val < endLunch), {
+					.refine((val) => !(format(new Date(val), 'HH:mm') >= startLunch && format(new Date(val), 'HH:mm') <= endLunch), {
 						message:
 							"O horário final está reservado para o almoço do profissional",
 					})
-					.refine((val) => !(val < startDay || val > endDay), {
+					.refine((val) => !(format(new Date(val), 'HH:mm') < startDay || format(new Date(val), 'HH:mm') > endDay), {
 						message:
 							"O horário final está fora do expediente do profissional",
 					}),

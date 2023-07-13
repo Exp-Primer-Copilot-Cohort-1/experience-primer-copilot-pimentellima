@@ -14,7 +14,6 @@ type Procedure = {
 	color: string;
 	val: string;
 	health_insurance: HealthInsurance;
-	status: string;
 };
 
 type Client = {
@@ -30,7 +29,7 @@ type Prof = {
 	label: string;
 };
 
-export type RecurrentActivity2 = {
+export type RecurrentActivityParams = {
 	values: {
 		profId: string;
 		clientId: string;

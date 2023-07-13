@@ -11,12 +11,12 @@ export interface ScheduleManagerInterface {
 		AbstractError,
 		z.SafeParseReturnType<
 			{
-				hour_end: string;
-				hour_start: string;
+				hourEnd: string;
+				hourStart: string;
 			},
 			{
-				hour_end: string;
-				hour_start: string;
+				hourEnd: string;
+				hourStart: string;
 			}
 		>
 	>;
