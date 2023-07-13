@@ -256,7 +256,7 @@ Route.group(() => {
 		Route.post('/recurrent', 'ActivityController.createRecurrentActivity').as(
 			'activity.storeRecurrent',
 		)
-		Route.post('payment', 'ActivityController.payment').as('activity.payment')
+		Route.put('payment/:id', 'ActivityController.updateActivityPayment').as('activity.payment')
 	}).prefix('activity')
 
 	Route.group(() => {

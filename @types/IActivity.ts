@@ -14,7 +14,6 @@ type Procedure = {
 	color: string;
 	val: string;
 	health_insurance: HealthInsurance;
-	status: string;
 };
 
 type Client = {

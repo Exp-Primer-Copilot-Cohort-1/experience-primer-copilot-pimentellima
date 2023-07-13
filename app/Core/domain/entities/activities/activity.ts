@@ -232,7 +232,6 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 						color: procedureData.color,
 						minutes: procedureData.minutes,
 						val,
-						status: PaymentStatus.PENDING,
 						health_insurance: {
 							value: healthInsuranceId,
 							label: healthInsuranceData.name,

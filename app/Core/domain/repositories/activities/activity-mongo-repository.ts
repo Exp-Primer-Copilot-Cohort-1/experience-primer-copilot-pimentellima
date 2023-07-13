@@ -107,8 +107,9 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 				returnDocument: "after",
 			}
 		);
-		if (!updatedActivity)
-		return left(new AbstractError("Error updating activity", 500));
+		if (!updatedActivity) {
+			return left(new AbstractError("Error updating activity", 500));
+		}
 		return right(updatedActivity);
 	}
 
