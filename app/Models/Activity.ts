@@ -143,7 +143,7 @@ const ActivitySchema = new Schema<IActivity>(
 )
 
 ActivitySchema.pre('find', function () {
-	this.where({ type: 'marked' })
+	this.where({ $in: ['marked', undefined] })
 })
 
 export default Mongoose.model<IActivity>('activities', ActivitySchema, 'activities')
