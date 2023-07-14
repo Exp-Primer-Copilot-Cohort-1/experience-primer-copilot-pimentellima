@@ -9,26 +9,24 @@ const makeSut = () => {
 	const repo = new BillingMongooseRepository()
 	const useCase = new UpdateAttrBillingInMonthUseCase(repo, 'current')
 
-	const sut = new UpdateCurrentBillingInMonthUseCase(repo, useCase)
+	const sut = new UpdateCurrentBillingInMonthUseCase(repo)
 
 	return {
 		sut,
 	}
 }
 
-describe('Update Attr Revenue Reports in Month Use Case (Integration)', () => {
+describe('Update Current Revenue Reports in Month Use Case (Integration)', () => {
 	beforeAll(async () => {
 		await mongoose.connect(
 			'mongodb://admin:admin@localhost/admin?connectTimeoutMS=300000&retryWrites=true',
 		)
 	})
 
-	it('should be able to update billing reports in month', async () => {
+	it('should be current to update billing reports in month', async () => {
 		const { sut } = makeSut()
 		const revenueOrErr = await sut.execute({
 			unity_id: '6359660fc109b232759921d4',
-			value: 15,
-			month: 1,
 		})
 
 		expect(revenueOrErr.isRight()).toBeTruthy()

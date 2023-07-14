@@ -11,6 +11,7 @@ import { DaysTradeParams } from './day-trades-by-prof'
 
 type Range = {
 	unity_id: string
+	day?: number
 	month?: number
 	year?: number
 }
@@ -24,6 +25,7 @@ export class MinimumDesirableUseCase implements UseCase<Range, IBilling> {
 
 	public async execute({
 		unity_id,
+		day = new Date().getDate(),
 		month = new Date().getMonth(),
 		year = new Date().getFullYear(),
 	}: Range): PromiseEither<AbstractError, IBilling> {
@@ -42,6 +44,7 @@ export class MinimumDesirableUseCase implements UseCase<Range, IBilling> {
 				const daysOrErr = await this.daysTrade.execute({
 					_id: prof._id,
 					unity_id,
+					day,
 					month,
 					year,
 				})

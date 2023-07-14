@@ -11,12 +11,19 @@ type workedDays = number
 export type DaysTradeParams = {
 	_id: string
 	unity_id: string
+	day: number
 	month: number
 	year: number
 }
 
-const getDaysCount = (year: number, month: number, days: IUser, holidays: IHoliday[]) => {
-	const date = new Date(year, month, 1)
+const getDaysCount = (
+	year: number,
+	month: number,
+	day: number,
+	days: IUser,
+	holidays: IHoliday[],
+) => {
+	const date = new Date(year, month, day)
 	let counter = 0
 
 	const dayOfWeek = [
@@ -75,11 +82,12 @@ export class DayTradesByProfUseCase implements UseCase<DaysTradeParams, workedDa
 			FindAllHolidaysByUnityParams,
 			IHoliday[]
 		>,
-	) {}
+	) { }
 
 	public async execute({
 		_id,
 		unity_id,
+		day = new Date().getDate(),
 		year = new Date().getFullYear(),
 		month = new Date().getMonth(),
 	}: DaysTradeParams): PromiseEither<AbstractError, number> {
@@ -98,7 +106,7 @@ export class DayTradesByProfUseCase implements UseCase<DaysTradeParams, workedDa
 		const holidays = filterHolidays(holidaysOrErr.extract(), month)
 		const prof = profOrErr.extract()
 
-		const count = getDaysCount(year, month, prof, holidays)
+		const count = getDaysCount(year, month, day, prof, holidays)
 		const hours = hoursToDays(prof)
 		return right(count * hours || 0)
 	}

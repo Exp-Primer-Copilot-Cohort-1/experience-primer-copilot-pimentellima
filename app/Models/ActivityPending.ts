@@ -1,18 +1,9 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
+import { PaymentStatus } from 'App/Helpers'
 import type { IActivity } from 'Types/IActivity'
 
 const ActivitySchema = new Schema<IActivity>(
 	{
-		date: {
-			type: Date,
-		},
-		hour_start: {
-			type: String,
-		},
-		hour_end: {
-			type: String,
-		},
 		status: {
 			type: String,
 			required: true,
@@ -110,28 +101,15 @@ const ActivitySchema = new Schema<IActivity>(
 			type: Schema.Types.ObjectId,
 			required: true,
 		},
-		scheduled: {
-			type: String,
-			required: true,
-			enum: Object.values(AppointmentStatus),
-			default: AppointmentStatus.SCHEDULED,
-		},
+
 		prof_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
 		},
-		started_at: {
-			type: Date,
-			required: false,
-		},
-		finished_at: {
-			type: Date,
-			required: false,
-		},
 		type: {
 			type: String,
 			required: false,
-			default: 'marked',
+			default: 'pending',
 		},
 	},
 	{
@@ -143,7 +121,11 @@ const ActivitySchema = new Schema<IActivity>(
 )
 
 ActivitySchema.pre('find', function () {
-	this.where({ type: 'marked' })
+	this.where({ type: 'pending' })
 })
 
-export default Mongoose.model<IActivity>('activities', ActivitySchema, 'activities')
+export default Mongoose.model<IActivity>(
+	'activities_pending',
+	ActivitySchema,
+	'activities',
+)

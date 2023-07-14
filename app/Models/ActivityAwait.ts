@@ -101,6 +101,11 @@ const ActivityAwaitSchema = new Schema<IActivity>(
 			type: Schema.Types.ObjectId,
 			required: true,
 		},
+		type: {
+			type: String,
+			required: false,
+			default: 'await',
+		},
 	},
 	{
 		timestamps: {
@@ -110,4 +115,12 @@ const ActivityAwaitSchema = new Schema<IActivity>(
 	},
 )
 
-export default Mongoose.model<IActivity>('activity_awaits', ActivityAwaitSchema)
+ActivityAwaitSchema.pre('find', function () {
+	this.where({ type: 'await' })
+})
+
+export default Mongoose.model<IActivity>(
+	'activity_awaits',
+	ActivityAwaitSchema,
+	'activities',
+)

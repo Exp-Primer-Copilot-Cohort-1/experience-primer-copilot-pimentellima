@@ -71,4 +71,13 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 
 		return right(unity.revenue_reports?.[year] as any)
 	}
+
+	async updateCurrentBillingInMonth(
+		unity_id: string,
+		value: number,
+		month: number,
+		year = new Date().getFullYear(),
+	): PromiseEither<AbstractError, IBilling> {
+		return right()
+	}
 }

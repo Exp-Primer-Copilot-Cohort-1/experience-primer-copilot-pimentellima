@@ -1,4 +1,4 @@
-import { model, Schema } from '@ioc:Mongoose'
+import Mongoose, { Schema } from '@ioc:Mongoose'
 
 const PaymentActivitySchema = new Schema(
 	{},
@@ -10,4 +10,4 @@ const PaymentActivitySchema = new Schema(
 	},
 )
 
-export default model('payment_activities', PaymentActivitySchema)
+export default Mongoose.model('payment_activities', PaymentActivitySchema)
