@@ -8,15 +8,15 @@ import HealthInsurance from "App/Models/HealthInsurance";
 import Procedure from "App/Models/Procedure";
 import ScheduleBlock from "App/Models/ScheduleBlock";
 import User from "App/Models/User";
+import areRangesIntersecting from "App/utils/are-ranges-intersecting";
 import { IActivity } from "Types/IActivity";
 import { IScheduleBlock } from "Types/IScheduleBlock";
 import { IUser } from "Types/IUser";
 import {
 	getDay,
 	isAfter,
-	isBefore,
 	isSameDay,
-	startOfYesterday,
+	startOfYesterday
 } from "date-fns";
 import { z } from "zod";
 import { AbstractActivity } from "../abstract/activity-abstract";
@@ -154,8 +154,6 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 
 			const profSchedule = [...activities, ...scheduleBlocks].filter(
 				({ date }) => {
-					console.log(new Date(params.date))
-					console.log(new Date(date))
 					return isSameDay(new Date(params.date), new Date(date));
 				}
 			);
@@ -181,28 +179,8 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 						}
 						return true;
 					}),
-				hourStart: z.string().refine((val) => {
-					if(profSchedule.length === 0) return true
-					for (const { hour_end, hour_start } of profSchedule) {
-						if (
-							isAfter(new Date(val), new Date(hour_start)) &&
-							isBefore(new Date(val), new Date(hour_end))
-						)
-							return false;
-						else return true;
-					}
-				}),
-				hourEnd: z.string().refine((val) => {
-					if(profSchedule.length === 0) return true
-					for (const { hour_end, hour_start } of profSchedule) {
-						if (
-							isAfter(new Date(val), new Date(hour_start)) &&
-							isBefore(new Date(val), new Date(hour_end))
-						)
-							return false;
-						else return true;
-					}
-				}),
+				hourStart: z.string(),
+				hourEnd: z.string(),
 				procedures: z.array(
 					z.object({
 						procedureId: z.string(),
@@ -211,7 +189,23 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					})
 				),
 				obs: z.string().optional(),
-			}).parse(params);
+			})
+				.refine(({ hourStart, hourEnd }) => {
+					for (const { hour_end, hour_start } of profSchedule) {
+						if (
+							areRangesIntersecting({
+								range1Start: new Date(hourStart),
+								range1End: new Date(hourEnd),
+								range2Start: new Date(hour_start),
+								range2End: new Date(hour_end),
+							})
+						) {
+							return false;
+						}
+					}
+					return true;
+				})
+				.parse(params);
 
 			const procedures = await Promise.all(
 				params.procedures.map(async (procedure) => {
