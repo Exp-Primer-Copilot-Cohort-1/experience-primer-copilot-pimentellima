@@ -256,7 +256,9 @@ Route.group(() => {
 		Route.post('/recurrent', 'ActivityController.createRecurrentActivity').as(
 			'activity.storeRecurrent',
 		)
-		Route.put('payment/:id', 'ActivityController.updateActivityPayment').as('activity.payment')
+		Route.put('payment/:id', 'ActivityController.updateActivityPayment').as(
+			'activity.payment',
+		)
 	}).prefix('activity')
 
 	Route.group(() => {
@@ -458,4 +460,6 @@ Route.group(() => {
 			'revenues.updateDesirable',
 		)
 	}).prefix('revenues')
+
+	Route.get('census', 'CensusController.index').as('census.index')
 }).middleware(['auth', 'role'])
