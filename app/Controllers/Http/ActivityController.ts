@@ -1,13 +1,16 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import { adaptRoute } from "App/Core/adapters";
 import {
+	makeCreateActivityAwaitComposer,
 	makeCreateActivityComposer,
 	makeCreateRecurrentActivityComposer,
 	makeDeleteActivityByIdComposer,
 	makeFindActivitiesByProfIdComposer,
 	makeFindActivityByClientIdComposer,
 	makeFindActivityByIdComposer,
+	makeFindAllActivitiesAwaitComposer,
 	makeFindAllActivitiesComposer,
+	makeFindAllActivitiesPendingComposer,
 	makeUpdateActivityByIdComposer,
 	makeUpdateActivityFinishedAtComposer,
 	makeUpdateActivityPaymentComposer,
@@ -22,6 +25,17 @@ class ActivityController {
 		});
 	}
 
+	async findAllActivitiesAwait(ctx: HttpContextContract) {
+		return adaptRoute(makeFindAllActivitiesAwaitComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		});
+	}
+
+	async findAllActivitiesPending(ctx: HttpContextContract) {
+		return adaptRoute(makeFindAllActivitiesPendingComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		});
+	}
 	async updateActivityStatusById(ctx: HttpContextContract) {
 		return adaptRoute(makeUpdateActivityStatusComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
@@ -61,6 +75,12 @@ class ActivityController {
 
 	async createActivity(ctx: HttpContextContract) {
 		return adaptRoute(makeCreateActivityComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		});
+	}
+
+	async createActivityAwait(ctx: HttpContextContract) {
+		return adaptRoute(makeCreateActivityAwaitComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		});
 	}

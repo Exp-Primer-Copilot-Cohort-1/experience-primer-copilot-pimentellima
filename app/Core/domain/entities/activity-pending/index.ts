@@ -7,29 +7,30 @@ import Client from "App/Models/Client";
 import HealthInsurance from "App/Models/HealthInsurance";
 import Procedure from "App/Models/Procedure";
 import User from "App/Models/User";
-import { ActivityAwaitParams, IActivityAwait } from "Types/IActivityAwait";
+import { ActivityAwaitParams } from "Types/IActivityAwait";
+import { IActivityPending } from "Types/IActivityPending";
 import { IUser } from "Types/IUser";
 import * as z from "zod";
 import { AbstractActivity } from "../abstract/activity-abstract";
 
-export class ActivityAwaitEntity
+export class ActivityPendingEntity
 	extends AbstractActivity
-	implements IActivityAwait
+	implements IActivityPending
 {
-	private _type: "await";
+    private _type: 'pending'
 
-	public get type() {
+    public get type() {
 		return this._type;
 	}
-
-	defineType(type: "await"): ActivityAwaitEntity {
-		this._type = type;
-		return this;
+	
+	defineType(type: 'pending') : ActivityPendingEntity {
+		this._type = type
+		return this
 	}
 
 	public static async build(
 		params: ActivityAwaitParams
-	): PromiseEither<AbstractError, ActivityAwaitEntity> {
+	): PromiseEither<AbstractError, ActivityPendingEntity> {
 		try {
 			z.object({
 				profId: z.string(),
@@ -93,12 +94,12 @@ export class ActivityAwaitEntity
 			);
 
 			return right(
-				new ActivityAwaitEntity()
+				new ActivityPendingEntity()
 					.defineStatus(PaymentStatus.PENDING)
 					.defineProcedures(procedures)
 					.defineClient(client)
+					.defineType('pending')
 					.defineObs(params.obs)
-					.defineType('await')
 					.defineProf(prof)
 					.defineActive(true)
 					.defineProfId(params.profId)
@@ -110,4 +111,4 @@ export class ActivityAwaitEntity
 	}
 }
 
-export default ActivityAwaitEntity;
+export default ActivityPendingEntity;

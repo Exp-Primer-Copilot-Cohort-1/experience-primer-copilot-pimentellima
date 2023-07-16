@@ -2,9 +2,9 @@ import { ActivitiesManagerInterface } from "App/Core/domain/repositories/interfa
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import { ActivityParams, IActivity } from "Types/IActivity";
+import { ActivityValues, IActivity } from "Types/IActivity";
 
-type Props = ActivityParams & {
+type Props = ActivityValues & {
 	id: string
 };
 

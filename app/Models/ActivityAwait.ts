@@ -1,8 +1,8 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { PaymentStatus } from 'App/Helpers'
-import type { IActivity } from 'Types/IActivity'
+import { IActivityAwait } from 'Types/IActivity'
 
-const ActivityAwaitSchema = new Schema<IActivity>(
+const ActivityAwaitSchema = new Schema<IActivityAwait>(
 	{
 		procedures: [
 			{
@@ -115,11 +115,7 @@ const ActivityAwaitSchema = new Schema<IActivity>(
 	},
 )
 
-ActivityAwaitSchema.pre('find', function () {
-	this.where({ type: 'await' })
-})
-
-export default Mongoose.model<IActivity>(
+export default Mongoose.model<IActivityAwait>(
 	'activity_awaits',
 	ActivityAwaitSchema,
 	'activities',
