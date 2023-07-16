@@ -1,9 +1,13 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
+import Activity from 'App/Models/Activity'
 import Unity from 'App/Models/Unity'
 import { IBilling } from 'Types/IBilling'
+import { Types } from 'mongoose'
 import { UnitNotFoundError } from '../../errors/unit-not-found'
 import { ReportsUnitiesManagerInterface } from '../interface/reports-unities-manager.interface'
+
+const ObjectId = Types.ObjectId
 
 export class BillingMongooseRepository implements ReportsUnitiesManagerInterface {
 	constructor() { }
@@ -72,12 +76,64 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 		return right(unity.revenue_reports?.[year] as any)
 	}
 
-	async updateCurrentBillingInMonth(
+	async findRevenuesByMonth(
 		unity_id: string,
-		value: number,
 		month: number,
 		year = new Date().getFullYear(),
-	): PromiseEither<AbstractError, IBilling> {
-		return right()
+	): PromiseEither<AbstractError, number> {
+		const date_start = new Date(year, month, 1)
+		const date_end = new Date(year, month + 1, 0)
+
+		const pipeline = [
+			{
+				$match: {
+					unity_id: new ObjectId(unity_id.toString()),
+					scheduled: 'completed',
+				},
+			},
+			{
+				$addFields: {
+					convertedDate: {
+						$dateFromString: {
+							dateString: '$payment.date',
+						},
+					},
+					value: {
+						$convert: {
+							input: {
+								$replaceOne: {
+									input: '$payment.value',
+									find: ',',
+									replacement: '.',
+								},
+							},
+							to: 'double',
+						},
+					},
+				},
+			},
+			{
+				$match: {
+					convertedDate: {
+						$gte: new Date(date_start),
+						$lte: new Date(date_end),
+					},
+				},
+			},
+			{
+				$group: {
+					_id: null,
+					total: {
+						$sum: '$value',
+					},
+				},
+			},
+		]
+
+		const [revenue] = await Activity.aggregate(pipeline)
+
+		if (!revenue) return left(new AbstractError('Err to find revenue', 400))
+
+		return right(revenue?.total)
 	}
 }

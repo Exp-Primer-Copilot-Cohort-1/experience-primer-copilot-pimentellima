@@ -1,6 +1,6 @@
 import { BillingMongooseRepository } from 'App/Core/domain/repositories'
 import mongoose from 'mongoose'
-import { beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { UpdateDesirableBillingInMonthUseCase } from './update-desirable-revenue-reports-in-month-use-case'
 
@@ -17,7 +17,9 @@ describe('Update Desirable Revenue Reports in Month Use Case (Integration)', () 
 			'mongodb://admin:admin@localhost/admin?connectTimeoutMS=300000&retryWrites=true',
 		)
 	})
-
+	afterAll(async () => {
+		await mongoose.connection.close()
+	})
 	it('should be able to update billing reports in month', async () => {
 		const { sut } = makeSut()
 

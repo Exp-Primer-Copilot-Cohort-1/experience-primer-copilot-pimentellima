@@ -4,12 +4,12 @@ import {
 	ProfsMongooseRepository,
 } from 'App/Core/domain/repositories'
 import mongoose from 'mongoose'
-import { beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import {
 	FindAllHolidaysByUnityUseCase,
 	SaveHolidaysNationalsDefaultUseCase,
-} from '../holidays'
+} from '../../holidays'
 import { DayTradesByProfUseCase } from './day-trades-by-prof'
 
 const makeSut = () => {
@@ -35,14 +35,17 @@ describe('Day Trade By Prof Use Case (Integration)', () => {
 			'mongodb://admin:admin@localhost/admin?connectTimeoutMS=300000&retryWrites=true',
 		)
 	})
-
-	it('should be true', async () => {
+	afterAll(async () => {
+		await mongoose.connection.close()
+	})
+	it('should be day trades by prof', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.execute({
 			unity_id: '63528c11c109b232759921d1',
 			month: 1,
 			year: 2021,
 			_id: '63528c12c109b232759921d3',
+			day: 1,
 		})
 
 		expect(resultOrErr.isRight()).toBeTruthy()

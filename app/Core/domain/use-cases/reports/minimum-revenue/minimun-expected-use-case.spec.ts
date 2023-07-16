@@ -5,13 +5,13 @@ import {
 	ProfsMongooseRepository,
 } from 'App/Core/domain/repositories'
 import mongoose from 'mongoose'
-import { beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import {
 	FindAllHolidaysByUnityUseCase,
 	SaveHolidaysNationalsDefaultUseCase,
-} from '../holidays'
-import { AveragePriceProceduresUseCase } from '../procedures/average-price-procedures-group-by-prof'
+} from '../../holidays'
+import { AveragePriceProceduresUseCase } from '../../procedures/average-price-procedures-group-by-prof'
 import { DayTradesByProfUseCase } from './day-trades-by-prof'
 import { MinimumDesirableUseCase } from './minimun-expected-use-case'
 import { UpdateAttrBillingInMonthUseCase } from './update-attr-revenue-reports-in-month-use-case'
@@ -69,6 +69,9 @@ describe('Minimum Expected Report Use Case (Integration)', () => {
 		)
 	})
 
+	afterAll(async () => {
+		await mongoose.connection.close()
+	})
 	it('should return a report', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.execute({ unity_id: '6359660fc109b232759921d4' })
