@@ -3,3 +3,9 @@ export type UpdateAttrReportsRevenues = {
 	value: number
 	month?: number
 }
+
+export type UnityReportsRevenues = {
+	unity_id: string
+	month?: number
+	year?: number
+}

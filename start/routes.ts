@@ -514,4 +514,6 @@ Route.group(() => {
 			'revenues.updateDesirable'
 		)
 	}).prefix('revenues')
+
+	Route.get('census', 'CensusController.index').as('census.index')
 }).middleware(['auth', 'role'])
