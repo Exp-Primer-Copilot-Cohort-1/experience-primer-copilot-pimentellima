@@ -1,8 +1,8 @@
-import Mongoose, { Schema } from '@ioc:Mongoose'
-import { PaymentStatus } from 'App/Helpers'
-import type { IActivity } from 'Types/IActivity'
+import Mongoose, { Schema } from "@ioc:Mongoose";
+import { PaymentStatus } from "App/Helpers";
+import { IActivityPending } from "Types/IActivity";
 
-const ActivitySchema = new Schema<IActivity>(
+const ActivityPendingSchema = new Schema<IActivityPending>(
 	{
 		status: {
 			type: String,
@@ -109,23 +109,19 @@ const ActivitySchema = new Schema<IActivity>(
 		type: {
 			type: String,
 			required: false,
-			default: 'pending',
+			default: "pending",
 		},
 	},
 	{
 		timestamps: {
-			createdAt: 'created_at',
-			updatedAt: 'updated_at',
+			createdAt: "created_at",
+			updatedAt: "updated_at",
 		},
-	},
-)
+	}
+);
 
-ActivitySchema.pre('find', function () {
-	this.where({ type: 'pending' })
-})
-
-export default Mongoose.model<IActivity>(
-	'activities_pending',
-	ActivitySchema,
-	'activities',
-)
+export default Mongoose.model<IActivityPending>(
+	"activities_pending",
+	ActivityPendingSchema,
+	"activities"
+);

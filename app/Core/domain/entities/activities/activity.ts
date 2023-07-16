@@ -12,12 +12,7 @@ import areRangesIntersecting from "App/utils/are-ranges-intersecting";
 import { IActivity } from "Types/IActivity";
 import { IScheduleBlock } from "Types/IScheduleBlock";
 import { IUser } from "Types/IUser";
-import {
-	getDay,
-	isAfter,
-	isSameDay,
-	startOfYesterday
-} from "date-fns";
+import { getDay, isAfter, isSameDay, startOfYesterday } from "date-fns";
 import { z } from "zod";
 import { AbstractActivity } from "../abstract/activity-abstract";
 
@@ -25,12 +20,19 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 	private _date: Date;
 	private _hour_start: string;
 	private _hour_end: string;
-	private _schedule_block: boolean;
-	private _all_day: boolean;
-	private _is_recorrent: boolean;
 	private _scheduled: AppointmentStatus;
+	private _type: "marked";
 	private _started_at?: Date;
 	private _finished_at?: Date;
+
+	public get type() {
+		return this._type;
+	}
+
+	defineType(type: "marked"): ActivityEntity {
+		this._type = type;
+		return this;
+	}
 
 	public get started_at(): Date | undefined {
 		return this._started_at;
@@ -54,10 +56,6 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		super();
 	}
 
-	public get is_recorrent(): boolean {
-		return this._is_recorrent;
-	}
-
 	public get date(): Date {
 		return this._date;
 	}
@@ -70,25 +68,8 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		return this._hour_end;
 	}
 
-	public get schedule_block(): boolean {
-		return this._schedule_block;
-	}
-
-	public get all_day(): boolean {
-		return this._all_day;
-	}
-
-	public get is_recurrent(): boolean {
-		return this._is_recorrent;
-	}
-
 	public get scheduled(): AppointmentStatus {
 		return this._scheduled;
-	}
-
-	defineisRecorrent(is_recorrent: boolean): this {
-		this._is_recorrent = is_recorrent;
-		return this;
 	}
 
 	defineDate(date: Date): this {
@@ -101,18 +82,6 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 	}
 	defineHourEnd(date: string): this {
 		this._hour_end = date;
-		return this;
-	}
-	defineScheduleBlock(schedule_block: boolean): this {
-		this._schedule_block = schedule_block;
-		return this;
-	}
-	defineAllDay(all_day: boolean): this {
-		this._all_day = all_day;
-		return this;
-	}
-	defineIsRecorrent(is_recorrent: boolean): this {
-		this._is_recorrent = is_recorrent;
 		return this;
 	}
 	defineScheduled(scheduled: AppointmentStatus): this {
@@ -260,9 +229,9 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					.defineStatus(PaymentStatus.PENDING)
 					.defineProcedures(procedures)
 					.defineClient(client)
+					.defineType("marked")
 					.defineObs(params.obs)
 					.defineProf(prof)
-					.defineIsRecorrent(false)
 					.defineActive(true)
 					.defineScheduled(AppointmentStatus.SCHEDULED)
 					.defineProfId(params.profId)

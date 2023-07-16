@@ -4,11 +4,11 @@ import { PromiseEither, left, right } from "App/Core/shared";
 import Account from "App/Models/Account";
 import CostCenter from "App/Models/CostCenter";
 import FinancialCategory from "App/Models/FinancialCategory";
-import { IActivityPayment } from "Types/IActivity";
+import { IPaymentActivity } from "Types/IPaymentActivity";
 import { Schema } from "mongoose";
 import * as z from "zod";
 
-export class ActivityPaymentEntity implements IActivityPayment {
+export class ActivityPaymentEntity implements IPaymentActivity {
 	bank: { id: string | Schema.Types.ObjectId; name: string };
 	cost_center: { id: string | ObjectId; name: string };
 	category: { id: string | ObjectId; name: string };

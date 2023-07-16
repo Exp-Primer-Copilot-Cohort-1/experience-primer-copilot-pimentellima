@@ -1,42 +1,66 @@
-import { AbstractError } from 'App/Core/errors/error.interface'
-import { PromiseEither } from 'App/Core/shared/either'
-import { AppointmentStatus } from 'App/Helpers'
-import { ActivityParams, IActivity, RecurrentActivityParams } from 'Types/IActivity'
+import { AbstractError } from "App/Core/errors/error.interface";
+import { PromiseEither } from "App/Core/shared/either";
+import { AppointmentStatus } from "App/Helpers";
+import {
+	ActivityAwaitValues,
+	ActivityValues,
+	IActivity,
+	IActivityAwait,
+	IActivityPending,
+	PaymentValues,
+	RecurrentActivityValues,
+} from "Types/IActivity";
 
 export interface ActivitiesManagerInterface {
 	createActivity: (
 		unity_id: string,
-		values: ActivityParams,
-	) => PromiseEither<AbstractError, IActivity>
+		values: ActivityValues
+	) => PromiseEither<AbstractError, IActivity>;
+	createActivityAwait: (
+		unity_id: string,
+		values: ActivityAwaitValues
+	) => PromiseEither<AbstractError, IActivityAwait>;
 	createRecurrentActivity: (
 		unity_id: string,
-		values: RecurrentActivityParams,
-	) => PromiseEither<AbstractError, IActivity[]>
-	findAllActivities: (unity_id: string) => PromiseEither<AbstractError, IActivity[]>
-	updateActivityById: (
-		id: string,
-		values: ActivityParams,
-	) => PromiseEither<AbstractError, IActivity>
-	updateActivityStatusById: (
-		id: string,
-		status: AppointmentStatus,
-	) => PromiseEither<AbstractError, IActivity>
-	updateActivityStartedAt: (
-		id: string,
-		started_at: Date,
-	) => PromiseEither<AbstractError, IActivity>
-	updateActivityFinishedAt: (
-		id: string,
-		finished_at: Date,
-	) => PromiseEither<AbstractError, IActivity>
+		values: RecurrentActivityValues
+	) => PromiseEither<AbstractError, IActivity[]>;
+	findAllActivities: (
+		unity_id: string
+	) => PromiseEither<AbstractError, IActivity[]>;
+	findAllActivitiesPending: (
+		unity_id: string
+	) => PromiseEither<AbstractError, IActivityPending[]>;
+	findAllActivitiesAwait: (
+		unity_id: string
+	) => PromiseEither<AbstractError, IActivityAwait[]>;
 	findActivitiesByProf: (
 		unity_id: string,
-		prof_id: string,
-	) => PromiseEither<AbstractError, IActivity[]>
+		prof_id: string
+	) => PromiseEither<AbstractError, IActivity[]>;
 	findActivitiesByClient: (
 		unity_id: string,
-		client_id: string,
-	) => PromiseEither<AbstractError, IActivity[]>
-	findActivityById: (id: string) => PromiseEither<AbstractError, IActivity>
-	deleteActivityById: (id: string) => PromiseEither<AbstractError, IActivity>
+		client_id: string
+	) => PromiseEither<AbstractError, IActivity[]>;
+	findActivityById: (id: string) => PromiseEither<AbstractError, IActivity>;
+	updateActivityById: (
+		id: string,
+		values: ActivityValues
+	) => PromiseEither<AbstractError, IActivity>;
+	updateActivityStatusById: (
+		id: string,
+		status: AppointmentStatus
+	) => PromiseEither<AbstractError, IActivity>;
+	updateActivityStartedAt: (
+		id: string,
+		started_at: Date
+	) => PromiseEither<AbstractError, IActivity>;
+	updateActivityFinishedAt: (
+		id: string,
+		finished_at: Date
+	) => PromiseEither<AbstractError, IActivity>;
+	updateActivityPayment: (
+		id: string,
+		values: PaymentValues
+	) => PromiseEither<AbstractError, IActivity>;
+	deleteActivityById: (id: string) => PromiseEither<AbstractError, IActivity>;
 }
