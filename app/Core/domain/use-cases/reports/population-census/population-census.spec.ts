@@ -54,18 +54,25 @@ describe('Population Census Use Case (Integration)', () => {
 						count: expect.any(Number),
 					}),
 				]),
-				scheduled_events: expect.arrayContaining([
-					expect.objectContaining({
-						label: expect.any(String),
-						count: expect.any(Number),
-					}),
-				]),
-				genrer_client: expect.arrayContaining([
-					expect.objectContaining({
-						label: expect.any(String),
-						count: expect.any(Number),
-					}),
-				]),
+				scheduled_events: expect.objectContaining({
+					rescheduled: expect.any(Number),
+					canceled: expect.any(Number),
+					awaiting: expect.any(Number),
+					completed: expect.any(Number),
+					confirmed: expect.any(Number),
+					scheduled: expect.any(Number),
+					in_progress: expect.any(Number),
+				}),
+				genrer_clients: expect.objectContaining({
+					female: expect.any(Number),
+					male: expect.any(Number),
+					not_informed: expect.any(Number),
+				}),
+				media_time_attendance: expect.any(Number),
+				new_and_old_clients: expect.objectContaining({
+					new: expect.any(Number),
+					old: expect.any(Number),
+				}),
 			}),
 		)
 	})

@@ -46,6 +46,8 @@ export class PopulationCensusByDateUseCase
 			partnersOrErr,
 			proceduresOrErr,
 			genrer_clientOrErr,
+			media_time_attendanceOrErr,
+			new_and_old_clientsOrErr,
 		] = await Promise.all([
 			this.manager.findCensusActivitiesByUnityOrProf(
 				unity_id,
@@ -77,6 +79,18 @@ export class PopulationCensusByDateUseCase
 				date_end,
 				prof_id,
 			),
+			this.manager.findMediaTimeAttendanceByUnityOrProf(
+				unity_id,
+				date_start,
+				date_end,
+				prof_id,
+			),
+			this.manager.findNewAndOldClientsByUnityOrProf(
+				unity_id,
+				date_start,
+				date_end,
+				prof_id,
+			),
 		])
 
 		if (
@@ -84,7 +98,9 @@ export class PopulationCensusByDateUseCase
 			health_insurancesOrErr.isLeft() ||
 			partnersOrErr.isLeft() ||
 			proceduresOrErr.isLeft() ||
-			genrer_clientOrErr.isLeft()
+			genrer_clientOrErr.isLeft() ||
+			media_time_attendanceOrErr.isLeft() ||
+			new_and_old_clientsOrErr.isLeft()
 		) {
 			return left(
 				new AbstractError('Error on find census activities by unity', 400),
@@ -95,14 +111,18 @@ export class PopulationCensusByDateUseCase
 		const health_insurances = health_insurancesOrErr.extract()
 		const partners = partnersOrErr.extract()
 		const procedures = proceduresOrErr.extract()
-		const genrer_client = genrer_clientOrErr.extract()
+		const genrer_clients = genrer_clientOrErr.extract()
+		const media_time_attendance = media_time_attendanceOrErr.extract()
+		const new_and_old_clients = new_and_old_clientsOrErr.extract()
 
 		return right({
 			scheduled_events,
 			health_insurances,
 			partners,
 			procedures,
-			genrer_client,
+			genrer_clients,
+			media_time_attendance,
+			new_and_old_clients,
 		})
 	}
 }

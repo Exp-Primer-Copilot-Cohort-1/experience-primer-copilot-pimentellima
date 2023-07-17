@@ -15,6 +15,7 @@ import { AveragePriceProceduresUseCase } from '../../procedures/average-price-pr
 import { DayTradesByProfUseCase } from './day-trades-by-prof'
 import { MinimumDesirableUseCase } from './minimun-expected-use-case'
 import { UpdateAttrBillingInMonthUseCase } from './update-attr-revenue-reports-in-month-use-case'
+import { UpdateCurrentBillingInMonthUseCase } from './update-current-revenue-reports-in-month-use-case'
 
 const updateAttrSut = () => {
 	const updateAttr = new UpdateAttrBillingInMonthUseCase(
@@ -56,7 +57,12 @@ const makeSut = () => {
 	const { updateAttr } = updateAttrSut()
 	const { average } = averageSut()
 	const { dayTrade } = dayTradeSut()
-	const sut = new MinimumDesirableUseCase(average, dayTrade, updateAttr)
+	const sut = new MinimumDesirableUseCase(
+		average,
+		dayTrade,
+		updateAttr,
+		new UpdateCurrentBillingInMonthUseCase(new BillingMongooseRepository()),
+	)
 	return {
 		sut,
 	}

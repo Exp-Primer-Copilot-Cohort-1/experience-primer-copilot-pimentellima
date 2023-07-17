@@ -5,6 +5,8 @@ import {
 	ICensusCountPartners,
 	ICensusCountProcedure,
 	ICensusGenrerClient,
+	ICensusMediaTimeAttendance,
+	ICensusNewAndOldClients,
 	ICensusScheduledEvent,
 } from 'Types/ICensus'
 
@@ -14,13 +16,13 @@ export interface CensusUnitiesManagerInterface {
 		date_start: string,
 		date_end: string,
 		prof_id?: string,
-	) => PromiseEither<AbstractError, ICensusScheduledEvent[]>
+	) => PromiseEither<AbstractError, ICensusScheduledEvent>
 	findCesusGenrerClientByUnityOrProf: (
 		unity_id: string,
 		date_start: string,
 		date_end: string,
 		prof_id?: string,
-	) => PromiseEither<AbstractError, ICensusGenrerClient[]>
+	) => PromiseEither<AbstractError, ICensusGenrerClient>
 	findCensusProcedureByUnityOrProf: (
 		unity_id: string,
 		date_start: string,
@@ -40,4 +42,18 @@ export interface CensusUnitiesManagerInterface {
 		date_end: string,
 		prof_id?: string,
 	) => PromiseEither<AbstractError, ICensusCountPartners[]>
+
+	findMediaTimeAttendanceByUnityOrProf: (
+		unity_id: string,
+		date_start: string,
+		date_end: string,
+		prof_id?: string,
+	) => PromiseEither<AbstractError, ICensusMediaTimeAttendance>
+
+	findNewAndOldClientsByUnityOrProf: (
+		unity_id: string,
+		date_start: string,
+		date_end: string,
+		prof_id?: string,
+	) => PromiseEither<AbstractError, ICensusNewAndOldClients>
 }

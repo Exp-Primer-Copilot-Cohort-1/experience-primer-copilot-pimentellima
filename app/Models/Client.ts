@@ -84,7 +84,7 @@ const ClientSchema = new Schema<IUserClient>(
 		},
 		genrer: {
 			type: String,
-			default: 'not informed',
+			default: 'not_informed',
 		},
 		document: {
 			type: String,
