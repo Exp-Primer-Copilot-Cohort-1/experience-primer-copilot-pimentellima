@@ -4,6 +4,10 @@ import { IActivityPending } from "Types/IActivity";
 
 const ActivityPendingSchema = new Schema<IActivityPending>(
 	{
+		group_id: {
+			type: String,
+			required: true
+		},
 		status: {
 			type: String,
 			required: true,
