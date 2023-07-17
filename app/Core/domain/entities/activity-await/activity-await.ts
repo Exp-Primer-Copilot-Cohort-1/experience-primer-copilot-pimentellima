@@ -7,7 +7,7 @@ import Client from "App/Models/Client";
 import HealthInsurance from "App/Models/HealthInsurance";
 import Procedure from "App/Models/Procedure";
 import User from "App/Models/User";
-import { ActivityAwaitParams, IActivityAwait } from "Types/IActivityAwait";
+import { ActivityAwaitValues, IActivityAwait } from "Types/IActivity";
 import { IUser } from "Types/IUser";
 import * as z from "zod";
 import { AbstractActivity } from "../abstract/activity-abstract";
@@ -28,7 +28,7 @@ export class ActivityAwaitEntity
 	}
 
 	public static async build(
-		params: ActivityAwaitParams
+		params: ActivityAwaitValues
 	): PromiseEither<AbstractError, ActivityAwaitEntity> {
 		try {
 			z.object({

@@ -7,8 +7,7 @@ import Client from "App/Models/Client";
 import HealthInsurance from "App/Models/HealthInsurance";
 import Procedure from "App/Models/Procedure";
 import User from "App/Models/User";
-import { ActivityAwaitParams } from "Types/IActivityAwait";
-import { IActivityPending } from "Types/IActivityPending";
+import { ActivityPendingValues, IActivityPending } from "Types/IActivity";
 import { IUser } from "Types/IUser";
 import * as z from "zod";
 import { AbstractActivity } from "../abstract/activity-abstract";
@@ -18,9 +17,19 @@ export class ActivityPendingEntity
 	implements IActivityPending
 {
     private _type: 'pending'
+	private _group_id: string
 
     public get type() {
 		return this._type;
+	}
+
+	public get group_id() {
+		return this._group_id
+	}
+
+	defineGroupId(group_id: string) : ActivityPendingEntity {
+		this._group_id = group_id
+		return this
 	}
 	
 	defineType(type: 'pending') : ActivityPendingEntity {
@@ -29,7 +38,7 @@ export class ActivityPendingEntity
 	}
 
 	public static async build(
-		params: ActivityAwaitParams
+		params: ActivityPendingValues
 	): PromiseEither<AbstractError, ActivityPendingEntity> {
 		try {
 			z.object({

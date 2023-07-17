@@ -2,6 +2,8 @@ import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import { AppointmentStatus, PaymentStatus } from "App/Helpers";
 import Activity from "App/Models/Activity";
+import ActivityAwait from "App/Models/ActivityAwait";
+import ActivityPending from "App/Models/ActivityPending";
 import {
 	ActivityAwaitValues,
 	ActivityValues,
@@ -11,15 +13,14 @@ import {
 	PaymentValues,
 	RecurrentActivityValues,
 } from "Types/IActivity";
+import mongoose from "mongoose";
 import ActivityEntity from "../../entities/activities/activity";
+import ActivityAwaitEntity from "../../entities/activity-await/activity-await";
+import { ActivityPaymentEntity } from "../../entities/activity-payment/ActivityPaymentEntity";
+import ActivityPendingEntity from "../../entities/activity-pending";
 import { ActivityNotFoundError } from "../../errors/activity-not-found";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ActivitiesManagerInterface } from "../interface/activity-manager.interface";
-import { ActivityPaymentEntity } from "../../entities/activity-payment/ActivityPaymentEntity";
-import ActivityPendingEntity from "../../entities/activity-pending";
-import ActivityPending from "App/Models/ActivityPending";
-import ActivityAwaitEntity from "../../entities/activity-await/activity-await";
-import ActivityAwait from "App/Models/ActivityAwait";
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() {}
@@ -227,9 +228,14 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 				new AbstractError("Error validating pending activities", 500)
 			);
 
+		const groupId = new mongoose.Types.ObjectId().toString()
 		for (let i = 0; i < pending; i++) {
 			await ActivityPending.create(
-				pendingActivityOrErr.extract().defineUnityId(unity_id).params()
+				pendingActivityOrErr
+					.extract()
+					.defineUnityId(unity_id)
+					.defineGroupId(groupId)
+					.params()
 			);
 		}
 

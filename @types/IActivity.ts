@@ -77,6 +77,7 @@ export interface IActivityAwait {
 
 export interface IActivityPending {
 	_id: string | ObjectId;
+	group_id: string,
 	procedures: Procedure[];
 	type: "pending";
 	client: Client;
@@ -134,6 +135,14 @@ export type ActivityValues = {
 } & DateValues;
 
 export type ActivityAwaitValues = {
+	activityId?: string;
+	profId: string;
+	clientId: string;
+	procedures: ProcedureValues[];
+	obs?: string;
+};
+
+export type ActivityPendingValues = {
 	activityId?: string;
 	profId: string;
 	clientId: string;
