@@ -279,30 +279,19 @@ export class CensusMongooseRepository implements CensusUnitiesManagerInterface {
 
 		const pipeline = [
 			{
-				$match: match,
-			},
-			{
-				$addFields: {
-					start_time: {
-						$dateFromString: {
-							dateString: '$hour_start',
-						},
-					},
-					end_time: {
-						$dateFromString: {
-							dateString: '$hour_end',
-						},
-					},
+				$match: {
+					...match,
+					scheduled: 'completed',
+					finished_at: { $exists: true },
+					started_at: { $exists: true },
 				},
 			},
 			{
 				$addFields: {
-					activity_duration: {
-						$divide: [
-							{
-								$subtract: ['$end_time', '$start_time'],
-							},
-							1000 * 60,
+					time_diff: {
+						$subtract: [
+							{ $toLong: '$finished_at' },
+							{ $toLong: '$started_at' },
 						],
 					},
 				},
@@ -311,15 +300,15 @@ export class CensusMongooseRepository implements CensusUnitiesManagerInterface {
 				$group: {
 					_id: null,
 					average_activity_duration: {
-						$avg: '$activity_duration',
+						$avg: '$time_diff',
 					},
 				},
 			},
 		]
 
-		const activities = await Activity.aggregate(pipeline)
+		const [avg] = await Activity.aggregate(pipeline)
 
-		return right(0)
+		return right(avg?.average_activity_duration || 0)
 	}
 	async findNewAndOldClientsByUnityOrProf(
 		unity_id: string,

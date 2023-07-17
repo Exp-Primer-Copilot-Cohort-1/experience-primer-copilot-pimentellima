@@ -88,7 +88,7 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 			{
 				$match: {
 					unity_id: new ObjectId(unity_id.toString()),
-					scheduled: 'completed',
+					status: 'PAGO',
 				},
 			},
 			{

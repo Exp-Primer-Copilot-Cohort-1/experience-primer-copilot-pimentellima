@@ -26,7 +26,6 @@ describe('Population Census Use Case (Integration)', () => {
 			unity_id: '6359660fc109b232759921d4', // unity id
 			date_start: '2023-01-01', // date start
 			date_end: '2024-01-31', // date end
-			prof_id: '6359660fc109b232759921d6', // prof id
 		})
 
 		expect(resultOrErr.isRight()).toBeTruthy()
