@@ -3,19 +3,105 @@ import { PromiseEither, left, right } from "App/Core/shared";
 import { AppointmentStatus, PaymentStatus } from "App/Helpers";
 import Activity from "App/Models/Activity";
 import {
-	ActivityParams,
+	ActivityAwaitValues,
+	ActivityValues,
 	IActivity,
+	IActivityAwait,
+	IActivityPending,
 	PaymentValues,
-	RecurrentActivityParams,
+	RecurrentActivityValues,
 } from "Types/IActivity";
 import ActivityEntity from "../../entities/activities/activity";
 import { ActivityNotFoundError } from "../../errors/activity-not-found";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ActivitiesManagerInterface } from "../interface/activity-manager.interface";
 import { ActivityPaymentEntity } from "../../entities/activity-payment/ActivityPaymentEntity";
+import ActivityPendingEntity from "../../entities/activity-pending";
+import ActivityPending from "App/Models/ActivityPending";
+import ActivityAwaitEntity from "../../entities/activity-await/activity-await";
+import ActivityAwait from "App/Models/ActivityAwait";
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() {}
+
+	async findAllActivities(
+		unity_id: string
+	): PromiseEither<AbstractError, IActivity[]> {
+		if (!unity_id) return left(new MissingParamsError("unity id"));
+
+		const activities = await Activity.find({
+			unity_id,
+			type: "marked" || undefined,
+		});
+		return right(activities);
+	}
+
+	async findActivitiesByProf(
+		unity_id: string,
+		prof_id: string
+	): PromiseEither<AbstractError, IActivity[]> {
+		if (!unity_id) return left(new MissingParamsError("unity id"));
+		if (!prof_id) return left(new MissingParamsError("prof id"));
+
+		const activities = await Activity.find({
+			unity_id,
+			"prof.value": prof_id,
+			type: "marked" || undefined,
+		});
+		return right(activities);
+	}
+
+	async findActivitiesByClient(
+		unity_id: string,
+		client_id: string
+	): PromiseEither<AbstractError, IActivity[]> {
+		if (!unity_id) return left(new MissingParamsError("unity id"));
+		if (!client_id) return left(new MissingParamsError("client id"));
+
+		const activities = await Activity.find({
+			unity_id,
+			"client.value": client_id,
+			type: "marked" || undefined,
+		});
+
+		return right(activities);
+	}
+
+	async findAllActivitiesPending(
+		unity_id: string
+	): PromiseEither<AbstractError, IActivityPending[]> {
+		if (!unity_id) return left(new MissingParamsError("unity id"));
+		const activities = await ActivityPending.find({
+			unity_id,
+			type: "pending",
+		});
+		return right(activities);
+	}
+
+	async findAllActivitiesAwait(
+		unity_id: string
+	): PromiseEither<AbstractError, IActivityAwait[]> {
+		if (!unity_id) return left(new MissingParamsError("unity id"));
+
+		const activities = await ActivityAwait.find({
+			unity_id,
+			type: "await",
+		});
+		return right(activities);
+	}
+
+	async createActivityAwait(
+		unity_id: string,
+		values: ActivityAwaitValues
+	): PromiseEither<AbstractError, IActivityAwait> {
+		const activityOrErr = await ActivityAwaitEntity.build(values);
+		if (activityOrErr.isLeft()) return left(activityOrErr.extract());
+
+		const newActivity = await ActivityAwait.create(
+			activityOrErr.extract().defineUnityId(unity_id).params()
+		);
+		return right(newActivity);
+	}
 
 	async updateActivityStartedAt(
 		id: string,
@@ -115,7 +201,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 	async createRecurrentActivity(
 		unity_id: string,
-		{ values, dates }: RecurrentActivityParams
+		{ values, dates, pending }: RecurrentActivityValues
 	): PromiseEither<AbstractError, IActivity[]> {
 		if (!unity_id) return left(new MissingParamsError("unity_id"));
 
@@ -134,6 +220,19 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 				activityOrErr.extract().defineUnityId(unity_id).params()
 			);
 		}
+
+		const pendingActivityOrErr = await ActivityPendingEntity.build(values);
+		if (pendingActivityOrErr.isLeft())
+			return left(
+				new AbstractError("Error validating pending activities", 500)
+			);
+
+		for (let i = 0; i < pending; i++) {
+			await ActivityPending.create(
+				pendingActivityOrErr.extract().defineUnityId(unity_id).params()
+			);
+		}
+
 		const newActivities = await Promise.all(
 			validatedActivities.map(
 				async (activity) => await Activity.create(activity)
@@ -144,7 +243,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 	async createActivity(
 		unity_id: string,
-		params: ActivityParams
+		params: ActivityValues
 	): PromiseEither<AbstractError, IActivity> {
 		if (!unity_id) return left(new MissingParamsError("unity_id"));
 		const activityOrErr = await ActivityEntity.build({
@@ -181,44 +280,9 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		return right(activity);
 	}
 
-	async findAllActivities(
-		unity_id: string
-	): PromiseEither<AbstractError, IActivity[]> {
-		if (!unity_id) return left(new MissingParamsError("unity id"));
-
-		const activities = await Activity.find({ unity_id });
-		return right(activities);
-	}
-
-	async findActivitiesByProf(
-		unity_id: string,
-		prof_id: string
-	): PromiseEither<AbstractError, IActivity[]> {
-		if (!unity_id) return left(new MissingParamsError("unity id"));
-		if (!prof_id) return left(new MissingParamsError("prof id"));
-
-		const activities = await Activity.find({ unity_id, prof_id });
-		return right(activities);
-	}
-
-	async findActivitiesByClient(
-		unity_id: string,
-		client_id: string
-	): PromiseEither<AbstractError, IActivity[]> {
-		if (!unity_id) return left(new MissingParamsError("unity id"));
-		if (!client_id) return left(new MissingParamsError("client id"));
-
-		const activities = await Activity.find({
-			unity_id,
-			"client.value": client_id,
-		});
-
-		return right(activities);
-	}
-
 	async updateActivityById(
 		id: string,
-		params: ActivityParams
+		params: ActivityValues
 	): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new MissingParamsError("id"));
 		const oldActivity = await Activity.findById(id);

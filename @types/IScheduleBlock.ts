@@ -12,7 +12,7 @@ export interface IScheduleBlock {
 
 export type ScheduleBlockParams = {
 	profId: string
-	date: string
+	date: Date
 	hourStart: string
 	hourEnd: string
 	allDay: boolean

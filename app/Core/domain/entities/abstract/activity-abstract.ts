@@ -1,32 +1,31 @@
 import { PaymentStatus } from "App/Helpers";
-import { Client, IAbstractActivity, Procedure, Prof } from "Types/IAbstractActivity";
-import { Entity } from "./entity.abstract";
 
-export abstract class AbstractActivity extends Entity implements IAbstractActivity {
+import { Entity } from "./entity.abstract";
+import { Client, IAbstractActivity, Procedure, Prof } from "Types/IActivity";
+
+export abstract class AbstractActivity
+	extends Entity
+	implements IAbstractActivity
+{
 	private _status: PaymentStatus;
 	private _procedures: Procedure[];
 	private _client: Client;
-	private _partner: string;
 	private _obs?: string;
 	private _prof: Prof;
 	private _active: boolean;
 	private _unity_id: string;
 	private _prof_id: string;
-	
+
 	public get status() {
 		return this._status;
 	}
-	
+
 	public get procedures() {
 		return this._procedures;
 	}
 
 	public get client() {
 		return this._client;
-	}
-
-	public get partner() {
-		return this._partner;
 	}
 
 	public get obs() {
@@ -64,11 +63,6 @@ export abstract class AbstractActivity extends Entity implements IAbstractActivi
 		return this;
 	}
 
-	public definePartner(partner: string): this {
-		this._partner = partner;
-		return this;
-	}
-
 	public defineObs(obs?: string): this {
 		this._obs = obs;
 		return this;
@@ -94,4 +88,3 @@ export abstract class AbstractActivity extends Entity implements IAbstractActivi
 		return this;
 	}
 }
-
