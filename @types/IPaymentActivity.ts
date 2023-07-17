@@ -21,4 +21,5 @@ export interface IPaymentActivity {
 	installment: boolean
 	installmentCurrent?: number
 	installments?: number
+	active?: boolean
 }

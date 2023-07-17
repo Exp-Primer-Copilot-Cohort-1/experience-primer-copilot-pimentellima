@@ -66,6 +66,11 @@ const PaymentActivitySchema = new Schema<IPaymentActivity>(
 			required: false,
 			default: 1,
 		},
+		active: {
+			type: Boolean,
+			required: false,
+			default: true,
+		},
 	},
 	{
 		timestamps: {
