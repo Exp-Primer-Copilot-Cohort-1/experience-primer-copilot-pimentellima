@@ -1,6 +1,6 @@
 import { ObjectId } from '@ioc:Mongoose'
 
-export interface IPaymentActivity {
+export interface ITransaction {
 	bank: {
 		id: string | ObjectId
 		name: string

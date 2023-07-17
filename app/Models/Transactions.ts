@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IPaymentActivity } from 'Types/IPaymentActivity'
+import { ITransaction } from 'Types/ITransaction'
 
 const schemaDefault = (colection: string) => ({
 	type: Schema.Types.ObjectId,
@@ -7,7 +7,7 @@ const schemaDefault = (colection: string) => ({
 	required: false,
 })
 
-const PaymentActivitySchema = new Schema<IPaymentActivity>(
+const PaymentActivitySchema = new Schema<ITransaction>(
 	{
 		bank: {
 			id: schemaDefault('banks'),
@@ -80,4 +80,4 @@ const PaymentActivitySchema = new Schema<IPaymentActivity>(
 	},
 )
 
-export default Mongoose.model('payment_activities', PaymentActivitySchema)
+export default Mongoose.model('transactions', PaymentActivitySchema)

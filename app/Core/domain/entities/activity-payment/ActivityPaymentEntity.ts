@@ -4,7 +4,7 @@ import { PromiseEither, left, right } from "App/Core/shared";
 import Account from "App/Models/Account";
 import CostCenter from "App/Models/CostCenter";
 import FinancialCategory from "App/Models/FinancialCategory";
-import { IPaymentActivity } from "Types/IPaymentActivity";
+import { IPaymentActivity } from "Types/ITransaction";
 import { Schema } from "mongoose";
 import * as z from "zod";
 
