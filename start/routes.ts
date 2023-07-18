@@ -261,7 +261,7 @@ Route.group(() => {
 	}).prefix('procedure')
 
 	Route.group(() => {
-		Route.get(':prof_id', 'ScheduleController.verifySchedule').as('schedule.show')
+		Route.get('/work-hours/:prof_id', 'ScheduleController.getWorkHours').as('schedule.show')
 	}).prefix('schedule')
 
 	Route.post('/upload', 'AdonnisLegadoController.bridge').as('upload.image')
