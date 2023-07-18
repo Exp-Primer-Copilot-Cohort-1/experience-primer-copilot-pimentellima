@@ -9,6 +9,10 @@ const schemaDefault = (colection: string) => ({
 
 const TransactionsSchema = new Schema<ITransaction>(
 	{
+		group_by: {
+			type: String,
+			required: false,
+		},
 		prof: {
 			value: schemaDefault('users'),
 			label: {
@@ -62,8 +66,12 @@ const TransactionsSchema = new Schema<ITransaction>(
 			type: String,
 			required: true,
 		},
+		paid: {
+			type: Boolean,
+			required: false,
+		},
 		date: {
-			type: String,
+			type: Date,
 			required: true,
 		},
 		description: {
@@ -74,6 +82,7 @@ const TransactionsSchema = new Schema<ITransaction>(
 			type: String,
 			required: true,
 			enum: ['income', 'expense'],
+			default: 'expense',
 		},
 		occurrences: {
 			type: String,
