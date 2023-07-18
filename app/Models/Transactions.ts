@@ -7,25 +7,49 @@ const schemaDefault = (colection: string) => ({
 	required: false,
 })
 
-const PaymentActivitySchema = new Schema<ITransaction>(
+const TransactionsSchema = new Schema<ITransaction>(
 	{
+		prof: {
+			value: schemaDefault('users'),
+			label: {
+				type: String,
+				required: false,
+			},
+		},
+		client: {
+			value: schemaDefault('clients'),
+			label: {
+				type: String,
+				required: false,
+			},
+		},
+		// Array de procedimentos
+		procedures: [
+			{
+				value: schemaDefault('procedures'),
+				label: {
+					type: String,
+					required: false,
+				},
+			},
+		],
 		bank: {
-			id: schemaDefault('banks'),
-			name: {
+			value: schemaDefault('banks'),
+			label: {
 				type: String,
 				required: false,
 			},
 		},
 		cost_center: {
-			id: schemaDefault('cost_centers'),
-			name: {
+			value: schemaDefault('cost_centers'),
+			label: {
 				type: String,
 				required: false,
 			},
 		},
 		category: {
-			id: schemaDefault('financial_categories'),
-			name: {
+			value: schemaDefault('financial_categories'),
+			label: {
 				type: String,
 				required: false,
 			},
@@ -50,6 +74,12 @@ const PaymentActivitySchema = new Schema<ITransaction>(
 			type: String,
 			required: true,
 			enum: ['income', 'expense'],
+		},
+		occurrences: {
+			type: String,
+			required: false,
+			enum: ['once', 'daily', 'weekly', 'biweekly', 'monthly'],
+			default: 'once',
 		},
 		installment: {
 			type: Boolean,
@@ -80,4 +110,4 @@ const PaymentActivitySchema = new Schema<ITransaction>(
 	},
 )
 
-export default Mongoose.model('transactions', PaymentActivitySchema)
+export default Mongoose.model('transactions', TransactionsSchema)

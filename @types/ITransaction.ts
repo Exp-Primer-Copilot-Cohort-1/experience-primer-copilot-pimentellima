@@ -1,6 +1,18 @@
 import { ObjectId } from '@ioc:Mongoose'
 
 export interface ITransaction {
+	prof: {
+		value: string
+		label: string
+	}
+	client: {
+		value: string
+		label: string
+	}
+	procedures: {
+		value: string
+		label: string
+	}[]
 	bank: {
 		id: string | ObjectId
 		name: string
@@ -18,6 +30,7 @@ export interface ITransaction {
 	paymentForm: string
 	description?: string
 	type?: 'income' | 'expense'
+	occurrences?: 'once' | 'daily' | 'weekly' | 'biweekly' | 'monthly'
 	installment: boolean
 	installmentCurrent?: number
 	installments?: number
