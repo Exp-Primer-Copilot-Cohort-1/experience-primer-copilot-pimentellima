@@ -8,7 +8,7 @@ class TransactionsController {
 	async index({ auth, request }: HttpContextContract) {
 		const userLogged = auth.user
 
-		let { date_start, date_end, type } = request.qs()
+		let { date_start, date_end } = request.qs()
 
 		if (!date_start) {
 			const now = new Date()
@@ -20,14 +20,9 @@ class TransactionsController {
 			date_end = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString()
 		}
 
-		if (!type) {
-			type = 'income'
-		}
-
 		const transactions = await Transaction.find({
 			unity_id: userLogged?.unity_id,
 			active: true,
-			type,
 			date: {
 				$gte: date_start,
 				$lte: date_end,
