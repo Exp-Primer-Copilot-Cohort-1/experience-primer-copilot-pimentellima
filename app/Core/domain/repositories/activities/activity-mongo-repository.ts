@@ -228,7 +228,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 				new AbstractError("Error validating pending activities", 500)
 			);
 
-		const groupId = new mongoose.Types.ObjectId().toString()
+		const groupId = new mongoose.Types.ObjectId().toString();
 		for (let i = 0; i < pending; i++) {
 			await ActivityPending.create(
 				pendingActivityOrErr
@@ -294,9 +294,17 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		const oldActivity = await Activity.findById(id);
 		if (!oldActivity) return left(new ActivityNotFoundError());
 
+		const hasRescheduled =
+			oldActivity.date.toISOString() !== params.date ||
+			oldActivity.hour_start !== params.hourStart ||
+			oldActivity.hour_end !== params.hourEnd;
+
 		const activityOrErr = await ActivityEntity.build({
 			...params,
 			unity_id: oldActivity.unity_id.toString(),
+			scheduled: hasRescheduled
+				? AppointmentStatus.RESCHEDULED
+				: oldActivity.scheduled,
 			activityId: id,
 		});
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract());

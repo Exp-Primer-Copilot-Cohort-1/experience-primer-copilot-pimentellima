@@ -102,6 +102,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		date: string;
 		hourStart: string;
 		hourEnd: string;
+		scheduled?: AppointmentStatus;
 		obs?: string;
 	}): PromiseEither<AbstractError, ActivityEntity> {
 		try {
@@ -233,7 +234,11 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					.defineObs(params.obs)
 					.defineProf(prof)
 					.defineActive(true)
-					.defineScheduled(AppointmentStatus.SCHEDULED)
+					.defineScheduled(
+						params.scheduled
+							? params.scheduled
+							: AppointmentStatus.SCHEDULED
+					)
 					.defineProfId(params.profId)
 			);
 		} catch (err) {
