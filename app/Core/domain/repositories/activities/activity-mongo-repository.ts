@@ -295,7 +295,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		if (!oldActivity) return left(new ActivityNotFoundError());
 
 		const hasRescheduled =
-			oldActivity.date.toISOString() !== params.date ||
+			oldActivity.date?.toISOString() !== params.date ||
 			oldActivity.hour_start !== params.hourStart ||
 			oldActivity.hour_end !== params.hourEnd;
 
