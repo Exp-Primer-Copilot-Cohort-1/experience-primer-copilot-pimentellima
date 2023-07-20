@@ -261,7 +261,9 @@ Route.group(() => {
 	}).prefix('procedure')
 
 	Route.group(() => {
-		Route.get('/work-hours/:prof_id', 'ScheduleController.getWorkHours').as('schedule.show')
+		Route.get('/work-hours/:prof_id', 'ScheduleController.getWorkHours').as(
+			'schedule.show',
+		)
 	}).prefix('schedule')
 
 	Route.post('/upload', 'AdonnisLegadoController.bridge').as('upload.image')
@@ -296,11 +298,11 @@ Route.group(() => {
 	}).prefix('room')
 
 	Route.group(() => {
-		Route.get('', 'AdonnisLegadoController.bridge').as('ingredients.index')
-		Route.get('/:id', 'AdonnisLegadoController.bridge').as('ingredients.show')
-		Route.put('/:id', 'AdonnisLegadoController.bridge').as('ingredients.update')
-		Route.delete('/:id', 'AdonnisLegadoController.bridge').as('ingredients.destroy')
-		Route.post('', 'AdonnisLegadoController.bridge').as('ingredients.store')
+		Route.get('', 'IngredientController.index').as('ingredients.index')
+		Route.get('/:id', 'IngredientController.show').as('ingredients.show')
+		Route.put('/:id', 'IngredientController.update').as('ingredients.update')
+		Route.delete('/:id', 'IngredientController.destroy').as('ingredients.destroy')
+		Route.post('', 'IngredientController.store').as('ingredients.store')
 	}).prefix('ingredients')
 
 	Route.group(() => {

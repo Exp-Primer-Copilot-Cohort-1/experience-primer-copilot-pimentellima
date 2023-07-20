@@ -2,6 +2,12 @@ import Mongoose, { Schema } from '@ioc:Mongoose'
 import { decrypt, encrypt } from 'App/Helpers/encrypt'
 import type { IUserClient } from 'Types/IClient'
 
+const schemaDefault = (colection: string) => ({
+	type: Schema.Types.ObjectId,
+	ref: colection,
+	required: false,
+})
+
 /**
  * @swagger
  * components:
@@ -131,7 +137,11 @@ const ClientSchema = new Schema<IUserClient>(
 			default: true,
 		},
 		partner: {
-			type: String,
+			value: schemaDefault('partners'),
+			label: {
+				type: String,
+				required: false,
+			},
 		},
 		due_date: {
 			type: Date,
@@ -181,15 +191,23 @@ ClientSchema.pre('save', async function (next) {
 
 ClientSchema.post('find', async function (docs) {
 	for (const doc of docs) {
-		if (doc?.document) {
-			doc.document = await decrypt(doc.document)
+		try {
+			if (doc?.document) {
+				doc.document = await decrypt(doc.document)
+			}
+		} catch (error) {
+			console.log('erro na decriptação')
 		}
 	}
 })
 
 ClientSchema.post('findOne', async function (doc) {
-	if (doc?.document) {
-		doc.document = await decrypt(doc.document)
+	try {
+		if (doc?.document) {
+			doc.document = await decrypt(doc.document)
+		}
+	} catch (error) {
+		console.log('erro na decriptação')
 	}
 })
 

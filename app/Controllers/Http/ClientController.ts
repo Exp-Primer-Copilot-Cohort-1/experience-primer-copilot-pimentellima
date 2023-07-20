@@ -97,7 +97,9 @@ class ClientController {
 
 	public async update({ params, request }: HttpContextContract) {
 		const data = request.all()
-		const user = await Client.findByIdAndUpdate(params.id, data).orFail()
+		const user = await Client.findByIdAndUpdate(params.id, data, {
+			new: true,
+		}).orFail()
 
 		await user.save()
 		return user
