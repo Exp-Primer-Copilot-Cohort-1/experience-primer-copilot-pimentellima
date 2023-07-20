@@ -60,6 +60,7 @@ Route.group(() => {
 	Route.get('sessions/user', 'SessionController.getUser')
 	Route.post('sessions/refresh', 'SessionController.refreshToken')
 	Route.get('sessions/check', 'SessionController.checkToken')
+	Route.post('/logout', 'SessionController.logout')
 }).middleware('auth')
 
 Route.group(() => {
@@ -261,7 +262,9 @@ Route.group(() => {
 	}).prefix('procedure')
 
 	Route.group(() => {
-		Route.get('/work-hours/:prof_id', 'ScheduleController.getWorkHours').as('schedule.show')
+		Route.get('/work-hours/:prof_id', 'ScheduleController.getWorkHours').as(
+			'schedule.show',
+		)
 	}).prefix('schedule')
 
 	Route.post('/upload', 'AdonnisLegadoController.bridge').as('upload.image')
