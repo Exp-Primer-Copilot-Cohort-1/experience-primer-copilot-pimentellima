@@ -21,6 +21,10 @@ import ActivityPendingEntity from "../../entities/activity-pending";
 import { ActivityNotFoundError } from "../../errors/activity-not-found";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ActivitiesManagerInterface } from "../interface/activity-manager.interface";
+import Transactions from "App/Models/Transactions";
+import { TransactionEntity } from "../../entities/transaction/TransactionEntity";
+import { addMonths } from "date-fns";
+import { ITransaction } from "Types/ITransaction";
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() {}
@@ -177,6 +181,28 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 		const paymentOrErr = await ActivityPaymentEntity.build(other);
 		if (paymentOrErr.isLeft()) return left(paymentOrErr.extract());
+
+		const numberOfIncomes = values.installmentsNumber
+			? values.installmentsNumber
+			: 1;
+		let validatedTransactions: ITransaction[] = [];
+		for (let i = 0; i < numberOfIncomes; i++) {
+			const paymentDate = addMonths(new Date(values.paymentDate), i);
+			const transactionOrErr = await TransactionEntity.build({
+				...other,
+				type: "income",
+				installments: numberOfIncomes,
+				installmentCurrent: i+1,
+				paymentDate,
+			});
+			if (transactionOrErr.isLeft())
+				return left(transactionOrErr.extract());
+			else validatedTransactions.push(transactionOrErr.extract());
+		}
+
+		validatedTransactions.forEach((transaction) =>
+			Transactions.create(transaction)
+		);
 
 		const oldActivity = await Activity.findById(id);
 		if (!oldActivity)
