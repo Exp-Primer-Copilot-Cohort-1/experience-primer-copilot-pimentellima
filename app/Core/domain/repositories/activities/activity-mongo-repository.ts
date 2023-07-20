@@ -4,6 +4,8 @@ import { AppointmentStatus, PaymentStatus } from "App/Helpers";
 import Activity from "App/Models/Activity";
 import ActivityAwait from "App/Models/ActivityAwait";
 import ActivityPending from "App/Models/ActivityPending";
+import Transactions from "App/Models/Transactions";
+import areRangesIntersecting from "App/utils/are-ranges-intersecting";
 import {
 	ActivityAwaitValues,
 	ActivityValues,
@@ -13,18 +15,17 @@ import {
 	PaymentValues,
 	RecurrentActivityValues,
 } from "Types/IActivity";
+import { ITransaction } from "Types/ITransaction";
+import { addMonths } from "date-fns";
 import mongoose from "mongoose";
 import ActivityEntity from "../../entities/activities/activity";
 import ActivityAwaitEntity from "../../entities/activity-await/activity-await";
 import { ActivityPaymentEntity } from "../../entities/activity-payment/ActivityPaymentEntity";
 import ActivityPendingEntity from "../../entities/activity-pending";
+import { TransactionEntity } from "../../entities/transaction/TransactionEntity";
 import { ActivityNotFoundError } from "../../errors/activity-not-found";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ActivitiesManagerInterface } from "../interface/activity-manager.interface";
-import Transactions from "App/Models/Transactions";
-import { TransactionEntity } from "../../entities/transaction/TransactionEntity";
-import { addMonths } from "date-fns";
-import { ITransaction } from "Types/ITransaction";
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() {}
@@ -232,7 +233,22 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	): PromiseEither<AbstractError, IActivity[]> {
 		if (!unity_id) return left(new MissingParamsError("unity_id"));
 
+		for (let i = 0; i < dates.length; i++) {
+			for (let j = i + 1; j < dates.length; j++) {
+				if (
+					areRangesIntersecting({
+						range1Start: new Date(dates[i].hourStart),
+						range1End: new Date(dates[i].hourEnd),
+						range2Start: new Date(dates[j].hourStart),
+						range2End: new Date(dates[j].hourEnd),
+					})
+				)
+					return left(new AbstractError('', 409))
+			}
+		}
+
 		let validatedActivities: IActivity[] = [];
+
 		for (let i = 0; i < dates.length; i++) {
 			const date = dates[i];
 			const activityOrErr = await ActivityEntity.build({
