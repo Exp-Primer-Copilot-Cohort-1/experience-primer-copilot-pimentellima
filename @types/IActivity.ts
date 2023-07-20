@@ -29,21 +29,25 @@ export type Prof = {
 	label: string;
 };
 
-type ActivityPayment = {
+export type ActivityPayment = {
 	cost_center: {
-		id: string | ObjectId;
-		name: string;
+		value: string | ObjectId;
+		label: string;
 	};
 	category: {
-		id: string | ObjectId;
-		name: string;
+		value: string | ObjectId;
+		label: string;
 	};
+	bank: {
+		value: string | ObjectId;
+		label: string;
+	}
 	value: string;
-	paymentForm: string;
-	date: string;
-	installment: boolean;
-	installments?: string;
+	date: Date;
 	description?: string;
+	paymentForm: string;
+	installment: boolean;
+	installments?: number;
 };
 
 export interface IAbstractActivity {
@@ -159,7 +163,7 @@ export type PaymentValues = {
 	paymentDate: string;
 	paymentForm: string;
 	installment: boolean;
-	installmentsNumber: number;
+	installmentsNumber?: number;
 	value: string;
 	description?: string;
 };

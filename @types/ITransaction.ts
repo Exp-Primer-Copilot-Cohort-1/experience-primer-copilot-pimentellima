@@ -16,16 +16,16 @@ export interface ITransaction {
 		label: string
 	}[]
 	bank: {
-		id: string | ObjectId
-		name: string
+		value: string | ObjectId
+		label: string
 	}
 	cost_center: {
-		id: string | ObjectId
-		name: string
+		value: string | ObjectId
+		label: string
 	}
 	category: {
-		id: string | ObjectId
-		name: string
+		value: string | ObjectId
+		label: string
 	}
 	paid?: boolean
 	value: string

@@ -4,11 +4,11 @@ import { PromiseEither, left, right } from "App/Core/shared";
 import Account from "App/Models/Account";
 import CostCenter from "App/Models/CostCenter";
 import FinancialCategory from "App/Models/FinancialCategory";
-import { IPaymentActivity } from "Types/ITransaction";
+import { ActivityPayment } from "Types/IActivity";
 import { Schema } from "mongoose";
 import * as z from "zod";
 
-export class ActivityPaymentEntity implements IPaymentActivity {
+export class ActivityPaymentEntity implements ActivityPayment {
 	bank: { id: string | Schema.Types.ObjectId; name: string };
 	cost_center: { id: string | ObjectId; name: string };
 	category: { id: string | ObjectId; name: string };
@@ -54,7 +54,7 @@ export class ActivityPaymentEntity implements IPaymentActivity {
 		return this;
 	}
 
-	defineInstallments(value?: number) {
+	defineInstallmentsNumber(value?: number) {
 		this.installments = value;
 		return this;
 	}
@@ -72,7 +72,7 @@ export class ActivityPaymentEntity implements IPaymentActivity {
 		paymentDate: string;
 		paymentForm: string;
 		installment: boolean;
-		installmentsNumber: number;
+		installmentsNumber?: number;
 		value: string;
 		description?: string;
 	}): PromiseEither<AbstractError, ActivityPaymentEntity> {
@@ -113,7 +113,7 @@ export class ActivityPaymentEntity implements IPaymentActivity {
 					.defineValue(values.value)
 					.definePaymentForm(values.paymentForm)
 					.defineInstallment(values.installment)
-					.defineInstallments(values.installmentsNumber)
+					.defineInstallmentsNumber(values.installmentsNumber)
 					.defineDescription(values.description)
 			);
 		} catch (err) {
