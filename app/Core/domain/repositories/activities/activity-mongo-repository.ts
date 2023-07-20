@@ -26,6 +26,7 @@ import { TransactionEntity } from "../../entities/transaction/TransactionEntity"
 import { ActivityNotFoundError } from "../../errors/activity-not-found";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ActivitiesManagerInterface } from "../interface/activity-manager.interface";
+import divideCurrency from "App/utils/divide-currency";
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() {}
@@ -192,6 +193,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			const transactionOrErr = await TransactionEntity.build({
 				...other,
 				type: "income",
+				value: divideCurrency(other.value, numberOfIncomes),
 				installments: numberOfIncomes,
 				installmentCurrent: i+1,
 				paymentDate,
