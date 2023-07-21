@@ -4,6 +4,7 @@ import { makeProceduresCreateComposer } from 'App/Core/composers'
 import { makeProceduresUpdateByIdComposer } from 'App/Core/composers/procedures'
 import { makeProceduresDeleteByIdComposer } from 'App/Core/composers/procedures/make-procedures-delete-by-id-composer'
 import { makeProceduresFindAllComposer } from 'App/Core/composers/procedures/make-procedures-find-all-composer'
+import Procedure from 'App/Models/Procedure'
 
 class ProcedureController {
 	async index(ctx: HttpContextContract) {
@@ -23,6 +24,24 @@ class ProcedureController {
 
 	async destroy(ctx: HttpContextContract) {
 		return adaptRoute(makeProceduresDeleteByIdComposer(), ctx)
+	}
+
+	async addProduct(ctx: HttpContextContract) {
+		await Procedure.findByIdAndUpdate(ctx.params.id, {
+			$push: {
+				products: ctx.request.body,
+			},
+		})
+		return ctx.response.ok({ message: 'Produto adicionado com sucesso' })
+	}
+
+	async removeProduct(ctx: HttpContextContract) {
+		await Procedure.findByIdAndUpdate(ctx.params.id, {
+			$pull: {
+				products: ctx.request.body,
+			},
+		})
+		return ctx.response.ok({ message: 'Produto removido com sucesso' })
 	}
 }
 

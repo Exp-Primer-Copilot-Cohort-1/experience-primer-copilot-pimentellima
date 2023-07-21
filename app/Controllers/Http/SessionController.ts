@@ -23,7 +23,7 @@ class SessionController {
 			response.send('Missing or invalid jwt token')
 		}
 	}
-	async logout({ auth, response }) {
+	async logout({ auth, response }: HttpContextContract) {
 		await auth.logout()
 		return response.status(200).json({ message: 'Logout bem-sucedido' })
 	}

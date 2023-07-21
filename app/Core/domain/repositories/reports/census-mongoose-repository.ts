@@ -234,14 +234,30 @@ export class CensusMongooseRepository implements CensusUnitiesManagerInterface {
 				$match: match,
 			},
 			{
+				$addFields: {
+					client_id: { $toObjectId: '$client.value' },
+				},
+			},
+			{
+				$lookup: {
+					from: 'clients', // substitua com o nome da sua coleção de clientes
+					localField: 'client_id', // substitua com o nome do campo que referencia o cliente no seu modelo de Atividade
+					foreignField: '_id',
+					as: 'client',
+				},
+			},
+			{
+				$unwind: '$client',
+			},
+			{
 				$group: {
 					_id: {
 						$cond: {
-							if: { $eq: ['$client.partner', ''] }, // Condição
+							if: { $eq: ['$client.partner.label', ''] }, // Condição
 							then: 'SEM PARCEIROS', // Valor se a condição for verdadeira
 							else: {
 								$ifNull: [
-									'$client.partner', // Expressão a ser avaliada
+									'$client.partner.label', // Expressão a ser avaliada
 									'SEM PARCEIROS', // Valor a ser usado se a expressão for nula ou inexistente
 								],
 							}, // Valor se a condição for falsa

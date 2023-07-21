@@ -48,6 +48,14 @@ class StocksController {
 	async destroy({ params }) {
 		await Stock.findByIdAndDelete({ _id: params.id }).orFail()
 	}
+
+	async update({ params, request }) {
+		const data = request.all()
+		const stock = await Stock.findByIdAndUpdate(params.id, data, {
+			new: true,
+		}).orFail()
+		return stock
+	}
 }
 
 export default StocksController

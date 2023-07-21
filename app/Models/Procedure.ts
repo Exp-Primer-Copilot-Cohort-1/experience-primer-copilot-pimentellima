@@ -22,6 +22,22 @@ const ProcedureSchema = new Schema<IProcedure>(
 		},
 		prof: [ProfSchemaHelper],
 		health_insurance: [HealthInsuranceSchemaHelper],
+		products: [
+			{
+				value: {
+					type: Schema.Types.ObjectId,
+					required: true,
+				},
+				label: {
+					type: String,
+					required: true,
+				},
+				quantity: {
+					type: Number,
+					required: true,
+				},
+			},
+		],
 		unity_id: {
 			type: Schema.Types.ObjectId,
 			required: true,

@@ -15,6 +15,11 @@ export interface IProcedure {
 		label: string
 		price: string
 	}[]
+	products?: {
+		value: string
+		label: string
+		quantity: number
+	}[]
 	unity_id: string | ObjectId
 	created_at: Date | string
 	updated_at: Date | string
