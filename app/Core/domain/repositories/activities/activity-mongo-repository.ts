@@ -5,7 +5,7 @@ import Activity from "App/Models/Activity";
 import ActivityAwait from "App/Models/ActivityAwait";
 import ActivityPending from "App/Models/ActivityPending";
 import Transactions from "App/Models/Transactions";
-import areRangesIntersecting from "App/utils/are-ranges-intersecting";
+import divideCurrency from "App/utils/divide-currency";
 import {
 	ActivityAwaitValues,
 	ActivityValues,
@@ -26,7 +26,6 @@ import { TransactionEntity } from "../../entities/transaction/TransactionEntity"
 import { ActivityNotFoundError } from "../../errors/activity-not-found";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ActivitiesManagerInterface } from "../interface/activity-manager.interface";
-import divideCurrency from "App/utils/divide-currency";
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() {}
@@ -234,20 +233,6 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		{ values, dates, pending }: RecurrentActivityValues
 	): PromiseEither<AbstractError, IActivity[]> {
 		if (!unity_id) return left(new MissingParamsError("unity_id"));
-
-		for (let i = 0; i < dates.length; i++) {
-			for (let j = i + 1; j < dates.length; j++) {
-				if (
-					areRangesIntersecting({
-						range1Start: new Date(dates[i].hourStart),
-						range1End: new Date(dates[i].hourEnd),
-						range2Start: new Date(dates[j].hourStart),
-						range2End: new Date(dates[j].hourEnd),
-					})
-				)
-					return left(new AbstractError('', 409))
-			}
-		}
 
 		let validatedActivities: IActivity[] = [];
 

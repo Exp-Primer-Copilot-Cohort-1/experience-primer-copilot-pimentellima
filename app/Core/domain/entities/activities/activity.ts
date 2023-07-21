@@ -2,7 +2,6 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import { AppointmentStatus, PaymentStatus } from "App/Helpers";
-import Activity from "App/Models/Activity";
 import Client from "App/Models/Client";
 import HealthInsurance from "App/Models/HealthInsurance";
 import Procedure from "App/Models/Procedure";
@@ -110,19 +109,11 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 			if (!profData)
 				return left(new AbstractError("Could not find prof", 404));
 
-			const activities = (
-				await Activity.find({
-					prof_id: params.profId,
-				})
-			).filter(
-				(activity) => !(activity._id?.toString() === params.activityId)
-			) as IActivity[];
-
 			const scheduleBlocks = (await ScheduleBlock.find({
 				"prof.value": params.profId,
 			})) as IScheduleBlock[];
 
-			const profSchedule = [...activities, ...scheduleBlocks].filter(
+			const profSchedule = scheduleBlocks.filter(
 				({ date }) => {
 					return isSameDay(new Date(params.date), new Date(date));
 				}
