@@ -17,27 +17,28 @@ import type { AuthConfig } from '@ioc:Adonis/Addons/Auth'
 |
 */
 const authConfig: AuthConfig = {
-  guard: 'web',
-  guards: {
-    web: {
-      driver: 'session',
-      provider: {
-        driver: 'mongo',
-      },
-    },
-    api: {
-      driver: 'oat',
-      tokenProvider: {
-        driver: 'redis',
-        redisConnection: 'local',
-        foreignKey: 'user_id',
-        type: 'bearer',
-      },
-      provider: {
-        driver: 'mongo',
-      },
-    },
-  },
+	guard: 'web',
+	guards: {
+		web: {
+			driver: 'session',
+			provider: {
+				driver: 'mongo',
+			},
+		},
+		api: {
+			driver: 'oat',
+			expiresIn: '1d',
+			tokenProvider: {
+				driver: 'redis',
+				redisConnection: 'local',
+				foreignKey: 'user_id',
+				type: 'bearer',
+			},
+			provider: {
+				driver: 'mongo',
+			},
+		},
+	},
 }
 
 export default authConfig

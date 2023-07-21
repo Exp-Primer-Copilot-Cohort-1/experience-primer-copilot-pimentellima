@@ -2,6 +2,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import { makeSignInComposer } from 'App/Core/composers'
 
+
 class SessionController {
 	public async store(ctx: HttpContextContract) {
 		return adaptRoute(makeSignInComposer(ctx), ctx)
@@ -25,6 +26,7 @@ class SessionController {
 	}
 	async logout({ auth, response }: HttpContextContract) {
 		try {
+			await auth.use('api').revoke() // 'api' é o guard padrão para autenticação via token
 			await auth.logout()
 			return response.status(200).json({ message: 'Logout bem-sucedido' })
 		} catch (error) {
