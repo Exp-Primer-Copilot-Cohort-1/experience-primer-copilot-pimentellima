@@ -11,7 +11,7 @@ const makeSut = () => {
 	}
 }
 
-describe('Population Census Use Case (Integration)', () => {
+describe('Census Mongoose Repository (Integration)', () => {
 	beforeAll(async () => {
 		await mongoose.connect(
 			'mongodb://admin:admin@localhost/admin?connectTimeoutMS=300000&retryWrites=true',

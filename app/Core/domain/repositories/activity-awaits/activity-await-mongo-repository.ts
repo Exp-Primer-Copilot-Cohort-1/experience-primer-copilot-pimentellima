@@ -5,7 +5,10 @@ import { IActivityAwait } from 'Types/IActivity'
 import ActivityAwaitEntity from '../../entities/activity-await/activity-await'
 import { ActivityNotFoundError } from '../../errors/activity-not-found'
 import { MissingParamsError } from '../../errors/missing-params'
+import { generateScores } from '../helpers/scores'
 import { ActivityAwaitManagerInterface } from '../interface/activity-await-manager-interface'
+
+import { Types } from 'mongoose'
 
 export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterface {
 	constructor() { }
@@ -28,10 +31,23 @@ export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterfa
 	): PromiseEither<AbstractError, IActivityAwait[]> {
 		if (!unity_id) return left(new MissingParamsError('unity id'))
 
-		const activities = await ActivityAwait.find({
-			unity_id,
-			type: 'await',
-		})
+		const id = new Types.ObjectId(unity_id)
+
+		const scoreMap = await generateScores(id as any)
+
+		const activities = await ActivityAwait.aggregate([
+			{
+				$match: {
+					type: 'await',
+					unity_id: id,
+				},
+			},
+			{
+				$addFields: {
+					score: { $ifNull: [{ $literal: scoreMap['$client.value'] }, 0] },
+				},
+			},
+		])
 
 		return right(activities)
 	}
