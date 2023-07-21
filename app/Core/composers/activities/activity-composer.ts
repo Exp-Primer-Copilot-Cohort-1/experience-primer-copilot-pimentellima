@@ -1,104 +1,91 @@
-import { Controller } from "App/Core/adapters/controller";
-import { ControllerGeneric } from "App/Core/adapters/controller/helpers";
-import { ActivityMongoRepository } from "App/Core/domain/repositories/activities/activity-mongo-repository";
-import { FindAllActivitiesUseCase } from "App/Core/domain/use-cases";
-import { CreateActivityAwaitUseCase } from "App/Core/domain/use-cases/activities/create-activity-await-use-case";
-import { CreateActivityUseCase } from "App/Core/domain/use-cases/activities/create-activity-use-case";
-import { CreateRecurrentActivityUseCase } from "App/Core/domain/use-cases/activities/create-recurrent-activity-use-case";
-import { DeleteActivityByIdUseCase } from "App/Core/domain/use-cases/activities/delete-activity-by-id-use-case";
-import { FindActivitiesByClientIdUseCase } from "App/Core/domain/use-cases/activities/find-activities-by-client-use-case";
-import { FindActivitiesByProfIdUseCase } from "App/Core/domain/use-cases/activities/find-activities-by-prof-use-case";
-import { FindActivityByIdUseCase } from "App/Core/domain/use-cases/activities/find-activity-by-id-use-case";
-import { FindAllActivitiesAwaitUseCase } from "App/Core/domain/use-cases/activities/find-all-activities-await-use-case";
-import { FindAllActivitiesPendingUseCase } from "App/Core/domain/use-cases/activities/find-all-activities-pending-use-case";
-import { UpdateActivityFinishedAtUseCase } from "App/Core/domain/use-cases/activities/update-activity-finished-at-use-case";
-import { UpdateActivityPaymentUseCase } from "App/Core/domain/use-cases/activities/update-activity-payment-use-case";
-import { UpdateActivityStartedAtUseCase } from "App/Core/domain/use-cases/activities/update-activity-started-at-use-case";
-import { UpdateActivityStatusByIdUseCase } from "App/Core/domain/use-cases/activities/update-activity-status-by-use-case";
-import { UpdateActivityByIdUseCase } from "App/Core/domain/use-cases/activities/update-activity-use-case";
+import { Controller } from 'App/Core/adapters/controller'
+import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
+import {
+	ActivityAwaitMongoRepository,
+	ActivityMongoRepository,
+} from 'App/Core/domain/repositories'
+import { FindAllActivitiesUseCase } from 'App/Core/domain/use-cases'
+import { CreateActivityAwaitUseCase } from 'App/Core/domain/use-cases/activities/create-activity-await-use-case'
+import { CreateActivityUseCase } from 'App/Core/domain/use-cases/activities/create-activity-use-case'
+import { CreateRecurrentActivityUseCase } from 'App/Core/domain/use-cases/activities/create-recurrent-activity-use-case'
+import { DeleteActivityByIdUseCase } from 'App/Core/domain/use-cases/activities/delete-activity-by-id-use-case'
+import { FindActivitiesByClientIdUseCase } from 'App/Core/domain/use-cases/activities/find-activities-by-client-use-case'
+import { FindActivitiesByProfIdUseCase } from 'App/Core/domain/use-cases/activities/find-activities-by-prof-use-case'
+import { FindActivityByIdUseCase } from 'App/Core/domain/use-cases/activities/find-activity-by-id-use-case'
+import { FindAllActivitiesAwaitUseCase } from 'App/Core/domain/use-cases/activities/find-all-activities-await-use-case'
+import { FindAllActivitiesPendingUseCase } from 'App/Core/domain/use-cases/activities/find-all-activities-pending-use-case'
+import { UpdateActivityFinishedAtUseCase } from 'App/Core/domain/use-cases/activities/update-activity-finished-at-use-case'
+import { UpdateActivityPaymentUseCase } from 'App/Core/domain/use-cases/activities/update-activity-payment-use-case'
+import { UpdateActivityStartedAtUseCase } from 'App/Core/domain/use-cases/activities/update-activity-started-at-use-case'
+import { UpdateActivityStatusByIdUseCase } from 'App/Core/domain/use-cases/activities/update-activity-status-by-use-case'
+import { UpdateActivityByIdUseCase } from 'App/Core/domain/use-cases/activities/update-activity-use-case'
 
 export const makeCreateActivityComposer = (): ControllerGeneric => {
-	return new Controller(
-		new CreateActivityUseCase(new ActivityMongoRepository())
-	);
-};
+	return new Controller(new CreateActivityUseCase(new ActivityMongoRepository()))
+}
 
 export const makeCreateActivityAwaitComposer = (): ControllerGeneric => {
-	return new Controller(
-		new CreateActivityAwaitUseCase(new ActivityMongoRepository())
-	);
-};
+	return new Controller(new CreateActivityAwaitUseCase(new ActivityMongoRepository()))
+}
 
 export const makeUpdateActivityPaymentComposer = (): ControllerGeneric => {
-	return new Controller(
-		new UpdateActivityPaymentUseCase(new ActivityMongoRepository())
-	);
-};
+	return new Controller(new UpdateActivityPaymentUseCase(new ActivityMongoRepository()))
+}
 export const makeCreateRecurrentActivityComposer = (): ControllerGeneric => {
 	return new Controller(
-		new CreateRecurrentActivityUseCase(new ActivityMongoRepository())
-	);
-};
+		new CreateRecurrentActivityUseCase(new ActivityMongoRepository()),
+	)
+}
 export const makeDeleteActivityByIdComposer = (): ControllerGeneric => {
-	return new Controller(
-		new DeleteActivityByIdUseCase(new ActivityMongoRepository())
-	);
-};
+	return new Controller(new DeleteActivityByIdUseCase(new ActivityMongoRepository()))
+}
 export const makeFindActivityByClientIdComposer = (): ControllerGeneric => {
 	return new Controller(
-		new FindActivitiesByClientIdUseCase(new ActivityMongoRepository())
-	);
-};
+		new FindActivitiesByClientIdUseCase(new ActivityMongoRepository()),
+	)
+}
 export const makeFindActivityByIdComposer = (): ControllerGeneric => {
-	return new Controller(
-		new FindActivityByIdUseCase(new ActivityMongoRepository())
-	);
-};
+	return new Controller(new FindActivityByIdUseCase(new ActivityMongoRepository()))
+}
 export const makeFindActivitiesByProfIdComposer = (): ControllerGeneric => {
 	return new Controller(
-		new FindActivitiesByProfIdUseCase(new ActivityMongoRepository())
-	);
-};
+		new FindActivitiesByProfIdUseCase(new ActivityMongoRepository()),
+	)
+}
 export const makeFindAllActivitiesComposer = (): ControllerGeneric => {
-	return new Controller(
-		new FindAllActivitiesUseCase(new ActivityMongoRepository())
-	);
-};
+	return new Controller(new FindAllActivitiesUseCase(new ActivityMongoRepository()))
+}
 
 export const makeFindAllActivitiesAwaitComposer = (): ControllerGeneric => {
 	return new Controller(
-		new FindAllActivitiesAwaitUseCase(new ActivityMongoRepository())
-	);
-};
+		new FindAllActivitiesAwaitUseCase(new ActivityAwaitMongoRepository()),
+	)
+}
 
 export const makeFindAllActivitiesPendingComposer = (): ControllerGeneric => {
 	return new Controller(
-		new FindAllActivitiesPendingUseCase(new ActivityMongoRepository())
-	);
-};
+		new FindAllActivitiesPendingUseCase(new ActivityMongoRepository()),
+	)
+}
 
 export const makeUpdateActivityByIdComposer = (): ControllerGeneric => {
-	return new Controller(
-		new UpdateActivityByIdUseCase(new ActivityMongoRepository())
-	);
-};
+	return new Controller(new UpdateActivityByIdUseCase(new ActivityMongoRepository()))
+}
 
 export const makeUpdateActivityStatusComposer = (): ControllerGeneric => {
 	return new Controller(
 		new UpdateActivityStatusByIdUseCase(new ActivityMongoRepository()),
-	);
-};
+	)
+}
 
 export const makeUpdateActivityStartedAtComposer = (): ControllerGeneric => {
 	return new Controller(
 		new UpdateActivityStartedAtUseCase(new ActivityMongoRepository()),
-	);
-};
+	)
+}
 
 export const makeUpdateActivityFinishedAtComposer = (): ControllerGeneric => {
 	return new Controller(
 		new UpdateActivityFinishedAtUseCase(new ActivityMongoRepository()),
-	);
-};
-
-
+	)
+}

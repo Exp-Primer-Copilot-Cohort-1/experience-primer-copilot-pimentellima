@@ -1,3 +1,4 @@
+export * from './activities/activity-composer'
 export * from './categories/make-categories-create-composer'
 export * from './categories/make-categories-delete-by-id-composer'
 export * from './categories/make-categories-find-by-unity-composer'

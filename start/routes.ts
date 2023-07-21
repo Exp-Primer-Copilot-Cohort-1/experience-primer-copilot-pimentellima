@@ -60,8 +60,9 @@ Route.group(() => {
 	Route.get('sessions/user', 'SessionController.getUser')
 	Route.post('sessions/refresh', 'SessionController.refreshToken')
 	Route.get('sessions/check', 'SessionController.checkToken')
-	Route.post('sessions/logout', 'SessionController.logout')
 }).middleware('auth')
+
+Route.post('sessions/logout', 'SessionController.logout')
 
 Route.group(() => {
 	Route.group(() => {

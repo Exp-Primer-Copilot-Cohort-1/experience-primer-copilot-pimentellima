@@ -24,8 +24,12 @@ class SessionController {
 		}
 	}
 	async logout({ auth, response }: HttpContextContract) {
-		await auth.logout()
-		return response.status(200).json({ message: 'Logout bem-sucedido' })
+		try {
+			await auth.logout()
+			return response.status(200).json({ message: 'Logout bem-sucedido' })
+		} catch (error) {
+			return response.status(204)
+		}
 	}
 }
 

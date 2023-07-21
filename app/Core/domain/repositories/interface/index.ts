@@ -1,3 +1,4 @@
+export * from './activity-await-manager-interface'
 export * from './activity-manager.interface'
 export * from './admin-manager.interface'
 export * from './categories-manager.interface'
