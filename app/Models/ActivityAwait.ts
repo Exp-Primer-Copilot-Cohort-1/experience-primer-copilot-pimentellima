@@ -68,9 +68,32 @@ const ActivityAwaitSchema = new Schema<IActivityAwait>(
 				default: null,
 			},
 			partner: {
-				type: String,
+				type: new Schema(
+					{
+						value: {
+							type: String,
+							validate: {
+								validator: function (v) {
+									return !this.partner || (v && this.partner?.label)
+								},
+								message: (props) =>
+									'Se "partner" é fornecido, "value" e "label" devem ser fornecidos!',
+							},
+						},
+						label: {
+							type: String,
+							validate: {
+								validator: function (v) {
+									return !this.partner || (v && this.partner.value)
+								},
+								message: (props) =>
+									'Se "partner" é fornecido, "value" e "label" devem ser fornecidos!',
+							},
+						},
+					},
+					{ _id: false },
+				), // {_id: false} evita que o Mongoose crie um ID automático para o subdocumento
 				required: false,
-				default: null,
 			},
 		},
 		obs: {
