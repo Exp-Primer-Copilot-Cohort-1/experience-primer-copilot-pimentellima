@@ -11,6 +11,9 @@ export default function ({
 	range2Start: Date
 	range2End: Date
 }) {
+	if (isBefore(range1Start, range2Start) && isAfter(range1End, range2End))
+		return true
+
 	if (isAfter(range1Start, range2End)) {
 		return false
 	}

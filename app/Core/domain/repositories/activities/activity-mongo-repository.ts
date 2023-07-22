@@ -177,10 +177,9 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		id: string,
 		values: PaymentValues
 	): PromiseEither<AbstractError, IActivity> {
-		const { paid, ...other } = values;
 		if (!id) return left(new MissingParamsError("activity id"));
 
-		const paymentOrErr = await ActivityPaymentEntity.build(other);
+		const paymentOrErr = await ActivityPaymentEntity.build(values);
 		if (paymentOrErr.isLeft()) return left(paymentOrErr.extract());
 
 		const numberOfIncomes = values.installmentsNumber
@@ -190,9 +189,9 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		for (let i = 0; i < numberOfIncomes; i++) {
 			const paymentDate = addMonths(new Date(values.paymentDate), i);
 			const transactionOrErr = await TransactionEntity.build({
-				...other,
+				...values,
 				type: "income",
-				value: divideCurrency(other.value, numberOfIncomes),
+				value: divideCurrency(values.value, numberOfIncomes),
 				installments: numberOfIncomes,
 				installmentCurrent: i+1,
 				paymentDate,
@@ -215,7 +214,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			{
 				$set: {
 					payment: paymentOrErr.extract(),
-					status: paid ? PaymentStatus.PAID : oldActivity.status,
+					status: values.paid ? PaymentStatus.PAID : oldActivity.status,
 				},
 			},
 			{

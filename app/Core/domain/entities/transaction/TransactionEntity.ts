@@ -101,10 +101,16 @@ export class TransactionEntity implements ITransaction {
 		return this;
 	}
 
+	definePaid(paid: boolean) {
+		this.paid = paid
+		return this
+	}
+
 	public static async build(values: {
 		activityId: string;
 		bankAccountId: string;
 		costCenterId: string;
+		paid: boolean
 		categoryId: string;
 		paymentDate: Date;
 		paymentForm: string;
@@ -156,6 +162,7 @@ export class TransactionEntity implements ITransaction {
 					.defineDate(values.paymentDate)
 					.defineValue(values.value)
 					.definePaymentForm(values.paymentForm)
+					.definePaid(values.paid)
 					.defineType(values.type)
 					.defineInstallment(values.installment)
 					.defineInstallments(values.installments)
