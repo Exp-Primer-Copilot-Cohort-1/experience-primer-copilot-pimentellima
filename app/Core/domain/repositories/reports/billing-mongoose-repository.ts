@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import Activity from 'App/Models/Activity'
+import Transactions from 'App/Models/Transactions'
 import Unity from 'App/Models/Unity'
 import { IBilling } from 'Types/IBilling'
 import { Types } from 'mongoose'
@@ -88,33 +88,8 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 			{
 				$match: {
 					unity_id: new ObjectId(unity_id.toString()),
-					status: 'PAGO',
-				},
-			},
-			{
-				$addFields: {
-					convertedDate: {
-						$dateFromString: {
-							dateString: '$payment.date',
-						},
-					},
-					value: {
-						$convert: {
-							input: {
-								$replaceOne: {
-									input: '$payment.value',
-									find: ',',
-									replacement: '.',
-								},
-							},
-							to: 'double',
-						},
-					},
-				},
-			},
-			{
-				$match: {
-					convertedDate: {
+					paid: true,
+					date: {
 						$gte: new Date(date_start),
 						$lte: new Date(date_end),
 					},
@@ -130,10 +105,12 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 			},
 		]
 
-		const [revenue] = await Activity.aggregate(pipeline)
+		const revenue = await Transactions.aggregate(pipeline)
+
+		console.log(revenue)
 
 		if (!revenue) return left(new AbstractError('Err to find revenue', 400))
 
-		return right(revenue?.total)
+		return right(revenue[0]?.total || 0)
 	}
 }

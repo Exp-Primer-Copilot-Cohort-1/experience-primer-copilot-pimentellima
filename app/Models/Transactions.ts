@@ -59,7 +59,7 @@ const TransactionsSchema = new Schema<ITransaction>(
 			},
 		},
 		value: {
-			type: String,
+			type: Number,
 			required: true,
 		},
 		paymentForm: {
@@ -69,6 +69,7 @@ const TransactionsSchema = new Schema<ITransaction>(
 		paid: {
 			type: Boolean,
 			required: false,
+			default: true,
 		},
 		date: {
 			type: Date,
