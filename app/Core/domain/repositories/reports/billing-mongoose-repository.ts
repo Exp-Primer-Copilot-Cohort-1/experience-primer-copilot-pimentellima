@@ -78,7 +78,7 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 
 	async findRevenuesByMonth(
 		unity_id: string,
-		month: number,
+		month = new Date().getMonth(),
 		year = new Date().getFullYear(),
 	): PromiseEither<AbstractError, number> {
 		const date_start = new Date(year, month, 1)
@@ -89,6 +89,7 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 				$match: {
 					unity_id: new ObjectId(unity_id.toString()),
 					paid: true,
+					type: 'income',
 					date: {
 						$gte: new Date(date_start),
 						$lte: new Date(date_end),
@@ -106,8 +107,6 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 		]
 
 		const revenue = await Transactions.aggregate(pipeline)
-
-		console.log(revenue)
 
 		if (!revenue) return left(new AbstractError('Err to find revenue', 400))
 

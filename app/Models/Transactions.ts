@@ -35,6 +35,7 @@ const TransactionsSchema = new Schema<ITransaction>(
 					type: String,
 					required: false,
 				},
+				_id: false,
 			},
 		],
 		bank: {
@@ -110,6 +111,11 @@ const TransactionsSchema = new Schema<ITransaction>(
 			type: Boolean,
 			required: false,
 			default: true,
+		},
+		unity_id: {
+			type: Mongoose.Schema.Types.ObjectId,
+			ref: 'unities',
+			required: true,
 		},
 	},
 	{

@@ -2,7 +2,6 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import { makeSignInComposer } from 'App/Core/composers'
 
-
 class SessionController {
 	public async store(ctx: HttpContextContract) {
 		return adaptRoute(makeSignInComposer(ctx), ctx)
@@ -22,6 +21,8 @@ class SessionController {
 			await auth.check()
 		} catch (error) {
 			response.send('Missing or invalid jwt token')
+			await auth.logout()
+			await auth.use('api').revoke()
 		}
 	}
 	async logout({ auth, response }: HttpContextContract) {

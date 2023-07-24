@@ -1,7 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Transaction from 'App/Models/Transactions'
 import { ITransaction } from 'Types/ITransaction'
-import { addMonths, isBefore } from 'date-fns'
+import { addMonths } from 'date-fns'
 import { Types } from 'mongoose'
 
 class TransactionsController {
@@ -40,11 +40,12 @@ class TransactionsController {
 		const installment = paymentForm === 'credit_card'
 		const installments = installment && data.installments ? data.installments : 1
 
-		const now = new Date()
 		let date = new Date(data.date)
 
 		const group_id = data.activity_id || new Types.ObjectId()
 		const transactions = [] as ITransaction[]
+
+		const value = Number(data.value?.toString().replace(',', '.') || 0) / installments
 
 		for (let i = 0; i < installments; i++) {
 			const transaction = await Transaction.create({
@@ -53,9 +54,8 @@ class TransactionsController {
 				installment,
 				installments,
 				date,
-				value: Number(data.value?.replace(',', '.') || 0) / installments,
+				value,
 				installmentCurrent: i + 1,
-				paid: isBefore(date, now),
 				unity_id: userLogged?.unity_id,
 			})
 
@@ -63,7 +63,7 @@ class TransactionsController {
 			transactions.push(transaction)
 		}
 
-		return transactions
+		return transactions[0]
 	}
 
 	async update({ params, request }: HttpContextContract) {

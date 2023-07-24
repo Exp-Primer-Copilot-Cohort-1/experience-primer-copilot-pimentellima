@@ -28,7 +28,7 @@ export interface ITransaction {
 		label: string
 	}
 	paid?: boolean
-	value: string
+	value: number | string
 	date: string | Date
 	paymentForm: string
 	description?: string
@@ -38,4 +38,5 @@ export interface ITransaction {
 	installmentCurrent?: number
 	installments?: number
 	active?: boolean
+	unity_id: string | ObjectId
 }
