@@ -190,10 +190,11 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			const paymentDate = addMonths(new Date(values.paymentDate), i);
 			const transactionOrErr = await TransactionEntity.build({
 				...values,
+				paid: true,
 				type: "income",
 				value: divideCurrency(values.value, numberOfIncomes),
 				installments: numberOfIncomes,
-				installmentCurrent: i+1,
+				installmentCurrent: i + 1,
 				paymentDate,
 			});
 			if (transactionOrErr.isLeft())
@@ -205,16 +206,12 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			Transactions.create(transaction)
 		);
 
-		const oldActivity = await Activity.findById(id);
-		if (!oldActivity)
-			return left(new AbstractError("Could not find activity", 404));
-
 		const updatedActivity = await Activity.findByIdAndUpdate(
 			id,
 			{
 				$set: {
 					payment: paymentOrErr.extract(),
-					status: values.paid ? PaymentStatus.PAID : oldActivity.status,
+					status: PaymentStatus.PAID,
 				},
 			},
 			{
