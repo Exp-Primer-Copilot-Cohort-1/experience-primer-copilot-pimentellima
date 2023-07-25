@@ -370,16 +370,16 @@ Route.group(() => {
 		Route.get('/:id', 'PaymentProfController.findPaymentProfById').as(
 			'payments-prof.show',
 		)
-		Route.put('/:id', 'PaymentProfController.updatePaymentProfById').as(
+		Route.put('/:prof_id/:id', 'PaymentProfController.updatePaymentProfById').as(
 			'payments-prof.update',
 		)
-		Route.delete('/:id', 'PaymentProfController.deletePaymentProfById').as(
+		Route.delete('/:prof_id/:id', 'PaymentProfController.deletePaymentProfById').as(
 			'payments-prof.destroy',
 		)
 		Route.post('', 'PaymentProfController.createPaymentProf').as(
 			'payments-prof.store',
 		)
-	}).prefix('payments-prof')
+	}).prefix('payment-participations')
 
 	Route.group(() => {
 		Route.get('', 'FinancialCategoryController.index').as(

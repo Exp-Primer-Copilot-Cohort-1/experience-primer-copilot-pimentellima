@@ -199,6 +199,29 @@ const ProfSchema = new Schema<IUser>(
 			type: Array,
 			required: false,
 		},
+		payment_participations: [
+			{
+				value: { type: Number, required: false, default: 0 },
+				percent: { type: Number, required: false, default: 0 },
+				procedure: {
+					label: { type: String, required: true },
+					value: {
+						type: Schema.Types.ObjectId,
+						ref: 'procedures',
+						required: true,
+					},
+				},
+				health_insurance: {
+					label: { type: String, required: true },
+					value: {
+						type: Schema.Types.ObjectId,
+						ref: 'health_insurances',
+						required: true,
+					},
+				},
+				active: { type: Boolean, required: false, default: true },
+			},
+		],
 	},
 	{
 		timestamps: {

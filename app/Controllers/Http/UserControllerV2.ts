@@ -12,7 +12,7 @@ const fetchUserByType = async (type, unityId, active = true) =>
 		type: {
 			$in: type,
 		},
-	})
+	}).select('-payment_participations -password')
 
 class UserControllerV2 {
 	public async findAllUsersProfs({ auth }) {
