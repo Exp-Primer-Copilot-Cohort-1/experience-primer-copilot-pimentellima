@@ -24,6 +24,7 @@ const ProcedureSchema = new Schema<IProcedure>(
 		health_insurance: [HealthInsuranceSchemaHelper],
 		products: [
 			{
+				_id: false,
 				value: {
 					type: Schema.Types.ObjectId,
 					required: true,

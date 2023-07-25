@@ -29,7 +29,7 @@ class ProcedureController {
 	async addProduct(ctx: HttpContextContract) {
 		await Procedure.findByIdAndUpdate(ctx.params.id, {
 			$push: {
-				products: ctx.request.body,
+				products: ctx.request.body(),
 			},
 		})
 		return ctx.response.ok({ message: 'Produto adicionado com sucesso' })
@@ -38,7 +38,7 @@ class ProcedureController {
 	async removeProduct(ctx: HttpContextContract) {
 		await Procedure.findByIdAndUpdate(ctx.params.id, {
 			$pull: {
-				products: ctx.request.body,
+				products: ctx.request.body(),
 			},
 		})
 		return ctx.response.ok({ message: 'Produto removido com sucesso' })

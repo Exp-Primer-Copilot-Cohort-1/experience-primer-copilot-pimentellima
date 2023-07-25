@@ -139,10 +139,10 @@ Route.group(() => {
 		Route.put(':_id', 'ProcedureController.update').as('procedures.update')
 		Route.delete(':id', 'ProcedureController.destroy').as('procedures.destroy')
 		Route.post('', 'ProcedureController.store').as('procedures.store')
-		Route.post('products', 'ProcedureController.addProduct').as(
+		Route.post(':id/products', 'ProcedureController.addProduct').as(
 			'procedures.addProduct',
 		)
-		Route.delete('products', 'ProcedureController.removeProduct').as(
+		Route.delete(':id/products', 'ProcedureController.removeProduct').as(
 			'procedures.removeProduct',
 		)
 	}).prefix('procedures')
