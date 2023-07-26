@@ -218,7 +218,6 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					.defineUnityId(params.unity_id)
 					.defineHourStart(params.hourStart)
 					.defineHourEnd(params.hourEnd)
-					.defineStatus(PaymentStatus.PENDING)
 					.defineProcedures(procedures)
 					.defineClient(client)
 					.defineType("marked")
