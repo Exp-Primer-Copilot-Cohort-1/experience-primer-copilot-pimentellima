@@ -60,7 +60,7 @@ const TransactionsSchema = new Schema<ITransaction>(
 			},
 		},
 		value: {
-			type: Number,
+			type: String,
 			required: true,
 		},
 		paymentForm: {
