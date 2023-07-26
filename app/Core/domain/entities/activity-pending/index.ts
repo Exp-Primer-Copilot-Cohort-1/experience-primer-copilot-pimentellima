@@ -16,25 +16,25 @@ export class ActivityPendingEntity
 	extends AbstractActivity
 	implements IActivityPending
 {
-    private _type: 'pending'
-	private _group_id: string
+	private _type: "pending";
+	private _group_id: string;
 
-    public get type() {
+	public get type() {
 		return this._type;
 	}
 
 	public get group_id() {
-		return this._group_id
+		return this._group_id;
 	}
 
-	defineGroupId(group_id: string) : ActivityPendingEntity {
-		this._group_id = group_id
-		return this
+	defineGroupId(group_id: string): ActivityPendingEntity {
+		this._group_id = group_id;
+		return this;
 	}
-	
-	defineType(type: 'pending') : ActivityPendingEntity {
-		this._type = type
-		return this
+
+	defineType(type: "pending"): ActivityPendingEntity {
+		this._type = type;
+		return this;
 	}
 
 	public static async build(
@@ -42,76 +42,32 @@ export class ActivityPendingEntity
 	): PromiseEither<AbstractError, ActivityPendingEntity> {
 		try {
 			z.object({
-				profId: z.string(),
-				clientId: z.string(),
+				prof: z.object({
+					value: z.string(),
+					label: z.string(),
+				}),
+				client: z.object({
+					value: z.string(),
+					label: z.string(),
+				}),
 				procedures: z.array(
 					z.object({
-						procedureId: z.string(),
-						healthInsuranceId: z.string(),
-						val: z.string().regex(/\d{0,2}(\,\d{1,2})?/),
+						value: z.string(),
+						label: z.string(),
 					})
 				),
 				obs: z.string().optional(),
 			}).parse(params);
 
-			const profData = (await User.findById(params.profId)) as IUser;
-			if (!profData)
-				return left(new AbstractError("Could not find prof", 404));
-
-			const clientData = await Client.findById(params.clientId);
-			if (!clientData)
-				return left(new AbstractError("Could not find client", 404));
-			const client = {
-				value: params.clientId,
-				label: clientData.name,
-				celphone: clientData.celphone,
-				email: clientData.email,
-				partner: clientData.partner,
-			};
-
-			const prof = {
-				value: params.profId,
-				label: profData.name,
-			};
-
-			const procedures = await Promise.all(
-				params.procedures.map(async (procedure) => {
-					const { procedureId, healthInsuranceId, val } = procedure;
-					const procedureData = await Procedure.findById(procedureId);
-					const healthInsuranceData = await HealthInsurance.findById(
-						healthInsuranceId
-					);
-					if (!procedureData || !healthInsuranceData) throw Error;
-					const healthInsurancePrice =
-						procedureData.health_insurance.find(
-							(i) => i.value === healthInsuranceId
-						)?.price || "";
-					return {
-						value: procedureId,
-						label: procedureData.name,
-						color: procedureData.color,
-						minutes: procedureData.minutes,
-						val,
-						status: PaymentStatus.PENDING,
-						health_insurance: {
-							value: healthInsuranceId,
-							label: healthInsuranceData.name,
-							price: healthInsurancePrice,
-						},
-					};
-				})
-			);
-
 			return right(
 				new ActivityPendingEntity()
-					.defineStatus(PaymentStatus.PENDING)
-					.defineProcedures(procedures)
-					.defineClient(client)
-					.defineType('pending')
+					.defineProcedures(params.procedures)
+					.defineClient(params.client)
+					.defineType("pending")
 					.defineObs(params.obs)
-					.defineProf(prof)
+					.defineProf(params.prof)
 					.defineActive(true)
-					.defineProfId(params.profId)
+					.defineProfId(params.prof.value)
 			);
 		} catch (err) {
 			console.log(err);

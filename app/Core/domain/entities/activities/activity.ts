@@ -1,14 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import { AppointmentStatus, PaymentStatus } from "App/Helpers";
-import Client from "App/Models/Client";
-import HealthInsurance from "App/Models/HealthInsurance";
-import Procedure from "App/Models/Procedure";
+import { AppointmentStatus } from "App/Helpers";
 import ScheduleBlock from "App/Models/ScheduleBlock";
 import User from "App/Models/User";
 import areRangesIntersecting from "App/utils/are-ranges-intersecting";
-import { IActivity } from "Types/IActivity";
+import { Client, IActivity, Procedure, Prof } from "Types/IActivity";
 import { IScheduleBlock } from "Types/IScheduleBlock";
 import { IUser } from "Types/IUser";
 import { getDay, isAfter, isSameDay, startOfYesterday } from "date-fns";
@@ -89,39 +86,37 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 	}
 
 	public static async build(params: {
-		activityId?: string;
-		unity_id: string;
-		profId: string;
-		clientId: string;
-		procedures: {
-			procedureId: string;
-			healthInsuranceId: string;
-			val: string;
-		}[];
-		date: string;
-		hourStart: string;
-		hourEnd: string;
+		prof: Prof;
+		client: Client;
 		scheduled?: AppointmentStatus;
+		procedures: Procedure[];
 		obs?: string;
+		hour_start: string;
+		hour_end: string;
+		date: string;
 	}): PromiseEither<AbstractError, ActivityEntity> {
 		try {
-			const profData = (await User.findById(params.profId)) as IUser;
+			const profData = (await User.findById(params.prof.value)) as IUser;
 			if (!profData)
 				return left(new AbstractError("Could not find prof", 404));
 
-			const scheduleBlocks = (await ScheduleBlock.find({
-				"prof.value": params.profId,
+			const scheduleBlocksData = (await ScheduleBlock.find({
+				"prof.value": params.prof.value,
 			})) as IScheduleBlock[];
 
-			const profSchedule = scheduleBlocks.filter(
-				({ date }) => {
-					return isSameDay(new Date(params.date), new Date(date));
-				}
-			);
+			const scheduleBlocks = scheduleBlocksData.filter(({ date }) => {
+				return isSameDay(new Date(params.date), new Date(date));
+			});
 
 			z.object({
-				profId: z.string(),
-				clientId: z.string(),
+				prof: z.object({
+					value: z.string(),
+					label: z.string(),
+				}),
+				client: z.object({
+					value: z.string(),
+					label: z.string(),
+				}),
 				date: z
 					.string()
 					.refine((val) => isAfter(new Date(val), startOfYesterday()))
@@ -140,25 +135,24 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 						}
 						return true;
 					}),
-				hourStart: z.string(),
-				hourEnd: z.string(),
+				hour_start: z.string(),
+				hour_end: z.string(),
 				procedures: z.array(
 					z.object({
-						procedureId: z.string(),
-						healthInsuranceId: z.string(),
-						val: z.string().regex(/\d{0,2}(\,\d{1,2})?/),
+						value: z.string(),
+						label: z.string(),
 					})
 				),
 				obs: z.string().optional(),
 			})
-				.refine(({ hourStart, hourEnd }) => {
-					for (const { hour_end, hour_start } of profSchedule) {
+				.refine(({ hour_start, hour_end }) => {
+					for (const sb of scheduleBlocks) {
 						if (
 							areRangesIntersecting({
-								range1Start: new Date(hourStart),
-								range1End: new Date(hourEnd),
-								range2Start: new Date(hour_start),
-								range2End: new Date(hour_end),
+								range1Start: new Date(hour_start),
+								range1End: new Date(hour_end),
+								range2Start: new Date(sb.hour_start),
+								range2End: new Date(sb.hour_end),
 							})
 						) {
 							return false;
@@ -168,68 +162,23 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 				})
 				.parse(params);
 
-			const procedures = await Promise.all(
-				params.procedures.map(async (procedure) => {
-					const { procedureId, healthInsuranceId, val } = procedure;
-					const procedureData = await Procedure.findById(procedureId);
-					const healthInsuranceData = await HealthInsurance.findById(
-						healthInsuranceId
-					);
-					if (!procedureData || !healthInsuranceData)
-						throw new AbstractError("Error creating activity", 500);
-					const healthInsurancePrice =
-						procedureData.health_insurance.find(
-							(i) => i.value === healthInsuranceId
-						)?.price || "";
-					return {
-						value: procedureId,
-						label: procedureData.name,
-						color: procedureData.color,
-						minutes: procedureData.minutes,
-						val,
-						health_insurance: {
-							value: healthInsuranceId,
-							label: healthInsuranceData.name,
-							price: healthInsurancePrice,
-						},
-					};
-				})
-			);
-
-			const clientData = await Client.findById(params.clientId);
-			if (!clientData)
-				return left(new AbstractError("Could not find client", 404));
-			const client = {
-				value: params.clientId,
-				label: clientData.name,
-				celphone: clientData.celphone,
-				email: clientData.email,
-				partner: clientData.partner,
-			};
-
-			const prof = {
-				value: params.profId,
-				label: profData.name,
-			};
-
 			return right(
 				new ActivityEntity()
 					.defineDate(new Date(params.date))
-					.defineUnityId(params.unity_id)
-					.defineHourStart(params.hourStart)
-					.defineHourEnd(params.hourEnd)
-					.defineProcedures(procedures)
-					.defineClient(client)
-					.defineType("marked")
-					.defineObs(params.obs)
-					.defineProf(prof)
-					.defineActive(true)
+					.defineHourStart(params.hour_start)
+					.defineHourEnd(params.hour_end)
+					.defineProcedures(params.procedures)
 					.defineScheduled(
 						params.scheduled
 							? params.scheduled
 							: AppointmentStatus.SCHEDULED
 					)
-					.defineProfId(params.profId)
+					.defineClient(params.client)
+					.defineType("marked")
+					.defineObs(params.obs)
+					.defineProf(params.prof)
+					.defineActive(true)
+					.defineProfId(params.prof.value)
 			);
 		} catch (err) {
 			console.log(err);

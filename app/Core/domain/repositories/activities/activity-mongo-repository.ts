@@ -8,12 +8,11 @@ import Transactions from "App/Models/Transactions";
 import divideCurrency from "App/utils/divide-currency";
 import {
 	ActivityAwaitValues,
-	ActivityPayment,
 	ActivityValues,
 	IActivity,
 	IActivityAwait,
 	IActivityPending,
-	RecurrentActivityValues,
+	RecurrentActivityValues
 } from "Types/IActivity";
 import { ITransaction } from "Types/ITransaction";
 import { addMonths } from "date-fns";
@@ -240,7 +239,6 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			const activityOrErr = await ActivityEntity.build({
 				...date,
 				...values,
-				unity_id,
 			});
 			if (activityOrErr.isLeft()) {
 				return left(activityOrErr.extract());
@@ -280,10 +278,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		params: ActivityValues
 	): PromiseEither<AbstractError, IActivity> {
 		if (!unity_id) return left(new MissingParamsError("unity_id"));
-		const activityOrErr = await ActivityEntity.build({
-			...params,
-			unity_id,
-		});
+		const activityOrErr = await ActivityEntity.build(params);
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract());
 
 		const newActivity = await Activity.create(
@@ -316,7 +311,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 	async updateActivityById(
 		id: string,
-		params: ActivityValues
+		values: ActivityValues
 	): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new MissingParamsError("id"));
 		const oldActivity = await Activity.findById(id);
@@ -324,29 +319,32 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 		const hasRescheduled =
 			oldActivity.date &&
-			(oldActivity.date?.toISOString() !== params.date ||
-				oldActivity.hour_start !== params.hourStart ||
-				oldActivity.hour_end !== params.hourEnd);
+			(oldActivity.date?.toISOString() !== values.date ||
+				oldActivity.hour_start !== values.hour_start ||
+				oldActivity.hour_end !== values.hour_end);
 
 		const activityOrErr = await ActivityEntity.build({
-			...params,
-			unity_id: oldActivity.unity_id.toString(),
+			...oldActivity,
+			...values,
 			scheduled: hasRescheduled
 				? AppointmentStatus.RESCHEDULED
 				: oldActivity.scheduled,
-			activityId: id,
 		});
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract());
 
 		const updatedActivity = await Activity.findByIdAndUpdate(
 			id,
-			activityOrErr.extract().params(),
+			activityOrErr
+				.extract()
+				.defineUnityId(oldActivity.unity_id.toString())
+				.params(),
 			{
 				returnDocument: "after",
 			}
 		);
 		if (!updatedActivity)
 			return left(new AbstractError("Error updating activity", 500));
+			console.log(updatedActivity.hour_start)
 		return right(updatedActivity);
 	}
 }

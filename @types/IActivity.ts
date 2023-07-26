@@ -120,46 +120,39 @@ export interface IActivity {
 
 type DateValues = {
 	date: string;
-	hourStart: string;
-	hourEnd: string;
-};
-
-type ProcedureValues = {
-	procedureId: string;
-	healthInsuranceId: string;
-	val: string;
+	hour_start: string;
+	hour_end: string;
 };
 
 export type ActivityValues = {
-	activityId?: string;
-	profId: string;
-	clientId: string;
-	procedures: ProcedureValues[];
+	_id?: string
+	prof: Prof;
+	client: Client;
+	procedures: Procedure[];
 	obs?: string;
 } & DateValues;
 
 export type ActivityAwaitValues = {
-	activityId?: string;
-	profId: string;
-	clientId: string;
-	procedures: ProcedureValues[];
+	_id?: string
+	prof: Prof;
+	client: Client;
+	procedures: Procedure[];
 	obs?: string;
 };
 
 export type ActivityPendingValues = {
-	activityId?: string;
-	profId: string;
-	clientId: string;
-	procedures: ProcedureValues[];
+	prof: Prof;
+	client: Client;
+	procedures: Procedure[];
 	obs?: string;
 };
 
 export type RecurrentActivityValues = {
 	pending: number;
 	values: {
-		profId: string;
-		clientId: string;
-		procedures: ProcedureValues[];
+		prof: Prof;
+		client: Client;
+		procedures: Procedure[];
 		obs?: string;
 	};
 	dates: DateValues[];
