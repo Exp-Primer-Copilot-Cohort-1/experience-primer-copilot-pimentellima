@@ -70,7 +70,9 @@ class ActivityController {
 	}
 
 	async updateActivityPayment(ctx: HttpContextContract) {
-		return adaptRoute(makeUpdateActivityPaymentComposer(), ctx);
+		return adaptRoute(makeUpdateActivityPaymentComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		});
 	}
 
 	async createActivity(ctx: HttpContextContract) {
