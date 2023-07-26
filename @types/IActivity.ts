@@ -154,20 +154,6 @@ export type ActivityPendingValues = {
 	obs?: string;
 };
 
-export type PaymentValues = {
-	activityId: string;
-	bankAccountId: string;
-	costCenterId: string;
-	categoryId: string;
-	paid: boolean;
-	paymentDate: string;
-	paymentForm: string;
-	installment: boolean;
-	installmentsNumber?: number;
-	value: string;
-	description?: string;
-};
-
 export type RecurrentActivityValues = {
 	pending: number;
 	values: {

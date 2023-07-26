@@ -7,9 +7,9 @@ import {
 	IActivity,
 	IActivityAwait,
 	IActivityPending,
-	PaymentValues,
 	RecurrentActivityValues,
 } from "Types/IActivity";
+import { ITransaction } from "Types/ITransaction";
 
 export interface ActivitiesManagerInterface {
 	createActivity: (
@@ -60,7 +60,8 @@ export interface ActivitiesManagerInterface {
 	) => PromiseEither<AbstractError, IActivity>;
 	updateActivityPayment: (
 		id: string,
-		values: PaymentValues
+		unity_id: string,
+		values: ITransaction
 	) => PromiseEither<AbstractError, IActivity>;
 	deleteActivityById: (id: string) => PromiseEither<AbstractError, IActivity>;
 }

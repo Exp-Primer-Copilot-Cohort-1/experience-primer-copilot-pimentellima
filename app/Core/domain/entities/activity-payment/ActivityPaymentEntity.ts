@@ -1,30 +1,33 @@
 import { ObjectId } from "@ioc:Mongoose";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import Account from "App/Models/Account";
-import CostCenter from "App/Models/CostCenter";
-import FinancialCategory from "App/Models/FinancialCategory";
 import { ActivityPayment } from "Types/IActivity";
 import { Schema } from "mongoose";
 import * as z from "zod";
 
 export class ActivityPaymentEntity implements ActivityPayment {
-	bank: { id: string | Schema.Types.ObjectId; name: string };
-	cost_center: { id: string | ObjectId; name: string };
-	category: { id: string | ObjectId; name: string };
+	bank: { value: string | Schema.Types.ObjectId; label: string };
+	cost_center: { value: string | ObjectId; label: string };
+	category: { value: string | ObjectId; label: string };
 	value: string;
 	paymentForm: string;
-	date: string;
+	date: Date;
 	description?: string | undefined;
 	installment: boolean;
 	installments?: number;
 
-	defineBank(values: { id: string | ObjectId; name: string }) {
+	defineBank(values: {
+		value: string | Schema.Types.ObjectId;
+		label: string;
+	}) {
 		this.bank = values;
 		return this;
 	}
 
-	defineCategory(values: { id: string | ObjectId; name: string }) {
+	defineCategory(values: {
+		value: string | Schema.Types.ObjectId;
+		label: string;
+	}) {
 		this.category = values;
 		return this;
 	}
@@ -39,7 +42,7 @@ export class ActivityPaymentEntity implements ActivityPayment {
 		return this;
 	}
 
-	defineDate(value: string) {
+	defineDate(value: Date) {
 		this.date = value;
 		return this;
 	}
@@ -54,66 +57,54 @@ export class ActivityPaymentEntity implements ActivityPayment {
 		return this;
 	}
 
-	defineInstallmentsNumber(value?: number) {
+	defineInstallments(value?: number) {
 		this.installments = value;
 		return this;
 	}
 
-	defineCostCenter(value: { id: string | ObjectId; name: string }) {
+	defineCostCenter(value: {
+		value: string | Schema.Types.ObjectId;
+		label: string;
+	}) {
 		this.cost_center = value;
 		return this;
 	}
 
-	public static async build(values: {
-		activityId: string;
-		bankAccountId: string;
-		costCenterId: string;
-		categoryId: string;
-		paymentDate: string;
-		paymentForm: string;
-		installment: boolean;
-		installmentsNumber?: number;
-		value: string;
-		description?: string;
-	}): PromiseEither<AbstractError, ActivityPaymentEntity> {
+	public static async build(
+		values: ActivityPayment
+	): PromiseEither<AbstractError, ActivityPaymentEntity> {
 		try {
 			z.object({
-				bankAccountId: z.string(),
-				paymentDate: z.string(),
+				cost_center: z.object({
+					value: z.string(),
+					label: z.string(),
+				}),
+				category: z.object({
+					value: z.string(),
+					label: z.string(),
+				}),
+				bank: z.object({
+					value: z.string(),
+					label: z.string(),
+				}),
+				value: z.string(),
+				date: z.date(),
+				description: z.string().optional(),
 				paymentForm: z.string(),
 				installment: z.boolean(),
-				installmentsNumber: z.number().optional(),
-				value: z.string(),
-				description: z.string().optional(),
+				installments: z.number().optional(),
 			}).parse(values);
-
-			const bank = await Account.findById(values.bankAccountId);
-			const costCenter = await CostCenter.findById(values.costCenterId);
-			const category = await FinancialCategory.findById(
-				values.categoryId
-			);
-			if (!bank || !category || !costCenter)
-				return left(new AbstractError("Internal error", 500));
 
 			return right(
 				new ActivityPaymentEntity()
-					.defineBank({
-						id: values.bankAccountId,
-						name: bank.bank,
-					})
-					.defineCostCenter({
-						id: values.costCenterId,
-						name: costCenter.name,
-					})
-					.defineCategory({
-						id: values.categoryId,
-						name: category.name,
-					})
-					.defineDate(values.paymentDate)
+					.defineBank(values.bank)
+					.defineCostCenter(values.cost_center)
+					.defineCategory(values.category)
+					.defineDate(new Date(values.date))
 					.defineValue(values.value)
 					.definePaymentForm(values.paymentForm)
 					.defineInstallment(values.installment)
-					.defineInstallmentsNumber(values.installmentsNumber)
+					.defineInstallments(values.installments)
 					.defineDescription(values.description)
 			);
 		} catch (err) {

@@ -8,11 +8,11 @@ import Transactions from "App/Models/Transactions";
 import divideCurrency from "App/utils/divide-currency";
 import {
 	ActivityAwaitValues,
+	ActivityPayment,
 	ActivityValues,
 	IActivity,
 	IActivityAwait,
 	IActivityPending,
-	PaymentValues,
 	RecurrentActivityValues,
 } from "Types/IActivity";
 import { ITransaction } from "Types/ITransaction";
@@ -175,27 +175,30 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 	async updateActivityPayment(
 		id: string,
-		values: PaymentValues
+		unity_id: string,
+		values: ITransaction
 	): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new MissingParamsError("activity id"));
 
-		const paymentOrErr = await ActivityPaymentEntity.build(values);
+		const paymentOrErr = await ActivityPaymentEntity.build({
+			...values,
+			date: new Date(values.date),
+		});
 		if (paymentOrErr.isLeft()) return left(paymentOrErr.extract());
 
-		const numberOfIncomes = values.installmentsNumber
-			? values.installmentsNumber
-			: 1;
+		const numberOfIncomes = values.installments ? values.installments : 1;
 		let validatedTransactions: ITransaction[] = [];
 		for (let i = 0; i < numberOfIncomes; i++) {
-			const paymentDate = addMonths(new Date(values.paymentDate), i);
+			const date = addMonths(new Date(values.date), i);
 			const transactionOrErr = await TransactionEntity.build({
 				...values,
 				paid: true,
 				type: "income",
+				unity_id,
 				value: divideCurrency(values.value, numberOfIncomes),
 				installments: numberOfIncomes,
 				installmentCurrent: i + 1,
-				paymentDate,
+				date,
 			});
 			if (transactionOrErr.isLeft())
 				return left(transactionOrErr.extract());
@@ -320,9 +323,10 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		if (!oldActivity) return left(new ActivityNotFoundError());
 
 		const hasRescheduled =
-			oldActivity.date?.toISOString() !== params.date ||
-			oldActivity.hour_start !== params.hourStart ||
-			oldActivity.hour_end !== params.hourEnd;
+			oldActivity.date &&
+			(oldActivity.date?.toISOString() !== params.date ||
+				oldActivity.hour_start !== params.hourStart ||
+				oldActivity.hour_end !== params.hourEnd);
 
 		const activityOrErr = await ActivityEntity.build({
 			...params,
