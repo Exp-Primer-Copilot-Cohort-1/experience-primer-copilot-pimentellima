@@ -14,7 +14,6 @@ export class UpdatePaymentProfUseCase implements UseCase<TypeParams, IPaymentPro
 	constructor(private readonly paymentProfManager: PaymentProfManagerInterface) { }
 
 	public async execute(params: TypeParams): PromiseEither<AbstractError, IPaymentProf> {
-		console.log(params)
 
 		const paymentProfOrErr = await this.paymentProfManager.updatePaymentProfById(
 			params.paymentProf,

@@ -94,12 +94,8 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 	): PromiseEither<AbstractError, IPaymentProf> {
 		if (!id || !prof_id) return left(new MissingParamsError('id or prof_id'))
 
-		console.log('aqui', paymentProf, id, prof_id)
-
 		const _id = new ObjectId(id.toString())
 		const set = buildUpdateObject(paymentProf)
-
-		console.log(set)
 
 		const updateOrErr = await Prof.findOneAndUpdate(
 			{
