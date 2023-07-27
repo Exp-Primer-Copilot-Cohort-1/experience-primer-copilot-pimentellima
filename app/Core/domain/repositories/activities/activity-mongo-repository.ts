@@ -12,7 +12,7 @@ import {
 	IActivity,
 	IActivityAwait,
 	IActivityPending,
-	RecurrentActivityValues
+	RecurrentActivityValues,
 } from "Types/IActivity";
 import { ITransaction } from "Types/ITransaction";
 import { addMonths } from "date-fns";
@@ -280,10 +280,10 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		if (!unity_id) return left(new MissingParamsError("unity_id"));
 		const activityOrErr = await ActivityEntity.build(params);
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract());
-
 		const newActivity = await Activity.create(
 			activityOrErr.extract().defineUnityId(unity_id).params()
 		);
+
 		return right(newActivity);
 	}
 
@@ -344,7 +344,6 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		);
 		if (!updatedActivity)
 			return left(new AbstractError("Error updating activity", 500));
-			console.log(updatedActivity.hour_start)
 		return right(updatedActivity);
 	}
 }
