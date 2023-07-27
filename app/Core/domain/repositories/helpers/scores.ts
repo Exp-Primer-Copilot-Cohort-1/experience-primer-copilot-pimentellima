@@ -13,6 +13,7 @@ export async function generateScores(unity_id: ObjectId) {
 		{
 			$group: {
 				_id: '$client.value',
+				label: { $first: '$client.label' },
 				total: { $sum: 1 },
 				completed: {
 					$sum: { $cond: [{ $eq: ['$scheduled', 'completed'] }, 1, 0] },
@@ -22,6 +23,7 @@ export async function generateScores(unity_id: ObjectId) {
 		{
 			$project: {
 				_id: 1,
+				label: 1,
 				score: { $divide: ['$completed', '$total'] },
 			},
 		},

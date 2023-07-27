@@ -42,12 +42,12 @@ export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterfa
 					unity_id: id,
 				},
 			},
-			{
-				$addFields: {
-					score: { $ifNull: [{ $literal: scoreMap['$client.value'] }, 0] },
-				},
-			},
 		])
+
+		// Adiciona a pontuação de cada cliente
+		for (const activity of activities) {
+			activity.score = scoreMap[activity.client.value] || 0
+		}
 
 		return right(activities)
 	}
