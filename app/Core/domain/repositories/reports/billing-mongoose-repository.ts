@@ -110,6 +110,6 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 
 		if (!revenue) return left(new AbstractError('Err to find revenue', 400))
 
-		return right(revenue[0]?.total || 0)
+		return right(revenue[0]?.total?.toFixed(2) || 0)
 	}
 }
