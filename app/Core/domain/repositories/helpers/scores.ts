@@ -12,22 +12,17 @@ export async function generateScores(unity_id: ObjectId): Promise<Scores> {
 				type: 'marked',
 				unity_id: unity_id,
 				date: { $lte: new Date() },
-				scheduled: { $in: ['completed', 'canceled_client', 'canceled'] },
+				scheduled: { $in: ['completed', 'canceled_client'] },
 			},
 		},
 		{
 			$group: {
 				_id: '$client.value',
+				label: { $first: '$client.label' },
 				total: { $sum: 1 },
 				canceled: {
 					$sum: {
-						$cond: [
-							{
-								$eq: ['$scheduled', ['canceled_client', 'canceled']],
-							},
-							1,
-							0,
-						],
+						$cond: [{ $eq: ['$scheduled', 'canceled_client'] }, 1, 0],
 					},
 				},
 			},
@@ -35,20 +30,21 @@ export async function generateScores(unity_id: ObjectId): Promise<Scores> {
 		{
 			$project: {
 				_id: 1,
+				label: 1,
 				score: {
-					$round: [
+					$subtract: [
+						100,
 						{
-							$subtract: [
-								100,
+							$round: [
 								{
 									$multiply: [
 										{ $divide: ['$canceled', '$total'] },
 										100,
 									],
 								},
+								2,
 							],
 						},
-						2,
 					],
 				},
 			},
