@@ -7,7 +7,7 @@ import Activity from "App/Models/Activity";
 import Procedure from "App/Models/Procedure";
 import Stock from "App/Models/Stock";
 import { IActivity } from "Types/IActivity";
-import { ActivityNotFoundError } from "../../errors/activity-not-found";
+import { IStock } from "Types/IStock";
 
 type Props = {
 	id: string;
@@ -33,14 +33,10 @@ export class UpdateActivityStatusByIdUseCase
 		if (updatedActivityOrErr.isLeft())
 			return left(updatedActivityOrErr.extract());
 
-		if (
-			updatedActivityOrErr.extract().scheduled ===
-			AppointmentStatus.COMPLETED
-		) {
-			const activity = await Activity.findById(params.id);
-			if (!activity) return left(new ActivityNotFoundError());
+		if (params.status === AppointmentStatus.COMPLETED) {
+			const activity = await Activity.findById(params.id)
+			if(!activity) return left(new AbstractError('', 500))
 			const stocksData = await Stock.find();
-
 			const proceduresData = await Procedure.find({
 				_id: {
 					$in: activity.procedures.map((p) => p.value),
@@ -55,9 +51,12 @@ export class UpdateActivityStatusByIdUseCase
 				if (!products) return;
 				products.forEach((product) => {
 					const productData = stocksData.find(
-						(p) => p._id.toString() === product.value
+						(stock) =>
+							stock._id.toString() === product.value.toString()
 					);
+
 					if (!productData?.stock_automatic) return;
+
 					if (productsWithQuantities[product.value]) {
 						productsWithQuantities[product.value] +=
 							product.quantity;
@@ -67,18 +66,40 @@ export class UpdateActivityStatusByIdUseCase
 				});
 			});
 
-			Object.keys(productsWithQuantities).forEach(async (key) => {
-				await Stock.findByIdAndUpdate(
-					{ _id: key },
-					{
-						$inc: { quantity: -productsWithQuantities[key] },
-					},
-					{
-						new: true,
-						returnDocument: "after",
-					}
-				);
-			});
+			await Promise.all(
+				Object.keys(productsWithQuantities).map(async (key) => {
+					const stock: IStock | undefined = stocksData
+						.find((stock) => stock._id.toString() === key)
+						?.toObject();
+					if (!stock?.batches.length) return;
+					let quantityLeft = productsWithQuantities[key];
+					const batches: IStock["batches"] = [];
+					stock.batches.forEach((batch) => {
+						if (quantityLeft === 0) {
+							batches.push(batch);
+						} else if (quantityLeft < batch.quantity) {
+							batches.push({
+								...batch,
+								quantity: batch.quantity - quantityLeft,
+							});
+							quantityLeft = 0;
+						} else if (quantityLeft >= batch.quantity) {
+							quantityLeft = quantityLeft - batch.quantity;
+						}
+					});
+
+					await Stock.findByIdAndUpdate(
+						key,
+						{
+							$set: { batches },
+						},
+						{
+							new: true,
+							returnDocument: "after",
+						}
+					);
+				})
+			);
 		}
 
 		return right(updatedActivityOrErr.extract());
