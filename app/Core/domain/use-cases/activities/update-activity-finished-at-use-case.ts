@@ -6,6 +6,7 @@ import Activity from "App/Models/Activity";
 import Procedure from "App/Models/Procedure";
 import Stock from "App/Models/Stock";
 import { IActivity } from "Types/IActivity";
+import { IStock } from "Types/IStock";
 import { ActivityNotFoundError } from "../../errors/activity-not-found";
 
 type Props = {
@@ -26,6 +27,7 @@ export class UpdateActivityFinishedAtUseCase
 		const activity = await Activity.findById(params.id);
 		if (!activity) return left(new ActivityNotFoundError());
 
+		if (!activity) return left(new AbstractError("", 500));
 		const stocksData = await Stock.find();
 		const proceduresData = await Procedure.find({
 			_id: {
@@ -41,8 +43,9 @@ export class UpdateActivityFinishedAtUseCase
 			if (!products) return;
 			products.forEach((product) => {
 				const productData = stocksData.find(
-					(p) => p._id.toString() === product.value
+					(stock) => stock._id.toString() === product.value.toString()
 				);
+
 				if (!productData?.stock_automatic) return;
 
 				if (productsWithQuantities[product.value]) {
@@ -51,18 +54,40 @@ export class UpdateActivityFinishedAtUseCase
 			});
 		});
 
-		Object.keys(productsWithQuantities).forEach(async (key) => {
-			await Stock.findByIdAndUpdate(
-				{ _id: key },
-				{
-					$inc: { quantity: -productsWithQuantities[key] },
-				},
-				{
-					new: true,
-					returnDocument: "after",
-				}
-			);
-		});
+		await Promise.all(
+			Object.keys(productsWithQuantities).map(async (key) => {
+				const stock: IStock | undefined = stocksData
+					.find((stock) => stock._id.toString() === key)
+					?.toObject();
+				if (!stock?.batches.length) return;
+				let quantityLeft = productsWithQuantities[key];
+				const batches: IStock["batches"] = [];
+				stock.batches.forEach((batch) => {
+					if (quantityLeft === 0) {
+						batches.push(batch);
+					} else if (quantityLeft < batch.quantity) {
+						batches.push({
+							...batch,
+							quantity: batch.quantity - quantityLeft,
+						});
+						quantityLeft = 0;
+					} else if (quantityLeft >= batch.quantity) {
+						quantityLeft = quantityLeft - batch.quantity;
+					}
+				});
+
+				await Stock.findByIdAndUpdate(
+					key,
+					{
+						$set: { batches },
+					},
+					{
+						new: true,
+						returnDocument: "after",
+					}
+				);
+			})
+		);
 
 		const updatedActivityOrErr =
 			await this.activitiesManager.updateActivityFinishedAt(

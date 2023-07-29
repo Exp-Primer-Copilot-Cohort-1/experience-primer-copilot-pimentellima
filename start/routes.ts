@@ -121,16 +121,12 @@ Route.group(() => {
 	}).prefix('schedule-block')
 
 	Route.group(() => {
-		Route.put(':id', 'AdonnisLegadoController.bridge').as('stock.update')
-		Route.put('update/:id', 'AdonnisLegadoController.bridge').as('stock.update.id')
-	}).prefix('stock')
-
-	Route.group(() => {
 		Route.get('', 'StocksController.index').as('stocks.index')
 		Route.get(':id', 'StocksController.show').as('stocks.show')
 		Route.delete(':id', 'StocksController.destroy').as('stocks.destroy')
 		Route.post('', 'StocksController.store').as('stocks.store')
 		Route.put(':id', 'StocksController.update').as('stocks.update')
+		Route.put('/active/:id', 'StocksController.updateActive').as('stocks.updateActive')
 	}).prefix('stocks')
 
 	Route.group(() => {
