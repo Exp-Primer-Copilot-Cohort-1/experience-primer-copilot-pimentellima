@@ -1,9 +1,9 @@
-import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { TransactionEntity } from "App/Core/domain/entities/transaction/TransactionEntity"
-import Transaction from 'App/Models/Transactions'
-import divideCurrencyByInteger from "App/utils/divide-currency"
-import { ITransaction } from 'Types/ITransaction'
-import { addMonths } from 'date-fns'
+import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
+import { TransactionEntity } from "App/Core/domain/entities/transaction/TransactionEntity";
+import { left } from "App/Core/shared";
+import Transaction from "App/Models/Transactions";
+import { ITransaction } from "Types/ITransaction";
+import { addMonths } from "date-fns";
 
 class TransactionsController {
 	async index({ auth, request }: HttpContextContract) {
@@ -43,21 +43,32 @@ class TransactionsController {
 
 	async store({ request, auth }: HttpContextContract) {
 		const userLogged = auth.user;
-		const data = request.all() as ITransaction;
+		if (!userLogged) throw Error();
+		const data = request.all() as Omit<ITransaction, "value"> & {
+			value: string;
+		};
 
-		const numberOfIncomes = data.installments ? data.installments : 1;
+		const numberOfTransactions = data.installments ? data.installments : 1;
 		let validatedTransactions: ITransaction[] = [];
-		for (let i = 0; i < numberOfIncomes; i++) {
-			const date = addMonths(new Date(data.date), i);
+
+		for (
+			let currentTransaction = 0;
+			currentTransaction < numberOfTransactions;
+			currentTransaction++
+		) {
+			const date = addMonths(new Date(data.date), currentTransaction);
 			const transactionOrErr = await TransactionEntity.build({
 				...data,
-				unity_id: userLogged?.unity_id.toString(),
-				value: divideCurrencyByInteger(data.value, numberOfIncomes),
-				installments: numberOfIncomes,
-				installmentCurrent: i + 1,
+				unity_id: userLogged.unity_id.toString(),
+				value:
+					parseFloat(data.value.replace(",", ".")) /
+					numberOfTransactions,
+				installments: numberOfTransactions,
+				installmentCurrent: currentTransaction + 1,
 				date,
 			});
-			if (transactionOrErr.isLeft()) return transactionOrErr.extract();
+			if (transactionOrErr.isLeft())
+				return left(transactionOrErr.extract());
 			else validatedTransactions.push(transactionOrErr.extract());
 		}
 
@@ -66,15 +77,25 @@ class TransactionsController {
 				Transaction.create(transaction)
 			)
 		);
-		return transactions[0]
+		return transactions[0];
 	}
 
-	async update({ params, request }: HttpContextContract) {
-		const data = request.all() as ITransaction;
+	async update({ params, request, auth }: HttpContextContract) {
+		const userLogged = auth.user;
+		if (!userLogged) throw Error();
+		const data = request.all() as Omit<ITransaction, "value"> & {
+			value: string;
+		};
+
+		const transactionOrErr = await TransactionEntity.build({
+			...data,
+			unity_id: userLogged.unity_id.toString(),
+			value: parseFloat(data.value.replace(",", ".")),
+		});
 
 		const transaction = await Transaction.findByIdAndUpdate(
 			params.id,
-			data,
+			transactionOrErr.extract(),
 			{
 				new: true,
 			}

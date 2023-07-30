@@ -61,7 +61,7 @@ export interface ActivitiesManagerInterface {
 	updateActivityPayment: (
 		id: string,
 		unity_id: string,
-		values: ITransaction
+		values: Omit<ITransaction, "value"> & { value: string }
 	) => PromiseEither<AbstractError, IActivity>;
 	deleteActivityById: (id: string) => PromiseEither<AbstractError, IActivity>;
 }
