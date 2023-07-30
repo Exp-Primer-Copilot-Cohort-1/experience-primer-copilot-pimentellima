@@ -2,6 +2,8 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, right } from 'App/Core/shared'
 import Activity from 'App/Models/Activity'
 import {
+	ICensusActivitiesByDays,
+	ICensusActivitiesByProf,
 	ICensusCountHealthInsurances,
 	ICensusCountPartners,
 	ICensusCountProcedure,
@@ -10,24 +12,9 @@ import {
 	ICensusNewAndOldClients,
 	ICensusScheduledEvent,
 } from 'Types/ICensus'
-import { Types } from 'mongoose'
 import { CensusUnitiesManagerInterface } from '../interface/census-manager.interface'
 
-const ObjectId = Types.ObjectId
-
-const generateMatch = ({ date_start, date_end, unity_id, prof_id }) => {
-	const match = {
-		date: {
-			$gte: new Date(date_start),
-			$lte: new Date(date_end),
-		},
-		unity_id: new ObjectId(unity_id),
-	}
-
-	if (prof_id) match['prof_id'] = new ObjectId(prof_id)
-
-	return match
-}
+import generateMatch from './generate-match-census'
 
 export class CensusMongooseRepository implements CensusUnitiesManagerInterface {
 	async findCensusActivitiesByUnityOrProf(
@@ -388,5 +375,105 @@ export class CensusMongooseRepository implements CensusUnitiesManagerInterface {
 				old: 0,
 			}) as ICensusNewAndOldClients,
 		)
+	}
+
+	async findActivitiesByDaysByUnityOrProf(
+		unity_id: string,
+		date_start: string,
+		date_end: string,
+		prof_id?: string | undefined,
+	): PromiseEither<AbstractError, ICensusActivitiesByDays> {
+		const match = generateMatch({
+			date_start,
+			date_end,
+			unity_id: unity_id.toString(),
+			prof_id,
+		})
+
+		const pipeline = [
+			{
+				$match: match,
+			},
+			{
+				$group: {
+					_id: {
+						date: { $dateToString: { format: '%Y-%m-%d', date: '$date' } },
+						scheduled: '$scheduled',
+					},
+					count: { $sum: 1 },
+				},
+			},
+			{
+				$group: {
+					_id: '$_id.date',
+					scheduledCounts: {
+						$push: {
+							scheduled: '$_id.scheduled',
+							count: '$count',
+						},
+					},
+				},
+			},
+			{
+				$project: {
+					_id: 0,
+					date: '$_id',
+					scheduledCounts: 1,
+				},
+			},
+		]
+
+		const activities = await Activity.aggregate(pipeline)
+
+		return right(
+			activities?.reduce((acc, curr) => ({ ...acc, [curr._id]: curr.count }), {
+				0: 0,
+				1: 0,
+				2: 0,
+				3: 0,
+				4: 0,
+				5: 0,
+				6: 0,
+			}) as ICensusActivitiesByDays,
+		)
+	}
+
+	async findActivitiesByProfByUnity(
+		unity_id: string,
+		date_start: string,
+		date_end: string,
+		prof_id: string | undefined,
+	): PromiseEither<AbstractError, ICensusActivitiesByProf[]> {
+		const match = generateMatch({
+			date_start,
+			date_end,
+			unity_id: unity_id.toString(),
+			prof_id,
+		})
+
+		const pipeline = [
+			{
+				$match: match,
+			},
+			{
+				$group: {
+					_id: '$prof.value',
+					label: { $first: '$prof.label' },
+					count: { $sum: 1 },
+				},
+			},
+			{
+				$project: {
+					_id: 0,
+					label: 1,
+					value: '$_id',
+					count: 1,
+				},
+			},
+		]
+
+		const activities = await Activity.aggregate(pipeline)
+
+		return right(activities)
 	}
 }

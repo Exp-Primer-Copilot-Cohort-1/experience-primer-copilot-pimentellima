@@ -126,7 +126,9 @@ Route.group(() => {
 		Route.delete(':id', 'StocksController.destroy').as('stocks.destroy')
 		Route.post('', 'StocksController.store').as('stocks.store')
 		Route.put(':id', 'StocksController.update').as('stocks.update')
-		Route.put('/active/:id', 'StocksController.updateActive').as('stocks.updateActive')
+		Route.put('/active/:id', 'StocksController.updateActive').as(
+			'stocks.updateActive',
+		)
 	}).prefix('stocks')
 
 	Route.group(() => {
@@ -460,5 +462,8 @@ Route.group(() => {
 		)
 	}).prefix('revenues')
 
-	Route.get('census', 'CensusController.index').as('census.index')
+	Route.group(() => {
+		Route.get('', 'CensusController.index').as('census.index')
+		Route.get('payments', 'CensusController.indexPayments').as('census.payments')
+	}).prefix('census')
 }).middleware(['auth', 'role'])

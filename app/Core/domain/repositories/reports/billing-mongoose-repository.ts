@@ -97,10 +97,35 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 				},
 			},
 			{
+				$addFields: {
+					convertedValue: {
+						$cond: [
+							{ $isNumber: '$value' },
+							'$value',
+							{
+								$toDouble: {
+									$replaceAll: {
+										input: {
+											$replaceAll: {
+												input: '$value',
+												find: '.',
+												replacement: '',
+											},
+										},
+										find: ',',
+										replacement: '.',
+									},
+								},
+							},
+						],
+					},
+				},
+			},
+			{
 				$group: {
 					_id: null,
 					total: {
-						$sum: '$value',
+						$sum: '$convertedValue',
 					},
 				},
 			},

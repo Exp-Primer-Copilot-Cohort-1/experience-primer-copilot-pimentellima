@@ -32,3 +32,46 @@ export type ICensusNewAndOldClients = {
 	new: number
 	old: number
 }
+
+export type ICensusActivitiesByDays = {
+	'0': number
+	'1': number
+	'2': number
+	'3': number
+	'4': number
+	'5': number
+	'6': number
+}
+
+export type ICensusActivitiesByProf = {
+	label: string
+	count: number
+	value: string
+}
+
+export type ICensusActivitiesByHealthInsurance = {
+	label: string
+	count: number
+	value: string
+	total: number
+}
+
+export type ICensusPaymentForm = {
+	count: number
+	value: string
+	total: number
+}
+
+export type ICensusPaymentByProf = {
+	label: string
+	count: number
+	value: string
+	total: number
+}
+
+export type ICensusParticipationPaymentByProf = {
+	value: string
+	label: string
+	count: number
+	total: number
+}

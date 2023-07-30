@@ -1,20 +1,23 @@
-export default function divideCurrencyByInteger(currencyValue: string, divisor: number) {
-	const numericValue = parseFloat(
-		currencyValue.replace(/[^0-9,]/g, "").replace(",", ".")
-	);
-
-	if (isNaN(numericValue)) {
-		throw new Error(
-			'Invalid currency format. Please use the BRL format (e.g., "R$ 100,00").'
-		);
+export default function divideCurrencyByInteger(
+	currencyValue: string | number,
+	divisor: number,
+): number {
+	if (typeof currencyValue === 'string') {
+		currencyValue = parseFloat(
+			currencyValue
+				.trim()
+				.replace(/[^0-9,]/g, '')
+				.replace(',', '.'),
+		)
 	}
 
-	const result = numericValue / divisor;
+	if (isNaN(currencyValue)) {
+		throw new Error(
+			'Invalid currency format. Please use the BRL format (e.g., "R$ 100,00").',
+		)
+	}
 
-	const formattedResult = result.toLocaleString("pt-BR", {
-		style: "currency",
-		currency: "BRL",
-	}).replace('R$', '').trim();
+	const result = currencyValue / divisor
 
-	return formattedResult;
+	return result
 }

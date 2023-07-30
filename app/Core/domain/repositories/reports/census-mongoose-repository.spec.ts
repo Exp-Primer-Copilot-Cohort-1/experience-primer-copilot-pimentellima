@@ -120,6 +120,7 @@ describe('Census Mongoose Repository (Integration)', () => {
 
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})
+
 	it('should be media time activities by unity and prof', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findMediaTimeAttendanceByUnityOrProf(
@@ -159,6 +160,30 @@ describe('Census Mongoose Repository (Integration)', () => {
 			'6359660fc109b232759921d4',
 			'2022-12-01',
 			'2024-07-31',
+		)
+
+		expect(resultOrErr.isRight()).toBeTruthy()
+	})
+
+	it('should be count actvities by day', async () => {
+		const { sut } = makeSut()
+		const resultOrErr = await sut.findActivitiesByDaysByUnityOrProf(
+			'6359660fc109b232759921d4',
+			'2022-12-01',
+			'2024-07-31',
+		)
+		console.log(resultOrErr)
+
+		expect(resultOrErr.isRight()).toBeTruthy()
+	})
+
+	it('should be count actvities by prof', async () => {
+		const { sut } = makeSut()
+		const resultOrErr = await sut.findActivitiesByProfByUnity(
+			'6359660fc109b232759921d4',
+			'2022-12-01',
+			'2024-07-31',
+			'6359660fc109b232759921d6', // prof id
 		)
 
 		expect(resultOrErr.isRight()).toBeTruthy()
