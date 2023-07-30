@@ -2,6 +2,7 @@ import { ObjectId } from "@ioc:Mongoose";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import { ITransaction } from "Types/ITransaction";
+import { addMonths } from "date-fns";
 import { Schema } from "mongoose";
 import * as z from "zod";
 
@@ -16,7 +17,7 @@ export class TransactionEntity implements ITransaction {
 	cost_center: { value: string | Schema.Types.ObjectId; label: string };
 	category: { value: string | Schema.Types.ObjectId; label: string };
 	paid?: boolean | undefined;
-	value: string;
+	value: number;
 	date: Date;
 	paymentForm: string;
 	description?: string | undefined;
@@ -82,7 +83,7 @@ export class TransactionEntity implements ITransaction {
 		return this;
 	}
 
-	defineValue(value: string) {
+	defineValue(value: number) {
 		this.value = value;
 		return this;
 	}
@@ -134,13 +135,15 @@ export class TransactionEntity implements ITransaction {
 						value: z.string(),
 						label: z.string(),
 					})
-					.optional(),
+					.optional()
+					.nullable(),
 				client: z
 					.object({
 						value: z.string(),
 						label: z.string(),
 					})
-					.optional(),
+					.optional()
+					.nullable(),
 				procedures: z
 					.array(
 						z.object({
@@ -148,7 +151,8 @@ export class TransactionEntity implements ITransaction {
 							label: z.string(),
 						})
 					)
-					.optional(),
+					.optional()
+					.nullable(),
 				bank: z.object({
 					value: z.string(),
 					label: z.string(),
@@ -162,7 +166,7 @@ export class TransactionEntity implements ITransaction {
 					label: z.string(),
 				}),
 				paid: z.boolean().optional(),
-				value: z.string(),
+				value: z.number(),
 				date: z.union([z.string(), z.date()]),
 				paymentForm: z.string(),
 				description: z.string().optional(),
@@ -174,7 +178,7 @@ export class TransactionEntity implements ITransaction {
 				installmentCurrent: z.number().optional(),
 				installments: z.number().optional(),
 				active: z.boolean().optional(),
-			});
+			}).parse(values);
 
 			return right(
 				new TransactionEntity()

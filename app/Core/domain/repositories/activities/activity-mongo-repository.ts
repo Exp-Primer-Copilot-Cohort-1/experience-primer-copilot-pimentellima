@@ -5,7 +5,6 @@ import Activity from "App/Models/Activity";
 import ActivityAwait from "App/Models/ActivityAwait";
 import ActivityPending from "App/Models/ActivityPending";
 import Transactions from "App/Models/Transactions";
-import divideCurrency from "App/utils/divide-currency";
 import {
 	ActivityAwaitValues,
 	ActivityValues,
@@ -15,7 +14,6 @@ import {
 	RecurrentActivityValues,
 } from "Types/IActivity";
 import { ITransaction } from "Types/ITransaction";
-import { addMonths } from "date-fns";
 import mongoose from "mongoose";
 import ActivityEntity from "../../entities/activities/activity";
 import ActivityAwaitEntity from "../../entities/activity-await/activity-await";
@@ -25,6 +23,7 @@ import { TransactionEntity } from "../../entities/transaction/TransactionEntity"
 import { ActivityNotFoundError } from "../../errors/activity-not-found";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ActivitiesManagerInterface } from "../interface/activity-manager.interface";
+import { addMonths } from "date-fns";
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() {}
@@ -175,7 +174,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	async updateActivityPayment(
 		id: string,
 		unity_id: string,
-		values: ITransaction
+		values: Omit<ITransaction, "value"> & { value: string }
 	): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new MissingParamsError("activity id"));
 
@@ -185,18 +184,22 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		});
 		if (paymentOrErr.isLeft()) return left(paymentOrErr.extract());
 
-		const numberOfIncomes = values.installments ? values.installments : 1;
+		const numberOfTransactions = values.installments ? values.installments : 1;
 		let validatedTransactions: ITransaction[] = [];
-		for (let i = 0; i < numberOfIncomes; i++) {
-			const date = addMonths(new Date(values.date), i);
+
+		for (
+			let currentTransaction = 0;
+			currentTransaction < numberOfTransactions;
+			currentTransaction++
+		) {
+			const date = addMonths(new Date(values.date), currentTransaction);
 			const transactionOrErr = await TransactionEntity.build({
 				...values,
-				paid: true,
-				type: "income",
 				unity_id,
-				value: divideCurrency(values.value, numberOfIncomes),
-				installments: numberOfIncomes,
-				installmentCurrent: i + 1,
+				value:
+					parseFloat(values.value.replace(",", ".")) / numberOfTransactions,
+				installments: numberOfTransactions,
+				installmentCurrent: currentTransaction + 1,
 				date,
 			});
 			if (transactionOrErr.isLeft())
