@@ -11,6 +11,7 @@ import {
 	ICensusParticipationPaymentByProf,
 	ICensusPaymentByProf,
 	ICensusPaymentForm,
+	ICensusRevenuesOfYearByUnityByProf,
 	ICensusScheduledEvent,
 } from 'Types/ICensus'
 
@@ -32,4 +33,5 @@ export type ICensusPayments = {
 	payment_by_partners: ICensusPaymentByProf[]
 	payment_participation_by_prof: ICensusParticipationPaymentByProf[]
 	payment_form: ICensusPaymentForm[]
+	revenues_activities: ICensusRevenuesOfYearByUnityByProf
 }

@@ -40,6 +40,12 @@ export type ICensusActivitiesByDays = {
 	dayOfWeek: number
 }
 
+export type ICensusActivitiesByDaysOfMonth = {
+	scheduled: AppointmentStatus
+	count: number
+	day: Date
+}
+
 export type ICensusActivitiesByProf = {
 	label: string
 	count: number
@@ -72,3 +78,18 @@ export type ICensusParticipationPaymentByProf = {
 	count: number
 	total: number
 }
+
+export type ICensusRevenuesOfYearByUnityByProf = [
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+]

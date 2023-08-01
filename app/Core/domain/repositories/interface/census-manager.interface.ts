@@ -2,6 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared'
 import {
 	ICensusActivitiesByDays,
+	ICensusActivitiesByDaysOfMonth,
 	ICensusActivitiesByHealthInsurance,
 	ICensusActivitiesByProf,
 	ICensusCountHealthInsurances,
@@ -13,6 +14,7 @@ import {
 	ICensusParticipationPaymentByProf,
 	ICensusPaymentByProf,
 	ICensusPaymentForm,
+	ICensusPaymentsByActityByMonthByUnityByProf,
 	ICensusScheduledEvent,
 } from 'Types/ICensus'
 
@@ -70,6 +72,13 @@ export interface CensusUnitiesManagerInterface {
 		prof_id?: string,
 	) => PromiseEither<AbstractError, ICensusActivitiesByDays[]>
 
+	findActivitiesByDaysOfMonthByUnityOrProf: (
+		unity_id: string,
+		date_start: string,
+		date_end: string,
+		prof_id?: string,
+	) => PromiseEither<AbstractError, ICensusActivitiesByDaysOfMonth[]>
+
 	findActivitiesByProfByUnity: (
 		unity_id: string,
 		date_start: string,
@@ -113,4 +122,11 @@ export interface CensusPaymentsManagerInterface {
 		date_end: string,
 		prof_id?: string,
 	) => PromiseEither<AbstractError, ICensusParticipationPaymentByProf[]>
+
+	findRevenuesActivitiesByUnityByProf: (
+		unity_id: string,
+		date_start: string,
+		date_end: string,
+		prof_id?: string,
+	) => PromiseEither<AbstractError, ICensusPaymentsByActityByMonthByUnityByProf>
 }

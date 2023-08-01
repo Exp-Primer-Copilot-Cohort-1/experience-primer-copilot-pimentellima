@@ -54,6 +54,7 @@ export class PaymentsCensusByDateUseCase
 			paymentsParticipationProfOrErr,
 			count_by_daysOrErr,
 			count_by_activity_by_profOrErr,
+			revenues_activitiesOrErr,
 		] = await Promise.all([
 			this.manager.findPaymentsByForm(unity_id, date_start, date_end, prof_id),
 			this.manager.findPaymentsByHealthInsurance(
@@ -82,6 +83,12 @@ export class PaymentsCensusByDateUseCase
 				date_end,
 				prof_id,
 			),
+			this.manager.findRevenuesActivitiesByUnityByProf(
+				unity_id,
+				date_start,
+				date_end,
+				prof_id,
+			),
 		])
 
 		if (
@@ -91,7 +98,8 @@ export class PaymentsCensusByDateUseCase
 			paymentsProfOrErr.isLeft() ||
 			paymentsParticipationProfOrErr.isLeft() ||
 			count_by_daysOrErr.isLeft() ||
-			count_by_activity_by_profOrErr.isLeft()
+			count_by_activity_by_profOrErr.isLeft() ||
+			revenues_activitiesOrErr.isLeft()
 		) {
 			return left(
 				new AbstractError('Error on find census activities by unity', 400),
@@ -105,6 +113,7 @@ export class PaymentsCensusByDateUseCase
 		const payment_participation_by_prof = paymentsParticipationProfOrErr.extract()
 		const count_by_days = count_by_daysOrErr.extract()
 		const count_by_activity_by_prof = count_by_activity_by_profOrErr.extract()
+		const revenues_activities = revenues_activitiesOrErr.extract()
 
 		return right({
 			count_by_activity_by_prof,
@@ -114,6 +123,7 @@ export class PaymentsCensusByDateUseCase
 			payment_form,
 			payment_participation_by_prof,
 			payment_by_partners,
+			revenues_activities,
 		})
 	}
 }
