@@ -21,7 +21,6 @@ describe('Activity Await Mongoose Repository (Integration)', () => {
 	it('should be find census activities by unity', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findAllActivities('6359660fc109b232759921d4')
-		console.log(resultOrErr)
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})
 })

@@ -106,16 +106,6 @@ export class PaymentsCensusByDateUseCase
 		const count_by_days = count_by_daysOrErr.extract()
 		const count_by_activity_by_prof = count_by_activity_by_profOrErr.extract()
 
-		console.log({
-			count_by_activity_by_prof,
-			count_by_days,
-			payments_by_health_insurances,
-			payment_by_prof,
-			payment_form,
-			payment_participation_by_prof,
-			payment_by_partners,
-		})
-
 		return right({
 			count_by_activity_by_prof,
 			count_by_days,

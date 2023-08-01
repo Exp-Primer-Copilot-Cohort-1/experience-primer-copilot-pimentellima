@@ -382,7 +382,7 @@ export class CensusMongooseRepository implements CensusUnitiesManagerInterface {
 		date_start: string,
 		date_end: string,
 		prof_id?: string | undefined,
-	): PromiseEither<AbstractError, ICensusActivitiesByDays> {
+	): PromiseEither<AbstractError, ICensusActivitiesByDays[]> {
 		const match = generateMatch({
 			date_start,
 			date_end,
@@ -397,7 +397,7 @@ export class CensusMongooseRepository implements CensusUnitiesManagerInterface {
 			{
 				$group: {
 					_id: {
-						date: { $dateToString: { format: '%Y-%m-%d', date: '$date' } },
+						dayOfWeek: { $dayOfWeek: '$date' },
 						scheduled: '$scheduled',
 					},
 					count: { $sum: 1 },
@@ -405,7 +405,7 @@ export class CensusMongooseRepository implements CensusUnitiesManagerInterface {
 			},
 			{
 				$group: {
-					_id: '$_id.date',
+					_id: '$_id.dayOfWeek',
 					scheduledCounts: {
 						$push: {
 							scheduled: '$_id.scheduled',
@@ -417,7 +417,7 @@ export class CensusMongooseRepository implements CensusUnitiesManagerInterface {
 			{
 				$project: {
 					_id: 0,
-					date: '$_id',
+					dayOfWeek: '$_id',
 					scheduledCounts: 1,
 				},
 			},
@@ -425,17 +425,9 @@ export class CensusMongooseRepository implements CensusUnitiesManagerInterface {
 
 		const activities = await Activity.aggregate(pipeline)
 
-		return right(
-			activities?.reduce((acc, curr) => ({ ...acc, [curr._id]: curr.count }), {
-				0: 0,
-				1: 0,
-				2: 0,
-				3: 0,
-				4: 0,
-				5: 0,
-				6: 0,
-			}) as ICensusActivitiesByDays,
-		)
+		console.log(activities)
+
+		return right(activities)
 	}
 
 	async findActivitiesByProfByUnity(

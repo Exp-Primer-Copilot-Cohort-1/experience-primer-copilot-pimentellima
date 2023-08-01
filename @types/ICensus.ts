@@ -1,3 +1,5 @@
+import { AppointmentStatus } from 'App/Helpers'
+
 type GenericCount = {
 	label: string
 	count: number
@@ -34,13 +36,8 @@ export type ICensusNewAndOldClients = {
 }
 
 export type ICensusActivitiesByDays = {
-	'0': number
-	'1': number
-	'2': number
-	'3': number
-	'4': number
-	'5': number
-	'6': number
+	scheduledCounts: { scheduled: AppointmentStatus; count: number }[]
+	dayOfWeek: number
 }
 
 export type ICensusActivitiesByProf = {

@@ -68,7 +68,7 @@ export interface CensusUnitiesManagerInterface {
 		date_start: string,
 		date_end: string,
 		prof_id?: string,
-	) => PromiseEither<AbstractError, ICensusActivitiesByDays>
+	) => PromiseEither<AbstractError, ICensusActivitiesByDays[]>
 
 	findActivitiesByProfByUnity: (
 		unity_id: string,

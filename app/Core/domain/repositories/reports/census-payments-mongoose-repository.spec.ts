@@ -61,6 +61,8 @@ describe('Census Payments Mongoose Repository (Integration)', () => {
 			'2024-01-31', // date end
 		)
 
+		console.log(resultOrErr.extract())
+
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})
 

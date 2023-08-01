@@ -172,7 +172,6 @@ describe('Census Mongoose Repository (Integration)', () => {
 			'2022-12-01',
 			'2024-07-31',
 		)
-		console.log(resultOrErr)
 
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})

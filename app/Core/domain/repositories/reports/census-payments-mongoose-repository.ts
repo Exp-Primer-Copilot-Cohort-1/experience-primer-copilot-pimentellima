@@ -225,11 +225,14 @@ export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerIn
 				},
 			},
 			{
+				$unwind: '$procedures',
+			},
+			{
 				$addFields: {
 					price: {
 						$toDouble: {
 							$replaceAll: {
-								input: '$payment.value',
+								input: '$procedures.val',
 								find: ',',
 								replacement: '.',
 							},
@@ -239,7 +242,11 @@ export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerIn
 			},
 			{
 				$group: {
-					_id: { $toObjectId: '$prof.value' },
+					_id: {
+						prof: '$prof.value',
+						procedure: '$procedures.value',
+					},
+					procedureLabel: { $first: '$procedures.label' },
 					label: { $first: '$prof.label' },
 					count: { $sum: 1 }, // Contando o número de procedimentos por parceiro
 					total: { $sum: '$price' }, // Somando o valor dos procedimentos por parceiro
@@ -248,8 +255,8 @@ export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerIn
 			{
 				$project: {
 					_id: 0, // Não inclui o campo _id no resultado
-					value: '$_id', // Renomeia _id para value
-					label: 1, // Inclui o campo label no resultado
+					name: '$label',
+					procedure: '$procedureLabel',
 					count: 1, // Inclui o campo count no resultado
 					total: 1, // Inclui o campo total no resultado
 				},
