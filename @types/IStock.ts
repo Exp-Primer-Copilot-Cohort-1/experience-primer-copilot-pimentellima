@@ -4,19 +4,20 @@ export interface IStock extends Document {
     _id: ObjectId;
     name: string;
     batches: {
-        name: string,
+        name?: string,
+        date_batch?: Date;
         quantity: number;
         minimum_quantity: number
-        date_batch: Date;
         price_cost: string;
         price_final: string;
     }[]
+    single_lot: boolean
     stock_automatic: boolean;
     active: boolean;
     unity_id: ObjectId;
     created_at: Date;
     updated_at: Date;
-}
+} 
 
 export type StockValues = {
     name: string;

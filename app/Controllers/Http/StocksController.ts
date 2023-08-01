@@ -2,6 +2,49 @@ import Stock from "App/Models/Stock";
 import { isBefore, isSameDay } from "date-fns";
 import { z } from "zod";
 
+function sortBatchesByDate(
+	a: string | undefined,
+	b: string | undefined
+): number {
+	if (typeof a === "undefined") return 1;
+	if (typeof b === "undefined") return -1;
+	if (isBefore(new Date(a), new Date(b))) return -1;
+	if (isSameDay(new Date(a), new Date(b))) return 0;
+	else return 1;
+}
+
+const stockSchema = z
+	.object({
+		name: z.string(),
+		batches: z
+			.array(
+				z.object({
+					name: z.string().optional(),
+					quantity: z.number(),
+					minimum_quantity: z.number(),
+					date_batch: z.string().optional(),
+					price_cost: z.string(),
+					price_final: z.string(),
+				})
+			)
+			.transform((arr) =>
+				arr.sort((a, b) =>
+					sortBatchesByDate(a.date_batch, b.date_batch)
+				)
+			),
+		single_lot: z.boolean(),
+		stock_automatic: z.boolean(),
+	})
+	.refine((schema) => {
+		if(schema.single_lot && schema.batches.length !== 1) return false
+		if (schema.single_lot) return true;
+		for (let i = 0; i < schema.batches.length; i++) {
+			const batch = schema.batches[i];
+			if (!batch.date_batch || !batch.name) return false;
+		}
+		return true;
+	});
+
 class StocksController {
 	async index({ auth, request }) {
 		const params = request.qs();
@@ -27,40 +70,7 @@ class StocksController {
 		const userLogged = auth.user;
 		const data = request.all();
 
-		const parsedData = z.object({
-			name: z.string(),
-			batches: z
-				.array(
-					z.object({
-						name: z.string(),
-						quantity: z.number(),
-						minimum_quantity: z.number(),
-						date_batch: z.string(),
-						price_cost: z.string(),
-						price_final: z.string(),
-					})
-				)
-				.transform((arr) =>
-					arr.sort((a, b) => {
-						if (
-							isBefore(
-								new Date(a.date_batch),
-								new Date(b.date_batch)
-							)
-						)
-							return -1;
-						if (
-							isSameDay(
-								new Date(a.date_batch),
-								new Date(b.date_batch)
-							)
-						)
-							return 0;
-						else return 1;
-					})
-				),
-			stock_automatic: z.boolean(),
-		}).parse(data);
+		const parsedData = stockSchema.parse(data);
 
 		const stocks = await Stock.create({
 			...parsedData,
@@ -90,40 +100,7 @@ class StocksController {
 	async update({ params, request }) {
 		const data = request.all();
 
-		const parsedData = z.object({
-			name: z.string(),
-			batches: z
-				.array(
-					z.object({
-						name: z.string(),
-						quantity: z.number(),
-						minimum_quantity: z.number(),
-						date_batch: z.string(),
-						price_cost: z.string(),
-						price_final: z.string(),
-					})
-				)
-				.transform((arr) =>
-					arr.sort((a, b) => {
-						if (
-							isBefore(
-								new Date(a.date_batch),
-								new Date(b.date_batch)
-							)
-						)
-							return -1;
-						if (
-							isSameDay(
-								new Date(a.date_batch),
-								new Date(b.date_batch)
-							)
-						)
-							return 0;
-						else return 1;
-					})
-				),
-			stock_automatic: z.boolean(),
-		}).parse(data);
+		const parsedData = stockSchema.parse(data);
 
 		const stock = await Stock.findByIdAndUpdate(params.id, parsedData, {
 			new: true,
