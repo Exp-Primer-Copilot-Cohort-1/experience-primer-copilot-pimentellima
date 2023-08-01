@@ -36,6 +36,7 @@ const stockSchema = z
 		stock_automatic: z.boolean(),
 	})
 	.refine((schema) => {
+		if(schema.single_lot && schema.batches.length !== 1) return false
 		if (schema.single_lot) return true;
 		for (let i = 0; i < schema.batches.length; i++) {
 			const batch = schema.batches[i];
