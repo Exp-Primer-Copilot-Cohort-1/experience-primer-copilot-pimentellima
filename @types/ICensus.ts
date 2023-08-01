@@ -41,9 +41,8 @@ export type ICensusActivitiesByDays = {
 }
 
 export type ICensusActivitiesByDaysOfMonth = {
-	scheduled: AppointmentStatus
-	count: number
-	day: Date
+	counts: { scheduled: AppointmentStatus; count: number }[]
+	day: number
 }
 
 export type ICensusActivitiesByProf = {

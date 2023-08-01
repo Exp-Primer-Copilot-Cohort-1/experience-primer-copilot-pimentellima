@@ -1,11 +1,17 @@
-import { CensusMongooseRepository } from 'App/Core/domain/repositories'
+import {
+	CensusClientsMongooseRepository,
+	CensusMongooseRepository,
+} from 'App/Core/domain/repositories'
 import mongoose from 'mongoose'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { PopulationCensusByDateUseCase } from './population-census-use-case'
 
 const makeSut = () => {
-	const sut = new PopulationCensusByDateUseCase(new CensusMongooseRepository())
+	const sut = new PopulationCensusByDateUseCase(
+		new CensusMongooseRepository(),
+		new CensusClientsMongooseRepository(),
+	)
 	return {
 		sut,
 	}

@@ -1,36 +1,27 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared'
 import {
-	ICensusActivitiesByDays,
-	ICensusActivitiesByDaysOfMonth,
 	ICensusActivitiesByHealthInsurance,
 	ICensusActivitiesByProf,
 	ICensusCountHealthInsurances,
 	ICensusCountPartners,
 	ICensusCountProcedure,
-	ICensusGenrerClient,
 	ICensusMediaTimeAttendance,
-	ICensusNewAndOldClients,
 	ICensusParticipationPaymentByProf,
 	ICensusPaymentByProf,
 	ICensusPaymentForm,
-	ICensusPaymentsByActityByMonthByUnityByProf,
-	ICensusScheduledEvent,
+	ICensusRevenuesOfYearByUnityByProf,
+	ICensusScheduledEvent
 } from 'Types/ICensus'
 
 export interface CensusUnitiesManagerInterface {
-	findCensusActivitiesByUnityOrProf: (
+	findCensusActivitiesOfScheduledByUnityOrProf: (
 		unity_id: string,
 		date_start: string,
 		date_end: string,
 		prof_id?: string,
 	) => PromiseEither<AbstractError, ICensusScheduledEvent>
-	findCesusGenrerClientByUnityOrProf: (
-		unity_id: string,
-		date_start: string,
-		date_end: string,
-		prof_id?: string,
-	) => PromiseEither<AbstractError, ICensusGenrerClient>
+
 	findCensusProcedureByUnityOrProf: (
 		unity_id: string,
 		date_start: string,
@@ -44,13 +35,6 @@ export interface CensusUnitiesManagerInterface {
 		prof_id?: string,
 	) => PromiseEither<AbstractError, ICensusCountHealthInsurances[]>
 
-	findCensusPartnersByUnityOrProf: (
-		unity_id: string,
-		date_start: string,
-		date_end: string,
-		prof_id?: string,
-	) => PromiseEither<AbstractError, ICensusCountPartners[]>
-
 	findMediaTimeAttendanceByUnityOrProf: (
 		unity_id: string,
 		date_start: string,
@@ -58,28 +42,7 @@ export interface CensusUnitiesManagerInterface {
 		prof_id?: string,
 	) => PromiseEither<AbstractError, ICensusMediaTimeAttendance>
 
-	findNewAndOldClientsByUnityOrProf: (
-		unity_id: string,
-		date_start: string,
-		date_end: string,
-		prof_id?: string,
-	) => PromiseEither<AbstractError, ICensusNewAndOldClients>
-
-	findActivitiesByDaysByUnityOrProf: (
-		unity_id: string,
-		date_start: string,
-		date_end: string,
-		prof_id?: string,
-	) => PromiseEither<AbstractError, ICensusActivitiesByDays[]>
-
-	findActivitiesByDaysOfMonthByUnityOrProf: (
-		unity_id: string,
-		date_start: string,
-		date_end: string,
-		prof_id?: string,
-	) => PromiseEither<AbstractError, ICensusActivitiesByDaysOfMonth[]>
-
-	findActivitiesByProfByUnity: (
+	findActivitiesOfProfByProfByUnity: (
 		unity_id: string,
 		date_start: string,
 		date_end: string,
@@ -128,5 +91,5 @@ export interface CensusPaymentsManagerInterface {
 		date_start: string,
 		date_end: string,
 		prof_id?: string,
-	) => PromiseEither<AbstractError, ICensusPaymentsByActityByMonthByUnityByProf>
+	) => PromiseEither<AbstractError, ICensusRevenuesOfYearByUnityByProf>
 }

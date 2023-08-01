@@ -3,7 +3,10 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 
-import { CensusUnitiesManagerInterface } from 'App/Core/domain/repositories/interface/census-manager.interface'
+import {
+	CensusClientsManagerInterface,
+	CensusUnitiesManagerInterface,
+} from 'App/Core/domain/repositories/interface'
 import { ICensusCount } from '../../helpers/census'
 
 type PopulationCensusByDateProps = {
@@ -16,7 +19,10 @@ type PopulationCensusByDateProps = {
 export class PopulationCensusByDateUseCase
 	implements UseCase<PopulationCensusByDateProps, ICensusCount>
 {
-	constructor(private readonly manager: CensusUnitiesManagerInterface) { }
+	constructor(
+		private readonly manager: CensusUnitiesManagerInterface,
+		private readonly managerClients: CensusClientsManagerInterface,
+	) { }
 
 	public async execute({
 		unity_id,
@@ -49,7 +55,7 @@ export class PopulationCensusByDateUseCase
 			media_time_attendanceOrErr,
 			new_and_old_clientsOrErr,
 		] = await Promise.all([
-			this.manager.findCensusActivitiesByUnityOrProf(
+			this.manager.findCensusActivitiesOfScheduledByUnityOrProf(
 				unity_id,
 				date_start,
 				date_end,
@@ -61,7 +67,7 @@ export class PopulationCensusByDateUseCase
 				date_end,
 				prof_id,
 			),
-			this.manager.findCensusPartnersByUnityOrProf(
+			this.managerClients.findCensusPartnersByUnityOrProf(
 				unity_id,
 				date_start,
 				date_end,
@@ -73,7 +79,7 @@ export class PopulationCensusByDateUseCase
 				date_end,
 				prof_id,
 			),
-			this.manager.findCesusGenrerClientByUnityOrProf(
+			this.managerClients.findCesusGenrerClientByUnityOrProf(
 				unity_id,
 				date_start,
 				date_end,
@@ -85,7 +91,7 @@ export class PopulationCensusByDateUseCase
 				date_end,
 				prof_id,
 			),
-			this.manager.findNewAndOldClientsByUnityOrProf(
+			this.managerClients.findNewAndOldClientsByUnityOrProf(
 				unity_id,
 				date_start,
 				date_end,

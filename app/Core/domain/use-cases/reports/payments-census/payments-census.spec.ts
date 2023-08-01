@@ -1,4 +1,5 @@
 import {
+	CensusDaysMongooseRepository,
 	CensusMongooseRepository,
 	CensusPaymentsMongooseRepository,
 } from 'App/Core/domain/repositories'
@@ -11,6 +12,7 @@ const makeSut = () => {
 	const sut = new PaymentsCensusByDateUseCase(
 		new CensusPaymentsMongooseRepository(),
 		new CensusMongooseRepository(),
+		new CensusDaysMongooseRepository(),
 	)
 	return {
 		sut,
@@ -37,8 +39,6 @@ describe('Population Census Use Case (Integration)', () => {
 		expect(resultOrErr.isRight()).toBeTruthy()
 
 		const census = resultOrErr.extract()
-
-		console.log(census)
 
 		// Check if each attribute in the output has the expected structure
 		expect(census).toEqual(

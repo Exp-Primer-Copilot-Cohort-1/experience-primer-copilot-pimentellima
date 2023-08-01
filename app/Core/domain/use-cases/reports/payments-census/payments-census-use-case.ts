@@ -4,9 +4,10 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 
 import {
+	CensusDaysManagerInterface,
 	CensusPaymentsManagerInterface,
 	CensusUnitiesManagerInterface,
-} from 'App/Core/domain/repositories/interface/census-manager.interface'
+} from 'App/Core/domain/repositories/interface'
 import { ICensusPayments } from '../../helpers/census'
 
 type PaymentsCensusByDateProps = {
@@ -22,6 +23,7 @@ export class PaymentsCensusByDateUseCase
 	constructor(
 		private readonly manager: CensusPaymentsManagerInterface,
 		private readonly count: CensusUnitiesManagerInterface,
+		private readonly managerDays: CensusDaysManagerInterface,
 	) { }
 
 	public async execute({
@@ -71,13 +73,13 @@ export class PaymentsCensusByDateUseCase
 				date_end,
 				prof_id,
 			),
-			this.count.findActivitiesByDaysByUnityOrProf(
+			this.managerDays.findActivitiesByDaysOfMonthByUnityOrProf(
 				unity_id,
 				date_start,
 				date_end,
 				prof_id,
 			),
-			this.count.findActivitiesByProfByUnity(
+			this.count.findActivitiesOfProfByProfByUnity(
 				unity_id,
 				date_start,
 				date_end,
