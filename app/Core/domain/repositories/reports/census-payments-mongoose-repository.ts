@@ -304,7 +304,9 @@ export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerIn
 			{
 				$group: {
 					_id: { $month: '$date' },
-					price: { $sum: '$value' },
+					price: {
+						$round: [{ $sum: '$value' }, 2],
+					},
 				},
 			},
 			{
