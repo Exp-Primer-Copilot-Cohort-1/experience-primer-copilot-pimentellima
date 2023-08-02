@@ -304,16 +304,19 @@ export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerIn
 			{
 				$group: {
 					_id: { $month: '$date' },
-					price: {
-						$round: [{ $sum: '$value' }, 2],
-					},
+					price: { $sum: '$value' },
 				},
 			},
 			{
 				$project: {
 					_id: 0,
 					month: '$_id',
-					price: 1,
+					price: {
+						$round: [
+							'$price',
+							2, // arredonda para duas casas decimais
+						],
+					},
 				},
 			},
 		]
