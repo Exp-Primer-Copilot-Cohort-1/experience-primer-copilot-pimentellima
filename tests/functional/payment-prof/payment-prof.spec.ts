@@ -1,5 +1,5 @@
 import { test } from '@japa/runner'
-import PaymentProf from 'App/Models/PaymentProf'
+import PaymentProf from 'App/Models/PaymentParticipations'
 import { assert } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 

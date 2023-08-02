@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
-import Prof from 'App/Models/Prof'
+import PaymentParticipations from 'App/Models/PaymentParticipations'
 import { IPaymentProf } from 'Types/IPaymentProf'
 import { Types } from 'mongoose'
 import { PaymentProfManagerInterface } from '../interface/payment-prof-manager-interface'
@@ -21,8 +21,8 @@ const obj: IPaymentProf = {
 		value: '6359660fc109b232759921d4',
 	},
 	prof: {
-		label: 'teste',
-		value: '643ee0a1da39798a147c02b2',
+		label: 'Rodrigo',
+		value: '6359660fc109b232759921d6',
 	},
 	value: 10,
 }
@@ -42,9 +42,12 @@ describe('Payment Participations Mongoose Repository (Integration)', () => {
 	})
 
 	afterAll(async () => {
-		await Prof.findByIdAndUpdate('643ee0a1da39798a147c02b2', {
-			payment_participations: [],
-		})
+		await PaymentParticipations.findOneAndUpdate(
+			{ 'prof.value': '6359660fc109b232759921d6' },
+			{
+				prices: [],
+			},
+		)
 		await mongoose.connection.close()
 	})
 
@@ -57,7 +60,7 @@ describe('Payment Participations Mongoose Repository (Integration)', () => {
 
 	it('should be find all payment participations by prof', async () => {
 		const { sut } = makeSut()
-		const resultOrErr = await sut.findPaymentProfById('643ee0a1da39798a147c02b2')
+		const resultOrErr = await sut.findPaymentProfById('6359660fc109b232759921d6')
 
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})
@@ -73,11 +76,11 @@ describe('Payment Participations Mongoose Repository (Integration)', () => {
 		const { sut } = makeSut()
 		const _id = new ObjectId().toString()
 
-		await Prof.updateOne(
-			{ _id: new ObjectId(obj.prof.value.toString()) },
+		await PaymentParticipations.updateOne(
+			{ 'prof.value': new ObjectId(obj.prof.value.toString()) },
 			{
 				$push: {
-					payment_participations: {
+					prices: {
 						...obj,
 						_id,
 					},

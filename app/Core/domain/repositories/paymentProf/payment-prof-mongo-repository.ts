@@ -1,14 +1,13 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import PaymentProf from 'App/Models/PaymentProf'
-import Prof from 'App/Models/Prof'
 import { IPaymentProf } from 'Types/IPaymentProf'
+import { Types } from 'mongoose'
 import { OptsQuery } from '../../entities/helpers/opts-query'
 import { PaymentProfEntity } from '../../entities/payment-prof/paymentProf'
 import { MissingParamsError } from '../../errors/missing-params'
 import { PaymentProfManagerInterface } from '../interface/payment-prof-manager-interface'
 
-import { Types } from 'mongoose'
+import PaymentParticipations from 'App/Models/PaymentParticipations'
 
 const ObjectId = Types.ObjectId
 
@@ -16,30 +15,25 @@ const generatePipeline = (match: any, active: boolean) => [
 	{
 		$match: match,
 	},
-	{ $unwind: '$payment_participations' },
-	{
-		$addFields: {
-			prof: {
-				value: '$_id',
-				label: '$name',
-			},
-		},
-	},
+	{ $unwind: '$prices' },
 	{
 		$match: {
-			'payment_participations.active': active,
+			'prices.active': active,
 		},
 	},
 	{
 		$project: {
-			_id: '$payment_participations._id',
-			value: '$payment_participations.value',
-			percent: '$payment_participations.percent',
-			procedure: '$payment_participations.procedure',
-			health_insurance: '$payment_participations.health_insurance',
-			active: '$payment_participations.active',
+			_id: '$prices._id',
+			participation_id: '$_id',
+			value: '$prices.abs',
+			percent: '$prices.percent',
+			active: '$prices.active',
+			procedure: 1,
+			health_insurance: 1,
 			prof: 1,
 			unity_id: 1,
+			date_start: '$prices.date_start',
+			date_end: '$prices.date_end',
 		},
 	},
 ]
@@ -50,57 +44,88 @@ function buildUpdateObject(updateFields: any): any {
 			if (typeof value === 'object' && value !== null) {
 				for (const subKey in value) {
 					if (value[subKey] !== undefined) {
-						updateObject[`payment_participations.$.${key}.${subKey}`] =
-							value[subKey]
+						updateObject[`prices.$.${key}.${subKey}`] = value[subKey]
 					}
 				}
 			} else {
-				updateObject[`payment_participations.$.${key}`] = value
+				updateObject[`prices.$.${key}`] = value
 			}
 		}
 		return updateObject
 	}, {})
 }
 
+const createFilter = (participation: IPaymentProf) => ({
+	health_insurance: {
+		label: participation.health_insurance.label,
+		value: new ObjectId(participation.health_insurance.value.toString()),
+	},
+	procedure: {
+		label: participation.procedure.label,
+		value: new ObjectId(participation.procedure.value.toString()),
+	},
+	prof: {
+		label: participation.prof.label,
+		value: new ObjectId(participation.prof.value.toString()),
+	},
+})
 export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 	constructor(private readonly opts: OptsQuery = OptsQuery.build()) { }
 
 	async createPaymentProf(
-		paymentProf: IPaymentProf,
-	): PromiseEither<AbstractError, PaymentProfEntity> {
-		const _id = new ObjectId().toString()
-		const newPaymentProfOrErr = await PaymentProfEntity.build({ ...paymentProf, _id })
-		if (newPaymentProfOrErr.isLeft()) return left(newPaymentProfOrErr.extract())
-		const newPaymentProf = newPaymentProfOrErr.extract()
+		participation: IPaymentProf,
+	): PromiseEither<AbstractError, IPaymentProf> {
+		if (!participation) return left(new MissingParamsError('participation'))
 
-		await Prof.updateOne(
-			{ _id: new ObjectId(newPaymentProf.prof.value.toString()) },
+		const filter = {
+			...createFilter(participation),
+			unity_id: participation.unity_id,
+		}
+
+		const doc = await PaymentParticipations.findOneAndUpdate(
+			filter,
+			{},
 			{
-				$push: {
-					payment_participations: {
-						...newPaymentProf.params(),
-					},
-				},
+				upsert: true,
+				new: true,
 			},
 		)
 
-		return right(newPaymentProf)
+		if (!doc) throw new AbstractError('Não foi possível criar a participação', 500)
+
+		for (let i = 0; i < doc.prices?.length; i++) {
+			doc.prices[i].active = false
+			if (!doc.prices[i].date_end) {
+				doc.prices[i].date_end = new Date()
+			}
+		}
+
+		doc.prices.push({
+			active: true,
+			date_start: new Date(),
+			abs: participation.value,
+			percent: participation.percent,
+		})
+
+		await doc.save()
+
+		return right(participation)
 	}
 
 	async updatePaymentProfById(
-		paymentProf: IPaymentProf,
+		participation: IPaymentProf,
 		id: string,
 		prof_id: string,
 	): PromiseEither<AbstractError, IPaymentProf> {
 		if (!id || !prof_id) return left(new MissingParamsError('id or prof_id'))
 
 		const _id = new ObjectId(id.toString())
-		const set = buildUpdateObject(paymentProf)
+		const set = buildUpdateObject(participation)
 
-		const updateOrErr = await Prof.findOneAndUpdate(
+		const updateOrErr = await PaymentParticipations.findOneAndUpdate(
 			{
 				_id: new ObjectId(prof_id.toString()),
-				'payment_participations._id': _id,
+				'prices._id': _id,
 			},
 			{
 				$set: set,
@@ -108,14 +133,26 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 			{
 				new: true,
 				projection: {
-					payment_participations: {
+					prices: {
 						$elemMatch: { _id },
 					},
 				}, // isso fará com que a função retorne apenas o elemento atualizado do array
 			},
 		)
 
-		return right(updateOrErr?.payment_participations?.[0] as IPaymentProf)
+		return right({
+			_id: updateOrErr?._id,
+			payment_participations_id: updateOrErr?._id,
+			value: updateOrErr?.prices[0].abs,
+			percent: updateOrErr?.prices[0].percent,
+			active: updateOrErr?.prices[0].active,
+			health_insurance: updateOrErr?.health_insurance,
+			procedure: updateOrErr?.procedure,
+			prof: updateOrErr?.prof,
+			date_start: updateOrErr?.prices[0].date_start,
+			date_end: updateOrErr?.prices[0].date_end,
+			unity_id: updateOrErr?.unity_id,
+		} as IPaymentProf)
 	}
 
 	async deletePaymentProfById(
@@ -123,7 +160,7 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 	): PromiseEither<AbstractError, PaymentProfEntity> {
 		if (!id) return left(new MissingParamsError('id'))
 
-		const item = await PaymentProf.findByIdAndDelete(id)
+		const item = await PaymentParticipations.findByIdAndDelete(id)
 		if (!item) return left(new AbstractError('PaymentProf not found', 404))
 
 		const paymentProfOrErr = await PaymentProfEntity.build(item.toObject())
@@ -137,11 +174,11 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 		if (!id) return left(new MissingParamsError('id'))
 
 		const pipeline = generatePipeline(
-			{ _id: new ObjectId(id.toString()) },
+			{ 'prof.value': new ObjectId(id.toString()) },
 			this.opts.active,
 		)
 
-		const data = await Prof.aggregate(pipeline)
+		const data = await PaymentParticipations.aggregate(pipeline)
 
 		return right(data)
 	}
@@ -156,7 +193,7 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 			this.opts.active,
 		)
 
-		const data = await Prof.aggregate(pipeline)
+		const data = await PaymentParticipations.aggregate(pipeline)
 
 		return right(data)
 	}
