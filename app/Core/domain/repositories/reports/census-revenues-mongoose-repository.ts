@@ -34,7 +34,7 @@ export class CensusRevenuesMongooseRepository implements CensusRevenuesManagerIn
 							$replaceAll: {
 								input: {
 									$replaceAll: {
-										input: '$procedures.val',
+										input: '$payment.value',
 										find: '.',
 										replacement: '',
 									},
