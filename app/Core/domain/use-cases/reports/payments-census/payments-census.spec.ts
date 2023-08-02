@@ -2,6 +2,7 @@ import {
 	CensusDaysMongooseRepository,
 	CensusMongooseRepository,
 	CensusPaymentsMongooseRepository,
+	CensusRevenuesMongooseRepository,
 } from 'App/Core/domain/repositories'
 import mongoose from 'mongoose'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
@@ -13,6 +14,7 @@ const makeSut = () => {
 		new CensusPaymentsMongooseRepository(),
 		new CensusMongooseRepository(),
 		new CensusDaysMongooseRepository(),
+		new CensusRevenuesMongooseRepository(),
 	)
 	return {
 		sut,

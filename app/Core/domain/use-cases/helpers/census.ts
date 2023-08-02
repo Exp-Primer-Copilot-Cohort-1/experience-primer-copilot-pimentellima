@@ -1,5 +1,5 @@
 import {
-	ICensusActivitiesByDays,
+	ICensusActivitiesByDaysOfMonth,
 	ICensusActivitiesByHealthInsurance,
 	ICensusActivitiesByProf,
 	ICensusCountHealthInsurances,
@@ -12,7 +12,7 @@ import {
 	ICensusPaymentByProf,
 	ICensusPaymentForm,
 	ICensusRevenuesOfYearByUnityByProf,
-	ICensusScheduledEvent,
+	ICensusScheduledEvent
 } from 'Types/ICensus'
 
 export type ICensusCount = {
@@ -26,12 +26,15 @@ export type ICensusCount = {
 }
 
 export type ICensusPayments = {
-	count_by_days: ICensusActivitiesByDays
+	count_by_days: ICensusActivitiesByDaysOfMonth[]
 	count_by_activity_by_prof: ICensusActivitiesByProf[]
 	payments_by_health_insurances: ICensusActivitiesByHealthInsurance[]
 	payment_by_prof: ICensusPaymentByProf[]
 	payment_by_partners: ICensusPaymentByProf[]
 	payment_participation_by_prof: ICensusParticipationPaymentByProf[]
 	payment_form: ICensusPaymentForm[]
-	revenues_activities: ICensusRevenuesOfYearByUnityByProf
+	revenues_activities: {
+		accrual_regime: ICensusRevenuesOfYearByUnityByProf
+		cash_regime: ICensusRevenuesOfYearByUnityByProf
+	}
 }

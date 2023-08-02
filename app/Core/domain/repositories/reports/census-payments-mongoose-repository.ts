@@ -133,7 +133,7 @@ export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerIn
 		date_start: string,
 		date_end: string,
 		prof_id?: string,
-	): PromiseEither<AbstractError, { label: string; count: number }[]> {
+	): PromiseEither<AbstractError, ICensusPaymentByProf[]> {
 		const match = generateMatch({
 			date_start,
 			date_end,

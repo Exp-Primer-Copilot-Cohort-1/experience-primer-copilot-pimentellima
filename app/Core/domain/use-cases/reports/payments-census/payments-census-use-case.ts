@@ -6,6 +6,7 @@ import { PromiseEither, left, right } from 'App/Core/shared'
 import {
 	CensusDaysManagerInterface,
 	CensusPaymentsManagerInterface,
+	CensusRevenuesManagerInterface,
 	CensusUnitiesManagerInterface,
 } from 'App/Core/domain/repositories/interface'
 import { ICensusPayments } from '../../helpers/census'
@@ -24,6 +25,7 @@ export class PaymentsCensusByDateUseCase
 		private readonly manager: CensusPaymentsManagerInterface,
 		private readonly count: CensusUnitiesManagerInterface,
 		private readonly managerDays: CensusDaysManagerInterface,
+		private readonly managerRevenues: CensusRevenuesManagerInterface,
 	) { }
 
 	public async execute({
@@ -56,7 +58,8 @@ export class PaymentsCensusByDateUseCase
 			paymentsParticipationProfOrErr,
 			count_by_daysOrErr,
 			count_by_activity_by_profOrErr,
-			revenues_activitiesOrErr,
+			accrualRegimeOrErr,
+			cashRegimeOrErr,
 		] = await Promise.all([
 			this.manager.findPaymentsByForm(unity_id, date_start, date_end, prof_id),
 			this.manager.findPaymentsByHealthInsurance(
@@ -85,7 +88,13 @@ export class PaymentsCensusByDateUseCase
 				date_end,
 				prof_id,
 			),
-			this.manager.findRevenuesActivitiesByUnityByProf(
+			this.managerRevenues.findRevenuesAccrualRegimeActivities(
+				unity_id,
+				date_start,
+				date_end,
+				prof_id,
+			),
+			this.managerRevenues.findRevenuesCashRegimeActivities(
 				unity_id,
 				date_start,
 				date_end,
@@ -101,7 +110,8 @@ export class PaymentsCensusByDateUseCase
 			paymentsParticipationProfOrErr.isLeft() ||
 			count_by_daysOrErr.isLeft() ||
 			count_by_activity_by_profOrErr.isLeft() ||
-			revenues_activitiesOrErr.isLeft()
+			accrualRegimeOrErr.isLeft() ||
+			cashRegimeOrErr.isLeft()
 		) {
 			return left(
 				new AbstractError('Error on find census activities by unity', 400),
@@ -115,7 +125,10 @@ export class PaymentsCensusByDateUseCase
 		const payment_participation_by_prof = paymentsParticipationProfOrErr.extract()
 		const count_by_days = count_by_daysOrErr.extract()
 		const count_by_activity_by_prof = count_by_activity_by_profOrErr.extract()
-		const revenues_activities = revenues_activitiesOrErr.extract()
+		const revenues_activities = {
+			accrual_regime: accrualRegimeOrErr.extract(),
+			cash_regime: cashRegimeOrErr.extract(),
+		}
 
 		return right({
 			count_by_activity_by_prof,
