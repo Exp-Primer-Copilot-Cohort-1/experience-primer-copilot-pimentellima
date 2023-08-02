@@ -257,6 +257,7 @@ export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerIn
 			{
 				$project: {
 					_id: 0, // Não inclui o campo _id no resultado
+					value: '$_id.prof', // Renomeia _id para value
 					name: '$label',
 					procedure: '$procedureLabel',
 					count: 1, // Inclui o campo count no resultado

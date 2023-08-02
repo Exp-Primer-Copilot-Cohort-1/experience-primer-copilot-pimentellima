@@ -69,6 +69,7 @@ export type ICensusPaymentByProf = {
 	count: number
 	value: string
 	total: number
+	name: string
 }
 
 export type ICensusParticipationPaymentByProf = {
