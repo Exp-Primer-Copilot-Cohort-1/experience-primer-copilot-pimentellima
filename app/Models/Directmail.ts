@@ -9,6 +9,10 @@ const DirectmailSchema = new Schema<IDirectmail>(
 			value: { type: String, required: true },
 			label: { type: String, required: true },
 		},
+		client: {
+			value: { type: String, required: true },
+			label: { type: String, required: true },
+		},
 		active: { type: Boolean, required: true },
 		unity_id: { type: Schema.Types.ObjectId, required: true },
 	},
