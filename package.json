@@ -8,7 +8,7 @@
 		"prod": "NODE_ENV=production node ace serve",
 		"dev": "node ace serve --watch",
 		"build": "node ace build --production --ignore-ts-errors",
-		"postbuild": "cp .env build/.env && cd build && yarn install --production",
+		"postbuild": "cp .env build/.env && cp ecossytem.config.js && cd build && yarn install --production",
 		"test:e2e": "node ace test --watch",
 		"test": "cross-env NODE_ENV=test vitest --ui --watch --t Unit",
 		"test:integration": "cross-env NODE_ENV=test vitest --ui --watch --t Integration",
