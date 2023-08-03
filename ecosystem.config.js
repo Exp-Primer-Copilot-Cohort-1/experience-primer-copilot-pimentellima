@@ -4,7 +4,7 @@ require('dotenv').config()
 module.exports = {
 	apps: [
 		{
-			name: 'dpsystem',
+			name: 'dpsystem-v5',
 			script: 'yarn',
 			args: 'start',
 			watch: true,
