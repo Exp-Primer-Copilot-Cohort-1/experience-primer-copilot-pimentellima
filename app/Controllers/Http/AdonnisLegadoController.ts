@@ -1,9 +1,10 @@
 /* eslint-disable indent */
+import Env from '@ioc:Adonis/Core/Env'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import axios from 'axios'
 
 const api = axios.create({
-	baseURL: 'http://localhost:3000',
+	baseURL: Env.get('ADONNIS_LEGADO_URL'),
 	headers: {
 		'Content-Type': 'application/json',
 	},

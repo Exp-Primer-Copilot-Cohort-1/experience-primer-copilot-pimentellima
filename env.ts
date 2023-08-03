@@ -36,4 +36,5 @@ export default Env.rules({
 	S3_REGION: Env.schema.string(),
 	S3_KEY: Env.schema.string(),
 	S3_SECRET: Env.schema.string(),
+	ADONNIS_LEGADO_URL: Env.schema.string(),
 })
