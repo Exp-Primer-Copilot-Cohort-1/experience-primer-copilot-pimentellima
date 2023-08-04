@@ -15,6 +15,16 @@ class DirectmailController {
 		return adaptRoute(makeDirectmailsFindByNameComposer(), ctx, { unity_id })
 	}
 
+	async findAllInactives(ctx: HttpContextContract) {
+		const unity_id = ctx.auth.user?.unity_id
+		const directmails = await Directmail.find({
+			active: false,
+			unity_id,
+		});
+
+		return directmails
+	}
+
 	async store(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id
 		return adaptRoute(makeDirectmailsCreateComposer(), ctx, { unity_id })

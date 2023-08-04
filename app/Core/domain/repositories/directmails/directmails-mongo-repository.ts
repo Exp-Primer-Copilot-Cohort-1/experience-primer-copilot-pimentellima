@@ -33,6 +33,22 @@ export class DirectmailsMongooseRepository
 	): PromiseEither<AbstractError, IDirectmail[]> {
 		const directmails = await Directmail.find({
 			name: { $regex: new RegExp(`.*${name}.*`) },
+			active: true,
+			unity_id,
+		});
+
+		if (!directmails) {
+			return left(new UnitNotFoundError());
+		}
+		return right(directmails);
+	}
+	async findByNameInactives(
+		name: string,
+		unity_id: string
+	): PromiseEither<AbstractError, IDirectmail[]> {
+		const directmails = await Directmail.find({
+			name: { $regex: new RegExp(`.*${name}.*`) },
+			active: false,
 			unity_id,
 		});
 

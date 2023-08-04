@@ -13,6 +13,17 @@ class PrescriptionController {
 		const userLogged = auth.user;
 		const prescriptions = await Prescription.where({
 			unity_id: userLogged.unity_id,
+			active: true
+		});
+
+		return prescriptions;
+	}
+
+	async findAllInactives({ request, auth }) {
+		const userLogged = auth.user;
+		const prescriptions = await Prescription.where({
+			unity_id: userLogged.unity_id,
+			active: false
 		});
 
 		return prescriptions;
