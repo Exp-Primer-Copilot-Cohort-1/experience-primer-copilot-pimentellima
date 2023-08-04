@@ -3,7 +3,7 @@ import { PromiseEither } from 'App/Core/shared'
 import { ICensusParticipationPaymentByProf } from 'Types/ICensus'
 
 export interface CensusPaymentParticipationsManagerInterface {
-	findPaymentsParticipationByProf: (
+	findPaymentsParticipation: (
 		unity_id: string,
 		date_start: string,
 		date_end: string,

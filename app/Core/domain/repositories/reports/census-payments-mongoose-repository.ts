@@ -4,10 +4,9 @@ import Activity from 'App/Models/Activity'
 import Transactions from 'App/Models/Transactions'
 import {
 	ICensusActivitiesByHealthInsurance,
-	ICensusParticipationPaymentByProf,
 	ICensusPaymentByProf,
 	ICensusPaymentForm,
-	ICensusRevenuesOfYearByUnityByProf,
+	ICensusRevenuesOfYearByUnityByProf
 } from 'Types/ICensus'
 import { CensusPaymentsManagerInterface } from '../interface/census-manager.interface'
 import generateMatch from './generate-match-census'
@@ -269,15 +268,6 @@ export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerIn
 		const activities = await Activity.aggregate(pipeline)
 
 		return right(activities)
-	}
-
-	async findPaymentsParticipationByProf(
-		unity_id: string,
-		date_start: string,
-		date_end: string,
-		prof_id?: string | undefined,
-	): PromiseEither<AbstractError, ICensusParticipationPaymentByProf[]> {
-		return right([])
 	}
 
 	async findRevenuesActivitiesByUnityByProf(

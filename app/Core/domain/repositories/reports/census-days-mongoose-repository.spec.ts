@@ -13,9 +13,7 @@ const makeSut = () => {
 
 describe('Census Mongoose Repository (Integration)', () => {
 	beforeAll(async () => {
-		await mongoose.connect(
-			process.env.DB_CONNECTION_STRING as string,
-		)
+		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})
 
 	it('should be count actvities by day in the week', async () => {
@@ -36,8 +34,6 @@ describe('Census Mongoose Repository (Integration)', () => {
 			'2022-12-01',
 			'2024-07-31',
 		)
-
-		console.log(resultOrErr.extract())
 
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})
