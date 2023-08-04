@@ -1,11 +1,11 @@
-import Mongoose, { Schema } from "@ioc:Mongoose";
-import { ITransaction } from "Types/ITransaction";
+import Mongoose, { Schema } from '@ioc:Mongoose'
+import { ITransaction } from 'Types/ITransaction'
 
 const schemaDefault = (colection: string) => ({
 	type: Schema.Types.ObjectId,
 	ref: colection,
 	required: false,
-});
+})
 
 const TransactionsSchema = new Schema<ITransaction>(
 	{
@@ -14,7 +14,7 @@ const TransactionsSchema = new Schema<ITransaction>(
 			required: false,
 		},
 		prof: {
-			value: schemaDefault("users"),
+			value: schemaDefault('users'),
 			label: {
 				type: String,
 				required: false,
@@ -22,7 +22,7 @@ const TransactionsSchema = new Schema<ITransaction>(
 			_id: false,
 		},
 		client: {
-			value: schemaDefault("clients"),
+			value: schemaDefault('clients'),
 			label: {
 				type: String,
 				required: false,
@@ -30,18 +30,36 @@ const TransactionsSchema = new Schema<ITransaction>(
 			_id: false,
 		},
 		// Array de procedimentos
-		procedures: [
-			{
-				value: schemaDefault("procedures"),
-				label: {
-					type: String,
-					required: false,
+		procedures: {
+			required: false,
+			type: [
+				{
+					value: schemaDefault('procedures'),
+					label: {
+						type: String,
+						required: false,
+					},
+					health_insurance: {
+						type: {
+							value: schemaDefault('health_insurances'),
+							label: String,
+						},
+						required: true,
+					},
+					payment_participations: {
+						type: {
+							value: Schema.Types.ObjectId,
+							price: Number,
+							percent: Number,
+						},
+						required: true,
+					},
+					_id: false,
 				},
-				_id: false,
-			},
-		],
+			],
+		},
 		bank: {
-			value: schemaDefault("banks"),
+			value: schemaDefault('banks'),
 			label: {
 				type: String,
 				required: false,
@@ -49,7 +67,7 @@ const TransactionsSchema = new Schema<ITransaction>(
 			_id: false,
 		},
 		cost_center: {
-			value: schemaDefault("cost_centers"),
+			value: schemaDefault('cost_centers'),
 			label: {
 				type: String,
 				required: false,
@@ -57,7 +75,7 @@ const TransactionsSchema = new Schema<ITransaction>(
 			_id: false,
 		},
 		category: {
-			value: schemaDefault("financial_categories"),
+			value: schemaDefault('financial_categories'),
 			label: {
 				type: String,
 				required: false,
@@ -88,14 +106,14 @@ const TransactionsSchema = new Schema<ITransaction>(
 		type: {
 			type: String,
 			required: true,
-			enum: ["income", "expense"],
-			default: "expense",
+			enum: ['income', 'expense'],
+			default: 'expense',
 		},
 		occurrences: {
 			type: String,
 			required: false,
-			enum: ["once", "daily", "weekly", "biweekly", "monthly"],
-			default: "once",
+			enum: ['once', 'daily', 'weekly', 'biweekly', 'monthly'],
+			default: 'once',
 		},
 		installment: {
 			type: Boolean,
@@ -119,16 +137,16 @@ const TransactionsSchema = new Schema<ITransaction>(
 		},
 		unity_id: {
 			type: Mongoose.Schema.Types.ObjectId,
-			ref: "unities",
+			ref: 'unities',
 			required: true,
 		},
 	},
 	{
 		timestamps: {
-			createdAt: "created_at",
-			updatedAt: "updated_at",
+			createdAt: 'created_at',
+			updatedAt: 'updated_at',
 		},
-	}
-);
+	},
+)
 
-export default Mongoose.model("transactions", TransactionsSchema);
+export default Mongoose.model('transactions', TransactionsSchema)

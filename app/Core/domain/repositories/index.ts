@@ -12,6 +12,7 @@ export * from './produceres'
 export * from './profs'
 export * from './reports'
 export * from './session'
+export * from './transactions'
 export * from './unities'
 export * from './users'
 

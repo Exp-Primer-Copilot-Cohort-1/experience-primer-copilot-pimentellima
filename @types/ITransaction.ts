@@ -14,6 +14,15 @@ export interface ITransaction {
 	procedures?: {
 		value: string
 		label: string
+		health_insurance?: {
+			value: string
+			label: string
+		}
+		payment_participation?: {
+			value: string
+			price: number
+			percent: number
+		}
 	}[]
 	bank: {
 		value: string | ObjectId

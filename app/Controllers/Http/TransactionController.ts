@@ -36,7 +36,7 @@ class TransactionsController {
 
 	async store({ request, auth }: HttpContextContract) {
 		const userLogged = auth.user
-		if (!userLogged) throw Error()
+
 		const data = request.all() as Omit<ITransaction, 'value'> & {
 			value: string
 		}
@@ -52,7 +52,7 @@ class TransactionsController {
 			const date = addMonths(new Date(data.date), currentTransaction)
 			const transactionOrErr = await TransactionEntity.build({
 				...data,
-				unity_id: userLogged.unity_id.toString(),
+				unity_id: userLogged?.unity_id.toString(),
 				value: divideCurrencyByInteger(data.value, numberOfTransactions),
 				installments: numberOfTransactions,
 				installmentCurrent: currentTransaction + 1,
