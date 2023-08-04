@@ -26,6 +26,9 @@ new Ignitor(__dirname).httpServer().start((handle) => {
 		const privateKey = readFileSync(join(__dirname + '/certs/server.key'), 'utf8')
 		const certificate = readFileSync(join(__dirname + '/certs/server.crt'), 'utf8')
 		const credentials = { key: privateKey, cert: certificate }
+
+		console.log('Server running on https://localhost:3333')
+
 		return createServer(credentials, handle)
 	}
 
