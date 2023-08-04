@@ -309,8 +309,10 @@ Route.group(() => {
 
 	Route.group(() => {
 		Route.get('', 'PrescriptionController.index').as('prescriptions.index')
+		Route.get('/inactive', 'PrescriptionController.findAllInactives').as('prescriptions.indexInactives')
 		Route.get('/:id', 'PrescriptionController.show').as('prescriptions.show')
 		Route.put('/:id', 'PrescriptionController.update').as('prescriptions.update')
+		Route.put('/status/:id', 'PrescriptionController.updateStatus').as('prescriptions.updateStatus')
 		Route.delete('/:id', 'PrescriptionController.destroy').as('prescriptions.destroy')
 		Route.post('', 'PrescriptionController.store').as('prescriptions.store')
 	}).prefix('prescriptions')
@@ -351,8 +353,10 @@ Route.group(() => {
 
 	Route.group(() => {
 		Route.get('', 'DirectmailController.index').as('directMails.index')
+		Route.get('/inactives', 'DirectmailController.findAllInactives').as('directMails.indexInactives')
 		Route.get('/:id', 'DirectmailController.show').as('directMails.show')
 		Route.put('/:id', 'DirectmailController.update').as('directMails.update')
+		Route.put('/status/:id', 'DirectmailController.updateStatus').as('directMails.updateStatus')
 		Route.delete('/:id', 'DirectmailController.destroy').as('directMails.destroy')
 		Route.post('', 'DirectmailController.store').as('directMails.store')
 	}).prefix('direct-mails')

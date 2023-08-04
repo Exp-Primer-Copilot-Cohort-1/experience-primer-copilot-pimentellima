@@ -7,11 +7,22 @@ import {
 	makeDirectmailsShowByIdComposer,
 	makeDirectmailsUpdateByIdComposer
 } from 'App/Core/composers'
+import Directmail from 'App/Models/Directmail'
 
 class DirectmailController {
 	async index(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id
 		return adaptRoute(makeDirectmailsFindByNameComposer(), ctx, { unity_id })
+	}
+
+	async findAllInactives(ctx: HttpContextContract) {
+		const unity_id = ctx.auth.user?.unity_id
+		const directmails = await Directmail.find({
+			active: false,
+			unity_id,
+		});
+
+		return directmails
 	}
 
 	async store(ctx: HttpContextContract) {
@@ -21,6 +32,20 @@ class DirectmailController {
 
 	async update(ctx: HttpContextContract) {
 		return adaptRoute(makeDirectmailsUpdateByIdComposer(), ctx)
+	}
+
+	async updateStatus({ params, request }) {
+		const data = request.only(["status"]);
+
+		const prescription = await Directmail.findByIdAndUpdate(
+			params.id,
+			{
+				$set: { active: data.status },
+			},
+			{ new: true }
+		);
+		
+		return prescription;
 	}
 
 	async show(ctx: HttpContextContract) {
