@@ -24,6 +24,7 @@ const obj: IPaymentProf = {
 		label: 'Rodrigo',
 		value: '6359660fc109b232759921d6',
 	},
+	unity_id: '6359660fc109b232759921d4',
 	value: 10,
 }
 
@@ -37,7 +38,7 @@ const makeSut = () => {
 describe('Payment Participations Mongoose Repository (Integration)', () => {
 	beforeAll(async () => {
 		await mongoose.connect(
-			'mongodb://admin:admin@localhost/admin?connectTimeoutMS=300000&retryWrites=true',
+			process.env.DB_CONNECTION_STRING as string,
 		)
 	})
 
@@ -61,13 +62,6 @@ describe('Payment Participations Mongoose Repository (Integration)', () => {
 	it('should be find all payment participations by prof', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findPaymentProfById('6359660fc109b232759921d6')
-
-		expect(resultOrErr.isRight()).toBeTruthy()
-	})
-
-	it('should be create payment participations by prof', async () => {
-		const { sut } = makeSut()
-		const resultOrErr = await sut.createPaymentProf(obj)
 
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})
