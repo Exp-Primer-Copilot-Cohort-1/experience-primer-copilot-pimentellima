@@ -1,9 +1,16 @@
 import Prescription from "App/Models/Prescription";
+import { z } from "zod";
+
+const prescriptionSchema = z.object({
+	name: z.string(),
+	text: z.string(),
+	client: z.object({}),
+	prof: z.object({}),
+})
 
 class PrescriptionController {
 	async index({ request, auth }) {
 		const userLogged = auth.user;
-		console.log(request)
 		const prescriptions = await Prescription.where({
 			unity_id: userLogged.unity_id,
 		});
@@ -15,6 +22,8 @@ class PrescriptionController {
 		const userLogged = auth.user;
 		const data = request.all();
 
+		prescriptionSchema.parse(data)
+
 		const prescription = await Prescription.create({
 			...data,
 			unity_id: userLogged.unity_id
@@ -25,6 +34,9 @@ class PrescriptionController {
 
 	async update({ params, request }) {
 		const data = request.all();
+
+		prescriptionSchema.parse({data})
+
 		const prescription = await Prescription.findByIdAndUpdate(
 			params.id,
 			data,
