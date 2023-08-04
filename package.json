@@ -8,7 +8,7 @@
 		"prod": "NODE_ENV=production node ace serve",
 		"dev": "node ace serve --watch",
 		"build": "node ace build --production --ignore-ts-errors",
-		"copy": "cp .env build/.env && cp ecosystem.config.js build/ecosystem.config.js",
+		"copy": "cp .env build/.env && cp ecosystem.config.js build/ecosystem.config.js && cp -r certs build/certs",
 		"postbuild": "yarn copy && cd build && yarn install --production",
 		"test:e2e": "node ace test --watch",
 		"test": "cross-env NODE_ENV=test vitest --ui --watch --t Unit",
