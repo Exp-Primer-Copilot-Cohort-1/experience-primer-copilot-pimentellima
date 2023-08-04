@@ -46,7 +46,7 @@ const PaymentParticipations = new Schema<IPaymentParticipations>(
 )
 
 PaymentParticipations.index(
-	{ prof: 1, procedure: 1, health_insurance: 1 },
+	{ 'prof.value': 1, 'procedure.value': 1, 'health_insurance.value': 1 },
 	{ unique: true },
 )
 

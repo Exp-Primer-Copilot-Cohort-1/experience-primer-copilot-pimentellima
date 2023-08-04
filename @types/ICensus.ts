@@ -75,7 +75,6 @@ export type ICensusPaymentByProf = {
 export type ICensusParticipationPaymentByProf = {
 	value: string
 	label: string
-	count: number
 	total: number
 }
 
