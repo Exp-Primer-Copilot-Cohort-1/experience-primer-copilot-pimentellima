@@ -308,6 +308,14 @@ Route.group(() => {
 	}).prefix('room')
 
 	Route.group(() => {
+		Route.get('', 'PrescriptionController.index').as('prescriptions.index')
+		Route.get('/:id', 'PrescriptionController.show').as('prescriptions.show')
+		Route.put('/:id', 'PrescriptionController.update').as('prescriptions.update')
+		Route.delete('/:id', 'PrescriptionController.destroy').as('prescriptions.destroy')
+		Route.post('', 'PrescriptionController.store').as('prescriptions.store')
+	}).prefix('prescriptions')
+
+	Route.group(() => {
 		Route.get('', 'IngredientController.index').as('ingredients.index')
 		Route.get('/:id', 'IngredientController.show').as('ingredients.show')
 		Route.put('/:id', 'IngredientController.update').as('ingredients.update')
