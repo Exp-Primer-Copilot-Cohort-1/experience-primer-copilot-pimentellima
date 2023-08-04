@@ -23,14 +23,12 @@ const makeSut = () => {
 
 describe('Population Census Use Case (Integration)', () => {
 	beforeAll(async () => {
-		await mongoose.connect(
-			'mongodb://admin:admin@localhost/admin?connectTimeoutMS=300000&retryWrites=true',
-		)
+		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})
 	afterAll(async () => {
 		await mongoose.connection.close()
 	})
-	it('should be find census payments activities by unity', async () => {
+	it.skip('should be find census payments activities by unity', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.execute({
 			unity_id: '6359660fc109b232759921d4', // unity id

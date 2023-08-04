@@ -17,7 +17,7 @@ const makeSut = () => {
 describe('Update Current Revenue Reports in Month Use Case (Integration)', () => {
 	beforeAll(async () => {
 		await mongoose.connect(
-			'mongodb://admin:admin@localhost/admin?connectTimeoutMS=300000&retryWrites=true',
+			process.env.DB_CONNECTION_STRING as string,
 		)
 	})
 	afterAll(async () => {
