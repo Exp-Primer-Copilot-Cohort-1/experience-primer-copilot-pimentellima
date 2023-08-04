@@ -7,6 +7,7 @@ import {
 	makeDirectmailsShowByIdComposer,
 	makeDirectmailsUpdateByIdComposer
 } from 'App/Core/composers'
+import Directmail from 'App/Models/Directmail'
 
 class DirectmailController {
 	async index(ctx: HttpContextContract) {
@@ -21,6 +22,20 @@ class DirectmailController {
 
 	async update(ctx: HttpContextContract) {
 		return adaptRoute(makeDirectmailsUpdateByIdComposer(), ctx)
+	}
+
+	async updateStatus({ params, request }) {
+		const data = request.only(["status"]);
+
+		const prescription = await Directmail.findByIdAndUpdate(
+			params.id,
+			{
+				$set: { active: data.status },
+			},
+			{ new: true }
+		);
+		
+		return prescription;
 	}
 
 	async show(ctx: HttpContextContract) {

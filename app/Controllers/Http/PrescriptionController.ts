@@ -6,7 +6,7 @@ const prescriptionSchema = z.object({
 	text: z.string(),
 	client: z.object({}),
 	prof: z.object({}),
-})
+});
 
 class PrescriptionController {
 	async index({ request, auth }) {
@@ -22,11 +22,11 @@ class PrescriptionController {
 		const userLogged = auth.user;
 		const data = request.all();
 
-		prescriptionSchema.parse(data)
+		prescriptionSchema.parse(data);
 
 		const prescription = await Prescription.create({
 			...data,
-			unity_id: userLogged.unity_id
+			unity_id: userLogged.unity_id,
 		});
 
 		return prescription;
@@ -35,7 +35,7 @@ class PrescriptionController {
 	async update({ params, request }) {
 		const data = request.all();
 
-		prescriptionSchema.parse({data})
+		prescriptionSchema.parse({ data });
 
 		const prescription = await Prescription.findByIdAndUpdate(
 			params.id,
@@ -45,6 +45,20 @@ class PrescriptionController {
 			}
 		);
 
+		return prescription;
+	}
+
+	async updateStatus({ params, request }) {
+		const data = request.only(["status"]);
+
+		const prescription = await Prescription.findByIdAndUpdate(
+			params.id,
+			{
+				$set: { active: data.status },
+			},
+			{ new: true }
+		);
+		
 		return prescription;
 	}
 
