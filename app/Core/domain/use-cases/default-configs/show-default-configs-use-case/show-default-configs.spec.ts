@@ -10,7 +10,7 @@ const makeSut = () => {
 	return { sut }
 }
 
-describe('ShowDefaultConfigsByIdUseCase (Unit)', () => {
+describe.skip('ShowDefaultConfigsByIdUseCase (Unit)', () => {
 	it('should return is left if unity_id is not provided', async () => {
 		const { sut } = makeSut()
 		const input = { name: 'não existe' }

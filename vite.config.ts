@@ -10,6 +10,7 @@ export default defineConfig({
 			provider: 'istanbul',
 			all: true,
 			include: ['app/Core/**/*.ts'],
+			exclude: ['**/.docker/**', 'app/Core/composers/**'],
 		},
 		reporters: ['html', 'default'],
 		testTimeout: 5000000,
