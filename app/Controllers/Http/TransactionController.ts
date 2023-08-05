@@ -51,8 +51,8 @@ class TransactionsController {
 			value: parseFloat(data.value?.toString()?.replace(',', '.')),
 		})
 
-		const transaction = await Transaction.findByIdAndUpdate(
-			params.id,
+		const transaction = await Transaction.findOneAndUpdate(
+			{ group_by: params.id },
 			transactionOrErr.extract(),
 			{
 				new: true,
