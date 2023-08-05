@@ -1,6 +1,7 @@
 import { ObjectId } from '@ioc:Mongoose'
 
 export interface ITransaction {
+	_id?: string | ObjectId
 	group_by?: string
 	activity_id?: string
 	prof?: {
@@ -37,7 +38,7 @@ export interface ITransaction {
 		label: string
 	}
 	paid?: boolean
-	unity_id?: string
+	unity_id: string | ObjectId
 	value: number
 	date: Date
 	paymentForm: string
