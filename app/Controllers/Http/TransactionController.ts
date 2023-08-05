@@ -1,10 +1,9 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { adaptRoute } from 'App/Core/adapters'
+import { makeCreateTransactionComposer } from 'App/Core/composers'
 import { TransactionEntity } from 'App/Core/domain/entities/transaction/TransactionEntity'
-import { left } from 'App/Core/shared'
 import Transaction from 'App/Models/Transactions'
-import divideCurrencyByInteger from 'App/utils/divide-currency'
 import { ITransaction } from 'Types/ITransaction'
-import { addMonths } from 'date-fns'
 
 class TransactionsController {
 	async index({ auth, request }: HttpContextContract) {
@@ -34,40 +33,10 @@ class TransactionsController {
 		return transactions
 	}
 
-	async store({ request, auth }: HttpContextContract) {
-		const userLogged = auth.user
+	async store(ctx: HttpContextContract) {
+		const unity_id = ctx.auth.user?.unity_id
 
-		const data = request.all() as Omit<ITransaction, 'value'> & {
-			value: string
-		}
-
-		const numberOfTransactions = data.installments ? data.installments : 1
-		const validatedTransactions: ITransaction[] = []
-
-		for (
-			let currentTransaction = 0;
-			currentTransaction < numberOfTransactions;
-			currentTransaction++
-		) {
-			const date = addMonths(new Date(data.date), currentTransaction)
-			const transactionOrErr = await TransactionEntity.build({
-				...data,
-				unity_id: userLogged?.unity_id.toString(),
-				value: divideCurrencyByInteger(data.value, numberOfTransactions),
-				installments: numberOfTransactions,
-				installmentCurrent: currentTransaction + 1,
-				date,
-			})
-			if (transactionOrErr.isLeft()) return left(transactionOrErr.extract())
-			else validatedTransactions.push(transactionOrErr.extract())
-		}
-
-		const transactions = await Promise.all(
-			validatedTransactions.map(async (transaction) =>
-				Transaction.create(transaction),
-			),
-		)
-		return transactions[0]
+		return adaptRoute(makeCreateTransactionComposer(), ctx, { unity_id })
 	}
 
 	async update({ params, request, auth }: HttpContextContract) {
