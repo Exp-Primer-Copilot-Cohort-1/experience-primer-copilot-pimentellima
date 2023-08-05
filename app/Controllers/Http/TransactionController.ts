@@ -35,7 +35,6 @@ class TransactionsController {
 
 	async store(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id
-
 		return adaptRoute(makeCreateTransactionComposer(), ctx, { unity_id })
 	}
 

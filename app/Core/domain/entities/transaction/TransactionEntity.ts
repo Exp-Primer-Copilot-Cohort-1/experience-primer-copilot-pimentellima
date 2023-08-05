@@ -6,16 +6,16 @@ import { Schema } from 'mongoose'
 import * as z from 'zod'
 
 export class TransactionEntity implements ITransaction {
-	group_by?: string | undefined
-	activity_id?: string | undefined
-	unity_id?: string
-	prof?: { value: string; label: string } | undefined
-	client?: { value: string; label: string } | undefined
-	procedures?: { value: string; label: string }[] | undefined
+	group_by: string
+	activity_id?: string
+	unity_id: string
+	prof?: { value: string; label: string }
+	client?: { value: string; label: string }
+	procedures?: { value: string; label: string }[]
 	bank: { value: string | Schema.Types.ObjectId; label: string }
 	cost_center: { value: string | Schema.Types.ObjectId; label: string }
 	category: { value: string | Schema.Types.ObjectId; label: string }
-	paid?: boolean | undefined
+	paid?: boolean
 	value: number
 	date: Date
 	paymentForm: string
@@ -27,29 +27,29 @@ export class TransactionEntity implements ITransaction {
 	installments?: number | undefined
 	active?: boolean | undefined
 
-	defineGroupBy(group_by: string | undefined) {
+	defineGroupBy(group_by: string) {
 		this.group_by = group_by
 		return this
 	}
-	defineActivityId(activity_id: string | undefined) {
+	defineActivityId(activity_id?: string) {
 		this.activity_id = activity_id
 		return this
 	}
-	defineProf(prof: { value: string; label: string } | undefined) {
+	defineProf(prof?: { value: string; label: string }) {
 		this.prof = prof
 		return this
 	}
-	defineClient(client: { value: string; label: string } | undefined) {
+	defineClient(client?: { value: string; label: string }) {
 		this.client = client
 		return this
 	}
 
-	defineProcedures(procedures: { value: string; label: string }[] | undefined) {
+	defineProcedures(procedures?: { value: string; label: string }[]) {
 		this.procedures = procedures
 		return this
 	}
 
-	defineInstallmentCurrent(installmentCurrent: number | undefined) {
+	defineInstallmentCurrent(installmentCurrent = 1) {
 		this.installmentCurrent = installmentCurrent
 		return this
 	}
@@ -64,7 +64,7 @@ export class TransactionEntity implements ITransaction {
 		return this
 	}
 
-	defineUnityId(unity_id: string | undefined) {
+	defineUnityId(unity_id: string) {
 		this.unity_id = unity_id
 		return this
 	}
@@ -109,7 +109,7 @@ export class TransactionEntity implements ITransaction {
 		return this
 	}
 
-	definePaid(paid: boolean | undefined) {
+	definePaid(paid = true) {
 		this.paid = paid
 		return this
 	}
@@ -119,7 +119,7 @@ export class TransactionEntity implements ITransaction {
 	): PromiseEither<AbstractError, TransactionEntity> {
 		try {
 			z.object({
-				group_by: z.string().optional(),
+				group_by: z.string(),
 				activity_id: z.string().optional(),
 				prof: z
 					.object({
@@ -187,11 +187,11 @@ export class TransactionEntity implements ITransaction {
 					.defineProf(values.prof)
 					.defineCostCenter(values.cost_center)
 					.defineCategory(values.category)
-					.defineGroupBy(values.activity_id)
+					.defineGroupBy(values.activity_id || (values.group_by as string))
 					.defineActivityId(values.activity_id)
 					.defineDate(new Date(values.date))
 					.defineValue(values.value)
-					.defineUnityId(values.unity_id)
+					.defineUnityId(values.unity_id?.toString())
 					.definePaymentForm(values.paymentForm)
 					.definePaid(values.paid)
 					.defineType(values.type)
