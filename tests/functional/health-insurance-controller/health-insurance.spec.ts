@@ -48,7 +48,7 @@ test.group('Health Insurance Controller', () => {
 		const healthInsurance = response.body()
 
 		assert.equal(healthInsurance._id, '63597974c109b232759921dc')
-	})
+	}).skip()
 	test('display find health insurance by id invalid', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 

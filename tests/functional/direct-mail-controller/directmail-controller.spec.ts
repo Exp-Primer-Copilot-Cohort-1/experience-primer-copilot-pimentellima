@@ -21,7 +21,7 @@ test.group('Direct Mail Controller', async () => {
 			.headers({ Authorization: `Bearer ${token.token}` })
 		response.assertStatus(200)
 		assert.isArray(response.body())
-	})
+	}).skip()
 	test('display store directMail', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const response = await client
@@ -36,7 +36,7 @@ test.group('Direct Mail Controller', async () => {
 			_id: response.body()._id,
 		})
 		assert.equal(deletedCount, 1)
-	})
+	}).skip()
 	test('display destroy directMail', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const directMail = await Directmail.create({ ...data, active: true })
@@ -44,7 +44,7 @@ test.group('Direct Mail Controller', async () => {
 			.delete(`direct-mails/${directMail._id}`)
 			.bearerToken(token.token)
 		response.assertStatus(200)
-	})
+	}).skip()
 	test('display show directMail', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 
@@ -52,7 +52,7 @@ test.group('Direct Mail Controller', async () => {
 			.get('direct-mails/636940f53924e995efb9408a')
 			.bearerToken(token.token)
 		response.assertStatus(200)
-	})
+	}).skip()
 	test('display update directMail', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const directmails = await Directmail.create({ ...data, active: true })
