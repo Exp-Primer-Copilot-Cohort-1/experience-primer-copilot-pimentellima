@@ -11,7 +11,7 @@ const TransactionsSchema = new Schema<ITransaction>(
 	{
 		group_by: {
 			type: String,
-			required: false,
+			required: true,
 		},
 		prof: {
 			value: schemaDefault('users'),
