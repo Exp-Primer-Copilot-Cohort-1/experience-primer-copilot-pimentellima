@@ -5,6 +5,7 @@ import { PromiseEither, left, right } from 'App/Core/shared'
 
 import {
 	CensusDaysManagerInterface,
+	CensusPaymentParticipationsManagerInterface,
 	CensusPaymentsManagerInterface,
 	CensusRevenuesManagerInterface,
 	CensusUnitiesManagerInterface,
@@ -26,6 +27,7 @@ export class PaymentsCensusByDateUseCase
 		private readonly count: CensusUnitiesManagerInterface,
 		private readonly managerDays: CensusDaysManagerInterface,
 		private readonly managerRevenues: CensusRevenuesManagerInterface,
+		private readonly managerParticipation: CensusPaymentParticipationsManagerInterface,
 	) { }
 
 	public async execute({
@@ -70,7 +72,7 @@ export class PaymentsCensusByDateUseCase
 			),
 			this.manager.findPaymentsByPartners(unity_id, date_start, date_end, prof_id),
 			this.manager.findPaymentsByProf(unity_id, date_start, date_end, prof_id),
-			this.manager.findPaymentsParticipationByProf(
+			this.managerParticipation.findPaymentsParticipation(
 				unity_id,
 				date_start,
 				date_end,

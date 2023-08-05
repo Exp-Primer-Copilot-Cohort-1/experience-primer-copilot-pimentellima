@@ -4,6 +4,7 @@ import {
 	CensusClientsMongooseRepository,
 	CensusDaysMongooseRepository,
 	CensusMongooseRepository,
+	CensusPaymentParticipationsMongooseRepository,
 	CensusPaymentsMongooseRepository,
 	CensusRevenuesMongooseRepository,
 } from 'App/Core/domain/repositories'
@@ -28,6 +29,7 @@ export const makeCensusPaymentsByMonthByUnityIdComposer = (): ControllerGeneric 
 			new CensusMongooseRepository(),
 			new CensusDaysMongooseRepository(),
 			new CensusRevenuesMongooseRepository(),
+			new CensusPaymentParticipationsMongooseRepository(),
 		),
 	)
 }
