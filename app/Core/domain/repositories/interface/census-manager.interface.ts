@@ -39,7 +39,7 @@ export interface CensusUnitiesManagerInterface {
 		prof_id?: string,
 	) => PromiseEither<AbstractError, ICensusMediaTimeAttendance>
 
-	findActivitiesOfProfByProfByUnity: (
+	findActivitiesOfProf: (
 		unity_id: string,
 		date_start: string,
 		date_end: string,

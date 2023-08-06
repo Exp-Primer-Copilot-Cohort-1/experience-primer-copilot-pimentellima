@@ -97,7 +97,7 @@ describe('Census Mongoose Repository (Integration)', () => {
 
 	it('should be count actvities by prof', async () => {
 		const { sut } = makeSut()
-		const resultOrErr = await sut.findActivitiesOfProfByProfByUnity(
+		const resultOrErr = await sut.findActivitiesOfProf(
 			'6359660fc109b232759921d4',
 			'2022-12-01',
 			'2024-07-31',

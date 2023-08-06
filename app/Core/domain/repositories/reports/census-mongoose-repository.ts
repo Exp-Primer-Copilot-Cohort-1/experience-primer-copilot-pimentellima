@@ -188,7 +188,7 @@ export class CensusMongooseRepository implements CensusUnitiesManagerInterface {
 		return right(avg?.average_activity_duration || 0)
 	}
 
-	async findActivitiesOfProfByProfByUnity(
+	async findActivitiesOfProf(
 		unity_id: string,
 		date_start: string,
 		date_end: string,

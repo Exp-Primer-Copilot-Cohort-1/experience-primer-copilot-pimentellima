@@ -84,12 +84,7 @@ export class PaymentsCensusByDateUseCase
 				date_end,
 				prof_id,
 			),
-			this.count.findActivitiesOfProfByProfByUnity(
-				unity_id,
-				date_start,
-				date_end,
-				prof_id,
-			),
+			this.count.findActivitiesOfProf(unity_id, date_start, date_end, prof_id),
 			this.managerRevenues.findRevenuesAccrualRegimeActivities(
 				unity_id,
 				date_start,
