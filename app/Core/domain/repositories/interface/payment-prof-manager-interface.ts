@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared'
-import { IPaymentProf } from 'Types/IPaymentProf'
+import { IPaymentProf, ParticipationPrice } from 'Types/IPaymentProf'
 
 export interface PaymentProfManagerInterface {
 	createPaymentProf: (
@@ -16,4 +16,10 @@ export interface PaymentProfManagerInterface {
 	findAllPaymentProfs: (
 		unity_id: string,
 	) => PromiseEither<AbstractError, IPaymentProf[]>
+	findCurrentPaymentParticipation(
+		unity_id: string,
+		prof_id: string,
+		health_insurance_id: string,
+		procedure_id: string,
+	): PromiseEither<AbstractError, ParticipationPrice>
 }

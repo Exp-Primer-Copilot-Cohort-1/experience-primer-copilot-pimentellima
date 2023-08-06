@@ -46,7 +46,7 @@ const TransactionsSchema = new Schema<ITransaction>(
 						},
 						required: true,
 					},
-					payment_participations: {
+					payment_participation: {
 						type: {
 							value: Schema.Types.ObjectId,
 							price: Number,

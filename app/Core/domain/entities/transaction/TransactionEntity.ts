@@ -1,116 +1,181 @@
 import { ObjectId } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { ITransaction } from 'Types/ITransaction'
+import { IProcedureTransaction, ITransaction } from 'Types/ITransaction'
 import { Schema } from 'mongoose'
 import * as z from 'zod'
+import { Entity } from '../abstract/entity.abstract'
+import zProcedure from './z-procedure'
+export class TransactionEntity extends Entity implements ITransaction {
+	_group_by: string
+	_activity_id?: string
+	_unity_id: string
+	_prof?: { value: string; label: string }
+	_client?: { value: string; label: string }
+	_procedures?: IProcedureTransaction[]
+	_bank: { value: string | Schema.Types.ObjectId; label: string }
+	_cost_center: { value: string | Schema.Types.ObjectId; label: string }
+	_category: { value: string | Schema.Types.ObjectId; label: string }
+	_paid?: boolean
+	_value: number
+	_date: Date
+	_paymentForm: string
+	_description?: string | undefined
+	_type: 'income' | 'expense'
+	_occurrences?: 'once' | 'daily' | 'weekly' | 'biweekly' | 'monthly' | undefined
+	_installment: boolean
+	_installmentCurrent?: number | undefined
+	_installments?: number | undefined
 
-export class TransactionEntity implements ITransaction {
-	group_by: string
-	activity_id?: string
-	unity_id: string
-	prof?: { value: string; label: string }
-	client?: { value: string; label: string }
-	procedures?: { value: string; label: string }[]
-	bank: { value: string | Schema.Types.ObjectId; label: string }
-	cost_center: { value: string | Schema.Types.ObjectId; label: string }
-	category: { value: string | Schema.Types.ObjectId; label: string }
-	paid?: boolean
-	value: number
-	date: Date
-	paymentForm: string
-	description?: string | undefined
-	type: 'income' | 'expense'
-	occurrences?: 'once' | 'daily' | 'weekly' | 'biweekly' | 'monthly' | undefined
-	installment: boolean
-	installmentCurrent?: number | undefined
-	installments?: number | undefined
-	active?: boolean | undefined
+	get group_by() {
+		return this._group_by
+	}
+
+	get prof() {
+		return this._prof
+	}
+
+	get client() {
+		return this._client
+	}
+
+	get procedures() {
+		return this._procedures
+	}
+
+	get bank() {
+		return this._bank
+	}
+
+	get cost_center() {
+		return this._cost_center
+	}
+
+	get category() {
+		return this._category
+	}
+
+	get paid() {
+		return this._paid
+	}
+
+	get value() {
+		return this._value
+	}
+
+	get date() {
+		return this._date
+	}
+
+	get paymentForm() {
+		return this._paymentForm
+	}
+
+	get description() {
+		return this._description
+	}
+
+	get type() {
+		return this._type
+	}
+
+	get occurrences() {
+		return this._occurrences
+	}
+
+	get installment() {
+		return this._installment
+	}
+
+	get installmentCurrent() {
+		return this._installmentCurrent
+	}
+
+	get unity_id() {
+		return this._unity_id
+	}
 
 	defineGroupBy(group_by: string) {
-		this.group_by = group_by
+		this._group_by = group_by
 		return this
 	}
-	defineActivityId(activity_id?: string) {
-		this.activity_id = activity_id
-		return this
-	}
+
 	defineProf(prof?: { value: string; label: string }) {
-		this.prof = prof
+		this._prof = prof
 		return this
 	}
 	defineClient(client?: { value: string; label: string }) {
-		this.client = client
+		this._client = client
 		return this
 	}
 
-	defineProcedures(procedures?: { value: string; label: string }[]) {
-		this.procedures = procedures
+	defineProcedures(procedures: IProcedureTransaction[] = []) {
+		this._procedures = procedures
 		return this
 	}
 
 	defineInstallmentCurrent(installmentCurrent = 1) {
-		this.installmentCurrent = installmentCurrent
+		this._installmentCurrent = installmentCurrent
 		return this
 	}
 
 	defineType(type: 'expense' | 'income') {
-		this.type = type
+		this._type = type
 		return this
 	}
 
 	defineBank(bank: { value: string | ObjectId; label: string }) {
-		this.bank = bank
+		this._bank = bank
 		return this
 	}
 
 	defineUnityId(unity_id: string) {
-		this.unity_id = unity_id
+		this._unity_id = unity_id
 		return this
 	}
 
 	defineCategory(category: { value: string | ObjectId; label: string }) {
-		this.category = category
+		this._category = category
 		return this
 	}
 
 	defineValue(value: number) {
-		this.value = value
+		this._value = value
 		return this
 	}
 
 	definePaymentForm(value: string) {
-		this.paymentForm = value
+		this._paymentForm = value
 		return this
 	}
 
 	defineDate(value: Date) {
-		this.date = value
+		this._date = value
 		return this
 	}
 
 	defineDescription(value?: string) {
-		this.description = value
+		this._description = value
 		return this
 	}
 
 	defineInstallment(value: boolean) {
-		this.installment = value
+		this._installment = value
 		return this
 	}
 
 	defineInstallments(value?: number) {
-		this.installments = value
+		this._installments = value
 		return this
 	}
 
 	defineCostCenter(cost_center: { value: string | ObjectId; label: string }) {
-		this.cost_center = cost_center
+		this._cost_center = cost_center
 		return this
 	}
 
 	definePaid(paid = true) {
-		this.paid = paid
+		this._paid = paid
 		return this
 	}
 
@@ -136,21 +201,7 @@ export class TransactionEntity implements ITransaction {
 					.optional()
 					.nullable(),
 				procedures: z
-					.array(
-						z.object({
-							value: z.string(),
-							label: z.string(),
-							health_insurance: z.object({
-								value: z.string(),
-								label: z.string(),
-							}),
-							payment_participations: z.object({
-								value: z.string(),
-								percent: z.number(),
-								price: z.number(),
-							}),
-						}),
-					)
+					.array(zProcedure.optional().nullable())
 					.optional()
 					.nullable(),
 				bank: z.object({
@@ -188,7 +239,6 @@ export class TransactionEntity implements ITransaction {
 					.defineCostCenter(values.cost_center)
 					.defineCategory(values.category)
 					.defineGroupBy(values.activity_id || (values.group_by as string))
-					.defineActivityId(values.activity_id)
 					.defineDate(new Date(values.date))
 					.defineValue(values.value)
 					.defineUnityId(values.unity_id?.toString())

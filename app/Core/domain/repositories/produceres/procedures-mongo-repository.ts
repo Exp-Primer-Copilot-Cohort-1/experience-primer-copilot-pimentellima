@@ -17,6 +17,20 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 		}
 		return right(procedures)
 	}
+	async findByProcedureId(
+		id: string,
+		unity_id: string,
+	): PromiseEither<AbstractError, IProcedure> {
+		const procedure = await Procedure.findOne({
+			_id: id,
+			unity_id: unity_id,
+		})
+		if (!procedure) {
+			return left(new AbstractError('Procedure not found', 400))
+		}
+		return right(procedure)
+	}
+
 	public async findByName(
 		name: string,
 		unity_id: string,

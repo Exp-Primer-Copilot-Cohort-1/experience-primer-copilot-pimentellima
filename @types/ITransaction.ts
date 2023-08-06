@@ -1,5 +1,29 @@
 import { ObjectId } from '@ioc:Mongoose'
 
+export interface IProcedureTransaction {
+	value: string
+	label: string
+	price: number
+	color: string
+	minutes: number
+	health_insurance: {
+		value: string
+		label: string
+	}
+	payment_participation: {
+		value: string
+		price: number
+		percent: number
+	}
+	stock?: {
+		value: string
+		label: string
+		quantity: number
+		price_cost: number
+		price_final: number
+	}[]
+}
+
 export interface ITransaction {
 	_id?: string | ObjectId
 	group_by?: string
@@ -12,19 +36,7 @@ export interface ITransaction {
 		value: string
 		label: string
 	}
-	procedures?: {
-		value: string
-		label: string
-		health_insurance?: {
-			value: string
-			label: string
-		}
-		payment_participation?: {
-			value: string
-			price: number
-			percent: number
-		}
-	}[]
+	procedures?: IProcedureTransaction[]
 	bank: {
 		value: string | ObjectId
 		label: string

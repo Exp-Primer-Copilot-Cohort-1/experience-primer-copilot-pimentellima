@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IPaymentProf } from 'Types/IPaymentProf'
+import { IPaymentProf, ParticipationPrice } from 'Types/IPaymentProf'
 import { Types } from 'mongoose'
 import { OptsQuery } from '../../entities/helpers/opts-query'
 import { PaymentProfEntity } from '../../entities/payment-prof/paymentProf'
@@ -26,6 +26,7 @@ const generatePipeline = (match: any, active: boolean) => [
 			_id: '$prices._id',
 			participation_id: '$_id',
 			value: '$prices.abs',
+			abs: '$prices.abs',
 			percent: '$prices.percent',
 			active: '$prices.active',
 			procedure: 1,
@@ -196,5 +197,29 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 		const data = await PaymentParticipations.aggregate(pipeline)
 
 		return right(data)
+	}
+
+	async findCurrentPaymentParticipation(
+		unity_id: string,
+		prof_id: string,
+		health_insurance_id: string,
+		procedure_id: string,
+	): PromiseEither<AbstractError, ParticipationPrice> {
+		const pipeline = generatePipeline(
+			{
+				'prof.value': new ObjectId(prof_id.toString()),
+				'health_insurance.value': new ObjectId(health_insurance_id.toString()),
+				'procedure.value': new ObjectId(procedure_id.toString()),
+				unity_id: new ObjectId(unity_id.toString()),
+			},
+			true,
+		)
+
+		const data = await PaymentParticipations.aggregate(pipeline)
+
+		if (!data || data.length === 0)
+			return left(new AbstractError('Participation not found', 404))
+
+		return right(data[0])
 	}
 }

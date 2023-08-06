@@ -37,6 +37,14 @@ const ProcedureSchema = new Schema<IProcedure>(
 					type: Number,
 					required: true,
 				},
+				price_cost: {
+					type: Number,
+					required: true,
+				},
+				price_final: {
+					type: Number,
+					required: true,
+				},
 			},
 		],
 		unity_id: {

@@ -4,10 +4,6 @@ import { ITransaction } from 'Types/ITransaction'
 import { assert } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 
-import { Types } from 'mongoose'
-
-const ObjectId = Types.ObjectId
-
 const transaction: ITransaction = {
 	unity_id: '6359660fc109b232759921d4',
 	type: 'income',
@@ -32,6 +28,23 @@ const transaction: ITransaction = {
 	value: 100,
 	installment: false,
 	paid: true,
+}
+
+const procedure = {
+	prof: { value: '6359660fc109b232759921d6', label: 'RODRIGO MACHADO' },
+	procedures: [
+		{
+			value: '64cfe7b52051b9be53a7055e',
+			label: 'COM PRODUTOS',
+			minutes: 60,
+			color: '#121212',
+			health_insurance: {
+				value: '6363ca3ac109b232759921f3',
+				label: 'CONVÊNIO',
+			},
+			price: '150,00',
+		},
+	],
 }
 
 test.group('Transactions Controller', async () => {
@@ -64,5 +77,55 @@ test.group('Transactions Controller', async () => {
 		})
 
 		assert.equal(deletedCount, 2)
+	})
+
+	test('display store transactions with installment', async ({ client }) => {
+		const { token } = await loginAndGetToken(client)
+
+		const response = await client
+			.post('transactions')
+			.json({
+				...transaction,
+				installments: 2,
+				paymentForm: 'credit_card',
+			})
+			.bearerToken(token.token)
+
+		response.assertStatus(200)
+
+		const t: ITransaction = response.body()
+
+		assert.isObject(t)
+
+		assert.containsAllKeys(t, ['_id'])
+		const { deletedCount } = await Transactions.deleteMany({
+			'prof.label': 'MOISÉS RODRIGUES DE PAULA TESTE',
+		})
+
+		assert.equal(deletedCount, 4)
+	})
+
+	test('display store transactions with procedure', async ({ client }) => {
+		const { token } = await loginAndGetToken(client)
+
+		const newTransaction = { ...transaction, ...procedure }
+
+		const response = await client
+			.post('transactions')
+			.json(newTransaction)
+			.bearerToken(token.token)
+
+		response.assertStatus(200)
+
+		const t: ITransaction = response.body()
+
+		assert.isObject(t)
+
+		assert.containsAllKeys(t, ['_id'])
+		const { deletedCount } = await Transactions.deleteMany({
+			_id: t._id,
+		})
+
+		assert.equal(deletedCount, 1)
 	})
 })
