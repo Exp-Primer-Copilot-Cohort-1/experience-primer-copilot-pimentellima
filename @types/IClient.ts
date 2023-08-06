@@ -9,7 +9,7 @@ export interface IUserClient extends Partial<IAddress> {
 	name: string
 	avatar?: string
 	birth_date: string | Date
-	genrer?: 'male' | 'female' | 'other' | 'not informed'
+	genre?: 'male' | 'female' | 'other' | 'not informed'
 	document: string
 	celphone: string
 	phone?: string

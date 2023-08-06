@@ -16,7 +16,7 @@ export type ICensusScheduledEvent = {
 	in_progress: number
 }
 
-export type ICensusGenrerClient = {
+export type ICensusGenreClient = {
 	not_informed: number
 	male: number
 	female: number
@@ -41,8 +41,9 @@ export type ICensusActivitiesByDays = {
 }
 
 export type ICensusActivitiesByDaysOfMonth = {
-	counts: { scheduled: AppointmentStatus; count: number }[]
-	day: number
+	count: number
+	date: string
+	scheduled: AppointmentStatus
 }
 
 export type ICensusActivitiesByProf = {
@@ -92,3 +93,9 @@ export type ICensusRevenuesOfYearByUnityByProf = [
 	number,
 	number,
 ]
+
+export type ICensusCost = {
+	value: string
+	procedure: string
+	total: number
+}

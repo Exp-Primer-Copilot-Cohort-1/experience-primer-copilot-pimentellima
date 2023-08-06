@@ -141,6 +141,7 @@ export class PaymentsCensusByDateUseCase
 			payment_participation_by_prof,
 			payment_by_partners,
 			revenues_activities,
+			cost: [],
 		})
 	}
 }

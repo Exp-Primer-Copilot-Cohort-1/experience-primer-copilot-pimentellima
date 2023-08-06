@@ -3,31 +3,31 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 
-'use strict';
+'use strict'
 
-const ImportService = use('App/Services/ImportService');
-const Helpers = use('Helpers');
-const User = use('App/Models/User');
+const ImportService = use('App/Services/ImportService')
+const Helpers = use('Helpers')
+const User = use('App/Models/User')
 
 class ImportController {
-  async import({request, auth}) {
-    const userLogged = auth.user;
+  async import({ request, auth }) {
+    const userLogged = auth.user
     try {
-      const upload = request.file('upload');
-      const fname = `${new Date().getTime()}.${upload.extname}`;
-      const dir = 'upload/';
+      const upload = request.file('upload')
+      const fname = `${new Date().getTime()}.${upload.extname}`
+      const dir = 'upload/'
 
       // move uploaded file into custom folder
       await upload.move(Helpers.tmpPath(dir), {
         name: fname,
-      });
+      })
 
       if (!upload.moved()) {
-        console.log('error');
-        return (upload.error(), 'Error moving files', 500);
+        console.log('error')
+        return upload.error(), 'Error moving files', 500
       }
 
-      const resp = await ImportService.ImportClassification(`tmp/${dir}${fname}`);
+      const resp = await ImportService.ImportClassification(`tmp/${dir}${fname}`)
       for (const itm of resp) {
         await User.create({
           unity_id: userLogged.unity_id,
@@ -36,7 +36,7 @@ class ImportController {
           due_date: null,
           name: itm[3],
           birth_date: itm[5],
-          genrer: itm[6],
+          genre: itm[6],
           document: itm[7],
           number_id: itm[8],
           celphone: itm[12],
@@ -55,15 +55,15 @@ class ImportController {
           observation: '',
           email: itm[14],
           password: null,
-        });
+        })
       }
 
-      return true;
+      return true
     } catch (er) {
-      console.log(er);
-      return false;
+      console.log(er)
+      return false
     }
   }
 }
 
-module.exports = ImportController;
+module.exports = ImportController

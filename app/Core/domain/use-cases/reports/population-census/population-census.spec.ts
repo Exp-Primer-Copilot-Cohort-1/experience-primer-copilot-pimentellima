@@ -19,9 +19,7 @@ const makeSut = () => {
 
 describe('Population Census Use Case (Integration)', () => {
 	beforeAll(async () => {
-		await mongoose.connect(
-			process.env.DB_CONNECTION_STRING as string,
-		)
+		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})
 	afterAll(async () => {
 		await mongoose.connection.close()
@@ -68,7 +66,7 @@ describe('Population Census Use Case (Integration)', () => {
 					scheduled: expect.any(Number),
 					in_progress: expect.any(Number),
 				}),
-				genrer_clients: expect.objectContaining({
+				genre_clients: expect.objectContaining({
 					female: expect.any(Number),
 					male: expect.any(Number),
 					not_informed: expect.any(Number),

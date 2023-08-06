@@ -125,10 +125,10 @@ class ReportController {
 				const user = await User.where({
 					_id: mongoose.Types.ObjectId(userId.client.value),
 				}).first()
-				if (user && user.genrer) {
-					if (user.genrer === 'male') {
+				if (user && user.genre) {
+					if (user.genre === 'male') {
 						usersMale.push(user)
-					} else if (user.genrer === 'female') {
+					} else if (user.genre === 'female') {
 						usersFemale.push(user)
 					}
 				}

@@ -3,20 +3,20 @@ import { PromiseEither, right } from 'App/Core/shared'
 import Activity from 'App/Models/Activity'
 import {
 	ICensusCountPartners,
-	ICensusGenrerClient,
-	ICensusNewAndOldClients
+	ICensusGenreClient,
+	ICensusNewAndOldClients,
 } from 'Types/ICensus'
 import { CensusClientsManagerInterface } from '../interface/census-clients-manager.interface'
 
 import generateMatch from './generate-match-census'
 
 export class CensusClientsMongooseRepository implements CensusClientsManagerInterface {
-	async findCesusGenrerClientByUnityOrProf(
+	async findCensusGenreClientByUnityOrProf(
 		unity_id: string,
 		date_start: string,
 		date_end: string,
 		prof_id?: string,
-	): PromiseEither<AbstractError, ICensusGenrerClient> {
+	): PromiseEither<AbstractError, ICensusGenreClient> {
 		const match = generateMatch({
 			date_start,
 			date_end,
@@ -46,7 +46,7 @@ export class CensusClientsMongooseRepository implements CensusClientsManagerInte
 			},
 			{
 				$group: {
-					_id: '$client.genrer',
+					_id: '$client.genre',
 					count: { $sum: 1 },
 				},
 			},
@@ -65,7 +65,7 @@ export class CensusClientsMongooseRepository implements CensusClientsManagerInte
 				not_informed: 0,
 				male: 0,
 				female: 0,
-			}) as ICensusGenrerClient,
+			}) as ICensusGenreClient,
 		)
 	}
 

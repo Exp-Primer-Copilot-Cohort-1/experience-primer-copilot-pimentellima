@@ -2,17 +2,18 @@ import {
 	ICensusActivitiesByDaysOfMonth,
 	ICensusActivitiesByHealthInsurance,
 	ICensusActivitiesByProf,
+	ICensusCost,
 	ICensusCountHealthInsurances,
 	ICensusCountPartners,
 	ICensusCountProcedure,
-	ICensusGenrerClient,
+	ICensusGenreClient,
 	ICensusMediaTimeAttendance,
 	ICensusNewAndOldClients,
 	ICensusParticipationPaymentByProf,
 	ICensusPaymentByProf,
 	ICensusPaymentForm,
 	ICensusRevenuesOfYearByUnityByProf,
-	ICensusScheduledEvent
+	ICensusScheduledEvent,
 } from 'Types/ICensus'
 
 export type ICensusCount = {
@@ -20,7 +21,7 @@ export type ICensusCount = {
 	health_insurances: ICensusCountHealthInsurances[]
 	partners: ICensusCountPartners[]
 	scheduled_events: ICensusScheduledEvent
-	genrer_clients: ICensusGenrerClient
+	genre_clients: ICensusGenreClient
 	media_time_attendance: ICensusMediaTimeAttendance
 	new_and_old_clients: ICensusNewAndOldClients
 }
@@ -37,4 +38,5 @@ export type ICensusPayments = {
 		accrual_regime: ICensusRevenuesOfYearByUnityByProf
 		cash_regime: ICensusRevenuesOfYearByUnityByProf
 	}
+	cost: ICensusCost[]
 }

@@ -20,7 +20,7 @@ export interface IStocksLog extends Document {
     celphone: string;
     document: string;
     exib_minutes: number;
-    genrer: string;
+    genre: string;
     hour_end: string | null;
     hour_end_lunch: string | null;
     hour_start: string | null;

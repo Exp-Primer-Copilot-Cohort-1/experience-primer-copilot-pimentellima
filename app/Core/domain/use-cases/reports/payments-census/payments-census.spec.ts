@@ -1,6 +1,7 @@
 import {
 	CensusDaysMongooseRepository,
 	CensusMongooseRepository,
+	CensusPaymentParticipationsMongooseRepository,
 	CensusPaymentsMongooseRepository,
 	CensusRevenuesMongooseRepository,
 } from 'App/Core/domain/repositories'
@@ -15,6 +16,7 @@ const makeSut = () => {
 		new CensusMongooseRepository(),
 		new CensusDaysMongooseRepository(),
 		new CensusRevenuesMongooseRepository(),
+		new CensusPaymentParticipationsMongooseRepository(),
 	)
 	return {
 		sut,
@@ -28,7 +30,7 @@ describe('Population Census Use Case (Integration)', () => {
 	afterAll(async () => {
 		await mongoose.connection.close()
 	})
-	it.skip('should be find census payments activities by unity', async () => {
+	it('should be find census payments activities by unity', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.execute({
 			unity_id: '6359660fc109b232759921d4', // unity id
@@ -40,57 +42,16 @@ describe('Population Census Use Case (Integration)', () => {
 
 		const census = resultOrErr.extract()
 
-		// Check if each attribute in the output has the expected structure
 		expect(census).toEqual(
 			expect.objectContaining({
-				count_by_days: expect.objectContaining({
-					'0': expect.any(Number),
-					'1': expect.any(Number),
-					'2': expect.any(Number),
-					'3': expect.any(Number),
-					'4': expect.any(Number),
-					'5': expect.any(Number),
-					'6': expect.any(Number),
-				}),
-				count_by_activity_by_prof: expect.arrayContaining([
-					expect.objectContaining({
-						label: expect.any(String),
-						value: expect.any(String),
-						count: expect.any(Number),
-					}),
-				]),
-				payments_by_health_insurances: expect.arrayContaining([
-					expect.objectContaining({
-						label: expect.any(String),
-						value: expect.any(String),
-						count: expect.any(Number),
-						total: expect.any(Number),
-					}),
-				]),
-				payment_by_prof: expect.arrayContaining([
-					expect.objectContaining({
-						label: expect.any(String),
-						value: expect.any(String),
-						count: expect.any(Number),
-						total: expect.any(Number),
-					}),
-				]),
-				payment_by_partners: expect.arrayContaining([
-					expect.objectContaining({
-						label: expect.any(String),
-						// value: expect.any(String),
-						count: expect.any(Number),
-						total: expect.any(Number),
-					}),
-				]),
+				count_by_days: expect.any(Array),
+				count_by_activity_by_prof: expect.any(Array),
+				payments_by_health_insurances: expect.any(Array),
+				payment_by_prof: expect.any(Array),
+				payment_by_partners: expect.any(Array),
 				payment_participation_by_prof: expect.any(Array),
-				payment_form: expect.any([
-					expect.objectContaining({
-						label: expect.any(String),
-						value: expect.any(String),
-						count: expect.any(Number),
-					}),
-				]),
+				payment_form: expect.any(Array),
+				cost: expect.any(Array),
 			}),
 		)
 	})

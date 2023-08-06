@@ -87,7 +87,7 @@ class UserController {
 			'avatar',
 			'birth_date',
 			'password',
-			'genrer',
+			'genre',
 			'document',
 			'is_company',
 			'number_id',
