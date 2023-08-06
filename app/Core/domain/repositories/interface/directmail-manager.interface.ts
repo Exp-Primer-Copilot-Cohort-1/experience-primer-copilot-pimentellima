@@ -13,6 +13,10 @@ export interface DirectmailManagerInterface {
 		id: string,
 		data: Partial<IDirectmail>,
 	) => PromiseEither<AbstractError, IDirectmail>
+	updateDirectMailActive: (
+		id: string,
+		active: boolean,
+	) => PromiseEither<AbstractError, IDirectmail>
 	createDirectmails: (
 		data: Partial<IDirectmail>,
 	) => PromiseEither<AbstractError, IDirectmail>
