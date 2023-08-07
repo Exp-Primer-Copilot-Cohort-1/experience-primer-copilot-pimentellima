@@ -2,6 +2,7 @@ import { Controller } from 'App/Core/adapters/controller'
 import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
 import {
 	CensusClientsMongooseRepository,
+	CensusCostMongooseRepository,
 	CensusDaysMongooseRepository,
 	CensusMongooseRepository,
 	CensusPaymentParticipationsMongooseRepository,
@@ -30,6 +31,7 @@ export const makeCensusPaymentsByMonthByUnityIdComposer = (): ControllerGeneric 
 			new CensusDaysMongooseRepository(),
 			new CensusRevenuesMongooseRepository(),
 			new CensusPaymentParticipationsMongooseRepository(),
+			new CensusCostMongooseRepository(),
 		),
 	)
 }

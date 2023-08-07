@@ -10,6 +10,7 @@ import {
 	CensusRevenuesManagerInterface,
 	CensusUnitiesManagerInterface,
 } from 'App/Core/domain/repositories/interface'
+import { CensusCostManagerInterface } from 'App/Core/domain/repositories/interface/census-cost.interface'
 import { ICensusPayments } from '../../helpers/census'
 
 type PaymentsCensusByDateProps = {
@@ -28,6 +29,7 @@ export class PaymentsCensusByDateUseCase
 		private readonly managerDays: CensusDaysManagerInterface,
 		private readonly managerRevenues: CensusRevenuesManagerInterface,
 		private readonly managerParticipation: CensusPaymentParticipationsManagerInterface,
+		private readonly managerCost: CensusCostManagerInterface,
 	) { }
 
 	public async execute({
@@ -62,6 +64,7 @@ export class PaymentsCensusByDateUseCase
 			count_by_activity_by_profOrErr,
 			accrualRegimeOrErr,
 			cashRegimeOrErr,
+			costOrErr,
 		] = await Promise.all([
 			this.manager.findPaymentsByForm(unity_id, date_start, date_end, prof_id),
 			this.manager.findPaymentsByHealthInsurance(
@@ -97,6 +100,7 @@ export class PaymentsCensusByDateUseCase
 				date_end,
 				prof_id,
 			),
+			this.managerCost.findCost(unity_id, date_start, date_end, prof_id),
 		])
 
 		if (
@@ -108,7 +112,8 @@ export class PaymentsCensusByDateUseCase
 			count_by_daysOrErr.isLeft() ||
 			count_by_activity_by_profOrErr.isLeft() ||
 			accrualRegimeOrErr.isLeft() ||
-			cashRegimeOrErr.isLeft()
+			cashRegimeOrErr.isLeft() ||
+			costOrErr.isLeft()
 		) {
 			return left(
 				new AbstractError('Error on find census activities by unity', 400),
@@ -126,6 +131,7 @@ export class PaymentsCensusByDateUseCase
 			accrual_regime: accrualRegimeOrErr.extract(),
 			cash_regime: cashRegimeOrErr.extract(),
 		}
+		const cost = costOrErr.extract()
 
 		return right({
 			count_by_activity_by_prof,
@@ -136,7 +142,7 @@ export class PaymentsCensusByDateUseCase
 			payment_participation_by_prof,
 			payment_by_partners,
 			revenues_activities,
-			cost: [],
+			cost,
 		})
 	}
 }

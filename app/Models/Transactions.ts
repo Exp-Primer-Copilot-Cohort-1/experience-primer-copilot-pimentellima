@@ -35,6 +35,18 @@ const TransactionsSchema = new Schema<ITransaction>(
 			type: [
 				{
 					value: schemaDefault('procedures'),
+					color: {
+						type: String,
+						required: false,
+					},
+					minutes: {
+						type: Number,
+						required: false,
+					},
+					price: {
+						type: Number,
+						required: true,
+					},
 					label: {
 						type: String,
 						required: false,
@@ -45,6 +57,7 @@ const TransactionsSchema = new Schema<ITransaction>(
 							label: String,
 						},
 						required: true,
+						_id: false,
 					},
 					payment_participation: {
 						type: {
@@ -53,6 +66,20 @@ const TransactionsSchema = new Schema<ITransaction>(
 							percent: Number,
 						},
 						required: true,
+						_id: false,
+					},
+					stock: {
+						type: [
+							{
+								value: schemaDefault('stocks'),
+								quantity: Number,
+								price_cost: Number,
+								price_final: Number,
+							},
+						],
+						required: false,
+						_id: false,
+						default: [],
 					},
 					_id: false,
 				},

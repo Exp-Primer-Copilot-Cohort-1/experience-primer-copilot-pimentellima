@@ -74,9 +74,21 @@ export type ICensusPaymentByProf = {
 }
 
 export type ICensusParticipationPaymentByProf = {
-	value: string
 	label: string
-	total: number
+	prof: {
+		value: string
+		label: string
+	}
+	health_insurance: {
+		value: string
+		label: string
+	}
+	procedure: {
+		value: string
+		label: string
+	}
+	cost: number
+	participation: number
 }
 
 export type ICensusRevenuesOfYearByUnityByProf = [
@@ -97,5 +109,7 @@ export type ICensusRevenuesOfYearByUnityByProf = [
 export type ICensusCost = {
 	value: string
 	procedure: string
+	health_insurance: string
+	prof: string
 	total: number
 }

@@ -1,4 +1,5 @@
 import {
+	CensusCostMongooseRepository,
 	CensusDaysMongooseRepository,
 	CensusMongooseRepository,
 	CensusPaymentParticipationsMongooseRepository,
@@ -17,6 +18,7 @@ const makeSut = () => {
 		new CensusDaysMongooseRepository(),
 		new CensusRevenuesMongooseRepository(),
 		new CensusPaymentParticipationsMongooseRepository(),
+		new CensusCostMongooseRepository(),
 	)
 	return {
 		sut,

@@ -4,7 +4,7 @@ export default z.object({
 	value: z.string(),
 	label: z.string(),
 	color: z.string(),
-	price: z.number(),
+	price: z.number().positive(),
 	minutes: z.number(),
 	health_insurance: z
 		.object({

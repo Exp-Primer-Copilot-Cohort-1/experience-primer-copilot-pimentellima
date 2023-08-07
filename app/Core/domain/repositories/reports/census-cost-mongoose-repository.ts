@@ -1,18 +1,17 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, right } from 'App/Core/shared'
 import Transactions from 'App/Models/Transactions'
-import { ICensusParticipationPaymentByProf } from 'Types/ICensus'
-import { CensusPaymentParticipationsManagerInterface } from '../interface/census-payment-participations.interface'
+import { ICensusCost } from 'Types/ICensus'
+import { CensusCostManagerInterface } from '../interface/census-cost.interface'
 import generateMatch from './generate-match-census'
 
-export class CensusPaymentParticipationsMongooseRepository
-	implements CensusPaymentParticipationsManagerInterface {
-	async findPaymentsParticipation(
+export class CensusCostMongooseRepository implements CensusCostManagerInterface {
+	async findCost(
 		unity_id: string,
 		date_start: string,
 		date_end: string,
 		prof_id?: string | undefined,
-	): PromiseEither<AbstractError, ICensusParticipationPaymentByProf[]> {
+	): PromiseEither<AbstractError, ICensusCost[]> {
 		const match = generateMatch({
 			date_start,
 			date_end,
@@ -25,33 +24,12 @@ export class CensusPaymentParticipationsMongooseRepository
 					...match,
 					'procedures.0': { $exists: true },
 					'procedures.0.payment_participation': { $exists: true },
+					'procedures.0.stock': { $exists: true },
 					type: 'income',
-					paid: true,
 				},
 			},
 			{
 				$unwind: '$procedures',
-			},
-			{
-				$addFields: {
-					calculatedPayment: {
-						$cond: [
-							{ $gt: ['$procedures.payment_participation.percent', 0] },
-							{
-								$multiply: [
-									'$procedures.price',
-									{
-										$divide: [
-											'$procedures.payment_participation.percent',
-											100,
-										],
-									},
-								],
-							},
-							'$procedures.payment_participation.price',
-						],
-					},
-				},
 			},
 			{
 				$addFields: {
@@ -82,8 +60,8 @@ export class CensusPaymentParticipationsMongooseRepository
 						prof: '$prof.value',
 					},
 					label: { $first: '$procedures.label' },
-					prof: { $first: '$prof.label' },
 					health_insurance: { $first: '$procedures.health_insurance.label' },
+					prof: { $first: '$prof.label' },
 					cost: { $sum: '$cost' },
 					participation: { $sum: '$calculatedPayment' },
 				},
@@ -91,28 +69,15 @@ export class CensusPaymentParticipationsMongooseRepository
 			{
 				$project: {
 					_id: 0,
-					procedure: {
-						value: '$_id.procedure',
-						label: '$label',
-					},
-					health_insurance: {
-						value: '$_id.health_insurance',
-						label: '$health_insurance',
-					},
-					prof: {
-						value: '$_id.prof',
-						label: '$prof',
-					},
-					cost: {
+					value: '$_id.procedure',
+					health_insurance: 1,
+					prof: 1,
+					procedure: '$label',
+					total: {
 						$round: [
-							'$cost',
-							2, // arredonda para duas casas decimais
-						],
-					},
-					label: 1,
-					participation: {
-						$round: [
-							'$participation',
+							{
+								$add: ['$cost', '$participation'],
+							},
 							2, // arredonda para duas casas decimais
 						],
 					},
