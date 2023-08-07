@@ -5,7 +5,7 @@ export class MissingParamsError extends AbstractError {
 
 	constructor(param?: string) {
 		const message = param ? param : ''
-		super('Missing params: ' + message, 400)
+		super('O parâmetro não foi repassado ' + message, 400)
 		this.name = 'MissingParamsError'
 	}
 

@@ -22,7 +22,10 @@ export class CreateWithProceduresTransactionUseCase
 		procedures,
 		...transaction
 	}: TransactionWithProcedure): PromiseEither<AbstractError, ITransaction> {
-		if (!procedures) return left(new AbstractError('Procedures not found', 400))
+		if (!procedures)
+			return left(
+				new AbstractError('Procedimento não foi passado como parâmetro', 400),
+			)
 
 		const proceduresTransactions: IProcedureTransaction[] = await Promise.all(
 			procedures.map(async (procedure) => {

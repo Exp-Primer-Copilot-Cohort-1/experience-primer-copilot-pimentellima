@@ -10,3 +10,9 @@ export type TransactionWithProcedure = Omit<
 	prof: { value: string; label: string }
 	client: { value: string; label: string }
 }
+
+export type TransactionWithActivity = ITransaction & {
+	id: string
+	unity_id: string
+	activity_id: string
+}

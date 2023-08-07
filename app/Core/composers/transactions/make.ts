@@ -1,6 +1,7 @@
 import { Controller } from 'App/Core/adapters/controller'
 import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
 import {
+	ActivityMongoRepository,
 	PaymentProfMongoRepository,
 	ProceduresMongooseRepository,
 	TransactionsMongooseRepository,
@@ -9,6 +10,7 @@ import {
 	CreateOnlyOneTransactionUseCase,
 	CreateTransactionUseCase,
 	CreateWithProceduresTransactionUseCase,
+	UpdateActivityPaymentUseCase,
 } from 'App/Core/domain/use-cases'
 
 export const makeCreateTransactionComposer = (): ControllerGeneric => {
@@ -20,6 +22,7 @@ export const makeCreateTransactionComposer = (): ControllerGeneric => {
 				new ProceduresMongooseRepository(),
 				new PaymentProfMongoRepository(),
 			),
+			new UpdateActivityPaymentUseCase(new ActivityMongoRepository()),
 		),
 	)
 }

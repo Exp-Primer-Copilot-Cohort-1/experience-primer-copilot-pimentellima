@@ -74,7 +74,8 @@ export class ProcedureTransactionEntity implements IProcedureTransaction {
 		try {
 			const price = z
 				.string()
-				.transform((value) => Number(value.replace(',', '.')))
+				.or(z.number())
+				.transform((value) => Number(value.toString().replace(',', '.')))
 				.parse(procedure.price)
 
 			zProcedure.parse({ ...procedure, price })

@@ -23,10 +23,13 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 	): PromiseEither<AbstractError, IProcedure> {
 		const procedure = await Procedure.findOne({
 			_id: id,
-			unity_id: unity_id,
+			unity_id: unity_id.toString(),
 		})
+
 		if (!procedure) {
-			return left(new AbstractError('Procedure not found', 400))
+			return left(
+				new AbstractError('Procedimento não encontrado no Banco de Dados', 400),
+			)
 		}
 		return right(procedure)
 	}
