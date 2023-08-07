@@ -39,7 +39,7 @@ export class CensusPaymentParticipationsMongooseRepository
 							{ $gt: ['$procedures.payment_participation.percent', 0] },
 							{
 								$multiply: [
-									'$procedures.percent',
+									'$procedures.payment_participation.percent',
 									{
 										$divide: ['$procedures.price', 100],
 									},

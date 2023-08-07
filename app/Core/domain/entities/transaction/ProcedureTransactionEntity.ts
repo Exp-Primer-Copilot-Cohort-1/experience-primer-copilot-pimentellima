@@ -54,11 +54,18 @@ export class ProcedureTransactionEntity implements IProcedureTransaction {
 		return this
 	}
 
-	definePaymentParticipation(payment_participation: {
-		value: string
-		price: number
-		percent: number
-	}): this {
+	definePaymentParticipation(
+		payment_participation: {
+			value: string
+			price: number
+			percent: number
+		},
+		price: number = this.price,
+	): this {
+		const { percent } = payment_participation
+		payment_participation.price =
+			percent > 0 ? (price / 100) * percent : payment_participation.price
+
 		this.payment_participation = payment_participation
 		return this
 	}
@@ -87,7 +94,7 @@ export class ProcedureTransactionEntity implements IProcedureTransaction {
 					.defineColor(procedure.color)
 					.defineMinutes(procedure.minutes)
 					.defineHealthInsurance(procedure.health_insurance)
-					.definePaymentParticipation(procedure.payment_participation)
+					.definePaymentParticipation(procedure.payment_participation, price)
 					.defineStock(procedure.stock),
 			)
 		} catch (error) {
