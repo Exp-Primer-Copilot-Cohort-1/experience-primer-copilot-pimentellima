@@ -46,7 +46,7 @@ export class CensusClientsMongooseRepository implements CensusClientsManagerInte
 			},
 			{
 				$group: {
-					_id: '$client.genre',
+					_id: '$client.genrer',
 					count: { $sum: 1 },
 				},
 			},

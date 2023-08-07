@@ -25,7 +25,7 @@ const schemaDefault = (colection: string) => ({
  *           type: string
  *         birth_date:
  *           type: string
- *         genre:
+ *         genrer:
  *           type: string
  *         document:
  *           type: string
@@ -88,7 +88,7 @@ const ClientSchema = new Schema<IUserClient>(
 		birth_date: {
 			type: String,
 		},
-		genre: {
+		genrer: {
 			type: String,
 			default: 'not_informed',
 		},
