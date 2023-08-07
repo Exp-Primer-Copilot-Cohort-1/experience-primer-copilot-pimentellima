@@ -1,21 +1,11 @@
 import Mongoose, { Schema } from "@ioc:Mongoose";
-import { IPrescription } from "IPrescription";
+import { IPrescription } from "Types/IPrescription";
 
 const PrescriptionSchema = new Schema<IPrescription>(
 	{
 		name: {
 			type: String,
 			required: true,
-		},
-		client: {
-			value: {
-				type: String,
-				required: true,
-			},
-			label: {
-				type: String,
-				required: true,
-			},
 		},
 		prof: {
 			value: {

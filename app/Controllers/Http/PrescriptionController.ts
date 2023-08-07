@@ -4,7 +4,6 @@ import { z } from "zod";
 const prescriptionSchema = z.object({
 	name: z.string(),
 	text: z.string(),
-	client: z.object({}),
 	prof: z.object({}),
 });
 
@@ -46,7 +45,7 @@ class PrescriptionController {
 	async update({ params, request }) {
 		const data = request.all();
 
-		prescriptionSchema.parse({ data });
+		prescriptionSchema.parse(data);
 
 		const prescription = await Prescription.findByIdAndUpdate(
 			params.id,
