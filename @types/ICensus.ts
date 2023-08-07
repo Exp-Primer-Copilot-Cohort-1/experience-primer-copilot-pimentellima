@@ -89,6 +89,7 @@ export type ICensusParticipationPaymentByProf = {
 	}
 	cost: number
 	participation: number
+	total: number
 }
 
 export type ICensusRevenuesOfYearByUnityByProf = [

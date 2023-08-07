@@ -39,22 +39,15 @@ export class CensusPaymentParticipationsMongooseRepository
 							{ $gt: ['$procedures.payment_participation.percent', 0] },
 							{
 								$multiply: [
-									'$procedures.price',
+									'$procedures.percent',
 									{
-										$divide: [
-											'$procedures.payment_participation.percent',
-											100,
-										],
+										$divide: ['$procedures.price', 100],
 									},
 								],
 							},
 							'$procedures.payment_participation.price',
 						],
 					},
-				},
-			},
-			{
-				$addFields: {
 					cost: {
 						$reduce: {
 							input: '$procedures.stock',
@@ -85,7 +78,8 @@ export class CensusPaymentParticipationsMongooseRepository
 					prof: { $first: '$prof.label' },
 					health_insurance: { $first: '$procedures.health_insurance.label' },
 					cost: { $sum: '$cost' },
-					participation: { $sum: '$calculatedPayment' },
+					total: { $sum: '$procedures.price' },
+					calculatedPayment: { $sum: '$calculatedPayment' },
 				},
 			},
 			{
@@ -110,9 +104,15 @@ export class CensusPaymentParticipationsMongooseRepository
 						],
 					},
 					label: 1,
+					total: {
+						$round: [
+							'$total',
+							2, // arredonda para duas casas decimais
+						],
+					},
 					participation: {
 						$round: [
-							'$participation',
+							'$calculatedPayment',
 							2, // arredonda para duas casas decimais
 						],
 					},
