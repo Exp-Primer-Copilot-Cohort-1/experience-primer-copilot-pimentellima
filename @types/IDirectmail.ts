@@ -8,10 +8,6 @@ export interface IDirectmail {
 		value: string;
 		label: string;
 	};
-	client: {
-		value: string,
-		label: string
-	}
 	active: boolean;
 	unity_id: ObjectId;
 	created_at: Date;
