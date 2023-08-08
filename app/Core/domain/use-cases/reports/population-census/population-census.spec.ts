@@ -66,7 +66,7 @@ describe('Population Census Use Case (Integration)', () => {
 					scheduled: expect.any(Number),
 					in_progress: expect.any(Number),
 				}),
-				genre_clients: expect.objectContaining({
+				gender_clients: expect.objectContaining({
 					female: expect.any(Number),
 					male: expect.any(Number),
 					not_informed: expect.any(Number),

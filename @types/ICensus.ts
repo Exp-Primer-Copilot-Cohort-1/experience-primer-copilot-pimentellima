@@ -16,7 +16,7 @@ export type ICensusScheduledEvent = {
 	in_progress: number
 }
 
-export type ICensusGenreClient = {
+export type ICensusGenderClient = {
 	not_informed: number
 	male: number
 	female: number

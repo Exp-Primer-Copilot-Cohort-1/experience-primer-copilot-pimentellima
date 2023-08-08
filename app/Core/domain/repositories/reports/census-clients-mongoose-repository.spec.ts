@@ -16,9 +16,9 @@ describe('Census Mongoose Repository (Integration)', () => {
 		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})
 
-	it('should be find census genre client by unity', async () => {
+	it('should be find census gender client by unity', async () => {
 		const { sut } = makeSut()
-		const resultOrErr = await sut.findCensusGenreClientByUnityOrProf(
+		const resultOrErr = await sut.findCensusGenderClientByUnityOrProf(
 			'6359660fc109b232759921d4',
 			'2023-01-01',
 			'2024-01-31',
@@ -27,9 +27,9 @@ describe('Census Mongoose Repository (Integration)', () => {
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})
 
-	it('should be find census genre client by unity and prof', async () => {
+	it('should be find census gender client by unity and prof', async () => {
 		const { sut } = makeSut()
-		const resultOrErr = await sut.findCensusGenreClientByUnityOrProf(
+		const resultOrErr = await sut.findCensusGenderClientByUnityOrProf(
 			'6359660fc109b232759921d4', // unity id
 			'2023-01-01', // date start
 			'2024-01-31', // date end

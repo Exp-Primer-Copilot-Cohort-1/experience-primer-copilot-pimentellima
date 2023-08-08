@@ -51,7 +51,7 @@ export class PopulationCensusByDateUseCase
 			health_insurancesOrErr,
 			partnersOrErr,
 			proceduresOrErr,
-			genre_clientOrErr,
+			gender_clientOrErr,
 			media_time_attendanceOrErr,
 			new_and_old_clientsOrErr,
 		] = await Promise.all([
@@ -79,7 +79,7 @@ export class PopulationCensusByDateUseCase
 				date_end,
 				prof_id,
 			),
-			this.managerClients.findCensusGenreClientByUnityOrProf(
+			this.managerClients.findCensusGenderClientByUnityOrProf(
 				unity_id,
 				date_start,
 				date_end,
@@ -104,7 +104,7 @@ export class PopulationCensusByDateUseCase
 			health_insurancesOrErr.isLeft() ||
 			partnersOrErr.isLeft() ||
 			proceduresOrErr.isLeft() ||
-			genre_clientOrErr.isLeft() ||
+			gender_clientOrErr.isLeft() ||
 			media_time_attendanceOrErr.isLeft() ||
 			new_and_old_clientsOrErr.isLeft()
 		) {
@@ -117,7 +117,7 @@ export class PopulationCensusByDateUseCase
 		const health_insurances = health_insurancesOrErr.extract()
 		const partners = partnersOrErr.extract()
 		const procedures = proceduresOrErr.extract()
-		const genre_clients = genre_clientOrErr.extract()
+		const gender_clients = gender_clientOrErr.extract()
 		const media_time_attendance = media_time_attendanceOrErr.extract()
 		const new_and_old_clients = new_and_old_clientsOrErr.extract()
 
@@ -126,7 +126,7 @@ export class PopulationCensusByDateUseCase
 			health_insurances,
 			partners,
 			procedures,
-			genre_clients,
+			gender_clients,
 			media_time_attendance,
 			new_and_old_clients,
 		})

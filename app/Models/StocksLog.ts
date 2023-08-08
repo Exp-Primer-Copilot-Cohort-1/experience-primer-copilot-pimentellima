@@ -21,7 +21,7 @@ const StocksLogSchema = new Schema<IStocksLog>(
 			celphone: { type: String, required: true },
 			document: { type: String, required: true },
 			exib_minutes: { type: Number, required: true },
-			genre: { type: String, required: true },
+			gender: { type: String, required: true },
 			hour_end: { type: String, default: null },
 			hour_end_lunch: { type: String, default: null },
 			hour_start: { type: String, default: null },

@@ -36,7 +36,7 @@ class ImportController {
           due_date: null,
           name: itm[3],
           birth_date: itm[5],
-          genre: itm[6],
+          gender: itm[6],
           document: itm[7],
           number_id: itm[8],
           celphone: itm[12],

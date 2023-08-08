@@ -2,7 +2,7 @@ const SELECTS = [
 	'_id',
 	'name',
 	'birth_date',
-	'genre',
+	'gender',
 	'document',
 	'number_id',
 	'celphone',

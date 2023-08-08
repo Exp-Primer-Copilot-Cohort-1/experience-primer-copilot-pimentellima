@@ -6,7 +6,7 @@ import {
 	ICensusCountHealthInsurances,
 	ICensusCountPartners,
 	ICensusCountProcedure,
-	ICensusGenreClient,
+	ICensusGenderClient,
 	ICensusMediaTimeAttendance,
 	ICensusNewAndOldClients,
 	ICensusParticipationPaymentByProf,
@@ -21,7 +21,7 @@ export type ICensusCount = {
 	health_insurances: ICensusCountHealthInsurances[]
 	partners: ICensusCountPartners[]
 	scheduled_events: ICensusScheduledEvent
-	genre_clients: ICensusGenreClient
+	gender_clients: ICensusGenderClient
 	media_time_attendance: ICensusMediaTimeAttendance
 	new_and_old_clients: ICensusNewAndOldClients
 }
