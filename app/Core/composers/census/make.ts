@@ -8,6 +8,7 @@ import {
 	CensusRevenuesMongooseRepository,
 } from 'App/Core/domain/repositories'
 import {
+	FindPaymentsByHealthInsuranceUseCase,
 	PaymentsCensusByDateUseCase,
 	PopulationCensusByDateUseCase,
 } from 'App/Core/domain/use-cases'
@@ -29,5 +30,10 @@ export const makeCensusPaymentsByMonthByUnityIdComposer = (): ControllerGeneric 
 			new CensusDaysMongooseRepository(),
 			new CensusRevenuesMongooseRepository(),
 		),
+	)
+}
+export const makeCensusPaymentsByHelthInsuranceComposer = (): ControllerGeneric => {
+	return new Controller(
+		new FindPaymentsByHealthInsuranceUseCase(new CensusPaymentsMongooseRepository()),
 	)
 }
