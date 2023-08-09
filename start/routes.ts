@@ -319,10 +319,14 @@ Route.group(() => {
 
 	Route.group(() => {
 		Route.get('', 'PrescriptionController.index').as('prescriptions.index')
-		Route.get('/inactive', 'PrescriptionController.findAllInactives').as('prescriptions.indexInactives')
+		Route.get('/inactive', 'PrescriptionController.findAllInactives').as(
+			'prescriptions.indexInactives',
+		)
 		Route.get('/:id', 'PrescriptionController.show').as('prescriptions.show')
 		Route.put('/:id', 'PrescriptionController.update').as('prescriptions.update')
-		Route.put('/status/:id', 'PrescriptionController.updateStatus').as('prescriptions.updateStatus')
+		Route.put('/status/:id', 'PrescriptionController.updateStatus').as(
+			'prescriptions.updateStatus',
+		)
 		Route.delete('/:id', 'PrescriptionController.destroy').as('prescriptions.destroy')
 		Route.post('', 'PrescriptionController.store').as('prescriptions.store')
 	}).prefix('prescriptions')
@@ -363,10 +367,14 @@ Route.group(() => {
 
 	Route.group(() => {
 		Route.get('', 'DirectmailController.index').as('directMails.index')
-		Route.get('/inactives', 'DirectmailController.findAllInactives').as('directMails.indexInactives')
+		Route.get('/inactives', 'DirectmailController.findAllInactives').as(
+			'directMails.indexInactives',
+		)
 		Route.get('/:id', 'DirectmailController.show').as('directMails.show')
 		Route.put('/:id', 'DirectmailController.update').as('directMails.update')
-		Route.put('/status/:id', 'DirectmailController.updateStatus').as('directMails.updateStatus')
+		Route.put('/status/:id', 'DirectmailController.updateStatus').as(
+			'directMails.updateStatus',
+		)
 		Route.delete('/:id', 'DirectmailController.destroy').as('directMails.destroy')
 		Route.post('', 'DirectmailController.store').as('directMails.store')
 	}).prefix('direct-mails')
@@ -488,4 +496,14 @@ Route.group(() => {
 		Route.get('', 'CensusController.index').as('census.index')
 		Route.get('payments', 'CensusController.indexPayments').as('census.payments')
 	}).prefix('census')
+	Route.group(() => {
+		Route.get('health-insurance', 'CensusController.indexHelthInsurance')
+		Route.get('activities-daysmonth', 'CensusController.indexActivitiesByDaysMonth')
+		Route.get('payments-by-form', 'CensusController.indexPaymentsByForm')
+		Route.get('activities-prof-by-prof', 'CensusController.indexActivitiesProfByProf')
+		Route.get('payments-by-partner', 'CensusController.indexPaymentsByPartner')
+		Route.get('payments-by-prof', 'CensusController.indexPaymentsByProf')
+		Route.get('payments-participation', 'CensusController.indexPaymentsParticipation')
+		Route.get('revenues-activities', 'CensusController.indexRevenuesActivities')
+	}).prefix('censu')
 }).middleware(['auth', 'role'])

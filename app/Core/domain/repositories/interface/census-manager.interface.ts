@@ -6,6 +6,7 @@ import {
 	ICensusCountHealthInsurances,
 	ICensusCountProcedure,
 	ICensusMediaTimeAttendance,
+	ICensusParticipationPaymentByProf,
 	ICensusPaymentByProf,
 	ICensusPaymentForm,
 	ICensusScheduledEvent,
@@ -54,7 +55,12 @@ export interface CensusPaymentsManagerInterface {
 		date_end: string,
 		prof_id?: string,
 	) => PromiseEither<AbstractError, ICensusActivitiesByHealthInsurance[]>
-
+	findPaymentsParticipationByProf: (
+		unity_id: string,
+		date_start: string,
+		date_end: string,
+		prof_id?: string,
+	) => PromiseEither<AbstractError, ICensusParticipationPaymentByProf[]>
 	findPaymentsByForm: (
 		unity_id: string,
 		date_start: string,
