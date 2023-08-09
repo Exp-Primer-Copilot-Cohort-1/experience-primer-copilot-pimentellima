@@ -1,6 +1,3 @@
-import Mail from '@ioc:Adonis/Addons/Mail'
-import Application from '@ioc:Adonis/Core/Application'
-import Logger from '@ioc:Adonis/Core/Logger'
 import type { EdgeValues } from '../constants/edge'
 // tipagem que extrai os values de EDGE
 
@@ -18,6 +15,14 @@ class MailEntity {
 
 	async send({ edge, props, email, title }: MailParams) {
 		try {
+			if (process.env.NODE_ENV === 'testing') {
+				return
+			}
+
+			const Application = (await import('@ioc:Adonis/Core/Application')).default
+			const Mail = (await import('@ioc:Adonis/Addons/Mail')).default
+			const Logger = (await import('@ioc:Adonis/Core/Logger')).default
+
 			const logo = Application.publicPath('logo.png')
 			await Mail.send((message) => {
 				message.embed(logo, 'logo')
@@ -30,6 +35,8 @@ class MailEntity {
 			Logger.info(`Email enviado para ${email}`)
 		} catch (error) {
 			console.log(error)
+			const Logger = (await import('@ioc:Adonis/Core/Logger')).default
+
 			Logger.error(error)
 		}
 	}

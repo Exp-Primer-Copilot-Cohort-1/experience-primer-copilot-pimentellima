@@ -24,6 +24,7 @@ export default defineConfig({
 			'**/tests/functional/**',
 		],
 		include: ['app/Core/**/*.spec.ts'],
+		watch: false,
 	},
 	resolve: {
 		alias: {
