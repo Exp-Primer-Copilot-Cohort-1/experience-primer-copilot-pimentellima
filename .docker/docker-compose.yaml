@@ -25,7 +25,7 @@ services:
     depends_on:
       - mongo
 
- redis:
+  redis:
     image: redis
     command: redis-server
     restart: always

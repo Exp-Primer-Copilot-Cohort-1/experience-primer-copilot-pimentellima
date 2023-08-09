@@ -1,8 +1,8 @@
-import { AbstractError } from 'App/Core/errors/error.interface';
+import { AbstractError } from 'App/Core/errors/error.interface'
 
 export class UnitDateExpiredError extends AbstractError {
 	constructor() {
-		super('Unit date expired.', 400);
-		this.name = 'UnitDateExpiredError';
+		super('Unidade com Data Expirada. Renove seu Plano!', 405)
+		this.name = 'UnitDateExpiredError'
 	}
 }

@@ -1,4 +1,5 @@
 import AdminUser from 'App/Core/domain/entities/user/admin'
+import { UserAdminIsExistError } from 'App/Core/domain/errors/user-admin-is-exist'
 import {
 	AdminManagerInterface,
 	UnitiesManagerInterface,
@@ -7,7 +8,6 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import type { IAdminUser } from 'Types/IAdminUser'
-import { UserAdminIsExistError } from '../../../errors/user-admin-is-exist'
 
 import SendSignUpConfirmEmail from 'App/Mail/emails/send-sign-up-confirm-email'
 
