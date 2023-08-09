@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import { AppointmentStatus } from 'App/Helpers'
 import { makeValidActivity } from 'tests/functional/helpers/makeValidActivity'
 import { describe, expect, it } from 'vitest'
-import { ConflictingScheduleError } from '../../errors/ conflicting-schedule-error'
+import { ConflictingScheduleError } from '../../errors/conflicting-schedule-error'
 import { ActivityInMemoryRepository } from '../../repositories/activities/activity-in-memory-repository'
 import { UpdateActivityByIdUseCase } from './update-activity-use-case'
 

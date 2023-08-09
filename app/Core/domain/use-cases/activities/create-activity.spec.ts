@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { makeValidActivity } from 'tests/functional/helpers/makeValidActivity'
 import { describe, expect, it } from 'vitest'
-import { ConflictingScheduleError } from '../../errors/ conflicting-schedule-error'
+import { ConflictingScheduleError } from '../../errors/conflicting-schedule-error'
 import { InvalidScheduleError } from '../../errors/invalid-schedule-error'
 import { ActivityInMemoryRepository } from '../../repositories/activities/activity-in-memory-repository'
 import { CreateActivityUseCase } from './create-activity-use-case'

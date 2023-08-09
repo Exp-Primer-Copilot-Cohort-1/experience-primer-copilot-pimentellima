@@ -12,7 +12,7 @@ import { Credentials } from '../../helpers/credentials'
 export class SignInUseCase implements UseCase<Credentials, ISession> {
 	constructor(
 		private readonly sessionManager: SessionManagerInterface,
-		private readonly unittiesManager: UnitiesManagerInterface,
+		private readonly unitiesManager: UnitiesManagerInterface,
 		private readonly unityValidationUseCase: UseCase<IUnity, IUnity>,
 	) { }
 
@@ -28,9 +28,7 @@ export class SignInUseCase implements UseCase<Credentials, ISession> {
 
 		const session = sessionOrErr.extract()
 
-		const unity = await this.unittiesManager.findById(
-			session.user.unity_id.toString(),
-		)
+		const unity = await this.unitiesManager.findById(session.user.unity_id.toString())
 
 		if (unity.isLeft()) {
 			return left(unity.extract())
