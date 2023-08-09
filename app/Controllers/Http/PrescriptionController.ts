@@ -14,7 +14,6 @@ class PrescriptionController {
 			unity_id: userLogged.unity_id,
 			active: true
 		});
-
 		return prescriptions;
 	}
 
