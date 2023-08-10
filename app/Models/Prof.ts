@@ -106,6 +106,7 @@ const ProfSchema = new Schema<IUser>(
 			type: String,
 			required: true,
 		},
+
 		unity_id: {
 			type: Mongoose.Schema.Types.ObjectId,
 			ref: 'unities',
@@ -149,6 +150,10 @@ const ProfSchema = new Schema<IUser>(
 		},
 		is_sunday: {
 			type: Boolean,
+			required: false,
+		},
+		gender: {
+			type: String,
 			required: false,
 		},
 		is_monday: {

@@ -7,6 +7,7 @@ export interface IUser extends IDaysOffice {
 	_id: string
 	name: string
 	email: string
+	gender?: 'M' | 'F' | 'O' | 'NB'
 	password: string
 	celphone: string
 	document: string

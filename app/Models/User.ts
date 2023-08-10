@@ -143,6 +143,10 @@ const UserSchema = new Schema<IUser>(
 			type: Boolean,
 			required: false,
 		},
+		gender: {
+			type: String,
+			required: false,
+		},
 		is_saturday: {
 			type: Boolean,
 			required: false,
