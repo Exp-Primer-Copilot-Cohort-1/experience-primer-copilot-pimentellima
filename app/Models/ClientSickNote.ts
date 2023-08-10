@@ -1,13 +1,13 @@
-import Mongoose, { Schema } from "@ioc:Mongoose";
-import { IClientSickNote } from "Types/IClientSickNote";
+import Mongoose, { Schema } from '@ioc:Mongoose'
+import { IClientMedicalCertificate } from 'Types/IClientMedicalCertificate'
 
-const ClientSickNote = new Schema<IClientSickNote>(
+const ClientMedicalCertificate = new Schema<IClientMedicalCertificate>(
 	{
 		client: {
 			value: { type: String, required: true },
 			label: { type: String, required: true },
 		},
-		sickNote: {
+		medicalCertificate: {
 			name: { type: String, required: true },
 			text: { type: String, required: true },
 		},
@@ -16,13 +16,13 @@ const ClientSickNote = new Schema<IClientSickNote>(
 	},
 	{
 		timestamps: {
-			createdAt: "created_at",
-			updatedAt: "updated_at",
+			createdAt: 'created_at',
+			updatedAt: 'updated_at',
 		},
-	}
-);
+	},
+)
 
-export default Mongoose.model<IClientSickNote>(
-	"clientSickNotes",
-	ClientSickNote
-);
+export default Mongoose.model<IClientMedicalCertificate>(
+	'clientMedicalCertificate',
+	ClientMedicalCertificate,
+)

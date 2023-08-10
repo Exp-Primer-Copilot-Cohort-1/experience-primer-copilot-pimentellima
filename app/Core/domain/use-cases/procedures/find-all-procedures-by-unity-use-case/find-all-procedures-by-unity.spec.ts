@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { ProceduresInMemoryRepository } from 'App/Core/domain/repositories/produceres/procedures-in-memory-repository'
+import { ProceduresInMemoryRepository } from 'App/Core/domain/repositories/procedures/procedures-in-memory-repository'
 import { FindAllProceduresByUnityUseCase } from './find-all-procedures-by-unity-use-case'
 
 const makeSut = () => {

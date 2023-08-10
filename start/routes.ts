@@ -300,10 +300,12 @@ Route.group(() => {
 	Route.get('reports-canceled', 'AdonnisLegadoController.bridge').as('reports.canceled')
 
 	Route.group(() => {
-		Route.get('/:client_id', 'ClientSickNoteController.findByClient').as(
+		Route.get('/:client_id', 'ClientMedicalCertificateController.findByClient').as(
 			'client-sick-note.findByClient',
 		)
-		Route.post('', 'ClientSickNoteController.store').as('client-sick-note.store')
+		Route.post('', 'ClientMedicalCertificateController.store').as(
+			'client-sick-note.store',
+		)
 	}).prefix('client-sick-note')
 
 	Route.group(() => {
@@ -356,33 +358,37 @@ Route.group(() => {
 	}).prefix('ingredients-list')
 
 	Route.group(() => {
-		Route.get('', 'AdonnisLegadoController.bridge').as('sick-notes.index')
-		Route.get('/:id', 'AdonnisLegadoController.bridge').as('sick-notes.show')
-		Route.put('/:id', 'AdonnisLegadoController.bridge').as('sick-notes.update')
-		Route.delete('/:id', 'AdonnisLegadoController.bridge').as('sick-notes.destroy')
-		Route.post('', 'AdonnisLegadoController.bridge').as('sick-notes.store')
-	}).prefix('sick-notes')
+		Route.get('', 'AdonnisLegadoController.bridge').as('medical-certificate.index')
+		Route.get('/:id', 'AdonnisLegadoController.bridge').as('medical-certificate.show')
+		Route.put('/:id', 'AdonnisLegadoController.bridge').as(
+			'medical-certificate.update',
+		)
+		Route.delete('/:id', 'AdonnisLegadoController.bridge').as(
+			'medical-certificate.destroy',
+		)
+		Route.post('', 'AdonnisLegadoController.bridge').as('medical-certificate.store')
+	}).prefix('medical-certificate')
 
 	Route.group(() => {
-		Route.get('', 'AdonnisLegadoController.bridge').as('directMail.index')
-		Route.get('/:id', 'AdonnisLegadoController.bridge').as('directMail.show')
-		Route.put('/:id', 'AdonnisLegadoController.bridge').as('directMail.update')
-		Route.delete('/:id', 'AdonnisLegadoController.bridge').as('directMail.destroy')
-		Route.post('', 'AdonnisLegadoController.bridge').as('directMail.store')
-	}).prefix('direct-mail')
-
-	Route.group(() => {
-		Route.get('', 'DirectmailController.index').as('directMails.index')
-		Route.get('/inatives', 'DirectmailController.findAllInatives').as(
-			'directMails.indexInatives',
+		Route.get('', 'MedicalCertificateController.index').as('medicalCertificate.index')
+		Route.get('/inatives', 'MedicalCertificateController.findAllInatives').as(
+			'medicalCertificate.indexInatives',
 		)
-		Route.get('/:id', 'DirectmailController.show').as('directMails.show')
-		Route.put('/:id', 'DirectmailController.update').as('directMails.update')
-		Route.put('/status/:id', 'DirectmailController.updateStatus').as(
-			'directMails.updateStatus',
+		Route.get('/:id', 'MedicalCertificateController.show').as(
+			'medicalCertificate.show',
 		)
-		Route.delete('/:id', 'DirectmailController.destroy').as('directMails.destroy')
-		Route.post('', 'DirectmailController.store').as('directMails.store')
+		Route.put('/:id', 'MedicalCertificateController.update').as(
+			'medicalCertificate.update',
+		)
+		Route.put('/status/:id', 'MedicalCertificateController.updateStatus').as(
+			'medicalCertificate.updateStatus',
+		)
+		Route.delete('/:id', 'MedicalCertificateController.destroy').as(
+			'medicalCertificate.destroy',
+		)
+		Route.post('', 'MedicalCertificateController.store').as(
+			'medicalCertificate.store',
+		)
 	}).prefix('direct-mails')
 
 	Route.group(() => {

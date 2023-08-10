@@ -43,6 +43,6 @@ export enum SCREENS {
 	VIEW_FORMS = '/dashboard/forms',
 	VIEW_FORMS_CREATE = '/dashboard/forms/new',
 	VIEW_FORMS_UPDATE = '/dashboard/forms/:id',
-	VIEW_SICK_NOTES = '/dashboard/sick-notes',
+	VIEW_MEDICAL_CERTIFICATES = '/dashboard/medical-certificate',
 	VIEW_INGREDIENTS_MODEL = '/dashboard/ingredients-model',
 }

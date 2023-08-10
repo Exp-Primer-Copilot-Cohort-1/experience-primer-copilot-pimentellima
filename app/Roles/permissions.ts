@@ -598,33 +598,33 @@ const PERMISSIONS_INGREDIENTS_LIST: Permission = {
 	},
 }
 
-const PERMISSIONS_SICK_NOTES: Permission = {
-	name: 'sick-notes',
+const PERMISSIONS_MEDICAL_CERTIFICATES: Permission = {
+	name: 'medical-certificate',
 	permissions: {
-		'sick-notes.index': {
+		'medical-certificate.index': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
 			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
-			screens: [SCREENS.VIEW_SICK_NOTES],
+			screens: [SCREENS.VIEW_MEDICAL_CERTIFICATES],
 		},
-		'sick-notes.show': {
+		'medical-certificate.show': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
 			permissions: [TYPE_PERMISSIONS.VIEW],
-			screens: [SCREENS.VIEW_SICK_NOTES],
+			screens: [SCREENS.VIEW_MEDICAL_CERTIFICATES],
 		},
-		'sick-notes.update': {
+		'medical-certificate.update': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
 			permissions: [TYPE_PERMISSIONS.UPDATE],
-			screens: [SCREENS.VIEW_SICK_NOTES],
+			screens: [SCREENS.VIEW_MEDICAL_CERTIFICATES],
 		},
-		'sick-notes.destroy': {
+		'medical-certificate.destroy': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
 			permissions: [TYPE_PERMISSIONS.DELETE],
-			screens: [SCREENS.VIEW_SICK_NOTES],
+			screens: [SCREENS.VIEW_MEDICAL_CERTIFICATES],
 		},
-		'sick-notes.store': {
+		'medical-certificate.store': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
 			permissions: [TYPE_PERMISSIONS.CREATE],
-			screens: [SCREENS.VIEW_SICK_NOTES],
+			screens: [SCREENS.VIEW_MEDICAL_CERTIFICATES],
 		},
 	},
 }
@@ -632,23 +632,23 @@ const PERMISSIONS_SICK_NOTES: Permission = {
 const PERMISSIONS_DIRECT_MAIL: Permission = {
 	name: 'direct-mail',
 	permissions: {
-		'directMail.index': {
+		'medicalCertificate.index': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
 			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
 		},
-		'directMail.show': {
+		'medicalCertificate.show': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
 			permissions: [TYPE_PERMISSIONS.VIEW],
 		},
-		'directMail.update': {
+		'medicalCertificate.update': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
 			permissions: [TYPE_PERMISSIONS.UPDATE],
 		},
-		'directMail.destroy': {
+		'medicalCertificate.destroy': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
 			permissions: [TYPE_PERMISSIONS.DELETE],
 		},
-		'directMail.store': {
+		'medicalCertificate.store': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
 			permissions: [TYPE_PERMISSIONS.CREATE],
 		},
@@ -922,7 +922,7 @@ const PERMISSIONS: ALL_PERMISSIONS = {
 	[PERMISSIONS_REPORTS.name]: PERMISSIONS_REPORTS,
 	[PERMISSIONS_ROOM.name]: PERMISSIONS_ROOM,
 	[PERMISSIONS_SCHEDULE.name]: PERMISSIONS_SCHEDULE,
-	[PERMISSIONS_SICK_NOTES.name]: PERMISSIONS_SICK_NOTES,
+	[PERMISSIONS_MEDICAL_CERTIFICATES.name]: PERMISSIONS_MEDICAL_CERTIFICATES,
 	[PERMISSIONS_STOCK.name]: PERMISSIONS_STOCK,
 	[PERMISSIONS_TRANSACTIONS.name]: PERMISSIONS_TRANSACTIONS,
 	[PERMISSIONS_PROCEDURE.name]: PERMISSIONS_PROCEDURE,

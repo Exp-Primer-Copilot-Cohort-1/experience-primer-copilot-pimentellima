@@ -1,4 +1,4 @@
-import { ProceduresInMemoryRepository } from 'App/Core/domain/repositories/produceres/procedures-in-memory-repository'
+import { ProceduresInMemoryRepository } from 'App/Core/domain/repositories/procedures/procedures-in-memory-repository'
 import { describe, expect, it } from 'vitest'
 import { UpdateProceduresByIdUseCase } from './update-procedures-by-id-use-case'
 
