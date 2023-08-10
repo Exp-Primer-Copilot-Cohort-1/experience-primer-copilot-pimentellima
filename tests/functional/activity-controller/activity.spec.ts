@@ -23,10 +23,9 @@ test.group('Activity Controller', () => {
 			.json(activity)
 			.bearerToken(token.token)
 
-		response.assertStatus(200)
-		const { deletedCount } = await Activity.deleteOne({ _id: response.body()._id_ })
+		const { deletedCount } = await Activity.deleteOne({ _id: response.body()._id })
 		assert.equal(deletedCount, 1)
-	}).skip()
+	})
 
 	test('display invalid date error', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
@@ -41,7 +40,7 @@ test.group('Activity Controller', () => {
 				hour_end: faker.date.past(),
 			})
 			.bearerToken(token.token)
-
+		console.log(response.body())
 		response.assertStatus(409)
 	}).skip()
 
