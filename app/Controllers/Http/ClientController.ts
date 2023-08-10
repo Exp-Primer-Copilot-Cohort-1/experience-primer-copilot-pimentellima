@@ -32,12 +32,12 @@ class ClientController {
 	async create({ request, auth, response }: HttpContextContract) {
 		const data = request.all()
 		const unity_id = auth.user?.unity_id
-
+		console.log(data)
 		const { name, birth_date, email, celphone } = data
 
-		if (!name || !birth_date || !email || !celphone) {
+		if (!name || !celphone) {
 			return response.status(400).json({
-				message: 'Missing Name Or Birth Day Or Email Or CellPhone',
+				message: 'Missing Name Or CellPhone',
 			})
 		}
 
