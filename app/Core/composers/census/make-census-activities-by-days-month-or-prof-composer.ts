@@ -7,7 +7,7 @@ export const makeCensusActivitiesByDaysMonthByUnityOrProfComposer =
 	(): ControllerGeneric => {
 		return new Controller(
 			new FindActivitiesByDaysOfMonthByUnityOrProfUseCase(
-				new CensusDaysMongooseRepository(),
-			),
+				new CensusDaysMongooseRepository()
+			)
 		)
 	}

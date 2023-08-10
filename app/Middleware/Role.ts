@@ -7,7 +7,7 @@ import PERMISSIONS from '../Roles/permissions'
 export default class Role {
 	public async handle(
 		{ auth, response, route }: HttpContextContract,
-		next: () => Promise<void>,
+		next: () => Promise<void>
 	) {
 		if (process.env.NODE_ENV === 'test') {
 			next()
@@ -23,9 +23,9 @@ export default class Role {
 		const blackListPermissions = auth.user?.blacklist || []
 
 		if (!type) {
-			return response
-				.status(401)
-				.send({ message: 'Você precisa estar logado para acessar esta página.' })
+			return response.status(401).send({
+				message: 'Você precisa estar logado para acessar esta página.'
+			})
 		}
 
 		const routeName = route?.name
@@ -43,19 +43,19 @@ export default class Role {
 
 		const hasRole = routePermissions.roles?.includes(type as ROLES)
 		const hasPermission = routePermissions.permissions?.some((permission) =>
-			permissions?.includes(permission),
+			permissions?.includes(permission)
 		)
 		const hasBlackListPermission = routePermissions.permissions?.some(
 			(permission) => {
 				const p = createPermission(name, permission)
 				return blackListPermissions?.includes(p)
-			},
+			}
 		)
 
 		if (hasBlackListPermission || (!hasRole && !hasPermission)) {
-			return response
-				.status(403)
-				.send({ message: 'Você não tem permissão para acessar este recurso.' })
+			return response.status(403).send({
+				message: 'Você não tem permissão para acessar este recurso.'
+			})
 		}
 
 		await next()

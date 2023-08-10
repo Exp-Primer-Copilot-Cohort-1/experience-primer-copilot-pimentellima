@@ -5,6 +5,8 @@ import { FindRevenuesActivitiesUseCase } from 'App/Core/domain/use-cases'
 
 export const makeCensusRevenuesActivitiesComposer = (): ControllerGeneric => {
 	return new Controller(
-		new FindRevenuesActivitiesUseCase(new CensusRevenuesMongooseRepository()),
+		new FindRevenuesActivitiesUseCase(
+			new CensusRevenuesMongooseRepository()
+		)
 	)
 }

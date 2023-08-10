@@ -5,6 +5,8 @@ import { FindActivitiesOfProfByProfByUnityUseCase } from 'App/Core/domain/use-ca
 
 export const makeCensusActivitiesProfByProfComposer = (): ControllerGeneric => {
 	return new Controller(
-		new FindActivitiesOfProfByProfByUnityUseCase(new CensusMongooseRepository()),
+		new FindActivitiesOfProfByProfByUnityUseCase(
+			new CensusMongooseRepository()
+		)
 	)
 }

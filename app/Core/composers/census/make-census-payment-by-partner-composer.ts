@@ -5,6 +5,8 @@ import { FindPaymentsByPartnersUseCase } from 'App/Core/domain/use-cases'
 
 export const makeCensusPaymentsByPartnerComposer = (): ControllerGeneric => {
 	return new Controller(
-		new FindPaymentsByPartnersUseCase(new CensusPaymentsMongooseRepository()),
+		new FindPaymentsByPartnersUseCase(
+			new CensusPaymentsMongooseRepository()
+		)
 	)
 }

@@ -37,19 +37,6 @@
 			"never"
 		],
 		"object-curly-spacing": "off",
-		"prettier/prettier": [
-			"error",
-			{
-				"semi": false,
-				"useTabs": true,
-				"bracketSpacing": true,
-				"arrowParens": "always",
-				"singleQuote": true,
-				"trailingComma": "all",
-				"printWidth": 90,
-				"tabWidth": 4
-			}
-		],
 		"@typescript-eslint/naming-convention": "off",
 		"@typescript-eslint/explicit-member-accessibility": "off"
 	}

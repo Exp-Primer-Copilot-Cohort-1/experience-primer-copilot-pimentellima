@@ -6,10 +6,9 @@ import {
 	ICensusCountHealthInsurances,
 	ICensusCountProcedure,
 	ICensusMediaTimeAttendance,
-	ICensusParticipationPaymentByProf,
 	ICensusPaymentByProf,
 	ICensusPaymentForm,
-	ICensusScheduledEvent,
+	ICensusScheduledEvent
 } from 'Types/ICensus'
 
 export interface CensusUnitiesManagerInterface {
@@ -17,34 +16,34 @@ export interface CensusUnitiesManagerInterface {
 		unity_id: string,
 		date_start: string,
 		date_end: string,
-		prof_id?: string,
+		prof_id?: string
 	) => PromiseEither<AbstractError, ICensusScheduledEvent>
 
 	findCensusProcedureByUnityOrProf: (
 		unity_id: string,
 		date_start: string,
 		date_end: string,
-		prof_id?: string,
+		prof_id?: string
 	) => PromiseEither<AbstractError, ICensusCountProcedure[]>
 	findCensusHealthInsurancesByUnityOrProf: (
 		unity_id: string,
 		date_start: string,
 		date_end: string,
-		prof_id?: string,
+		prof_id?: string
 	) => PromiseEither<AbstractError, ICensusCountHealthInsurances[]>
 
 	findMediaTimeAttendanceByUnityOrProf: (
 		unity_id: string,
 		date_start: string,
 		date_end: string,
-		prof_id?: string,
+		prof_id?: string
 	) => PromiseEither<AbstractError, ICensusMediaTimeAttendance>
 
 	findActivitiesOfProf: (
 		unity_id: string,
 		date_start: string,
 		date_end: string,
-		prof_id: string,
+		prof_id: string
 	) => PromiseEither<AbstractError, ICensusActivitiesByProf[]>
 }
 
@@ -53,32 +52,27 @@ export interface CensusPaymentsManagerInterface {
 		unity_id: string,
 		date_start: string,
 		date_end: string,
-		prof_id?: string,
+		prof_id?: string
 	) => PromiseEither<AbstractError, ICensusActivitiesByHealthInsurance[]>
-	findPaymentsParticipationByProf: (
-		unity_id: string,
-		date_start: string,
-		date_end: string,
-		prof_id?: string,
-	) => PromiseEither<AbstractError, ICensusParticipationPaymentByProf[]>
+
 	findPaymentsByForm: (
 		unity_id: string,
 		date_start: string,
 		date_end: string,
-		prof_id?: string,
+		prof_id?: string
 	) => PromiseEither<AbstractError, ICensusPaymentForm[]>
 
 	findPaymentsByPartners: (
 		unity_id: string,
 		date_start: string,
 		date_end: string,
-		prof_id?: string,
+		prof_id?: string
 	) => PromiseEither<AbstractError, ICensusPaymentByProf[]>
 
 	findPaymentsByProf: (
 		unity_id: string,
 		date_start: string,
 		date_end: string,
-		prof_id?: string,
+		prof_id?: string
 	) => PromiseEither<AbstractError, ICensusPaymentByProf[]>
 }

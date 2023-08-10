@@ -7,37 +7,41 @@ import {
 	CensusMongooseRepository,
 	CensusPaymentParticipationsMongooseRepository,
 	CensusPaymentsMongooseRepository,
-	CensusRevenuesMongooseRepository,
+	CensusRevenuesMongooseRepository
 } from 'App/Core/domain/repositories'
 import {
 	FindPaymentsByHealthInsuranceUseCase,
 	PaymentsCensusByDateUseCase,
-	PopulationCensusByDateUseCase,
+	PopulationCensusByDateUseCase
 } from 'App/Core/domain/use-cases'
 
 export const makeCensusByMonthByUnityIdComposer = (): ControllerGeneric => {
 	return new Controller(
 		new PopulationCensusByDateUseCase(
 			new CensusMongooseRepository(),
-			new CensusClientsMongooseRepository(),
-		),
+			new CensusClientsMongooseRepository()
+		)
 	)
 }
 
-export const makeCensusPaymentsByMonthByUnityIdComposer = (): ControllerGeneric => {
-	return new Controller(
-		new PaymentsCensusByDateUseCase(
-			new CensusPaymentsMongooseRepository(),
-			new CensusMongooseRepository(),
-			new CensusDaysMongooseRepository(),
-			new CensusRevenuesMongooseRepository(),
-			new CensusPaymentParticipationsMongooseRepository(),
-			new CensusCostMongooseRepository(),
-		),
-	)
-}
-export const makeCensusPaymentsByHelthInsuranceComposer = (): ControllerGeneric => {
-	return new Controller(
-		new FindPaymentsByHealthInsuranceUseCase(new CensusPaymentsMongooseRepository()),
-	)
-}
+export const makeCensusPaymentsByMonthByUnityIdComposer =
+	(): ControllerGeneric => {
+		return new Controller(
+			new PaymentsCensusByDateUseCase(
+				new CensusPaymentsMongooseRepository(),
+				new CensusMongooseRepository(),
+				new CensusDaysMongooseRepository(),
+				new CensusRevenuesMongooseRepository(),
+				new CensusPaymentParticipationsMongooseRepository(),
+				new CensusCostMongooseRepository()
+			)
+		)
+	}
+export const makeCensusPaymentsByHealthInsuranceComposer =
+	(): ControllerGeneric => {
+		return new Controller(
+			new FindPaymentsByHealthInsuranceUseCase(
+				new CensusPaymentsMongooseRepository()
+			)
+		)
+	}
