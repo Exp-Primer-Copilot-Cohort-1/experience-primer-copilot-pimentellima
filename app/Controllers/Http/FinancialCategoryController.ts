@@ -13,7 +13,7 @@ class FinancialCategoryController {
 		return categories
 	}
 
-	async inactives({ auth }: HttpContextContract) {
+	async inatives({ auth }: HttpContextContract) {
 		const userLogged = auth.user
 
 		const categories = FinancialCategory.find({

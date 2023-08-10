@@ -259,7 +259,7 @@ const PERMISSIONS_CLIENTS: Permission = {
 			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
 			screens: [SCREENS.VIEW_CLIENTS],
 		},
-		'clients.inactives': {
+		'clients.inatives': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
 			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
 			screens: [SCREENS.VIEW_CLIENTS],
@@ -299,12 +299,12 @@ const PERMISSIONS_USERS: Permission = {
 			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
 			screens: [SCREENS.VIEW_SECS],
 		},
-		'users.prof.inactives': {
+		'users.prof.inatives': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
 			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
 			screens: [SCREENS.VIEW_PROFS],
 		},
-		'users.secs.inactives': {
+		'users.secs.inatives': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF, ROLES.SEC],
 			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
 			screens: [SCREENS.VIEW_SECS],
@@ -730,7 +730,7 @@ const PERMISSIONS_FINANCIAL_CATEGORIES: Permission = {
 			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
 			screens: [SCREENS.VIEW_FINANCIAL_CATEGORY],
 		},
-		'financial-categories.inactives': {
+		'financial-categories.inatives': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
 			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
 			screens: [SCREENS.VIEW_FINANCIAL_CATEGORY],
@@ -766,7 +766,7 @@ const PERMISSIONS_COST_CENTERS: Permission = {
 			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
 			screens: [SCREENS.VIEW_COST_CENTER],
 		},
-		'cost-centers.inactives': {
+		'cost-centers.inatives': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SEC],
 			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
 			screens: [SCREENS.VIEW_COST_CENTER],

@@ -66,77 +66,57 @@ Route.post('sessions/logout', 'SessionController.logout')
 
 Route.group(() => {
 	Route.group(() => {
-		Route.get('', 'ClientController.findAllUsersClients').as(
-			'clients.index'
+		Route.get('', 'ClientController.findAllUsersClients').as('clients.index')
+		Route.get('inatives', 'ClientController.findAllUsersClientsInative').as(
+			'clients.inatives',
 		)
-		Route.get(
-			'inactives',
-			'ClientController.findAllUsersClientsInative'
-		).as('clients.inactives')
-		Route.get(':id', 'ClientController.findUserClientByID').as(
-			'clients.show'
-		)
+		Route.get(':id', 'ClientController.findUserClientByID').as('clients.show')
 		Route.get('verify/client', 'ClientController.verifyExistenceClient').as(
-			'clients.verify'
+			'clients.verify',
 		)
 		Route.put(':id', 'ClientController.update').as('clients.update')
 		Route.post('', 'ClientController.create').as('clients.store')
 	}).prefix('clients')
 
 	Route.group(() => {
-		Route.get('prof', 'UserControllerV2.findAllUsersProfs').as(
-			'users.prof.index'
+		Route.get('prof', 'UserControllerV2.findAllUsersProfs').as('users.prof.index')
+		Route.get('secs', 'UserControllerV2.findAllUsersSecs').as('users.secs.index')
+		Route.get('prof/inatives', 'UserControllerV2.findAllUsersProfsInative').as(
+			'users.prof.inatives',
 		)
-		Route.get('secs', 'UserControllerV2.findAllUsersSecs').as(
-			'users.secs.index'
+		Route.get('secs/inatives', 'UserControllerV2.findAllUsersSecsInative').as(
+			'users.secs.inatives',
 		)
-		Route.get(
-			'prof/inactives',
-			'UserControllerV2.findAllUsersProfsInative'
-		).as('users.prof.inactives')
-		Route.get(
-			'secs/inative',
-			'UserControllerV2.findAllUsersSecsInative'
-		).as('users.secs.inactives')
-		Route.get('prof/:id', 'AdonnisLegadoController.bridge').as(
-			'users.prof.show'
-		)
+		Route.get('prof/:id', 'AdonnisLegadoController.bridge').as('users.prof.show')
 		Route.put(':id', 'AdonnisLegadoController.bridge').as('users.update')
 		Route.delete(':id', 'UserController.destroy').as('users.destroy')
 	}).prefix('users')
 
 	Route.group(() => {
-		Route.get('', 'HealthInsuranceController.index').as(
-			'health-insurance.index'
-		)
-		Route.get(':id', 'HealthInsuranceController.show').as(
-			'health-insurance.show'
-		)
+		Route.get('', 'HealthInsuranceController.index').as('health-insurance.index')
+		Route.get(':id', 'HealthInsuranceController.show').as('health-insurance.show')
 		Route.put(':_id', 'HealthInsuranceController.update').as(
-			'health-insurance.update'
+			'health-insurance.update',
 		)
 		Route.delete(':id', 'HealthInsuranceController.destroy').as(
-			'health-insurance.destroy'
+			'health-insurance.destroy',
 		)
-		Route.post('', 'HealthInsuranceController.store').as(
-			'health-insurance.store'
-		)
+		Route.post('', 'HealthInsuranceController.store').as('health-insurance.store')
 	}).prefix('health-insurance')
 
 	Route.group(() => {
 		Route.get('', 'ScheduleBlockController.findAllScheduleBlocks').as(
-			'schedule-block.index'
+			'schedule-block.index',
 		)
 		Route.get(
 			'prof/:prof_id',
-			'ScheduleBlockController.findScheduleBlocksByProfId'
+			'ScheduleBlockController.findScheduleBlocksByProfId',
 		).as('schedule-block.profId')
-		Route.delete(
-			':id',
-			'ScheduleBlockController.deleteScheduleBlockById'
-		).as('schedule-block.destroy')
+		Route.delete(':id', 'ScheduleBlockController.deleteScheduleBlockById').as(
+			'schedule-block.destroy',
+		)
 		Route.post('', 'ScheduleBlockController.createScheduleBlock').as(
-			'schedule-block.store'
+			'schedule-block.store',
 		)
 	}).prefix('schedule-block')
 
@@ -147,7 +127,7 @@ Route.group(() => {
 		Route.post('', 'StocksController.store').as('stocks.store')
 		Route.put(':id', 'StocksController.update').as('stocks.update')
 		Route.put('/active/:id', 'StocksController.updateActive').as(
-			'stocks.updateActive'
+			'stocks.updateActive',
 		)
 	}).prefix('stocks')
 
@@ -155,15 +135,13 @@ Route.group(() => {
 		Route.get('', 'ProcedureController.index').as('procedures.index')
 		Route.get(':id', 'ProcedureController.show').as('procedures.show')
 		Route.put(':_id', 'ProcedureController.update').as('procedures.update')
-		Route.delete(':id', 'ProcedureController.destroy').as(
-			'procedures.destroy'
-		)
+		Route.delete(':id', 'ProcedureController.destroy').as('procedures.destroy')
 		Route.post('', 'ProcedureController.store').as('procedures.store')
 		Route.post(':id/products', 'ProcedureController.addProduct').as(
-			'procedures.addProduct'
+			'procedures.addProduct',
 		)
 		Route.delete(':id/products', 'ProcedureController.removeProduct').as(
-			'procedures.removeProduct'
+			'procedures.removeProduct',
 		)
 	}).prefix('procedures')
 
@@ -171,9 +149,7 @@ Route.group(() => {
 		Route.get('', 'CategoryController.index').as('categories.index')
 		Route.get(':id', 'CategoryController.show').as('categories.show')
 		Route.put(':id', 'CategoryController.update').as('categories.update')
-		Route.delete(':id', 'CategoryController.destroy').as(
-			'categories.destroy'
-		)
+		Route.delete(':id', 'CategoryController.destroy').as('categories.destroy')
 		Route.post('', 'CategoryController.store').as('categories.store')
 	}).prefix('categories')
 
@@ -189,9 +165,7 @@ Route.group(() => {
 		Route.get('', 'AdonnisLegadoController.bridge').as('partner.index')
 		Route.get(':id', 'AdonnisLegadoController.bridge').as('partner.show')
 		Route.put(':id', 'AdonnisLegadoController.bridge').as('partner.update')
-		Route.delete(':id', 'AdonnisLegadoController.bridge').as(
-			'partner.destroy'
-		)
+		Route.delete(':id', 'AdonnisLegadoController.bridge').as('partner.destroy')
 		Route.post('', 'AdonnisLegadoController.bridge').as('partner.store')
 	}).prefix('partner')
 
@@ -204,11 +178,9 @@ Route.group(() => {
 	}).prefix('partners')
 
 	Route.group(() => {
-		Route.get('prof/:prof_id', 'FormController.findFormByProfId').as(
-			'form.prof.show'
-		)
+		Route.get('prof/:prof_id', 'FormController.findFormByProfId').as('form.prof.show')
 		Route.get('category/:category_id', 'AdonnisLegadoController.bridge').as(
-			'form.category.show'
+			'form.category.show',
 		)
 		Route.post('', 'AdonnisLegadoController.bridge').as('form.store')
 		Route.get('', 'FormController.findAllForms').as('form.index')
@@ -217,10 +189,9 @@ Route.group(() => {
 		Route.delete(':id', 'AdonnisLegadoController.bridge').as('form.destroy')
 	}).prefix('form')
 
-	Route.get(
-		'answer-log-by-form/:form_id',
-		'AdonnisLegadoController.bridge'
-	).as('logAnswer.byFormId')
+	Route.get('answer-log-by-form/:form_id', 'AdonnisLegadoController.bridge').as(
+		'logAnswer.byFormId',
+	)
 	Route.get('answer', 'AdonnisLegadoController.bridge')
 	Route.get('answer/:id', 'AdonnisLegadoController.bridge')
 	Route.get('answer-by-form/:form_id', 'AdonnisLegadoController.bridge')
@@ -233,18 +204,13 @@ Route.group(() => {
 		Route.get('', 'AnswerController.findAllAnswers').as('answer.index')
 		Route.get(':id', 'AnswerController.findAnswerById').as('answer.show')
 		Route.get('form/:form_id', 'AnswerController.findAnswersByFormId').as(
-			'answer.form.show'
+			'answer.form.show',
 		)
-		Route.get(
-			'client/:client_id',
-			'AnswerController.findAnswersByClientId'
-		).as('answer.client.show')
-		Route.put(':id', 'AnswerController.updateAnswerById').as(
-			'answer.update'
+		Route.get('client/:client_id', 'AnswerController.findAnswersByClientId').as(
+			'answer.client.show',
 		)
-		Route.delete(':id', 'AnswerController.deleteAnswerById').as(
-			'answer.destroy'
-		)
+		Route.put(':id', 'AnswerController.updateAnswerById').as('answer.update')
+		Route.delete(':id', 'AnswerController.deleteAnswerById').as('answer.destroy')
 	}).prefix('answers')
 
 	Route.group(() => {
@@ -255,56 +221,44 @@ Route.group(() => {
 }).middleware(['auth', 'role'])
 
 Route.group(() => {
-	Route.get('activity-stock', 'AdonnisLegadoController.bridge').as(
-		'activity.stock'
-	)
+	Route.get('activity-stock', 'AdonnisLegadoController.bridge').as('activity.stock')
 
 	Route.group(() => {
-		Route.put(
-			'status/:id',
-			'ActivityController.updateActivityStatusById'
-		).as('activity.status')
-		Route.put(
-			'started_at/:id',
-			'ActivityController.updateActivityStartedAt'
-		).as('activity.startedAt')
-		Route.put(
-			'finished_at/:id',
-			'ActivityController.updateActivityFinishedAt'
-		).as('activity.finishedAt')
-		Route.put(':id', 'ActivityController.updateActivityById').as(
-			'activity.update'
+		Route.put('status/:id', 'ActivityController.updateActivityStatusById').as(
+			'activity.status',
 		)
-		Route.get('', 'ActivityController.findAllActivities').as(
-			'activity.index'
+		Route.put('started_at/:id', 'ActivityController.updateActivityStartedAt').as(
+			'activity.startedAt',
 		)
+		Route.put('finished_at/:id', 'ActivityController.updateActivityFinishedAt').as(
+			'activity.finishedAt',
+		)
+		Route.put(':id', 'ActivityController.updateActivityById').as('activity.update')
+		Route.get('', 'ActivityController.findAllActivities').as('activity.index')
 		Route.get('await', 'ActivityController.findAllActivitiesAwait').as(
-			'activity.indexAwait'
+			'activity.indexAwait',
 		)
 		Route.get('pending', 'ActivityController.findAllActivitiesPending').as(
-			'activity.indexPending'
+			'activity.indexPending',
 		)
-		Route.get(
-			'prof/:prof_id',
-			'ActivityController.findActivitiesByProfId'
-		).as('activity.byProfId')
-		Route.get(
-			'client/:client_id',
-			'ActivityController.findActivitiesByClientId'
-		).as('activity.byClientId')
+		Route.get('prof/:prof_id', 'ActivityController.findActivitiesByProfId').as(
+			'activity.byProfId',
+		)
+		Route.get('client/:client_id', 'ActivityController.findActivitiesByClientId').as(
+			'activity.byClientId',
+		)
 		Route.post('', 'ActivityController.createActivity').as('activity.store')
 		Route.post('await', 'ActivityController.createActivityAwait').as(
-			'activity.storeAwait'
+			'activity.storeAwait',
 		)
-		Route.post(
-			'recurrent',
-			'ActivityController.createRecurrentActivity'
-		).as('activity.storeRecurrent')
+		Route.post('recurrent', 'ActivityController.createRecurrentActivity').as(
+			'activity.storeRecurrent',
+		)
 		Route.put('payment/:id', 'ActivityController.updateActivityPayment').as(
-			'activity.payment'
+			'activity.payment',
 		)
 		Route.delete(':id', 'ActivityController.deleteActivityById').as(
-			'activity.destroy'
+			'activity.destroy',
 		)
 	}).prefix('activity')
 
@@ -312,298 +266,218 @@ Route.group(() => {
 		Route.get('', 'ProcedureController.index').as('procedure.index')
 		Route.get(':id', 'ProcedureController.show').as('procedure.show')
 		Route.put(':_id', 'ProcedureController.update').as('procedure.update')
-		Route.delete(':id', 'ProcedureController.destroy').as(
-			'procedure.destroy'
-		)
+		Route.delete(':id', 'ProcedureController.destroy').as('procedure.destroy')
 		Route.post('', 'ProcedureController.store').as('procedure.store')
 	}).prefix('procedure')
 
 	Route.group(() => {
 		Route.get('/work-hours/:prof_id', 'ScheduleController.getWorkHours').as(
-			'schedule.show'
+			'schedule.show',
 		)
 	}).prefix('schedule')
 
 	Route.post('/upload', 'AdonnisLegadoController.bridge').as('upload.image')
 
 	Route.get('reports-activities', 'AdonnisLegadoController.bridge').as(
-		'reports.activities'
+		'reports.activities',
 	)
-	Route.get(
-		'reports-activities-partner',
-		'AdonnisLegadoController.bridge'
-	).as('reports.activities.partner')
-	Route.get('reports-payment', 'AdonnisLegadoController.bridge').as(
-		'reports.payment'
+	Route.get('reports-activities-partner', 'AdonnisLegadoController.bridge').as(
+		'reports.activities.partner',
 	)
+	Route.get('reports-payment', 'AdonnisLegadoController.bridge').as('reports.payment')
 	Route.get('reports-payment-type', 'AdonnisLegadoController.bridge').as(
-		'reports.payment.type'
+		'reports.payment.type',
 	)
 	Route.get('reports-payment-prof', 'AdonnisLegadoController.bridge').as(
-		'reports.payment.prof'
+		'reports.payment.prof',
 	)
 	Route.get('reports-payment-prof-date', 'AdonnisLegadoController.bridge').as(
-		'reports.payment.prof.date'
+		'reports.payment.prof.date',
 	)
 	Route.get('reports-procedure', 'AdonnisLegadoController.bridge').as(
-		'reports.procedure'
+		'reports.procedure',
 	)
-	Route.get('reports-canceled', 'AdonnisLegadoController.bridge').as(
-		'reports.canceled'
-	)
+	Route.get('reports-canceled', 'AdonnisLegadoController.bridge').as('reports.canceled')
 
 	Route.group(() => {
 		Route.get('/:client_id', 'ClientSickNoteController.findByClient').as(
-			'client-sick-note.findByClient'
+			'client-sick-note.findByClient',
 		)
-		Route.post('', 'ClientSickNoteController.store').as(
-			'client-sick-note.store'
-		)
+		Route.post('', 'ClientSickNoteController.store').as('client-sick-note.store')
 	}).prefix('client-sick-note')
 
 	Route.group(() => {
-		Route.get(
-			'/:client_id',
-			'ClientPrescriptionController.findByClient'
-		).as('client-prescription.findByClient')
+		Route.get('/:client_id', 'ClientPrescriptionController.findByClient').as(
+			'client-prescription.findByClient',
+		)
 		Route.post('', 'ClientPrescriptionController.store').as(
-			'client-prescription.store'
+			'client-prescription.store',
 		)
 	}).prefix('client-prescription')
 
 	Route.group(() => {
 		Route.get('', 'AdonnisLegadoController.bridge').as('room.index')
 		Route.get('/:userId', 'AdonnisLegadoController.bridge').as('room.show')
-		Route.get('support', 'AdonnisLegadoController.bridge').as(
-			'room.support'
-		)
+		Route.get('support', 'AdonnisLegadoController.bridge').as('room.support')
 		Route.post('/:id', 'AdonnisLegadoController.bridge').as('room.store')
 		Route.get('unread', 'AdonnisLegadoController.bridge').as('room.unread')
 	}).prefix('room')
 
 	Route.group(() => {
 		Route.get('', 'PrescriptionController.index').as('prescriptions.index')
-		Route.get('/inactive', 'PrescriptionController.findAllInactives').as(
-			'prescriptions.indexInactives'
+		Route.get('/inactive', 'PrescriptionController.findAllInatives').as(
+			'prescriptions.indexInatives',
 		)
-		Route.get('/:id', 'PrescriptionController.show').as(
-			'prescriptions.show'
-		)
-		Route.put('/:id', 'PrescriptionController.update').as(
-			'prescriptions.update'
-		)
+		Route.get('/:id', 'PrescriptionController.show').as('prescriptions.show')
+		Route.put('/:id', 'PrescriptionController.update').as('prescriptions.update')
 		Route.put('/status/:id', 'PrescriptionController.updateStatus').as(
-			'prescriptions.updateStatus'
+			'prescriptions.updateStatus',
 		)
-		Route.delete('/:id', 'PrescriptionController.destroy').as(
-			'prescriptions.destroy'
-		)
+		Route.delete('/:id', 'PrescriptionController.destroy').as('prescriptions.destroy')
 		Route.post('', 'PrescriptionController.store').as('prescriptions.store')
 	}).prefix('prescriptions')
 
 	Route.group(() => {
 		Route.get('', 'IngredientController.index').as('ingredients.index')
 		Route.get('/:id', 'IngredientController.show').as('ingredients.show')
-		Route.put('/:id', 'IngredientController.update').as(
-			'ingredients.update'
-		)
-		Route.delete('/:id', 'IngredientController.destroy').as(
-			'ingredients.destroy'
-		)
+		Route.put('/:id', 'IngredientController.update').as('ingredients.update')
+		Route.delete('/:id', 'IngredientController.destroy').as('ingredients.destroy')
 		Route.post('', 'IngredientController.store').as('ingredients.store')
 	}).prefix('ingredients')
 
 	Route.group(() => {
-		Route.get('', 'AdonnisLegadoController.bridge').as(
-			'ingredients-list.index'
-		)
-		Route.get('/:id', 'AdonnisLegadoController.bridge').as(
-			'ingredients-list.show'
-		)
-		Route.put('/:id', 'AdonnisLegadoController.bridge').as(
-			'ingredients-list.update'
-		)
+		Route.get('', 'AdonnisLegadoController.bridge').as('ingredients-list.index')
+		Route.get('/:id', 'AdonnisLegadoController.bridge').as('ingredients-list.show')
+		Route.put('/:id', 'AdonnisLegadoController.bridge').as('ingredients-list.update')
 		Route.delete('/:id', 'AdonnisLegadoController.bridge').as(
-			'ingredients-list.destroy'
+			'ingredients-list.destroy',
 		)
-		Route.post('', 'AdonnisLegadoController.bridge').as(
-			'ingredients-list.store'
-		)
+		Route.post('', 'AdonnisLegadoController.bridge').as('ingredients-list.store')
 	}).prefix('ingredients-list')
 
 	Route.group(() => {
 		Route.get('', 'AdonnisLegadoController.bridge').as('sick-notes.index')
-		Route.get('/:id', 'AdonnisLegadoController.bridge').as(
-			'sick-notes.show'
-		)
-		Route.put('/:id', 'AdonnisLegadoController.bridge').as(
-			'sick-notes.update'
-		)
-		Route.delete('/:id', 'AdonnisLegadoController.bridge').as(
-			'sick-notes.destroy'
-		)
+		Route.get('/:id', 'AdonnisLegadoController.bridge').as('sick-notes.show')
+		Route.put('/:id', 'AdonnisLegadoController.bridge').as('sick-notes.update')
+		Route.delete('/:id', 'AdonnisLegadoController.bridge').as('sick-notes.destroy')
 		Route.post('', 'AdonnisLegadoController.bridge').as('sick-notes.store')
 	}).prefix('sick-notes')
 
 	Route.group(() => {
 		Route.get('', 'AdonnisLegadoController.bridge').as('directMail.index')
-		Route.get('/:id', 'AdonnisLegadoController.bridge').as(
-			'directMail.show'
-		)
-		Route.put('/:id', 'AdonnisLegadoController.bridge').as(
-			'directMail.update'
-		)
-		Route.delete('/:id', 'AdonnisLegadoController.bridge').as(
-			'directMail.destroy'
-		)
+		Route.get('/:id', 'AdonnisLegadoController.bridge').as('directMail.show')
+		Route.put('/:id', 'AdonnisLegadoController.bridge').as('directMail.update')
+		Route.delete('/:id', 'AdonnisLegadoController.bridge').as('directMail.destroy')
 		Route.post('', 'AdonnisLegadoController.bridge').as('directMail.store')
 	}).prefix('direct-mail')
 
 	Route.group(() => {
 		Route.get('', 'DirectmailController.index').as('directMails.index')
-		Route.get('/inactives', 'DirectmailController.findAllInactives').as(
-			'directMails.indexInactives'
+		Route.get('/inatives', 'DirectmailController.findAllInatives').as(
+			'directMails.indexInatives',
 		)
 		Route.get('/:id', 'DirectmailController.show').as('directMails.show')
-		Route.put('/:id', 'DirectmailController.update').as(
-			'directMails.update'
-		)
+		Route.put('/:id', 'DirectmailController.update').as('directMails.update')
 		Route.put('/status/:id', 'DirectmailController.updateStatus').as(
-			'directMails.updateStatus'
+			'directMails.updateStatus',
 		)
-		Route.delete('/:id', 'DirectmailController.destroy').as(
-			'directMails.destroy'
-		)
+		Route.delete('/:id', 'DirectmailController.destroy').as('directMails.destroy')
 		Route.post('', 'DirectmailController.store').as('directMails.store')
 	}).prefix('direct-mails')
 
 	Route.group(() => {
 		Route.get('', 'AdonnisLegadoController.bridge').as('pictures.index')
 		Route.get('/:id', 'AdonnisLegadoController.bridge').as('pictures.show')
-		Route.put('/:id', 'AdonnisLegadoController.bridge').as(
-			'pictures.update'
-		)
-		Route.delete('/:id', 'AdonnisLegadoController.bridge').as(
-			'pictures.destroy'
-		)
+		Route.put('/:id', 'AdonnisLegadoController.bridge').as('pictures.update')
+		Route.delete('/:id', 'AdonnisLegadoController.bridge').as('pictures.destroy')
 		Route.post('', 'AdonnisLegadoController.bridge').as('pictures.store')
 	}).prefix('pictures')
 
 	Route.get('activities-date', 'AdonnisLegadoController.bridge').as(
-		'activities-date.index'
+		'activities-date.index',
 	)
 
 	Route.group(() => {
 		Route.get('', 'PaymentProfController.findAllPaymentProfs').as(
-			'payments-prof.index'
+			'payments-prof.index',
 		)
 		Route.get('/:id', 'PaymentProfController.findPaymentProfById').as(
-			'payments-prof.show'
+			'payments-prof.show',
 		)
-		Route.put(
-			'/:prof_id/:id',
-			'PaymentProfController.updatePaymentProfById'
-		).as('payments-prof.update')
-		Route.delete(
-			'/:prof_id/:id',
-			'PaymentProfController.deletePaymentProfById'
-		).as('payments-prof.destroy')
+		Route.put('/:prof_id/:id', 'PaymentProfController.updatePaymentProfById').as(
+			'payments-prof.update',
+		)
+		Route.delete('/:prof_id/:id', 'PaymentProfController.deletePaymentProfById').as(
+			'payments-prof.destroy',
+		)
 		Route.post('', 'PaymentProfController.createPaymentProf').as(
-			'payments-prof.store'
+			'payments-prof.store',
 		)
 	}).prefix('payment-participations')
 
 	Route.group(() => {
 		Route.get('', 'FinancialCategoryController.index').as(
-			'financial-categories.index'
+			'financial-categories.index',
 		)
-		Route.get('/inactives', 'FinancialCategoryController.inactives').as(
-			'financial-categories.inactives'
+		Route.get('/inatives', 'FinancialCategoryController.inatives').as(
+			'financial-categories.inatives',
 		)
 		Route.get('/:id', 'FinancialCategoryController.show').as(
-			'financial-categories.show'
+			'financial-categories.show',
 		)
 		Route.put('/:id', 'FinancialCategoryController.update').as(
-			'financial-categories.update'
+			'financial-categories.update',
 		)
 		Route.delete('/:id', 'FinancialCategoryController.destroy').as(
-			'financial-categories.destroy'
+			'financial-categories.destroy',
 		)
 		Route.post('', 'FinancialCategoryController.store').as(
-			'financial-categories.store'
+			'financial-categories.store',
 		)
 	}).prefix('financial-categories')
 
 	Route.group(() => {
 		Route.get('', 'CostCenterController.index').as('cost-centers.index')
-		Route.get('/inactives', 'CostCenterController.inactives').as(
-			'cost-centers.inactives'
+		Route.get('/inatives', 'CostCenterController.inatives').as(
+			'cost-centers.inatives',
 		)
 		Route.get('/:id', 'CostCenterController.show').as('cost-centers.show')
-		Route.put('/:id', 'CostCenterController.update').as(
-			'cost-centers.update'
-		)
-		Route.delete('/:id', 'CostCenterController.destroy').as(
-			'cost-centers.destroy'
-		)
+		Route.put('/:id', 'CostCenterController.update').as('cost-centers.update')
+		Route.delete('/:id', 'CostCenterController.destroy').as('cost-centers.destroy')
 		Route.post('', 'CostCenterController.store').as('cost-centers.store')
 	}).prefix('cost-centers')
 
 	Route.group(() => {
 		Route.get('', 'AccountController.findAllAccounts').as('accounts.index')
-		Route.get('/:id', 'AccountController.findAccountById').as(
-			'accounts.show'
-		)
-		Route.put('/:id', 'AccountController.updateAccountById').as(
-			'accounts.update'
-		)
-		Route.delete('/:id', 'AccountController.deleteAccountById').as(
-			'accounts.destroy'
-		)
+		Route.get('/:id', 'AccountController.findAccountById').as('accounts.show')
+		Route.put('/:id', 'AccountController.updateAccountById').as('accounts.update')
+		Route.delete('/:id', 'AccountController.deleteAccountById').as('accounts.destroy')
 		Route.post('', 'AccountController.createAccount').as('accounts.store')
 	}).prefix('accounts')
 
 	Route.group(() => {
-		Route.get('', 'AdonnisLegadoController.bridge').as(
-			'default-config.index'
-		)
-		Route.get('/:id', 'AdonnisLegadoController.bridge').as(
-			'default-config.show'
-		)
-		Route.put('/:id', 'AdonnisLegadoController.bridge').as(
-			'default-config.update'
-		)
+		Route.get('', 'AdonnisLegadoController.bridge').as('default-config.index')
+		Route.get('/:id', 'AdonnisLegadoController.bridge').as('default-config.show')
+		Route.put('/:id', 'AdonnisLegadoController.bridge').as('default-config.update')
 		Route.delete('/:id', 'AdonnisLegadoController.bridge').as(
-			'default-config.destroy'
+			'default-config.destroy',
 		)
-		Route.post('', 'AdonnisLegadoController.bridge').as(
-			'default-config.store'
-		)
+		Route.post('', 'AdonnisLegadoController.bridge').as('default-config.store')
 	}).prefix('default-config')
 
 	Route.group(() => {
-		Route.get('', 'DefaultConfigController.index').as(
-			'default-configs.index'
-		)
-		Route.get('/:id', 'DefaultConfigController.show').as(
-			'default-configs.show'
-		)
-		Route.put('/:id', 'DefaultConfigController.update').as(
-			'default-configs.update'
-		)
+		Route.get('', 'DefaultConfigController.index').as('default-configs.index')
+		Route.get('/:id', 'DefaultConfigController.show').as('default-configs.show')
+		Route.put('/:id', 'DefaultConfigController.update').as('default-configs.update')
 		Route.delete('/:id', 'DefaultConfigController.destroy').as(
-			'default-configs.destroy'
+			'default-configs.destroy',
 		)
-		Route.post('', 'DefaultConfigController.store').as(
-			'default-configs.store'
-		)
+		Route.post('', 'DefaultConfigController.store').as('default-configs.store')
 	}).prefix('default-configs')
 
 	Route.group(() => {
 		Route.get('', 'TransactionController.index').as('transactions.index')
-		Route.put('/:id', 'TransactionController.update').as(
-			'transactions.update'
-		)
+		Route.put('/:id', 'TransactionController.update').as('transactions.update')
 		Route.get('/:id', 'TransactionController.show').as('transactions.show')
 		Route.post('', 'TransactionController.store').as('transactions.store')
 	}).prefix('transactions')
@@ -613,50 +487,29 @@ Route.group(() => {
 	Route.group(() => {
 		Route.get('', 'HolidaysController.index').as('holidays.index')
 		Route.post('', 'HolidaysController.store').as('holidays.store')
-		Route.delete('/:_id', 'HolidaysController.destroy').as(
-			'holidays.destroy'
-		)
+		Route.delete('/:_id', 'HolidaysController.destroy').as('holidays.destroy')
 	}).prefix('holidays')
 
 	Route.group(() => {
 		Route.get('', 'RevenuesController.index').as('revenues.index')
-		Route.get('/minimum', 'RevenuesController.updateMinimum').as(
-			'revenues.minimum'
-		)
+		Route.get('/minimum', 'RevenuesController.updateMinimum').as('revenues.minimum')
 		Route.put('/desirable', 'RevenuesController.updateDesirable').as(
-			'revenues.updateDesirable'
+			'revenues.updateDesirable',
 		)
 	}).prefix('revenues')
 
 	Route.group(() => {
 		Route.get('', 'CensusController.index').as('census.index')
-		Route.get('payments', 'CensusController.indexPayments').as(
-			'census.payments'
-		)
+		Route.get('payments', 'CensusController.indexPayments').as('census.payments')
 	}).prefix('census')
 	Route.group(() => {
 		Route.get('health-insurance', 'CensusController.indexHealthInsurance')
-		Route.get(
-			'activities-daysmonth',
-			'CensusController.indexActivitiesByDaysMonth'
-		)
+		Route.get('activities-daysmonth', 'CensusController.indexActivitiesByDaysMonth')
 		Route.get('payments-by-form', 'CensusController.indexPaymentsByForm')
-		Route.get(
-			'activities-prof-by-prof',
-			'CensusController.indexActivitiesProfByProf'
-		)
-		Route.get(
-			'payments-by-partner',
-			'CensusController.indexPaymentsByPartner'
-		)
+		Route.get('activities-prof-by-prof', 'CensusController.indexActivitiesProfByProf')
+		Route.get('payments-by-partner', 'CensusController.indexPaymentsByPartner')
 		Route.get('payments-by-prof', 'CensusController.indexPaymentsByProf')
-		Route.get(
-			'payments-participation',
-			'CensusController.indexPaymentsParticipation'
-		)
-		Route.get(
-			'revenues-activities',
-			'CensusController.indexRevenuesActivities'
-		)
+		Route.get('payments-participation', 'CensusController.indexPaymentsParticipation')
+		Route.get('revenues-activities', 'CensusController.indexRevenuesActivities')
 	}).prefix('censu')
 }).middleware(['auth', 'role'])

@@ -13,7 +13,7 @@ class CostCenterController {
 		return costCenters
 	}
 
-	async inactives({ auth }: HttpContextContract) {
+	async inatives({ auth }: HttpContextContract) {
 		const userLogged = auth.user
 
 		const costCenters = await CostCenter.find({
