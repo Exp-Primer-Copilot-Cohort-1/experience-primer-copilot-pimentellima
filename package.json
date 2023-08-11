@@ -49,16 +49,16 @@
 		"cross-env": "^7.0.3",
 		"cz-conventional-changelog": "^3.3.0",
 		"eslint": "^8.46.0",
+		"eslint-config-prettier": "^7.2.0",
 		"eslint-plugin-adonis": "^2.1.1",
+		"eslint-plugin-prettier": "^4.2.1",
 		"husky": "^8.0.3",
 		"pino-pretty": "^9.4.1",
 		"prettier": "^2.8.8",
 		"typescript": "^5.1.6",
 		"vitest": "^0.27.3",
 		"youch": "^3.2.3",
-		"youch-terminal": "^2.2.2",
-		"eslint-config-prettier": "^7.2.0",
-		"eslint-plugin-prettier": "^4.2.1"
+		"youch-terminal": "^2.2.2"
 	},
 	"dependencies": {
 		"@adonisjs/auth": "^8.2.3",
