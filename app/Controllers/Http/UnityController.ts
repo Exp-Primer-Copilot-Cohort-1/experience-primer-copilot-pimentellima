@@ -20,7 +20,7 @@ class UnityController {
 			'site',
 			'cep',
 			'address',
-			'neighbohood',
+			'neighborhood',
 			'address_number',
 			'complement',
 			'city',

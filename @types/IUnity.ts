@@ -21,7 +21,7 @@ export type IUnity = Nullable<{
 	complement: string
 	country: string
 	name_company: string
-	neighbohood: string
+	neighborhood: string
 	obs: string
 	phones: IPhone[]
 	site: string

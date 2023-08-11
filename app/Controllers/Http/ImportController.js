@@ -43,7 +43,7 @@ class ImportController {
           phone: itm[11],
           cep: itm[21],
           address: itm[22],
-          neighbohood: itm[25],
+          neighborhood: itm[25],
           complement: itm[24],
           address_number: itm[23],
           city: itm[26],

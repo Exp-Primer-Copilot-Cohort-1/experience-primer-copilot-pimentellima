@@ -9,7 +9,7 @@ const SELECTS = [
 	'phone',
 	'cep',
 	'address',
-	'neighbohood',
+	'neighborhood',
 	'complement',
 	'address_number',
 	'city',

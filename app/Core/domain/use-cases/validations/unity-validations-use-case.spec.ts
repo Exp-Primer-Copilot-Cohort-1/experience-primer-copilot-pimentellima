@@ -28,7 +28,7 @@ const unit = {
 	complement: faker.lorem.paragraph(),
 	document: cnpj.generate(),
 	name_company: faker.company.name(),
-	neighbohood: faker.address.county(),
+	neighborhood: faker.address.county(),
 	cnaes: '',
 	phones: [],
 }

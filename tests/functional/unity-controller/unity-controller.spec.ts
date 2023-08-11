@@ -12,7 +12,7 @@ const unityData = {
 	site: 'www.colheres.com',
 	cep: '49100-000',
 	address: 'Endereço da Unidade',
-	neighbohood: 'Bairro',
+	neighborhood: 'Bairro',
 	address_number: '123',
 	complement: 'Complemento',
 	city: 'Cidade',

@@ -65,7 +65,7 @@ export const UnitySchema = new Schema<IUnity>(
 			type: String,
 			required: false,
 		},
-		neighbohood: {
+		neighborhood: {
 			type: String,
 			required: false,
 		},
