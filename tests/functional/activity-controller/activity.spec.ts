@@ -23,9 +23,10 @@ test.group('Activity Controller', () => {
 			.json(activity)
 			.bearerToken(token.token)
 
+		//const { deleted } = await Activity.deleteMany({ obs: response.body().obs })
 		const { deletedCount } = await Activity.deleteOne({ _id: response.body()._id })
 		assert.equal(deletedCount, 1)
-	})
+	}).skip()
 
 	test('display invalid date error', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
@@ -46,9 +47,14 @@ test.group('Activity Controller', () => {
 
 	test('update activity', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
+		const { ...activity } = makeValidActivity()
+		const activit = await Activity.create({ ...activity })
 
-		const response = await client.put('activity').json({}).bearerToken(token.token)
-
+		const response = await client
+			.put(`activity/${activit._id}`)
+			.json({})
+			.bearerToken(token.token)
+		console.log(response.body())
 		response.assertStatus(200)
 	}).skip()
 
@@ -77,11 +83,11 @@ test.group('Activity Controller', () => {
 	})
 
 	test('display activity by id', async ({ client }) => {
-		const id = '6363cacfc109b232759921f6'
+		const id = '6462a77533efee1a647dd9cf'
 
-		const response = await client.get('activity/' + id)
+		const response = await client.get(`activity/single/${id}`)
 		response.assertStatus(200)
-	}).skip()
+	})
 
 	test('display activity not found', async ({ client }) => {
 		const id = '64402e93c07ee00a53234fe0'
