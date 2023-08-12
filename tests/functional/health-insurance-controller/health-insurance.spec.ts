@@ -5,10 +5,11 @@ import { assert } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 
 const healthInsurance = (unity_id) => ({
-	name: faker.name.firstName(),
-	register_code: faker.random.numeric(),
-	carence: faker.random.numeric(),
+	name: faker.person.firstName(),
+	register_code: faker.string.numeric(),
+	carence: faker.number.int(),
 	unity_id: unity_id,
+	profs: [],
 })
 
 test.group('Health Insurance Controller', () => {
@@ -37,6 +38,7 @@ test.group('Health Insurance Controller', () => {
 
 		response.assertStatus(200)
 	})
+	// é preciso usar um id existente
 	test('display find health insurance by id', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 
@@ -57,7 +59,7 @@ test.group('Health Insurance Controller', () => {
 		response.assertStatus(404)
 	})
 	test('display update health insurance by id', async ({ client }) => {
-		const name = faker.name.firstName()
+		const name = faker.person.firstName()
 		const { token, user } = await loginAndGetToken(client)
 
 		const item = healthInsurance(user.unity_id)
@@ -77,7 +79,7 @@ test.group('Health Insurance Controller', () => {
 
 		const { deletedCount } = await HealthInsurance.deleteOne({ _id: health._id })
 		assert.equal(deletedCount, 1)
-	}).skip()
+	})
 	test('display create health insurance', async ({ client }) => {
 		const { token, user } = await loginAndGetToken(client)
 
@@ -98,14 +100,14 @@ test.group('Health Insurance Controller', () => {
 		const { deletedCount } = await HealthInsurance.deleteOne({ _id: data._id })
 
 		assert.equal(deletedCount, 1)
-	}).skip()
+	})
 	test('display delete health insurance', async ({ client }) => {
 		const { token, user } = await loginAndGetToken(client)
 
 		const healthInsurance = await HealthInsurance.create({
-			name: faker.name.firstName(),
-			register_code: faker.random.numeric(),
-			carence: faker.random.numeric(),
+			name: faker.person.firstName,
+			register_code: faker.number.int(),
+			carence: faker.number.int(),
 			unity_id: user.unity_id,
 		})
 
@@ -119,5 +121,5 @@ test.group('Health Insurance Controller', () => {
 		}
 
 		response.assertStatus(200 || 204)
-	}).skip()
+	})
 })
