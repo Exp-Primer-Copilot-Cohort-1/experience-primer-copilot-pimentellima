@@ -1,6 +1,8 @@
+import { faker } from '@faker-js/faker'
 import { test } from '@japa/runner'
 import Unity from 'App/Models/Unity'
 import { assert } from 'chai'
+import { cpf } from 'cpf-cnpj-validator'
 import { loginAndGetToken } from '../helpers/login'
 
 const unityData = {
@@ -21,7 +23,7 @@ const unityData = {
 	obs: 'Observação',
 	schedule_obs: 'Observação do Horário',
 	date_expiration: '2023-12-31',
-	email: 'nediauling@hotmail.com',
+	email: faker.internet.email(),
 }
 
 test.group('Unity Controller', () => {
@@ -32,31 +34,36 @@ test.group('Unity Controller', () => {
 			.headers({ Authorization: `Bearer ${token.token}` })
 		response.assertStatus(200)
 		assert.isArray(response.body())
-	}).skip()
+	})
 
 	test('display store unity', async ({ client }) => {
+		const { token } = await loginAndGetToken(client)
 		const unityData = {
 			is_company: false,
-			date_expiration: '2021-01-01',
-			password: '123456',
-			repeat_password: '123456',
-			email: 'nediauling@hotmail.com',
+			date_expiration: faker.date.future(),
+			password: '@Aa123456',
+			repeat_password: '@Aa123456',
+			email: faker.internet.email(),
 			name: 'Test Unity',
-			document: '123456789',
+			document: cpf.generate(),
 			type: 'admin',
 		}
 
-		const response = await client.put('unity/:id').json({
-			...unityData,
-		})
+		const response = await client
+			.post('unity')
+			.json({
+				...unityData,
+			})
+			.bearerToken(token.token)
 		response.assertStatus(200)
 
 		const { _id } = response.body() as any
 
 		const { deletedCount } = await Unity.deleteOne({ _id })
 		assert.equal(deletedCount, 1)
-	}).skip()
+	})
 	test('display update unity', async ({ client }) => {
+		const { token } = await loginAndGetToken(client)
 		const unity = await Unity.create({ ...unityData, active: true })
 
 		const updatedData = {
@@ -67,7 +74,8 @@ test.group('Unity Controller', () => {
 		const response = await client
 			.put(`unity/${unity._id}`)
 			.json({ ...updatedData })
-			.send()
+			.bearerToken(token.token)
+
 		response.assertStatus(200)
 
 		const updatedUnity = await Unity.findById(unity._id)
@@ -77,7 +85,8 @@ test.group('Unity Controller', () => {
 
 		const { deletedCount } = await Unity.deleteOne({ _id: unity._id })
 		assert.equal(deletedCount, 1)
-	}).skip()
+	})
+	//usar um unity_id existente no bd
 	test('display show unity', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 
