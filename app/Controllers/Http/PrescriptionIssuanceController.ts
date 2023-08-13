@@ -1,9 +1,9 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
-import ClientPrescription from "App/Models/ClientPrescription";
+import PrescriptionIssuance from "App/Models/PrescriptionIssuance";
 
-class ClientPrescriptionController {
+class PrescriptionIssuanceController {
 	async findByClient(ctx: HttpContextContract) {
-		const prescriptions = await ClientPrescription.find({
+		const prescriptions = await PrescriptionIssuance.find({
 			"client.value": ctx.params.client_id,
 		});
 		return prescriptions;
@@ -12,7 +12,7 @@ class ClientPrescriptionController {
 	async store(ctx: HttpContextContract) {
 		const data = ctx.request.all();
 
-		const prescriptions = await ClientPrescription.create({
+		const prescriptions = await PrescriptionIssuance.create({
 			unity_id: ctx.auth.user?.unity_id,
 			...data,
 		});
@@ -20,4 +20,4 @@ class ClientPrescriptionController {
 	}
 }
 
-export default ClientPrescriptionController;
+export default PrescriptionIssuanceController;

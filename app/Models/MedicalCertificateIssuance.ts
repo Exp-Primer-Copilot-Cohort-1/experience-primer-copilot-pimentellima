@@ -1,7 +1,7 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IClientMedicalCertificate } from 'Types/IClientMedicalCertificate'
+import { IMedicalCertificateIssuance } from 'Types/IMedicalCertificateIssuance'
 
-const ClientMedicalCertificate = new Schema<IClientMedicalCertificate>(
+const MedicalCertificateIssuance = new Schema<IMedicalCertificateIssuance>(
 	{
 		client: {
 			value: { type: String, required: true },
@@ -22,7 +22,7 @@ const ClientMedicalCertificate = new Schema<IClientMedicalCertificate>(
 	},
 )
 
-export default Mongoose.model<IClientMedicalCertificate>(
-	'clientMedicalCertificate',
-	ClientMedicalCertificate,
+export default Mongoose.model<IMedicalCertificateIssuance>(
+	'medicalCertificateIssuances',
+	MedicalCertificateIssuance,
 )
