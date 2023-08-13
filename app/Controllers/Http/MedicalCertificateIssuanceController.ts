@@ -1,9 +1,9 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import ClientMedicalCertificate from 'App/Models/ClientMedicalCertificate'
+import MedicalCertificateIssuance from 'App/Models/MedicalCertificateIssuance'
 
-class ClientMedicalCertificateController {
+class MedicalCertificateIssuanceController {
 	async findByClient(ctx: HttpContextContract) {
-		const medicalCertificate = await ClientMedicalCertificate.find({
+		const medicalCertificate = await MedicalCertificateIssuance.find({
 			'client.value': ctx.params.client_id,
 		})
 		return medicalCertificate
@@ -12,7 +12,7 @@ class ClientMedicalCertificateController {
 	async store(ctx: HttpContextContract) {
 		const data = ctx.request.all()
 
-		const medicalCertificate = await ClientMedicalCertificate.create({
+		const medicalCertificate = await MedicalCertificateIssuance.create({
 			unity_id: ctx.auth.user?.unity_id,
 			...data,
 		})
@@ -20,4 +20,4 @@ class ClientMedicalCertificateController {
 	}
 }
 
-export default ClientMedicalCertificateController
+export default MedicalCertificateIssuanceController

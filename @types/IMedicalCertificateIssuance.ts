@@ -1,4 +1,4 @@
-export interface IClientMedicalCertificate {
+export interface IMedicalCertificateIssuance {
 	client: {
 		label: string
 		value: string
