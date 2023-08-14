@@ -1,7 +1,7 @@
 import Mongoose, { Schema } from "@ioc:Mongoose";
-import { IClientPrescription } from "Types/IClientPrescription";
+import { IPrescriptionIssuance } from "Types/IPrescriptionIssuance";
 
-const ClientPrescription = new Schema<IClientPrescription>(
+const PrescriptionIssuance = new Schema<IPrescriptionIssuance>(
 	{
 		client: {
 			value: { type: String, required: true },
@@ -22,7 +22,7 @@ const ClientPrescription = new Schema<IClientPrescription>(
 	}
 );
 
-export default Mongoose.model<IClientPrescription>(
-	"clientPrescriptions",
-	ClientPrescription
+export default Mongoose.model<IPrescriptionIssuance>(
+	"prescriptionIssuances",
+	PrescriptionIssuance
 );

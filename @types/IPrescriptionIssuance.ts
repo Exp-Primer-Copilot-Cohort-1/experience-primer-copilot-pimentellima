@@ -1,4 +1,4 @@
-export interface IClientPrescription {
+export interface IPrescriptionIssuance {
     client: {
         label: string,
         value: string

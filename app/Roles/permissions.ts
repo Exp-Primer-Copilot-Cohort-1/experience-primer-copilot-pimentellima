@@ -599,29 +599,29 @@ const PERMISSIONS_INGREDIENTS_LIST: Permission = {
 }
 
 const PERMISSIONS_MEDICAL_CERTIFICATES: Permission = {
-	name: 'medical-certificate',
+	name: 'medical-certificates',
 	permissions: {
-		'medical-certificate.index': {
+		'medical-certificates.index': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
 			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
 			screens: [SCREENS.VIEW_MEDICAL_CERTIFICATES],
 		},
-		'medical-certificate.show': {
+		'medical-certificates.show': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
 			permissions: [TYPE_PERMISSIONS.VIEW],
 			screens: [SCREENS.VIEW_MEDICAL_CERTIFICATES],
 		},
-		'medical-certificate.update': {
+		'medical-certificates.update': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
 			permissions: [TYPE_PERMISSIONS.UPDATE],
 			screens: [SCREENS.VIEW_MEDICAL_CERTIFICATES],
 		},
-		'medical-certificate.destroy': {
+		'medical-certificates.destroy': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
 			permissions: [TYPE_PERMISSIONS.DELETE],
 			screens: [SCREENS.VIEW_MEDICAL_CERTIFICATES],
 		},
-		'medical-certificate.store': {
+		'medical-certificates.store': {
 			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.PROF],
 			permissions: [TYPE_PERMISSIONS.CREATE],
 			screens: [SCREENS.VIEW_MEDICAL_CERTIFICATES],

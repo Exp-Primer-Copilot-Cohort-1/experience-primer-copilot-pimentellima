@@ -300,22 +300,22 @@ Route.group(() => {
 	Route.get('reports-canceled', 'AdonnisLegadoController.bridge').as('reports.canceled')
 
 	Route.group(() => {
-		Route.get('/:client_id', 'ClientMedicalCertificateController.findByClient').as(
-			'client-sick-note.findByClient',
+		Route.get('/:client_id', 'MedicalCertificateIssuanceController.findByClient').as(
+			'medical-certificate-issuance.findByClient',
 		)
-		Route.post('', 'ClientMedicalCertificateController.store').as(
-			'client-sick-note.store',
+		Route.post('', 'MedicalCertificateIssuanceController.store').as(
+			'medical-certificate-issuance.store',
 		)
-	}).prefix('client-sick-note')
+	}).prefix('medical-certificate-issuance')
 
 	Route.group(() => {
-		Route.get('/:client_id', 'ClientPrescriptionController.findByClient').as(
-			'client-prescription.findByClient',
+		Route.get('/:client_id', 'PrescriptionIssuanceController.findByClient').as(
+			'prescription-issuance.findByClient',
 		)
-		Route.post('', 'ClientPrescriptionController.store').as(
-			'client-prescription.store',
+		Route.post('', 'PrescriptionIssuanceController.store').as(
+			'prescription-issuance.store',
 		)
-	}).prefix('client-prescription')
+	}).prefix('prescription-issuance')
 
 	Route.group(() => {
 		Route.get('', 'AdonnisLegadoController.bridge').as('room.index')
