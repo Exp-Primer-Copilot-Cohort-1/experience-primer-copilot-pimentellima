@@ -1,3 +1,4 @@
+import { isValidObjectId } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import Account from 'App/Models/Account'
@@ -40,24 +41,20 @@ export class AccountMongoRepository implements AccountManagerInterface {
 	async updateAccountById(
 		account: IAccount,
 		id: string,
-	): PromiseEither<AbstractError, AccountEntity> {
+	): PromiseEither<AbstractError, IAccount> {
 		if (!id) return left(new MissingParamsError('id'))
-		const oldAccount = await Account.findById(id)
-		if (!oldAccount) return left(new AccountNotFoundError())
-		const newAccountOrErr = await AccountEntity.build({
-			...oldAccount.toObject(),
-			...account,
-		})
-		if (newAccountOrErr.isLeft())
-			return left(new AbstractError('Invalid params', 400))
-		const newAccount = newAccountOrErr.extract()
 
-		await Account.findByIdAndUpdate(id, newAccount.params())
-		return right(newAccount)
+		const doc = (
+			await Account.findByIdAndUpdate(id, account, { new: true })
+		)?.toObject()
+
+		return right(doc as IAccount)
 	}
 
 	async findAccountById(id: string): PromiseEither<AbstractError, AccountEntity> {
 		if (!id) return left(new MissingParamsError('id'))
+
+		if (!isValidObjectId(id)) return left(new InvalidParamsError())
 
 		const item = await Account.findById(id)
 		if (!item) return left(new AccountNotFoundError())

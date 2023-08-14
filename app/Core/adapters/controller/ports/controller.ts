@@ -5,14 +5,15 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import promiseErrorHandler from '../helpers/promise-err-handler'
 
 import { AbstractError } from 'App/Core/errors/error.interface'
+import { IUser } from 'Types/IUser'
 import { ControllerGeneric } from '../helpers/controller-generic'
 
 export class Controller implements ControllerGeneric {
 	constructor(private readonly UseCase: UseCase<any, any>) { }
 
-	public async handle(httpRequest: HttpRequest) {
+	public async handle(httpRequest: HttpRequest, user?: IUser) {
 		const [error, resOrErr] = await promiseErrorHandler(
-			this.UseCase.execute(httpRequest.body),
+			this.UseCase.execute(httpRequest.body, user),
 		)
 
 		if (error) {

@@ -456,7 +456,7 @@ Route.group(() => {
 	Route.group(() => {
 		Route.get('', 'AccountController.findAllAccounts').as('accounts.index')
 		Route.get('/:id', 'AccountController.findAccountById').as('accounts.show')
-		Route.put('/:id', 'AccountController.updateAccountById').as('accounts.update')
+		Route.put('/:id', 'AccountController.updateAccount').as('accounts.update')
 		Route.delete('/:id', 'AccountController.deleteAccountById').as('accounts.destroy')
 		Route.post('', 'AccountController.createAccount').as('accounts.store')
 	}).prefix('accounts')

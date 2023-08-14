@@ -4,12 +4,12 @@ import { IAccount } from 'Types/IAccount'
 import AccountEntity from '../../entities/account/account'
 
 export interface AccountManagerInterface {
-    findAllAccounts: (unity_id: string) => PromiseEither<AbstractError, IAccount[]>
-    createAccount: (account: IAccount) => PromiseEither<AbstractError, AccountEntity>
-    updateAccountById: (
-        account: IAccount,
-        id: string,
-    ) => PromiseEither<AbstractError, AccountEntity>
-    findAccountById: (id: string) => PromiseEither<AbstractError, AccountEntity>
-    deleteAccountById: (id: string) => PromiseEither<AbstractError, AccountEntity>
+	findAllAccounts: (unity_id: string) => PromiseEither<AbstractError, IAccount[]>
+	createAccount: (account: IAccount) => PromiseEither<AbstractError, AccountEntity>
+	updateAccountById: (
+		account: IAccount,
+		id: string,
+	) => PromiseEither<AbstractError, IAccount>
+	findAccountById: (id: string) => PromiseEither<AbstractError, AccountEntity>
+	deleteAccountById: (id: string) => PromiseEither<AbstractError, AccountEntity>
 }

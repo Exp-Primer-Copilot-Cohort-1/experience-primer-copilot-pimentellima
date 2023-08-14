@@ -2,7 +2,11 @@ import Mongoose, { Schema } from '@ioc:Mongoose'
 
 const LogSchema = new Schema(
 	{
-		collection: {
+		collection_name: {
+			type: String,
+			required: true,
+		},
+		date: {
 			type: String,
 			required: true,
 		},
@@ -15,11 +19,11 @@ const LogSchema = new Schema(
 			required: true,
 			enum: ['post', 'put', 'delete'],
 		},
-		prev: {
+		before: {
 			type: Object,
 			required: true,
 		},
-		changes: {
+		after: {
 			type: Object,
 			required: true,
 		},
@@ -33,8 +37,14 @@ const LogSchema = new Schema(
 					type: String,
 					required: true,
 				},
+				_id: false,
 			},
 			required: true,
+		},
+		unity_id: {
+			type: Schema.Types.ObjectId,
+			required: true,
+			ref: 'unities',
 		},
 	},
 	{

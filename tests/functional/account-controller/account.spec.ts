@@ -4,8 +4,11 @@ import Account from 'App/Models/Account'
 import { assert } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 
+import { Types } from '@ioc:Mongoose'
+const { ObjectId } = Types
+
 const newAccount = {
-	name: faker.name.fullName(),
+	name: faker.person.fullName(),
 	value: 0,
 	date: faker.date.future(),
 	bank: 'SANTANDER',
@@ -17,16 +20,16 @@ test.group('Account Controller', () => {
 	test('display all accounts', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 
-		const response = await client.get('account').bearerToken(token.token)
+		const response = await client.get('accounts').bearerToken(token.token)
 
 		response.assertStatus(200)
-	}).skip()
+	})
 
 	test('create account', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.post('account')
+			.post('accounts')
 			.json(newAccount)
 			.bearerToken(token.token)
 
@@ -34,22 +37,54 @@ test.group('Account Controller', () => {
 
 		const { deletedCount } = await Account.deleteOne({ _id: response.body()._id })
 		assert.equal(deletedCount, 1)
-	}).skip()
+	})
 
 	test('display account by id', async ({ client }) => {
+		const account = await Account.create(newAccount)
 		const { token } = await loginAndGetToken(client)
-		const id = '6390b598373d349c09b46d84'
+		const id = account._id.toString()
 
-		const response = await client.get('account/' + id).bearerToken(token.token)
+		const response = await client.get('accounts/' + id).bearerToken(token.token)
 		response.assertStatus(200)
-	}).skip()
+
+		const { deletedCount } = await Account.deleteOne({ _id: id })
+
+		assert.equal(deletedCount, 1)
+	})
 
 	test('display account not found', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
-		const id = '0000b000000d349c09b46d00'
+		const id = new ObjectId().toString()
 
-		const response = await client.get('account/' + id).bearerToken(token.token)
+		const response = await client.get('accounts/' + id).bearerToken(token.token)
 
 		response.assertStatus(404)
+	})
+
+	test('display account invalid id', async ({ client }) => {
+		const { token } = await loginAndGetToken(client)
+		const id = '0'
+
+		const response = await client.get('accounts/' + id).bearerToken(token.token)
+
+		response.assertStatus(400)
+	})
+
+	test('update account', async ({ client }) => {
+		const account = await Account.create(newAccount)
+		const { token } = await loginAndGetToken(client)
+		const id = account._id.toString()
+
+		const response = await client
+			.put('accounts/' + id)
+			.json({ name: 'new name' })
+			.bearerToken(token.token)
+
+		response.assertStatus(200)
+
+		const body = response.body()
+		const { deletedCount } = await Account.deleteOne({ _id: id })
+		assert.equal(deletedCount, 1)
+		assert.equal(body.name, 'new name')
 	})
 })
