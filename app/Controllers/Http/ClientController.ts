@@ -3,6 +3,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Client from 'App/Models/Client'
 
 import SELECTS from '../user-select'
+import { IClient, IUserClient } from 'Types/IClient'
 
 class ClientController {
 	async verifyExistenceClient({ request, auth, response }: HttpContextContract) {
@@ -29,10 +30,52 @@ class ClientController {
 		return user
 	}
 
+	async createMany({ request, auth, response }: HttpContextContract) {
+		const data: IUserClient[] = Object.keys(request.all()).map(
+			(key) => request.all()[key],
+		)
+		const unity_id = auth.user?.unity_id
+
+		const users = await Promise.all(
+			data.map(async (clientData) => {
+				const { name, birth_date, email, celphone } = clientData
+				if (!name || !celphone) {
+					return response.status(400).json({
+						message: 'Missing Name Or CellPhone',
+					})
+				}
+
+				const userData = await Client.findOne({
+					email,
+					name,
+					birth_date,
+					unity_id,
+				})
+
+				if (userData?.active) {
+					return response.status(400).send({
+						error: {
+							message: 'Este cliente já está cadastrado na unidade.',
+						},
+					})
+				}
+
+				return await Client.create({
+					...clientData,
+					unity_id: unity_id,
+					active: true,
+					due_date: null,
+					email,
+				})
+			}),
+		)
+
+		return users
+	}
+
 	async create({ request, auth, response }: HttpContextContract) {
 		const data = request.all()
 		const unity_id = auth.user?.unity_id
-		console.log(data)
 		const { name, birth_date, email, celphone } = data
 
 		if (!name || !celphone) {
