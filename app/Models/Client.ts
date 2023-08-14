@@ -95,6 +95,9 @@ const ClientSchema = new Schema<IUserClient>(
 		document: {
 			type: String,
 		},
+		rg: {
+			type: String,
+		},
 		celphone: {
 			type: String,
 			required: true,
@@ -180,10 +183,10 @@ const ClientSchema = new Schema<IUserClient>(
 )
 
 ClientSchema.pre('save', async function (next) {
-	if (!this.document) return next()
-
 	if (this.isNew) {
-		this.document = await encrypt(this.document?.replace(/\D/g, ''))
+		this.document =
+			this.document && (await encrypt(this.document?.replace(/\D/g, '')))
+		this.rg = this.rg && (await encrypt(this.rg?.replace(/\D/g, '')))
 	}
 
 	next()
@@ -195,8 +198,12 @@ ClientSchema.post('find', async function (docs) {
 			if (doc?.document) {
 				doc.document = await decrypt(doc.document)
 			}
+
+			if (doc?.rg) {
+				doc.rg = await decrypt(doc.rg)
+			}
 		} catch (error) {
-			console.log('erro na decriptação')
+			console.log('erro na descriptação')
 		}
 	}
 })
@@ -206,8 +213,12 @@ ClientSchema.post('findOne', async function (doc) {
 		if (doc?.document) {
 			doc.document = await decrypt(doc.document)
 		}
+
+		if (doc?.rg) {
+			doc.rg = await decrypt(doc.rg)
+		}
 	} catch (error) {
-		console.log('erro na decriptação')
+		console.log('erro na descriptação')
 	}
 })
 

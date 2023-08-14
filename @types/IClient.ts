@@ -11,6 +11,7 @@ export interface IUserClient extends Partial<IAddress> {
 	birth_date: string | Date
 	gender?: 'male' | 'female' | 'other' | 'not informed'
 	document: string
+	rg?: string
 	celphone: string
 	phone?: string
 	naturalness?: string
