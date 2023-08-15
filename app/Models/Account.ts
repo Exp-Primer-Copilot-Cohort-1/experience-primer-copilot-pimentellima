@@ -1,5 +1,4 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { PaymentStatus, PaymentType } from 'App/Helpers'
 import { IAccount } from 'Types/IAccount'
 
 /**
@@ -13,7 +12,7 @@ import { IAccount } from 'Types/IAccount'
  *           type: string
  *           description: The account name.
  *           required: true
- *         value:
+ *         cash:
  *           type: number
  *           description: The account value.
  *           required: true
@@ -38,23 +37,10 @@ import { IAccount } from 'Types/IAccount'
  *         description:
  *           type: string
  *           description: The account description.
- *         status:
- *           type: string
- *           description: The payment status.
- *           enum: [PENDING, PAID]
- *           default: PENDING
- *         type:
- *           type: string
- *           description: The payment type.
- *           enum: [OTHER, TYPE1, TYPE2]
- *           default: OTHER
  *         user_id:
  *           type: string
  *           format: uuid
  *           description: The associated user id.
- *         transaction_id:
- *           type: string
- *           description: The associated transaction id.
  *       required:
  *         - name
  *         - value
@@ -69,7 +55,7 @@ const AccountSchema = new Schema<IAccount>(
 			type: String,
 			required: true,
 		},
-		value: {
+		cash: {
 			type: Number,
 			required: true,
 		},
@@ -91,21 +77,10 @@ const AccountSchema = new Schema<IAccount>(
 			ref: 'unities',
 		},
 		description: String,
-		status: {
-			type: String,
-			enum: Object.values(PaymentStatus),
-			default: PaymentStatus.PENDING,
-		},
-		type: {
-			type: String,
-			enum: Object.values(PaymentType),
-			default: PaymentType.OTHER,
-		},
 		user_id: {
 			type: Schema.Types.ObjectId,
 			ref: 'User',
 		},
-		transaction_id: String,
 	},
 	{
 		timestamps: {
