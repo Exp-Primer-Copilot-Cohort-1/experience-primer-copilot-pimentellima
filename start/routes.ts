@@ -163,14 +163,6 @@ Route.group(() => {
 	}).prefix('category')
 
 	Route.group(() => {
-		Route.get('', 'AdonnisLegadoController.bridge').as('partner.index')
-		Route.get(':id', 'AdonnisLegadoController.bridge').as('partner.show')
-		Route.put(':id', 'AdonnisLegadoController.bridge').as('partner.update')
-		Route.delete(':id', 'AdonnisLegadoController.bridge').as('partner.destroy')
-		Route.post('', 'AdonnisLegadoController.bridge').as('partner.store')
-	}).prefix('partner')
-
-	Route.group(() => {
 		Route.get('', 'PartnerController.index').as('partners.index')
 		Route.get(':id', 'PartnerController.show').as('partners.show')
 		Route.put(':id', 'PartnerController.update').as('partners.update')

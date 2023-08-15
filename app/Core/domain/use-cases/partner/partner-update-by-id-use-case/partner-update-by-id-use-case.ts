@@ -18,7 +18,7 @@ export class UpdatePartnersByIdUseCase implements UseCase<Partial<IPartner>, IPa
 			return left(new MissingParamsError('_id is required'))
 		}
 		const partnersOrErr = await this.partnerManager.updatePartnerById(
-			partner._id,
+			partner._id.toString(),
 			partner,
 		)
 
