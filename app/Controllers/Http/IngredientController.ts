@@ -9,16 +9,12 @@ class IngredientController {
 			unity_id: userLogged.unity_id,
 		})
 
-		console.log(ingredients)
-
 		return ingredients
 	}
 
 	async store({ request, auth }) {
 		const userLogged = auth.user
 		const data = request.only(['name', 'description', 'user_id', 'ingredient_id'])
-
-		console.log(data)
 
 		const ingredients = await Ingredient.create({
 			...data,
