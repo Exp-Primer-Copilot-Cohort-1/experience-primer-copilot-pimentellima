@@ -20,6 +20,10 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
+Route.group(() => {
+	Route.get('/client-model', 'FileController.downloadClientModel')
+}).prefix('file')
+
 Route.get('/', async () => {
 	return { hello: 'world' }
 })
