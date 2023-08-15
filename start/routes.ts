@@ -508,15 +508,18 @@ Route.group(() => {
 	Route.group(() => {
 		Route.get('', 'CensusController.index').as('census.index')
 		Route.get('payments', 'CensusController.indexPayments').as('census.payments')
-	}).prefix('census')
-	Route.group(() => {
 		Route.get('health-insurance', 'CensusController.indexHealthInsurance')
-		Route.get('activities-daysmonth', 'CensusController.indexActivitiesByDaysMonth')
+		Route.get('activities-days-month', 'CensusController.indexActivitiesByDaysMonth')
 		Route.get('payments-by-form', 'CensusController.indexPaymentsByForm')
 		Route.get('activities-prof-by-prof', 'CensusController.indexActivitiesProfByProf')
 		Route.get('payments-by-partner', 'CensusController.indexPaymentsByPartner')
 		Route.get('payments-by-prof', 'CensusController.indexPaymentsByProf')
 		Route.get('payments-participation', 'CensusController.indexPaymentsParticipation')
 		Route.get('revenues-activities', 'CensusController.indexRevenuesActivities')
-	}).prefix('censu')
+	}).prefix('census')
+
+	Route.group(() => {
+		Route.get('', 'LogController.index').as('logs.index')
+		Route.get('/:id', 'LogController.show').as('logs.show')
+	}).prefix('logs')
 }).middleware(['auth', 'role'])
