@@ -1,7 +1,15 @@
 // Decorador de função
 
+import { encrypt } from 'App/Helpers/encrypt'
 import Log from 'App/Models/Log'
 import { Either } from '../shared'
+
+const documents = ['rg', 'document', 'cnh', 'titulo_eleitor', 'passaporte']
+
+function maskDocumentValue(value) {
+	// Se for uma string, mascare-a. Se for outro tipo, retorne como está.
+	return typeof value === 'string' ? '*'.repeat(value.length) : value
+}
 
 function deepCompare(before, after) {
 	const originalChanges = {}
@@ -22,6 +30,13 @@ function deepCompare(before, after) {
 		} else if (before[key] !== after[key]) {
 			originalChanges[key] = before[key]
 			modifiedChanges[key] = after[key]
+
+			try {
+				if (documents.includes(key)) {
+					originalChanges[key] = encrypt(before[key])
+					modifiedChanges[key] = encrypt(after[key])
+				}
+			} catch (error) { }
 		}
 	})
 

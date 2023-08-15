@@ -1,7 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Client from 'App/Models/Client'
-import DefaultConfig from 'App/Models/DefaultConfig'
 import { IClient, IUserClient } from 'Types/IClient'
 import { ClientManagerInterface } from '../interface'
 
@@ -24,7 +23,7 @@ export class ClientsMongooseRepository implements ClientManagerInterface {
 		data: Partial<IClient>,
 		id: string,
 	): PromiseEither<AbstractError, IUserClient> {
-		const doc = await DefaultConfig.findByIdAndUpdate(id, data, { new: true })
+		const doc = await Client.findByIdAndUpdate(id, data, { new: true })
 
 		if (!doc) {
 			return left(new AbstractError('Não foi Encontrado o documento', 404))

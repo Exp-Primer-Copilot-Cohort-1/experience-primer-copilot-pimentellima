@@ -10,14 +10,14 @@ type TypeParams = {
 } & IUserClient
 
 export class UpdateClientsByIdUseCase implements UseCase<TypeParams, IUserClient> {
-	constructor(private readonly accountManager: ClientManagerInterface) { }
+	constructor(private readonly manager: ClientManagerInterface) { }
 
 	@LogDecorator('clients', 'put')
 	public async execute({
 		id,
 		...client
 	}: TypeParams): PromiseEither<AbstractError, IUserClient> {
-		const clientOrErr = await this.accountManager.updateById(client, id)
+		const clientOrErr = await this.manager.updateById(client, id)
 
 		if (clientOrErr.isLeft()) {
 			return clientOrErr
