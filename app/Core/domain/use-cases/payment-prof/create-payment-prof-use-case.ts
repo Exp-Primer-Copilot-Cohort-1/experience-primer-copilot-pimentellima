@@ -1,3 +1,4 @@
+import LogDecorator from 'App/Core/decorators/log-decorator'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -10,6 +11,7 @@ export class CreatePaymentProfUseCase
 {
 	constructor(private readonly paymentProfManager: PaymentProfManagerInterface) { }
 
+	@LogDecorator('payment_participations', 'post')
 	public async execute(
 		paymentProf: IPaymentProf,
 	): PromiseEither<AbstractError, PaymentProfEntity> {

@@ -1,7 +1,6 @@
+import LogDecorator from 'App/Core/decorators/log-decorator'
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
-import {
-	ProceduresManagerInterface
-} from 'App/Core/domain/repositories/interface'
+import { ProceduresManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -12,6 +11,7 @@ export class UpdateProceduresByIdUseCase
 {
 	constructor(private readonly procedureManager: ProceduresManagerInterface) { }
 
+	@LogDecorator('procedures', 'put')
 	public async execute(
 		procedure: Partial<IProcedure>,
 	): PromiseEither<AbstractError, IProcedure> {

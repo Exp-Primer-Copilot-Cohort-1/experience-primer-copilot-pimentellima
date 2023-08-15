@@ -1,3 +1,4 @@
+import LogDecorator from 'App/Core/decorators/log-decorator'
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { DefaultConfigsManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
@@ -12,6 +13,7 @@ type Input = {
 export class DeleteDefaultConfigsByIdUseCase implements UseCase<Input, IDefaultConfig> {
 	constructor(private readonly configsManager: DefaultConfigsManagerInterface) { }
 
+	@LogDecorator('default_configs', 'delete')
 	public async execute(input: Input): PromiseEither<AbstractError, IDefaultConfig> {
 		if (!input?.id) {
 			return left(new MissingParamsError('id'))

@@ -1,3 +1,4 @@
+import LogDecorator from 'App/Core/decorators/log-decorator'
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { CategoriesManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
@@ -12,6 +13,7 @@ type Input = {
 export class DeleteCategoriesByIdUseCase implements UseCase<Input, ICategory> {
 	constructor(private readonly categoriesManager: CategoriesManagerInterface) { }
 
+	@LogDecorator('categories', 'delete')
 	public async execute(input: Input): PromiseEither<AbstractError, ICategory> {
 		if (!input?.id) {
 			return left(new MissingParamsError('id'))

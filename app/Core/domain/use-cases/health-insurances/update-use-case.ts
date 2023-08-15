@@ -1,3 +1,4 @@
+import LogDecorator from 'App/Core/decorators/log-decorator'
 import { InvalidParamsError } from 'App/Core/domain/errors/invalid-params-error'
 import { HealthInsuranceManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
@@ -10,6 +11,7 @@ export class UpdateHealthInsuranceUseCase
 {
 	constructor(private readonly manager: HealthInsuranceManagerInterface) { }
 
+	@LogDecorator('health_insurances', 'put')
 	public async execute(
 		params: Partial<IHealthInsurance>,
 	): PromiseEither<AbstractError, IHealthInsurance> {

@@ -1,3 +1,4 @@
+import LogDecorator from 'App/Core/decorators/log-decorator'
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { CategoriesManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
@@ -10,6 +11,7 @@ export class UpdateCategoriesByIdUseCase
 {
 	constructor(private readonly categoriesManager: CategoriesManagerInterface) { }
 
+	@LogDecorator('categories', 'put')
 	public async execute(
 		category: Partial<ICategory>,
 	): PromiseEither<AbstractError, ICategory> {
@@ -17,7 +19,7 @@ export class UpdateCategoriesByIdUseCase
 			return left(new MissingParamsError('_id is required'))
 		}
 		const categoriesOrErr = await this.categoriesManager.updateCategoriesById(
-			category._id,
+			category._id.toString(),
 			category,
 		)
 
