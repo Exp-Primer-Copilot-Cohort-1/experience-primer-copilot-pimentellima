@@ -48,6 +48,22 @@ const PERMISSIONS_HEALTH_INSURANCES: Permission = {
 	},
 }
 
+const PERMISSIONS_LOGS: Permission = {
+	name: 'logs',
+	permissions: {
+		'logs.index': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
+			screens: [],
+		},
+		'logs.show': {
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF],
+			permissions: [TYPE_PERMISSIONS.VIEW],
+			screens: [],
+		},
+	},
+}
+
 const PERMISSIONS_FORMS: Permission = {
 	name: 'form',
 	permissions: {
@@ -928,6 +944,7 @@ const PERMISSIONS: ALL_PERMISSIONS = {
 	[PERMISSIONS_PROCEDURE.name]: PERMISSIONS_PROCEDURE,
 	[PERMISSIONS_USERS.name]: PERMISSIONS_USERS,
 	[PERMISSIONS_UPLOAD.name]: PERMISSIONS_UPLOAD,
+	[PERMISSIONS_LOGS.name]: PERMISSIONS_LOGS,
 }
 
 export default PERMISSIONS
