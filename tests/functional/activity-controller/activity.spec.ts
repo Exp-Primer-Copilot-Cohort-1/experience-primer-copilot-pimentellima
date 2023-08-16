@@ -24,9 +24,9 @@ test.group('Activity Controller', () => {
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
-		const { deletedCount } = await Activity.deleteOne({ _id: response.body()._id_ })
-		assert.equal(deletedCount, 1)
-	}).skip()
+		const { deletedCount } = await Activity.deleteMany({ obs: response.body().obs })
+		assert.equal(deletedCount, 2)
+	})
 
 	test('display invalid date error', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
