@@ -1,3 +1,4 @@
+import LogDecorator from 'App/Core/decorators/log-decorator'
 import { ActivitiesManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
@@ -10,6 +11,7 @@ export class UpdateActivityPaymentUseCase
 {
 	constructor(private readonly activitiesManager: ActivitiesManagerInterface) { }
 
+	@LogDecorator('activities', 'put')
 	public async execute(
 		params: TransactionWithActivity,
 	): PromiseEither<AbstractError, IActivity> {

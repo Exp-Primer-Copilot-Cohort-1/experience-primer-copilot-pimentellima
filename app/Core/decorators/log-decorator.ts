@@ -11,34 +11,69 @@ function maskDocumentValue(value) {
 	return typeof value === 'string' ? '*'.repeat(value.length) : value
 }
 
-function deepCompare(before, after) {
+function deepCompare(before, after, seen = new Map()) {
 	const originalChanges = {}
 	const modifiedChanges = {}
 
-	Object.keys(after).forEach((key) => {
+	const allKeys = new Set([...Object.keys(before), ...Object.keys(after)])
+
+	for (const key of allKeys) {
+		const beforeExists = before.hasOwnProperty(key)
+		const afterExists = after.hasOwnProperty(key)
+
 		if (
+			beforeExists &&
+			afterExists &&
 			typeof before[key] === 'object' &&
 			before[key] !== null &&
 			typeof after[key] === 'object' &&
 			after[key] !== null
 		) {
-			const [originalNested, modifiedNested] = deepCompare(before[key], after[key])
+			// Se já comparamos esses objetos antes, evite a recursão
+			const cachedResult = seen.get(before[key])
+			if (cachedResult) {
+				if (cachedResult !== after[key]) {
+					originalChanges[key] = before[key]
+					modifiedChanges[key] = after[key]
+				}
+				continue
+			}
+
+			seen.set(before[key], after[key])
+
+			const [originalNested, modifiedNested] = deepCompare(
+				before[key],
+				after[key],
+				seen,
+			)
 			if (Object.keys(originalNested).length > 0) {
 				originalChanges[key] = originalNested
 				modifiedChanges[key] = modifiedNested
 			}
-		} else if (before[key] !== after[key]) {
-			originalChanges[key] = before[key]
-			modifiedChanges[key] = after[key]
+		} else if (
+			(beforeExists && !afterExists) ||
+			(!beforeExists && afterExists) ||
+			before[key] !== after[key]
+		) {
+			if (beforeExists) {
+				originalChanges[key] = before[key]
+			}
+			if (afterExists) {
+				modifiedChanges[key] = after[key]
+			}
 
 			try {
 				if (documents.includes(key)) {
-					originalChanges[key] = encrypt(before[key])
-					modifiedChanges[key] = encrypt(after[key])
+					if (beforeExists) {
+						originalChanges[key] = encrypt(before[key])
+					}
+					if (afterExists) {
+						modifiedChanges[key] = encrypt(after[key])
+					}
 				}
 			} catch (error) { }
 		}
-	})
+	}
 
 	return [originalChanges, modifiedChanges]
 }
@@ -92,7 +127,7 @@ export default function LogDecorator(
 				before,
 				after,
 				user,
-				collection_id: value._id,
+				collection_id: value._id.toString(),
 				unity_id: unity_id.toString(),
 			})
 
