@@ -120,7 +120,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		)
 		if (!activity) return left(new AbstractError('Error updating activity', 500))
 
-		return right(activity)
+		return right(activity.toObject())
 	}
 
 	async updateActivityFinishedAt(
@@ -140,7 +140,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			},
 		)
 		if (!activity) return left(new AbstractError('Error updating activity', 500))
-		return right(activity)
+		return right(activity.toObject())
 	}
 
 	async updateActivityStatusById(
@@ -160,7 +160,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		)
 		if (!activity) return left(new AbstractError('Error updating activity', 500))
 
-		return right(activity)
+		return right(activity.toObject())
 	}
 
 	async updateActivityPayment(
@@ -194,7 +194,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			return left(new AbstractError('Error updating activity', 500))
 		}
 
-		return right(updatedActivity)
+		return right(updatedActivity.toObject())
 	}
 
 	async createRecurrentActivity(
@@ -307,6 +307,6 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		)
 		if (!updatedActivity)
 			return left(new AbstractError('Error updating activity', 500))
-		return right(updatedActivity)
+		return right(updatedActivity.toObject())
 	}
 }
