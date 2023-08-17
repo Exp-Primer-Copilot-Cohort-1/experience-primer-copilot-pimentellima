@@ -121,18 +121,23 @@ test.group('Answer Controller', () => {
 		const response = await client
 			.get('answers/client/6399d980373d349c09b46db1')
 			.bearerToken(token.token)
-		console.log(response.body())
+		//console.log(response.body())
 		response.assertStatus(200)
 	})
 
 	test('create answer', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 
-		const response = await client.post('answer').json(answer).bearerToken(token.token)
-
+		const response = await client
+			.post('answers')
+			.json(answer)
+			.bearerToken(token.token)
+		//console.log(response.body())
 		response.assertStatus(200)
 
-		const { deletedCount } = await Answer.deleteOne({ _id: response.body()._id_ })
-		assert.equal(deletedCount, 1)
-	}).skip()
+		const { deletedCount } = await Answer.deleteMany({
+			client_id: response.body().client_id_,
+		})
+		assert.equal(deletedCount, 2)
+	})
 })
