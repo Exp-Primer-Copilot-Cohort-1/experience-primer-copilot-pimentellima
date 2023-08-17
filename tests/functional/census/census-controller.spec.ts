@@ -1,12 +1,12 @@
 import { test } from '@japa/runner'
 import { loginAndGetToken } from '../helpers/login'
 
-test.group('Census Controller', async () => {
+test.group('Censuss Controller', async () => {
 	test('display indexHelthIsurance ', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('censu/health-insurance')
+			.get('census/health-insurance')
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
@@ -15,7 +15,7 @@ test.group('Census Controller', async () => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('censu/activities-daysmonth')
+			.get('census/activities-days-month')
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
@@ -24,7 +24,7 @@ test.group('Census Controller', async () => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('censu/payments-by-form')
+			.get('census/payments-by-form')
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
@@ -33,7 +33,7 @@ test.group('Census Controller', async () => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('censu/activities-prof-by-prof')
+			.get('census/activities-prof-by-prof')
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
@@ -42,7 +42,7 @@ test.group('Census Controller', async () => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('censu/payments-by-partner')
+			.get('census/payments-by-partner')
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
@@ -51,7 +51,7 @@ test.group('Census Controller', async () => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('censu/payments-by-prof')
+			.get('census/payments-by-prof')
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
@@ -60,7 +60,7 @@ test.group('Census Controller', async () => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('censu/payments-participation')
+			.get('census/payments-participation')
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
@@ -69,7 +69,7 @@ test.group('Census Controller', async () => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('censu/revenues-activities')
+			.get('census/revenues-activities')
 			.bearerToken(token.token)
 
 		response.assertStatus(200)

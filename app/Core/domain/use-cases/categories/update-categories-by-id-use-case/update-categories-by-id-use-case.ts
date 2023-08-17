@@ -18,9 +18,10 @@ export class UpdateCategoriesByIdUseCase
 		if (!category?._id) {
 			return left(new MissingParamsError('_id is required'))
 		}
+
 		const categoriesOrErr = await this.categoriesManager.updateCategoriesById(
-			category._id.toString(),
 			category,
+			category._id.toString(),
 		)
 
 		if (categoriesOrErr.isLeft()) {

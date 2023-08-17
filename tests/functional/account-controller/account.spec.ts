@@ -9,7 +9,7 @@ const { ObjectId } = Types
 
 const newAccount = {
 	name: faker.person.fullName(),
-	value: 0,
+	cash: 0,
 	date: faker.date.future(),
 	bank: 'SANTANDER',
 	active: true,

@@ -153,18 +153,10 @@ Route.group(() => {
 	Route.group(() => {
 		Route.get('', 'CategoryController.index').as('categories.index')
 		Route.get(':id', 'CategoryController.show').as('categories.show')
-		Route.put(':id', 'CategoryController.update').as('categories.update')
-		Route.delete(':id', 'CategoryController.destroy').as('categories.destroy')
+		Route.put(':_id', 'CategoryController.update').as('categories.update')
+		Route.delete(':_id', 'CategoryController.destroy').as('categories.destroy')
 		Route.post('', 'CategoryController.store').as('categories.store')
 	}).prefix('categories')
-
-	Route.group(() => {
-		Route.get('', 'CategoryController.index').as('category.index')
-		Route.get(':id', 'CategoryController.show').as('category.show')
-		Route.put(':id', 'CategoryController.update').as('category.update')
-		Route.delete(':id', 'CategoryController.destroy').as('category.destroy')
-		Route.post('', 'CategoryController.store').as('category.store')
-	}).prefix('category')
 
 	Route.group(() => {
 		Route.get('', 'PartnerController.index').as('partners.index')
