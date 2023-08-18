@@ -64,7 +64,22 @@ test.group('Activity Controller', () => {
 
 		response.assertStatus(200)
 	})
+	test('create activity invalid error', async ({ client }) => {
+		const { token } = await loginAndGetToken(client)
 
+		const activity = makeValidActivity()
+		const response = await client
+			.post('activity')
+			.json({
+				...activity,
+				date: faker.date.past(),
+				hour_start: faker.date.past(),
+				hour_end: faker.date.past(),
+			})
+			.bearerToken(token.token)
+		response.assertStatus(409)
+		//	const { deletedCount } = await Activity.deleteMany({ obs: response.body().obs })
+	}).skip()
 	test('display all activities by client_id', async ({ client }) => {
 		const client_id = '635996b3c109b232759921e5'
 
@@ -78,11 +93,11 @@ test.group('Activity Controller', () => {
 	})
 
 	test('display activity by id', async ({ client }) => {
-		const id = '6363cacfc109b232759921f6'
+		const id = '64dec94ba6c2d76029f57111'
 
-		const response = await client.get('activity/' + id)
+		const response = await client.get('activity/single/' + id)
 		response.assertStatus(200)
-	}).skip()
+	})
 
 	test('display activity not found', async ({ client }) => {
 		const id = '64402e93c07ee00a53234fe0'
