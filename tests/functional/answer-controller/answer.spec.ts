@@ -110,7 +110,7 @@ test.group('Answer Controller', () => {
 	test('display all answers', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 
-		const response = await client.get('answer').bearerToken(token.token)
+		const response = await client.get('answers').bearerToken(token.token)
 
 		response.assertStatus(200)
 	})
