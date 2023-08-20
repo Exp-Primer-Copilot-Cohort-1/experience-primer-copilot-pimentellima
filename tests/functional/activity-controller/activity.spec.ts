@@ -93,10 +93,13 @@ test.group('Activity Controller', () => {
 	})
 
 	test('display activity by id', async ({ client }) => {
-		const id = '64dec94ba6c2d76029f57111'
+		const { _id, ...activity } = makeValidActivity()
+		const activities = await Activity.create({ ...activity, obs: 'delete' })
 
-		const response = await client.get('activity/single/' + id)
+		const response = await client.get('activity/single/' + activities._id)
 		response.assertStatus(200)
+		const { deletedCount } = await Activity.deleteMany({ obs: activities.obs })
+		assert.equal(deletedCount, 2)
 	})
 
 	test('display activity not found', async ({ client }) => {
