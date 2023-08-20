@@ -5,9 +5,9 @@ import { assert } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 
 const healthInsurance = (unity_id) => ({
-	name: faker.name.firstName(),
-	register_code: faker.random.numeric(),
-	carence: faker.random.numeric(),
+	name: faker.person.firstName(),
+	register_code: faker.string.numeric(),
+	carence: faker.string.numeric(),
 	unity_id: unity_id,
 })
 
@@ -38,17 +38,25 @@ test.group('Health Insurance Controller', () => {
 		response.assertStatus(200)
 	})
 	test('display find health insurance by id', async ({ client }) => {
-		const { token } = await loginAndGetToken(client)
+		const { token, user } = await loginAndGetToken(client)
+		const healthinsurance = await HealthInsurance.create({
+			name: 'find',
+			register_code: faker.string.numeric(),
+			carence: faker.string.numeric(),
+			unity_id: user.unity_id,
+		})
 
 		const response = await client
-			.get('health-insurance/63597974c109b232759921dc')
+			.get('health-insurance/' + healthinsurance._id)
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
-		const healthInsurance = response.body()
+		const { deletedCount } = await HealthInsurance.deleteOne({
+			_id: healthinsurance._id,
+		})
 
-		assert.equal(healthInsurance._id, '63597974c109b232759921dc')
-	}).skip()
+		assert.equal(deletedCount, 1)
+	})
 	test('display find health insurance by id invalid', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 
@@ -57,7 +65,7 @@ test.group('Health Insurance Controller', () => {
 		response.assertStatus(404)
 	})
 	test('display update health insurance by id', async ({ client }) => {
-		const name = faker.name.firstName()
+		const name = faker.person.firstName()
 		const { token, user } = await loginAndGetToken(client)
 
 		const item = healthInsurance(user.unity_id)
@@ -103,9 +111,9 @@ test.group('Health Insurance Controller', () => {
 		const { token, user } = await loginAndGetToken(client)
 
 		const healthInsurance = await HealthInsurance.create({
-			name: faker.name.firstName(),
-			register_code: faker.random.numeric(),
-			carence: faker.random.numeric(),
+			name: faker.person.firstName(),
+			register_code: faker.string.numeric(),
+			carence: faker.string.numeric(),
 			unity_id: user.unity_id,
 		})
 
