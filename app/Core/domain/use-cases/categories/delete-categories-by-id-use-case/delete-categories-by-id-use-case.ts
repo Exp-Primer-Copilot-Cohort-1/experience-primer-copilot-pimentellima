@@ -7,7 +7,7 @@ import { PromiseEither, left } from 'App/Core/shared'
 import { ICategory } from 'Types/ICategory'
 
 type Input = {
-	id: string
+	_id: string
 }
 
 export class DeleteCategoriesByIdUseCase implements UseCase<Input, ICategory> {
@@ -15,12 +15,12 @@ export class DeleteCategoriesByIdUseCase implements UseCase<Input, ICategory> {
 
 	@LogDecorator('categories', 'delete')
 	public async execute(input: Input): PromiseEither<AbstractError, ICategory> {
-		if (!input?.id) {
+		if (!input?._id) {
 			return left(new MissingParamsError('id'))
 		}
 
 		const categoriesOrErr = await this.categoriesManager.deleteCategoriesById(
-			input.id,
+			input._id,
 		)
 
 		return categoriesOrErr

@@ -36,7 +36,7 @@ test.group('Category Controller', async () => {
 		const { deletedCount } = await Category.deleteMany({
 			name: response.body().name,
 		})
-		assert.equal(deletedCount, 2)
+		assert.equal(deletedCount, 3)
 	})
 	test('display update category', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
@@ -75,6 +75,7 @@ test.group('Category Controller', async () => {
 	test('display destroy category', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const categories = await Category.create({ ...data, active: true })
+		console.log(categories._id)
 		const response = await client
 			.delete(`categories/${categories._id}`)
 			.bearerToken(token.token)
