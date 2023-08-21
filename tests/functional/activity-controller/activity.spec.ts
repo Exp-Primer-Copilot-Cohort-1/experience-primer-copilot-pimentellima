@@ -43,15 +43,20 @@ test.group('Activity Controller', () => {
 			.bearerToken(token.token)
 
 		response.assertStatus(409)
-	}).skip()
+	})
 
 	test('update activity', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
+		const { ...activity } = makeValidActivity()
+		const doc = await Activity.create({ ...activity })
 
-		const response = await client.put('activity').json({}).bearerToken(token.token)
+		const response = await client
+			.put(`activity/${doc._id}`)
+			.json({})
+			.bearerToken(token.token)
 
 		response.assertStatus(200)
-	}).skip()
+	})
 
 	test('display all activities by prof_id', async ({ client }) => {
 		const prof_id = '6359660fc109b232759921d6'

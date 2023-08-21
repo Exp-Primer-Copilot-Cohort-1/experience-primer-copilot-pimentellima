@@ -3,6 +3,7 @@ import { PromiseEither } from 'App/Core/shared/either'
 import { IPartner } from 'Types/IPartner'
 
 export interface PartnerManagerInterface {
+	findAll: (unity_id: string) => PromiseEither<AbstractError, IPartner[]>
 	findByName: (
 		name: string,
 		unity_id: string,

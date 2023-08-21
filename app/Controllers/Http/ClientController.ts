@@ -2,8 +2,13 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Client from 'App/Models/Client'
 
+import { adaptRoute } from 'App/Core/adapters'
+import {
+	makeClientCreateComposer,
+	makeClientUpdateComposer,
+} from 'App/Core/composers/clients/make'
+import { IUserClient } from 'Types/IClient'
 import SELECTS from '../user-select'
-import { IClient, IUserClient } from 'Types/IClient'
 
 class ClientController {
 	async verifyExistenceClient({ request, auth, response }: HttpContextContract) {
@@ -73,41 +78,11 @@ class ClientController {
 		return users
 	}
 
-	async create({ request, auth, response }: HttpContextContract) {
-		const data = request.all()
-		const unity_id = auth.user?.unity_id
-		const { name, birth_date, email, celphone } = data
-
-		if (!name || !celphone) {
-			return response.status(400).json({
-				message: 'Missing Name Or CellPhone',
-			})
-		}
-
-		const userData = await Client.findOne({
-			email,
-			name,
-			birth_date,
+	async create(ctx: HttpContextContract) {
+		const unity_id = ctx.auth.user?.unity_id
+		return adaptRoute(makeClientCreateComposer(), ctx, {
 			unity_id,
 		})
-
-		if (userData?.active) {
-			return response.status(400).send({
-				error: {
-					message: 'Este cliente já está cadastrado na unidade.',
-				},
-			})
-		}
-
-		const user = await Client.create({
-			...data,
-			unity_id: unity_id,
-			active: true,
-			due_date: null,
-			email: data.email?.trim().toLowerCase() || '',
-		})
-
-		return user
 	}
 
 	public async findAllUsersClientsInative({ auth }) {
@@ -138,14 +113,11 @@ class ClientController {
 		return user
 	}
 
-	public async update({ params, request }: HttpContextContract) {
-		const data = request.all()
-		const user = await Client.findByIdAndUpdate(params.id, data, {
-			new: true,
-		}).orFail()
-
-		await user.save()
-		return user
+	public async update(ctx: HttpContextContract) {
+		const unity_id = ctx.auth.user?.unity_id
+		return adaptRoute(makeClientUpdateComposer(), ctx, {
+			unity_id,
+		})
 	}
 }
 

@@ -9,6 +9,7 @@ const healthInsurance = (unity_id) => ({
 	register_code: faker.string.numeric(),
 	carence: faker.string.numeric(),
 	unity_id: unity_id,
+	profs: [],
 })
 
 test.group('Health Insurance Controller', () => {
@@ -37,9 +38,10 @@ test.group('Health Insurance Controller', () => {
 
 		response.assertStatus(200)
 	})
+	// é preciso usar um id existente
 	test('display find health insurance by id', async ({ client }) => {
 		const { token, user } = await loginAndGetToken(client)
-		const healthinsurance = await HealthInsurance.create({
+		const healthInsurance = await HealthInsurance.create({
 			name: 'find',
 			register_code: faker.string.numeric(),
 			carence: faker.string.numeric(),
@@ -47,12 +49,12 @@ test.group('Health Insurance Controller', () => {
 		})
 
 		const response = await client
-			.get('health-insurance/' + healthinsurance._id)
+			.get('health-insurance/' + healthInsurance._id)
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
 		const { deletedCount } = await HealthInsurance.deleteOne({
-			_id: healthinsurance._id,
+			_id: healthInsurance._id,
 		})
 
 		assert.equal(deletedCount, 1)
@@ -85,7 +87,7 @@ test.group('Health Insurance Controller', () => {
 
 		const { deletedCount } = await HealthInsurance.deleteOne({ _id: health._id })
 		assert.equal(deletedCount, 1)
-	}).skip()
+	})
 	test('display create health insurance', async ({ client }) => {
 		const { token, user } = await loginAndGetToken(client)
 
@@ -106,7 +108,7 @@ test.group('Health Insurance Controller', () => {
 		const { deletedCount } = await HealthInsurance.deleteOne({ _id: data._id })
 
 		assert.equal(deletedCount, 1)
-	}).skip()
+	})
 	test('display delete health insurance', async ({ client }) => {
 		const { token, user } = await loginAndGetToken(client)
 
@@ -118,7 +120,7 @@ test.group('Health Insurance Controller', () => {
 		})
 
 		const response = await client
-			.delete(`health-insurance/${healthInsurance._id}`)
+			.delete(`health-insurances/${healthInsurance._id}`)
 			.bearerToken(token.token)
 			.send()
 
@@ -126,6 +128,6 @@ test.group('Health Insurance Controller', () => {
 			console.log(response.error())
 		}
 
-		response.assertStatus(200 || 204)
+		response.assertStatus(204)
 	}).skip()
 })

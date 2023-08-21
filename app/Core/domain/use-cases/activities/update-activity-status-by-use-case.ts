@@ -1,3 +1,4 @@
+import LogDecorator from 'App/Core/decorators/log-decorator'
 import { ActivitiesManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
@@ -17,6 +18,7 @@ type Props = {
 export class UpdateActivityStatusByIdUseCase implements UseCase<Props, IActivity> {
 	constructor(private readonly activitiesManager: ActivitiesManagerInterface) { }
 
+	@LogDecorator('activities', 'put')
 	public async execute(params: Props): PromiseEither<AbstractError, IActivity> {
 		const updatedActivityOrErr =
 			await this.activitiesManager.updateActivityStatusById(

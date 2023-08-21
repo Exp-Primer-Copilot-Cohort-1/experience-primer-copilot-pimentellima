@@ -24,7 +24,7 @@ export * from './medical-certificate/make-medical-certificate-show-by-id-compose
 export * from './medical-certificate/make-medical-certificate-update-by-id-composer'
 export * from './partner/make-partner-create-composer'
 export * from './partner/make-partner-delete-by-id-composer'
-export * from './partner/make-partner-find-by-name-composer'
+export * from './partner/make-partner-find-by-unity-composer'
 export * from './partner/make-partner-update-by-id-composer'
 export * from './procedures/make-procedures-create-composer'
 export * from './procedures/make-procedures-delete-by-id-composer'

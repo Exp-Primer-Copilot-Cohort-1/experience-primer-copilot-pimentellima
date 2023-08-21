@@ -23,27 +23,27 @@ export class CategoriesMongooseRepository implements CategoriesManagerInterface 
 		return right(categories)
 	}
 	async deleteCategoriesById(id: string): PromiseEither<AbstractError, ICategory> {
-		const categories = await Category.findById(id)
-		if (!categories) {
-			return left(new UnitNotFoundError())
-		}
-		await categories.remove()
-		return right(categories)
+		const category = await Category.findByIdAndDelete(id).orFail()
+
+		return right(category)
 	}
-	public async createCategory(data): PromiseEither<AbstractError, ICategory> {
-		const categories = await Category.create({
-			...data,
-		})
-		return right(categories)
+	public async createCategory({
+		_id,
+		...data
+	}): PromiseEither<AbstractError, ICategory> {
+		const categories = await Category.create(data)
+		return right(categories.toObject())
 	}
 	public async updateCategoriesById(
-		id: string,
 		data: Partial<ICategory>,
+		id: string,
 	): PromiseEither<AbstractError, ICategory> {
 		const categories = await Category.findByIdAndUpdate(id, data)
+
 		if (!categories) {
-			return left(new UnitNotFoundError())
+			return left(new AbstractError('Categoria não encontrada', 404))
 		}
-		return right(categories)
+
+		return right(categories.toObject())
 	}
 }

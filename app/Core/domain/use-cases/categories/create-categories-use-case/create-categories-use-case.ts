@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
-import { PromiseEither } from 'App/Core/shared'
+import { PromiseEither, right } from 'App/Core/shared'
 
 import LogDecorator from 'App/Core/decorators/log-decorator'
 import { ICategory } from 'Types/ICategory'
@@ -15,6 +15,10 @@ export class CreateCategoriesUseCase implements UseCase<Partial<ICategory>, ICat
 	): PromiseEither<AbstractError, ICategory> {
 		const categoriesOrErr = await this.categoryManager.createCategory(categories)
 
-		return categoriesOrErr
+		if (categoriesOrErr.isLeft()) {
+			return categoriesOrErr
+		}
+
+		return right(categoriesOrErr.extract())
 	}
 }
