@@ -3,7 +3,7 @@ import { CensusRevenuesManagerInterface } from 'App/Core/domain/repositories/int
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { ICensusPayments } from '../../helpers/census'
+import { ICensusRevenuesOfYearByUnityByProf } from 'Types/ICensus'
 
 type FindRevenuesActivitiesProps = {
 	unity_id: string
@@ -12,8 +12,13 @@ type FindRevenuesActivitiesProps = {
 	prof_id?: string
 }
 
+type ICensusRevenues = {
+	accrual_regime: ICensusRevenuesOfYearByUnityByProf
+	cash_regime: ICensusRevenuesOfYearByUnityByProf
+}
+
 export class FindRevenuesActivitiesUseCase
-	implements UseCase<FindRevenuesActivitiesProps, ICensusPayments>
+	implements UseCase<FindRevenuesActivitiesProps, ICensusRevenues>
 {
 	constructor(private readonly managerRevenues: CensusRevenuesManagerInterface) { }
 
@@ -22,7 +27,7 @@ export class FindRevenuesActivitiesUseCase
 		date_start,
 		date_end,
 		prof_id,
-	}: FindRevenuesActivitiesProps): PromiseEither<AbstractError, ICensusPayments> {
+	}: FindRevenuesActivitiesProps): PromiseEither<AbstractError, ICensusRevenues> {
 		if (!unity_id) {
 			return left(new UnitNotFoundError())
 		}
@@ -68,6 +73,6 @@ export class FindRevenuesActivitiesUseCase
 			cash_regime: cashRegimeOrErr.extract(),
 		}
 
-		return right({ revenues_activities })
+		return right(revenues_activities)
 	}
 }

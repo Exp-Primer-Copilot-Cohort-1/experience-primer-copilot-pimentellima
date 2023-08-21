@@ -1,9 +1,11 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable indent */
 import { UnitNotFoundError } from 'App/Core/domain/errors/unit-not-found'
 import { CensusDaysManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { ICensusPayments } from '../../helpers/census'
+import { ICensusActivitiesByDaysOfMonth } from 'Types/ICensus'
 
 type FindActivitiesByUnityOrProfProps = {
 	unity_id: string
@@ -13,7 +15,7 @@ type FindActivitiesByUnityOrProfProps = {
 }
 
 export class FindActivitiesByDaysOfMonthByUnityOrProfUseCase
-	implements UseCase<FindActivitiesByUnityOrProfProps, ICensusPayments>
+	implements UseCase<FindActivitiesByUnityOrProfProps, ICensusActivitiesByDaysOfMonth[]>
 {
 	constructor(private readonly manager: CensusDaysManagerInterface) { }
 
@@ -22,7 +24,10 @@ export class FindActivitiesByDaysOfMonthByUnityOrProfUseCase
 		date_start,
 		date_end,
 		prof_id,
-	}: FindActivitiesByUnityOrProfProps): PromiseEither<AbstractError, ICensusPayments> {
+	}: FindActivitiesByUnityOrProfProps): PromiseEither<
+		AbstractError,
+		ICensusActivitiesByDaysOfMonth[]
+	> {
 		if (!unity_id) {
 			return left(new UnitNotFoundError())
 		}
@@ -56,6 +61,6 @@ export class FindActivitiesByDaysOfMonthByUnityOrProfUseCase
 
 		const count_by_days = count_by_daysOrErr.extract()
 
-		return right({ count_by_days })
+		return right(count_by_days)
 	}
 }

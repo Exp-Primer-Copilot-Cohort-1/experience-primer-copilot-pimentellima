@@ -12,19 +12,20 @@ type FindActivitiesOfProfByProfByUnityProps = {
 	prof_id?: string
 }
 
-type UseCaseFind = UseCase<
+type UseCaseFindActivitiesByProf = UseCase<
 	FindActivitiesOfProfByProfByUnityProps,
 	ICensusActivitiesByProf[]
 >
 
-export class FindActivitiesOfProfByProfByUnityUseCase implements UseCaseFind {
+export class FindActivitiesOfProfByProfByUnityUseCase
+	implements UseCaseFindActivitiesByProf {
 	constructor(private readonly count: CensusUnitiesManagerInterface) { }
 
 	public async execute({
 		unity_id,
 		date_start,
 		date_end,
-		prof_id
+		prof_id,
 	}: FindActivitiesOfProfByProfByUnityProps): PromiseEither<
 		AbstractError,
 		ICensusActivitiesByProf[]
@@ -35,41 +36,31 @@ export class FindActivitiesOfProfByProfByUnityUseCase implements UseCaseFind {
 
 		if (!date_start) {
 			const now = new Date()
-			date_start = new Date(
-				now.getFullYear(),
-				now.getMonth(),
-				1
-			).toISOString()
+			date_start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
 		}
 
 		if (!date_end) {
 			const now = new Date()
-			date_end = new Date(
-				now.getFullYear(),
-				now.getMonth() + 1,
-				0
-			).toISOString()
+			date_end = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString()
 		}
 
-		const count_by_activity_by_profOrErr =
-			await this.count.findActivitiesOfProf(
-				unity_id,
-				date_start,
-				date_end,
-				prof_id
-			)
+		const count_by_activity_by_profOrErr = await this.count.findActivitiesOfProf(
+			unity_id,
+			date_start,
+			date_end,
+			prof_id,
+		)
 
 		if (count_by_activity_by_profOrErr.isLeft()) {
 			return left(
 				new AbstractError(
 					'Error on find activities of professional by unity',
-					400
-				)
+					400,
+				),
 			)
 		}
 
-		const count_by_activity_by_prof =
-			count_by_activity_by_profOrErr.extract()
+		const count_by_activity_by_prof = count_by_activity_by_profOrErr.extract()
 
 		return right(count_by_activity_by_prof)
 	}

@@ -1,9 +1,10 @@
+/* eslint-disable prettier/prettier */
 import { UnitNotFoundError } from 'App/Core/domain/errors/unit-not-found'
 import { CensusPaymentsManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { ICensusPayments } from '../../helpers/census'
+import { ICensusActivitiesByHealthInsurance } from 'Types/ICensus'
 
 type FindPaymentsByHealthInsuranceProps = {
 	unity_id: string
@@ -13,7 +14,7 @@ type FindPaymentsByHealthInsuranceProps = {
 }
 
 export class FindPaymentsByHealthInsuranceUseCase
-	implements UseCase<FindPaymentsByHealthInsuranceProps, ICensusPayments>
+	implements UseCase<FindPaymentsByHealthInsuranceProps, ICensusActivitiesByHealthInsurance[]>
 {
 	constructor(private readonly manager: CensusPaymentsManagerInterface) { }
 
@@ -24,7 +25,7 @@ export class FindPaymentsByHealthInsuranceUseCase
 		prof_id,
 	}: FindPaymentsByHealthInsuranceProps): PromiseEither<
 		AbstractError,
-		ICensusPayments
+		ICensusActivitiesByHealthInsurance[]
 	> {
 		if (!unity_id) {
 			return left(new UnitNotFoundError())
@@ -56,6 +57,6 @@ export class FindPaymentsByHealthInsuranceUseCase
 
 		const payments_by_health_insurances = paymentsHealthInsuranceOrErr.extract()
 
-		return right({ payments_by_health_insurances })
+		return right(payments_by_health_insurances)
 	}
 }

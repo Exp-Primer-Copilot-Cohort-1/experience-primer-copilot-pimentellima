@@ -3,7 +3,7 @@ import { CensusPaymentsManagerInterface } from 'App/Core/domain/repositories/int
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { ICensusPayments } from '../../helpers/census'
+import { ICensusPaymentByProf } from 'Types/ICensus'
 
 type FindPaymentsByProfProps = {
 	unity_id: string
@@ -13,7 +13,7 @@ type FindPaymentsByProfProps = {
 }
 
 export class FindPaymentsByProfUseCase
-	implements UseCase<FindPaymentsByProfProps, ICensusPayments>
+	implements UseCase<FindPaymentsByProfProps, ICensusPaymentByProf[]>
 {
 	constructor(private readonly manager: CensusPaymentsManagerInterface) { }
 
@@ -22,7 +22,7 @@ export class FindPaymentsByProfUseCase
 		date_start,
 		date_end,
 		prof_id,
-	}: FindPaymentsByProfProps): PromiseEither<AbstractError, ICensusPayments> {
+	}: FindPaymentsByProfProps): PromiseEither<AbstractError, ICensusPaymentByProf[]> {
 		if (!unity_id) {
 			return left(new UnitNotFoundError())
 		}
@@ -52,6 +52,6 @@ export class FindPaymentsByProfUseCase
 
 		const payment_by_prof = paymentsProfOrErr.extract()
 
-		return right({ payment_by_prof })
+		return right(payment_by_prof)
 	}
 }
