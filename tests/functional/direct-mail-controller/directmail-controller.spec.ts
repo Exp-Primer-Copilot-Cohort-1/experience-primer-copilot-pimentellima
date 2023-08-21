@@ -39,7 +39,10 @@ test.group('Direct Mail Controller', async () => {
 	}).skip()
 	test('display destroy medicalCertificate', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
-		const medicalCertificate = await MedicalCertificate.create({ ...data, active: true })
+		const medicalCertificate = await MedicalCertificate.create({
+			...data,
+			active: true,
+		})
 		const response = await client
 			.delete(`direct-mails/${medicalCertificate._id}`)
 			.bearerToken(token.token)
@@ -47,15 +50,27 @@ test.group('Direct Mail Controller', async () => {
 	}).skip()
 	test('display show medicalCertificate', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
+		const medicalCertificate = await MedicalCertificate.create({
+			...data,
+			active: true,
+			name: 'show',
+		})
 
 		const response = await client
-			.get('direct-mails/636940f53924e995efb9408a')
+			.get('direct-mails/' + medicalCertificate._id)
 			.bearerToken(token.token)
 		response.assertStatus(200)
+		const { deletedCount } = await MedicalCertificate.deleteMany({
+			name: response.body().name,
+		})
+		assert.equal(deletedCount, 1)
 	}).skip()
 	test('display update medicalCertificate', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
-		const medicalCertificate = await MedicalCertificate.create({ ...data, active: true })
+		const medicalCertificate = await MedicalCertificate.create({
+			...data,
+			active: true,
+		})
 
 		const updatedData = {
 			...data,
@@ -70,7 +85,9 @@ test.group('Direct Mail Controller', async () => {
 
 		assert.equal(updatedMails?.name, updatedData.name)
 
-		const { deletedCount } = await MedicalCertificate.deleteOne({ _id: medicalCertificate._id })
+		const { deletedCount } = await MedicalCertificate.deleteOne({
+			_id: medicalCertificate._id,
+		})
 		assert.equal(deletedCount, 1)
 	}).skip()
 })

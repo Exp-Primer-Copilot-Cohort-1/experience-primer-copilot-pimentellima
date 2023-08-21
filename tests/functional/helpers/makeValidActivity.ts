@@ -2,11 +2,11 @@ import { faker } from '@faker-js/faker'
 import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
 
 export const makeValidActivity = () => {
-	const date = faker.date.future()
+	const date = new Date('2024-11-14T03:00:24.111Z')
 	date.setHours(0)
-	const hour_start = new Date(date)
+	const hour_start = date
 	hour_start.setHours(3)
-	const hour_end = new Date(date)
+	const hour_end = date
 	hour_end.setHours(hour_start.getHours() + 1)
 	const validActivity = {
 		_id: faker.string.numeric(),

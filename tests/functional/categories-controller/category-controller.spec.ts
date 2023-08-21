@@ -9,6 +9,10 @@ const data = {
 		value: '63597857c109b232759921d9',
 		label: 'MOISÉS RODRIGUES DE PAULA',
 	},
+	payment_form: {
+		value: '63597857c109b232759921d9',
+		label: 'MOISÉS RODRIGUES DE PAULA',
+	},
 	active: true,
 	unity_id: '63528c11c109b232759921d1',
 }
@@ -29,9 +33,10 @@ test.group('Category Controller', async () => {
 			.bearerToken(token.token)
 		response.assertStatus(200)
 
-		await Category.deleteOne({
-			name: 'test',
+		const { deletedCount } = await Category.deleteMany({
+			name: response.body().name,
 		})
+		assert.equal(deletedCount, 2)
 	})
 	test('display update category', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
@@ -45,6 +50,7 @@ test.group('Category Controller', async () => {
 			.put(`categories/${category._id}`)
 			.json({ ...updatedData })
 			.bearerToken(token.token)
+
 		response.assertStatus(200)
 		const updatedCategory = await Category.findById(category._id)
 
@@ -55,12 +61,17 @@ test.group('Category Controller', async () => {
 	}).skip()
 	test('display show category', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
+		const categories = await Category.create({ ...data, active: true, name: 'show' })
 
 		const response = await client
-			.get('categories/6364fe48c109b232759921fe')
+			.get('categories/' + categories._id)
 			.bearerToken(token.token)
 		response.assertStatus(200)
-	}).skip()
+		const { deletedCount } = await Category.deleteMany({
+			name: response.body().name,
+		})
+		assert.equal(deletedCount, 1)
+	})
 	test('display destroy category', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const categories = await Category.create({ ...data, active: true })
@@ -69,5 +80,5 @@ test.group('Category Controller', async () => {
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
-	}).skip()
+	})
 })

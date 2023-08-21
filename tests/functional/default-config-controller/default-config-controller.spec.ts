@@ -8,12 +8,19 @@ const dataUp = {
 }
 const data = {
 	name: null,
-	bank: [
-		{
-			value: '6390b598373d349c09b46d84',
-			label: 'DR. PERFORMANCE IPATINGA',
-		},
-	],
+	bank: {
+		value: '6390b598373d349c09b46d84',
+		label: 'DR. PERFORMANCE IPATINGA',
+	},
+	cost_center: {
+		value: '6390b598373d349c09b46d84',
+		label: 'DR. PERFORMANCE IPATINGA',
+	},
+	payment_form: {
+		value: '6390b598373d349c09b46d84',
+		label: 'DR. PERFORMANCE IPATINGA',
+		key: '1',
+	},
 	unity_id: '63528c11c109b232759921d1',
 	days: 1,
 	active: true,
@@ -28,7 +35,7 @@ test.group('DefaultConfig Controller', async () => {
 
 		response.assertStatus(200)
 		assert.isArray(response.body())
-	}).skip()
+	})
 	test('display store defaultConfig', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const response = await client
@@ -44,7 +51,7 @@ test.group('DefaultConfig Controller', async () => {
 			_id: response.body()._id,
 		})
 		assert.equal(deletedCount, 1)
-	}).skip()
+	})
 	test('display update defaultConfig', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const configs = await DefaultConfig.create({ ...data })
@@ -73,7 +80,7 @@ test.group('DefaultConfig Controller', async () => {
 			.delete(`default-configs/${defaultConfig._id}`)
 			.bearerToken(token.token)
 		response.assertStatus(200)
-	}).skip()
+	})
 	test('display show defaultConfig', async ({ client }) => {
 		const { _id } = await DefaultConfig.create({ ...data })
 		const { token } = await loginAndGetToken(client)
@@ -86,5 +93,5 @@ test.group('DefaultConfig Controller', async () => {
 
 		const { deletedCount } = await DefaultConfig.deleteOne({ _id: _id.toString() })
 		assert.equal(deletedCount, 1)
-	}).skip()
+	})
 })

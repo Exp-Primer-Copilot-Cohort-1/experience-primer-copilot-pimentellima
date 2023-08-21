@@ -7,7 +7,7 @@ import { loginAndGetToken } from '../helpers/login'
 const healthInsurance = (unity_id) => ({
 	name: faker.person.firstName(),
 	register_code: faker.string.numeric(),
-	carence: faker.number.int(),
+	carence: faker.string.numeric(),
 	unity_id: unity_id,
 	profs: [],
 })
@@ -40,17 +40,25 @@ test.group('Health Insurance Controller', () => {
 	})
 	// é preciso usar um id existente
 	test('display find health insurance by id', async ({ client }) => {
-		const { token } = await loginAndGetToken(client)
+		const { token, user } = await loginAndGetToken(client)
+		const healthInsurance = await HealthInsurance.create({
+			name: 'find',
+			register_code: faker.string.numeric(),
+			carence: faker.string.numeric(),
+			unity_id: user.unity_id,
+		})
 
 		const response = await client
-			.get('health-insurance/63597974c109b232759921dc')
+			.get('health-insurance/' + healthInsurance._id)
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
-		const healthInsurance = response.body()
+		const { deletedCount } = await HealthInsurance.deleteOne({
+			_id: healthInsurance._id,
+		})
 
-		assert.equal(healthInsurance._id, '63597974c109b232759921dc')
-	}).skip()
+		assert.equal(deletedCount, 1)
+	})
 	test('display find health insurance by id invalid', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 
@@ -106,8 +114,8 @@ test.group('Health Insurance Controller', () => {
 
 		const healthInsurance = await HealthInsurance.create({
 			name: faker.person.firstName(),
-			register_code: faker.number.int(),
-			carence: faker.number.int(),
+			register_code: faker.string.numeric(),
+			carence: faker.string.numeric(),
 			unity_id: user.unity_id,
 		})
 
