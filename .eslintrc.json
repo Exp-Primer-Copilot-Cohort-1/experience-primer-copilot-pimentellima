@@ -19,10 +19,7 @@
 		"prettier"
 	],
 	"rules": {
-		"indent": [
-			"error",
-			"tab"
-		],
+		"indent": "off",
 		"no-mixed-spaces-and-tabs": "off",
 		"linebreak-style": [
 			"error",

@@ -35,9 +35,7 @@ Route.post('users', 'UserController.store')
 
 Route.get('unity', 'UnityController.index')
 
-Route.put('activity-stts/:id', 'AdonnisLegadoController.bridge')
 Route.get('activity/single/:id', 'ActivityController.findActivityById')
-Route.put('activity-user/:id', 'AdonnisLegadoController.bridge')
 
 Route.get('permissions-default', 'PermissionController.defaultPermissions')
 
@@ -265,29 +263,6 @@ Route.group(() => {
 		)
 	}).prefix('schedule')
 
-	Route.post('/upload', 'AdonnisLegadoController.bridge').as('upload.image')
-
-	Route.get('reports-activities', 'AdonnisLegadoController.bridge').as(
-		'reports.activities',
-	)
-	Route.get('reports-activities-partner', 'AdonnisLegadoController.bridge').as(
-		'reports.activities.partner',
-	)
-	Route.get('reports-payment', 'AdonnisLegadoController.bridge').as('reports.payment')
-	Route.get('reports-payment-type', 'AdonnisLegadoController.bridge').as(
-		'reports.payment.type',
-	)
-	Route.get('reports-payment-prof', 'AdonnisLegadoController.bridge').as(
-		'reports.payment.prof',
-	)
-	Route.get('reports-payment-prof-date', 'AdonnisLegadoController.bridge').as(
-		'reports.payment.prof.date',
-	)
-	Route.get('reports-procedure', 'AdonnisLegadoController.bridge').as(
-		'reports.procedure',
-	)
-	Route.get('reports-canceled', 'AdonnisLegadoController.bridge').as('reports.canceled')
-
 	Route.group(() => {
 		Route.get('/:client_id', 'MedicalCertificateIssuanceController.findByClient').as(
 			'medical-certificate-issuance.findByClient',
@@ -305,14 +280,6 @@ Route.group(() => {
 			'prescription-issuance.store',
 		)
 	}).prefix('prescription-issuance')
-
-	Route.group(() => {
-		Route.get('', 'AdonnisLegadoController.bridge').as('room.index')
-		Route.get('/:userId', 'AdonnisLegadoController.bridge').as('room.show')
-		Route.get('support', 'AdonnisLegadoController.bridge').as('room.support')
-		Route.post('/:id', 'AdonnisLegadoController.bridge').as('room.store')
-		Route.get('unread', 'AdonnisLegadoController.bridge').as('room.unread')
-	}).prefix('room')
 
 	Route.group(() => {
 		Route.get('', 'PrescriptionController.index').as('prescriptions.index')
@@ -337,28 +304,6 @@ Route.group(() => {
 	}).prefix('ingredients')
 
 	Route.group(() => {
-		Route.get('', 'AdonnisLegadoController.bridge').as('ingredients-list.index')
-		Route.get('/:id', 'AdonnisLegadoController.bridge').as('ingredients-list.show')
-		Route.put('/:id', 'AdonnisLegadoController.bridge').as('ingredients-list.update')
-		Route.delete('/:id', 'AdonnisLegadoController.bridge').as(
-			'ingredients-list.destroy',
-		)
-		Route.post('', 'AdonnisLegadoController.bridge').as('ingredients-list.store')
-	}).prefix('ingredients-list')
-
-	Route.group(() => {
-		Route.get('', 'AdonnisLegadoController.bridge').as('medical-certificate.index')
-		Route.get('/:id', 'AdonnisLegadoController.bridge').as('medical-certificate.show')
-		Route.put('/:id', 'AdonnisLegadoController.bridge').as(
-			'medical-certificate.update',
-		)
-		Route.delete('/:id', 'AdonnisLegadoController.bridge').as(
-			'medical-certificate.destroy',
-		)
-		Route.post('', 'AdonnisLegadoController.bridge').as('medical-certificate.store')
-	}).prefix('medical-certificate')
-
-	Route.group(() => {
 		Route.get('', 'MedicalCertificateController.index').as('medicalCertificate.index')
 		Route.get('/inatives', 'MedicalCertificateController.findAllInatives').as(
 			'medicalCertificate.indexInatives',
@@ -379,18 +324,6 @@ Route.group(() => {
 			'medicalCertificate.store',
 		)
 	}).prefix('direct-mails')
-
-	Route.group(() => {
-		Route.get('', 'AdonnisLegadoController.bridge').as('pictures.index')
-		Route.get('/:id', 'AdonnisLegadoController.bridge').as('pictures.show')
-		Route.put('/:id', 'AdonnisLegadoController.bridge').as('pictures.update')
-		Route.delete('/:id', 'AdonnisLegadoController.bridge').as('pictures.destroy')
-		Route.post('', 'AdonnisLegadoController.bridge').as('pictures.store')
-	}).prefix('pictures')
-
-	Route.get('activities-date', 'AdonnisLegadoController.bridge').as(
-		'activities-date.index',
-	)
 
 	Route.group(() => {
 		Route.get('', 'PaymentProfController.findAllPaymentProfs').as(
@@ -451,16 +384,6 @@ Route.group(() => {
 	}).prefix('accounts')
 
 	Route.group(() => {
-		Route.get('', 'AdonnisLegadoController.bridge').as('default-config.index')
-		Route.get('/:id', 'AdonnisLegadoController.bridge').as('default-config.show')
-		Route.put('/:id', 'AdonnisLegadoController.bridge').as('default-config.update')
-		Route.delete('/:id', 'AdonnisLegadoController.bridge').as(
-			'default-config.destroy',
-		)
-		Route.post('', 'AdonnisLegadoController.bridge').as('default-config.store')
-	}).prefix('default-config')
-
-	Route.group(() => {
 		Route.get('', 'DefaultConfigController.index').as('default-configs.index')
 		Route.get('/:id', 'DefaultConfigController.show').as('default-configs.show')
 		Route.put('/:id', 'DefaultConfigController.update').as('default-configs.update')
@@ -496,13 +419,19 @@ Route.group(() => {
 	Route.group(() => {
 		Route.get('', 'CensusController.index').as('census.index')
 		Route.get('payments', 'CensusController.indexPayments').as('census.payments')
-		Route.get('health-insurance', 'CensusController.indexHealthInsurance')
+		Route.get('health-insurances', 'CensusController.indexHealthInsurance')
 		Route.get('activities-days-month', 'CensusController.indexActivitiesByDaysMonth')
-		Route.get('payments-by-form', 'CensusController.indexPaymentsByForm')
-		Route.get('activities-prof-by-prof', 'CensusController.indexActivitiesProfByProf')
-		Route.get('payments-by-partner', 'CensusController.indexPaymentsByPartner')
-		Route.get('payments-by-prof', 'CensusController.indexPaymentsByProf')
-		Route.get('payments-participation', 'CensusController.indexPaymentsParticipation')
+		Route.get('payments-by-forms', 'CensusController.indexPaymentsByForm')
+		Route.get(
+			'activities-prof-by-profs',
+			'CensusController.indexActivitiesProfByProf',
+		)
+		Route.get('payments-by-partners', 'CensusController.indexPaymentsByPartner')
+		Route.get('payments-by-profs', 'CensusController.indexPaymentsByProf')
+		Route.get(
+			'payments-participations',
+			'CensusController.indexPaymentsParticipation',
+		)
 		Route.get('revenues-activities', 'CensusController.indexRevenuesActivities')
 	}).prefix('census')
 

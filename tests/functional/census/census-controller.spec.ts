@@ -1,12 +1,12 @@
 import { test } from '@japa/runner'
 import { loginAndGetToken } from '../helpers/login'
 
-test.group('Censuss Controller', async () => {
-	test('display indexHelthIsurance ', async ({ client }) => {
+test.group('Census Controller', async () => {
+	test('display indexHealthInsurance ', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('census/health-insurance')
+			.get('census/health-insurances')
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
@@ -24,7 +24,7 @@ test.group('Censuss Controller', async () => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('census/payments-by-form')
+			.get('census/payments-by-forms')
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
@@ -33,7 +33,7 @@ test.group('Censuss Controller', async () => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('census/activities-prof-by-prof')
+			.get('census/activities-prof-by-profs')
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
@@ -42,7 +42,7 @@ test.group('Censuss Controller', async () => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('census/payments-by-partner')
+			.get('census/payments-by-partners')
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
@@ -51,7 +51,7 @@ test.group('Censuss Controller', async () => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('census/payments-by-prof')
+			.get('census/payments-by-profs')
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
@@ -60,7 +60,7 @@ test.group('Censuss Controller', async () => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('census/payments-participation')
+			.get('census/payments-participations')
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
