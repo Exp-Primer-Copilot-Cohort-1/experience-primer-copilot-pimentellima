@@ -28,16 +28,19 @@ export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterfa
 
 	async findAllActivities(
 		unity_id: string,
+		...args: any[]
 	): PromiseEither<AbstractError, IActivityAwait[]> {
 		if (!unity_id) return left(new MissingParamsError('unity id'))
 
 		const id = new Types.ObjectId(unity_id)
+		const attrs = (args[0] as { [key: string]: string }) || {}
 
 		const scoreMap = await generateScores(id as any)
 
 		const activities = await ActivityAwait.aggregate([
 			{
 				$match: {
+					...attrs,
 					type: 'await',
 					unity_id: id,
 				},

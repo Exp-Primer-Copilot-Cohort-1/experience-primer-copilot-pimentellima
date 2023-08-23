@@ -15,27 +15,52 @@ const fetchUserByType = async (type, unityId, active = true) =>
 	}).select('-payment_participations -password')
 
 class UserControllerV2 {
-	public async findAllUsersProfs({ auth }) {
+	public async findAllUsersProfs({ auth }: HttpContextContract) {
 		const userLogged = auth.user
 
-		const professionals = await fetchUserByType(
-			['prof', 'admin_prof'],
-			userLogged.unity_id,
-		)
-
-		return professionals || []
+		switch (userLogged?.type) {
+			case 'prof':
+				return await User.where({
+					_id: userLogged?._id,
+					unity_id: userLogged?.unity_id,
+					active: true,
+					type: {
+						$in: ['prof', 'admin_prof'],
+					},
+				}).select('-payment_participations -password')
+			default:
+				return await User.where({
+					unity_id: userLogged?.unity_id,
+					active: true,
+					type: {
+						$in: ['prof', 'admin_prof'],
+					},
+				}).select('-payment_participations -password')
+		}
 	}
 
 	public async findAllUsersProfsInative({ auth }) {
 		const userLogged = auth.user
 
-		const professionals = await fetchUserByType(
-			['prof', 'admin_prof'],
-			userLogged.unity_id,
-			false,
-		)
-
-		return professionals || []
+		switch (userLogged?.type) {
+			case 'prof':
+				return await User.where({
+					_id: userLogged?._id,
+					unity_id: userLogged?.unity_id,
+					active: false,
+					type: {
+						$in: ['prof', 'admin_prof'],
+					},
+				}).select('-payment_participations -password')
+			default:
+				return await User.where({
+					unity_id: userLogged?.unity_id,
+					active: false,
+					type: {
+						$in: ['prof', 'admin_prof'],
+					},
+				}).select('-payment_participations -password')
+		}
 	}
 
 	public async findAllUsersSecs({ auth }: HttpContextContract) {

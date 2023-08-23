@@ -83,14 +83,7 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 			unity_id: participation.unity_id,
 		}
 
-		const doc = await PaymentParticipations.findOneAndUpdate(
-			filter,
-			{},
-			{
-				upsert: true,
-				new: true,
-			},
-		)
+		const doc = await PaymentParticipations.findOne(filter)
 
 		if (!doc) throw new AbstractError('Não foi possível criar a participação', 500)
 
@@ -110,7 +103,11 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 
 		await doc.save()
 
-		return right(participation)
+		return right({
+			...participation,
+			_id: doc._id.toString(),
+			payment_participations_id: doc._id.toString(),
+		})
 	}
 
 	async updatePaymentProfById(

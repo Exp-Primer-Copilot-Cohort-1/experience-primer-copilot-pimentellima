@@ -15,8 +15,12 @@ export class FindAllActivitiesAwaitUseCase
 
 	public async execute({
 		unity_id,
+		...rest
 	}: ActivityAwaitParams): PromiseEither<AbstractError, IActivityAwait[]> {
-		const newActivityOrErr = await this.activitiesManager.findAllActivities(unity_id)
+		const newActivityOrErr = await this.activitiesManager.findAllActivities(
+			unity_id,
+			rest,
+		)
 
 		if (newActivityOrErr.isLeft()) return left(newActivityOrErr.extract())
 		const newActivity = newActivityOrErr.extract()

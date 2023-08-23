@@ -14,27 +14,55 @@ import {
 	makeUpdateActivityByIdComposer,
 	makeUpdateActivityFinishedAtComposer,
 	makeUpdateActivityStartedAtComposer,
-	makeUpdateActivityStatusComposer
+	makeUpdateActivityStatusComposer,
 } from 'App/Core/composers/activities/activity-composer'
 
 class ActivityController {
 	async findAllActivities(ctx: HttpContextContract) {
-		return adaptRoute(makeFindAllActivitiesComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
+		switch (ctx.auth.user?.type) {
+			case 'prof':
+				return adaptRoute(makeFindActivitiesByProfIdComposer(), ctx, {
+					unity_id: ctx.auth.user?.unity_id,
+					prof_id: ctx.auth.user?._id,
+				})
+
+			default:
+				return adaptRoute(makeFindAllActivitiesComposer(), ctx, {
+					unity_id: ctx.auth.user?.unity_id,
+				})
+		}
 	}
 
 	async findAllActivitiesAwait(ctx: HttpContextContract) {
-		return adaptRoute(makeFindAllActivitiesAwaitComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
+		switch (ctx.auth.user?.type) {
+			case 'prof':
+				return adaptRoute(makeFindAllActivitiesAwaitComposer(), ctx, {
+					unity_id: ctx.auth.user?.unity_id,
+					'prof.value': ctx.auth.user?._id,
+				})
+
+			default:
+				return adaptRoute(makeFindAllActivitiesAwaitComposer(), ctx, {
+					unity_id: ctx.auth.user?.unity_id,
+				})
+		}
 	}
 
 	async findAllActivitiesPending(ctx: HttpContextContract) {
-		return adaptRoute(makeFindAllActivitiesPendingComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
+		switch (ctx.auth.user?.type) {
+			case 'prof':
+				return adaptRoute(makeFindAllActivitiesPendingComposer(), ctx, {
+					unity_id: ctx.auth.user?.unity_id,
+					'prof.value': ctx.auth.user?._id,
+				})
+
+			default:
+				return adaptRoute(makeFindAllActivitiesPendingComposer(), ctx, {
+					unity_id: ctx.auth.user?.unity_id,
+				})
+		}
 	}
+
 	async updateActivityStatusById(ctx: HttpContextContract) {
 		return adaptRoute(makeUpdateActivityStatusComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,

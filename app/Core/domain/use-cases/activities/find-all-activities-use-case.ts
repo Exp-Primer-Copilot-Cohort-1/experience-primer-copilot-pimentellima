@@ -8,16 +8,16 @@ type ActivityProps = {
 	unity_id: string
 }
 
-export class FindAllActivitiesUseCase
-	implements UseCase<ActivityProps, IActivity[]>
-{
+export class FindAllActivitiesUseCase implements UseCase<ActivityProps, IActivity[]> {
 	constructor(private readonly activitiesManager: ActivitiesManagerInterface) { }
 
-	public async execute(
-		params: ActivityProps,
-	): PromiseEither<AbstractError, IActivity[]> {
+	public async execute({
+		unity_id,
+		...rest
+	}: ActivityProps): PromiseEither<AbstractError, IActivity[]> {
 		const activitiesOrErr = await this.activitiesManager.findAllActivities(
-			params?.unity_id,
+			unity_id,
+			rest,
 		)
 
 		if (activitiesOrErr.isLeft()) return left(activitiesOrErr.extract())

@@ -2,10 +2,8 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
 import { AppointmentStatus } from 'App/Helpers'
 import {
-	ActivityAwaitValues,
 	ActivityValues,
 	IActivity,
-	IActivityAwait,
 	IActivityPending,
 	RecurrentActivityValues,
 } from 'Types/IActivity'
@@ -16,21 +14,19 @@ export interface ActivitiesManagerInterface {
 		unity_id: string,
 		values: ActivityValues,
 	) => PromiseEither<AbstractError, IActivity>
-	createActivityAwait: (
-		unity_id: string,
-		values: ActivityAwaitValues,
-	) => PromiseEither<AbstractError, IActivityAwait>
 	createRecurrentActivity: (
 		unity_id: string,
 		values: RecurrentActivityValues,
 	) => PromiseEither<AbstractError, IActivity[]>
-	findAllActivities: (unity_id: string) => PromiseEither<AbstractError, IActivity[]>
+	findAllActivities: (
+		unity_id: string,
+		...args: unknown[]
+	) => PromiseEither<AbstractError, IActivity[]>
 	findAllActivitiesPending: (
 		unity_id: string,
+		...args: unknown[]
 	) => PromiseEither<AbstractError, IActivityPending[]>
-	findAllActivitiesAwait: (
-		unity_id: string,
-	) => PromiseEither<AbstractError, IActivityAwait[]>
+
 	findActivitiesByProf: (
 		unity_id: string,
 		prof_id: string,

@@ -95,12 +95,15 @@ export default function LogDecorator(
 			}
 			const db = (await import('@ioc:Mongoose')).default
 
-			const id = args[0]._id || args[0].id
+			const item = args[0]
+
+			const id = item._id || item.id
 
 			const props = (await db.model(collectionName).findById(id)) || {}
 
 			let user = args[1]
-			const unity_id = user.unity_id
+
+			const unity_id = user?.unity_id || item.unity_id || props.unity_id
 
 			if (user) {
 				user = {
@@ -120,6 +123,9 @@ export default function LogDecorator(
 
 			const [before, after] = deepCompare(props, value)
 
+			const collection_id =
+				value._id?.toString() || value.participation_id?.toString() || value._id
+
 			await Log.create({
 				action,
 				collection_name: collectionName,
@@ -127,7 +133,7 @@ export default function LogDecorator(
 				before,
 				after,
 				user,
-				collection_id: value._id.toString(),
+				collection_id,
 				unity_id: unity_id.toString(),
 			})
 

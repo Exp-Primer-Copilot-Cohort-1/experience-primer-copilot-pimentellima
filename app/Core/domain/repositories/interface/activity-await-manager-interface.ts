@@ -9,6 +9,7 @@ export interface ActivityAwaitManagerInterface {
 	) => PromiseEither<AbstractError, IActivityAwait>
 	findAllActivities: (
 		unity_id: string,
+		...args: any[]
 	) => PromiseEither<AbstractError, IActivityAwait[]>
 	updateActivityById: (
 		id: string,

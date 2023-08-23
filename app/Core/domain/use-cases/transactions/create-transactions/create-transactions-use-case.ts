@@ -1,10 +1,11 @@
+import LogDecorator from 'App/Core/decorators/log-decorator'
 import { TransactionEntity } from 'App/Core/domain/entities/transaction/TransactionEntity'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import divideCurrencyByInteger from 'App/utils/divide-currency'
 import { IActivity } from 'Types/IActivity'
-import { ITransaction } from 'Types/ITransaction'
+import type { ITransaction } from 'Types/ITransaction'
 import { addMonths } from 'date-fns'
 import { Types } from 'mongoose'
 import { UnitNotFoundError } from '../../../errors/unit-not-found'
@@ -26,13 +27,17 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 		>,
 	) { }
 
-	public async execute({
-		unity_id,
-		installments,
-		procedures = [],
-		activity_id,
-		...transaction
-	}: ITransaction): PromiseEither<AbstractError, ITransaction> {
+	@LogDecorator('transactions', 'post')
+	public async execute(
+		{
+			unity_id,
+			installments,
+			procedures = [],
+			activity_id,
+			...transaction
+		}: ITransaction,
+		...rest
+	): PromiseEither<AbstractError, ITransaction> {
 		if (!unity_id) return left(new UnitNotFoundError())
 
 		const numberOfTransactions = installments ? installments : 1
@@ -41,14 +46,17 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 		const group_by = activity_id || transaction.group_by || new Types.ObjectId()
 
 		if (activity_id) {
-			const transactionOrErr = await this.createWithActivity.execute({
-				...transaction,
-				activity_id: activity_id.toString(),
-				group_by: group_by.toString(),
-				unity_id: unity_id.toString(),
-				value: value.toString() as any,
-				installments: numberOfTransactions,
-			})
+			const transactionOrErr = await this.createWithActivity.execute(
+				{
+					...transaction,
+					activity_id: activity_id.toString(),
+					group_by: group_by.toString(),
+					unity_id,
+					value: value.toString() as any,
+					installments: numberOfTransactions,
+				},
+				...rest,
+			)
 			if (transactionOrErr.isLeft()) throw transactionOrErr.extract()
 		}
 

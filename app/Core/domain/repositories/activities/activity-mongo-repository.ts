@@ -5,7 +5,6 @@ import Activity from 'App/Models/Activity'
 import ActivityAwait from 'App/Models/ActivityAwait'
 import ActivityPending from 'App/Models/ActivityPending'
 import {
-	ActivityAwaitValues,
 	ActivityValues,
 	IActivity,
 	IActivityAwait,
@@ -15,7 +14,6 @@ import {
 import { ITransaction } from 'Types/ITransaction'
 import mongoose from 'mongoose'
 import ActivityEntity from '../../entities/activities/activity'
-import ActivityAwaitEntity from '../../entities/activity-await/activity-await'
 import { ActivityPaymentEntity } from '../../entities/activity-payment/ActivityPaymentEntity'
 import ActivityPendingEntity from '../../entities/activity-pending'
 import { ActivityNotFoundError } from '../../errors/activity-not-found'
@@ -68,9 +66,14 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 	async findAllActivitiesPending(
 		unity_id: string,
+		...args: unknown[]
 	): PromiseEither<AbstractError, IActivityPending[]> {
 		if (!unity_id) return left(new MissingParamsError('unity id'))
+
+		const attrs = (args[0] as { [key: string]: string }) || {}
+
 		const activities = await ActivityPending.find({
+			...attrs,
 			unity_id,
 			type: 'pending',
 		})
@@ -87,19 +90,6 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			type: 'await',
 		})
 		return right(activities)
-	}
-
-	async createActivityAwait(
-		unity_id: string,
-		values: ActivityAwaitValues,
-	): PromiseEither<AbstractError, IActivityAwait> {
-		const activityOrErr = await ActivityAwaitEntity.build(values)
-		if (activityOrErr.isLeft()) return left(activityOrErr.extract())
-
-		const newActivity = await ActivityAwait.create(
-			activityOrErr.extract().defineUnityId(unity_id).params(),
-		)
-		return right(newActivity)
 	}
 
 	async updateActivityStartedAt(
