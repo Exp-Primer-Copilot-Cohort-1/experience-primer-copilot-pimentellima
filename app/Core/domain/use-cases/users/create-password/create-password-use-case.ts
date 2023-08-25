@@ -1,14 +1,21 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, right } from 'App/Core/shared'
+import SendPasswordEmail from 'App/Mail/emails/send-password-email'
+import { ROLES } from 'App/Roles/types'
+import { CreatePasswordProps, Password } from '../type'
 
-type Password = string
+const roles = [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SUPERADMIN]
 
-export class CreatePasswordUseCase implements UseCase<Password, Password> {
+export class CreatePasswordUseCase implements UseCase<CreatePasswordProps, Password> {
 	constructor() { }
 
-	public async execute(password?: Password): PromiseEither<AbstractError, string> {
-		if (password) {
+	@SendPasswordEmail
+	public async execute({
+		password,
+		type,
+	}: CreatePasswordProps): PromiseEither<AbstractError, string> {
+		if (password && roles.includes(type)) {
 			return right(password)
 		}
 
@@ -18,21 +25,6 @@ export class CreatePasswordUseCase implements UseCase<Password, Password> {
 			.fill(pwdChars)
 			.map((x) => x[Math.floor(Math.random() * x.length)])
 			.join('')
-
-		// try {
-		// 	// await Mail.send(
-		// 	// 	'emails.create',
-		// 	// 	{ password: data.password },
-		// 	// 	(message) => {
-		// 	// 		message.from('ti@dpsystem.com.br');
-		// 	// 		message.to(data.email);
-		// 	// 		message.subject('A sua senha');
-		// 	// 	},
-		// 	// );
-		// 	Log.info(`Senha enviada para o ${data.email}`);
-		// } catch (error) {
-		// 	Log.error(error.message);
-		// }
 
 		return right(randPassword)
 	}

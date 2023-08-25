@@ -10,8 +10,10 @@ import { PromiseEither, left, right } from 'App/Core/shared'
 import type { IAdminUser } from 'Types/IAdminUser'
 
 import SendSignUpConfirmEmail from 'App/Mail/emails/send-sign-up-confirm-email'
+import { ROLES } from 'App/Roles/types'
+import { CreatePasswordProps, Password } from '../type'
 
-type CreatePasswordUseCase = UseCase<string, string>
+type CreatePasswordUseCase = UseCase<CreatePasswordProps, Password>
 
 export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {
 	constructor(
@@ -42,7 +44,11 @@ export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {
 			return left(unityOrErr.extract())
 		}
 
-		const passwordOrErr = await this.createPasswordUseCase.execute(admin.password)
+		const passwordOrErr = await this.createPasswordUseCase.execute({
+			password: admin.password,
+			type: admin.type as ROLES,
+			email: admin.email,
+		})
 
 		if (passwordOrErr.isLeft()) {
 			return left(passwordOrErr.extract())
