@@ -1,14 +1,14 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import {
-	makeFindBiliingYearByUnityIdComposer,
-	makeMinimunBillingByUnityComposer,
+	makeFindBillingYearByUnityIdComposer,
+	makeMinimumBillingByUnityComposer,
 	makeUpdateBillingDesirableByUnityComposer,
 } from 'App/Core/composers/billing/make'
 
 class RevenuesController {
 	async index(ctx: HttpContextContract) {
-		return adaptRoute(makeFindBiliingYearByUnityIdComposer(), ctx, {
+		return adaptRoute(makeFindBillingYearByUnityIdComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
@@ -20,7 +20,7 @@ class RevenuesController {
 	}
 
 	async updateMinimum(ctx: HttpContextContract) {
-		return adaptRoute(makeMinimunBillingByUnityComposer(), ctx, {
+		return adaptRoute(makeMinimumBillingByUnityComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}

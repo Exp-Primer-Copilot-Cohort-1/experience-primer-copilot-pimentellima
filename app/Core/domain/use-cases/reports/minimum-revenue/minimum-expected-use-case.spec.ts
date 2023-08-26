@@ -13,7 +13,7 @@ import {
 } from '../../holidays'
 import { AveragePriceProceduresUseCase } from '../../procedures/average-price-procedures-group-by-prof'
 import { DayTradesByProfUseCase } from './day-trades-by-prof'
-import { MinimumDesirableUseCase } from './minimun-expected-use-case'
+import { MinimumDesirableUseCase } from './minimum-expected-use-case'
 import { UpdateAttrBillingInMonthUseCase } from './update-attr-revenue-reports-in-month-use-case'
 import { UpdateCurrentBillingInMonthUseCase } from './update-current-revenue-reports-in-month-use-case'
 
@@ -70,9 +70,7 @@ const makeSut = () => {
 
 describe('Minimum Expected Report Use Case (Integration)', () => {
 	beforeAll(async () => {
-		await mongoose.connect(
-			process.env.DB_CONNECTION_STRING as string,
-		)
+		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})
 
 	afterAll(async () => {

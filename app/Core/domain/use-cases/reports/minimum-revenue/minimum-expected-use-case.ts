@@ -38,7 +38,7 @@ export class MinimumDesirableUseCase implements UseCase<Range, IBilling> {
 
 		const profs = profsOrErr.extract()
 
-		const minimun_desirable_by_profs = await Promise.all(
+		const minimum_desirable_by_profs = await Promise.all(
 			profs.map(async (prof) => {
 				if (!prof._id) return 0
 
@@ -60,14 +60,14 @@ export class MinimumDesirableUseCase implements UseCase<Range, IBilling> {
 			}),
 		)
 
-		const minimun_desirable = minimun_desirable_by_profs.reduce(
+		const minimum_desirable = minimum_desirable_by_profs.reduce(
 			(acc, curr) => acc + curr,
 			0,
 		)
 
 		const billingOrErr = await this.updateAttr.execute({
 			unity_id,
-			value: minimun_desirable,
+			value: minimum_desirable,
 			month,
 		})
 
