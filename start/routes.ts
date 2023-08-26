@@ -91,7 +91,7 @@ Route.group(() => {
 			'users.secs.inatives',
 		)
 		Route.get('prof/:id', 'AdonnisLegadoController.bridge').as('users.prof.show')
-		Route.put(':id', 'AdonnisLegadoController.bridge').as('users.update')
+		Route.put(':id', 'UserController.update').as('users.update')
 		Route.delete(':id', 'UserController.destroy').as('users.destroy')
 	}).prefix('users')
 
