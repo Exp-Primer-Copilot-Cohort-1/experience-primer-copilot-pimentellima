@@ -3,52 +3,17 @@ import { makeCreateAdminUserComposer } from 'App/Core/composers'
 import User from 'App/Models/User'
 // const Mail = use('Mail');
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-
-const SELECTS = require('../user-select')
-
-const mongoose = require('mongoose')
-
-const _ = require('lodash')
-
-function customIsEquals(first, second) {
-	const val = []
-	_.forEach(second, (value, key) => {
-		if (first[key] !== value) {
-			val.push({ value, key })
-		}
-	})
-	return val
-}
+import { ROLES } from 'App/Roles/types'
 
 class UserController {
-	public async index({ request, auth }) {
+	public async index({ auth }) {
 		const userLogged = auth.user
 		try {
-			const data = request.only(['name'])
-
-			if (data.name) {
-				const users = await User.where({
-					name: { $regex: new RegExp(`.*${data.name}.*`) },
-					unity_id: userLogged.unity_id,
-				})
-					.select(SELECTS)
-					.sort('-name')
-					.with('unity')
-					.with('answer')
-					.with('activity')
-					.with('userLog')
-					.fetch()
-				return users
-			}
 			const users = await User.where({
 				unity_id: userLogged.unity_id,
 			})
-				.select(SELECTS)
-				.with('answer')
-				.with('activity')
-				.with('unity')
-				.with('userLog')
-				.fetch()
+				.select('-password')
+				.exec()
 
 			return users
 		} catch (err) {
@@ -57,55 +22,48 @@ class UserController {
 		}
 	}
 
-	public async indexByType({ request }) {
-		try {
-			const { unity, type } = request.only(['name', 'type', 'unity'])
-
-			const users = User.where({
-				unity_id: mongoose.Types.ObjectId(unity),
-				type: { $regex: new RegExp(`.*${type}.*`) },
-			})
-				.select(SELECTS)
-				.sort('-name')
-				.with('unity')
-				.with('answer')
-				.with('activity')
-				.fetch()
-			return users
-		} catch (err) {
-			return false
-		}
-	}
-
 	public async store(ctx) {
 		return adaptRoute(makeCreateAdminUserComposer(), ctx)
 	}
 
-	public async update({ params, request }: HttpContextContract) {
+	public async update({ params, request, auth }: HttpContextContract) {
+		const userLogged = auth.user
 		const data = request.all()
+		const user = await User.findById(params.id).orFail()
+		const isEquals = params.id === userLogged?._id.toString()
 
-		const user = await User.findById(params.id, data).orFail()
+		switch (userLogged?.type) {
+			case ROLES.PROF:
+				if (isEquals) {
+					await user.update(data)
+					await user.save()
+				}
+				break
+			case ROLES.SEC:
+				if (isEquals) {
+					await user.update(data)
+					await user.save()
+				}
+				break
+			default:
+				await user.update(data)
+				await user.save()
+				break
+		}
 
-		await user.save()
 		return user
 	}
 
 	public async show({ params }) {
-		const user = await User.where({ _id: params.id })
-			.select(SELECTS)
-			.with('unity')
-			.with('answer')
-			.with('activity')
-			.with('userLog')
-			.firstOrFail()
+		const user = await User.findById(params.id).select('-password').orFail()
 
 		return user
 	}
 
-	public async destroy({ params }) {
-		const user = await User.where({ _id: params.id }).firstOrFail()
-		await user.delete()
-	}
+	// public async destroy({ params }) {
+	// 	const user = await User.where({ _id: params.id }).orFail()
+	// 	await user.delete()
+	// }
 }
 
 export default UserController

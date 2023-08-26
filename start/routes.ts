@@ -90,9 +90,8 @@ Route.group(() => {
 		Route.get('secs/inatives', 'UserControllerV2.findAllUsersSecsInative').as(
 			'users.secs.inatives',
 		)
-		Route.get('prof/:id', 'AdonnisLegadoController.bridge').as('users.prof.show')
+		Route.get('prof/:id', 'UserController.show').as('users.prof.show')
 		Route.put(':id', 'UserController.update').as('users.update')
-		Route.delete(':id', 'UserController.destroy').as('users.destroy')
 	}).prefix('users')
 
 	Route.group(() => {
