@@ -95,6 +95,10 @@ Route.group(() => {
 	}).prefix('users')
 
 	Route.group(() => {
+		Route.put(':id', 'ScheduledConfigController.update').as('scheduled.update')
+	}).prefix('scheduled')
+
+	Route.group(() => {
 		Route.get('', 'HealthInsuranceController.index').as('health-insurance.index')
 		Route.get(':id', 'HealthInsuranceController.show').as('health-insurance.show')
 		Route.put(':_id', 'HealthInsuranceController.update').as(
