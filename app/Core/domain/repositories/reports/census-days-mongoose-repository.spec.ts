@@ -16,9 +16,9 @@ describe('Census Mongoose Repository (Integration)', () => {
 		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})
 
-	it('should be count actvities by day in the week', async () => {
+	it('should be count activities by day in the week', async () => {
 		const { sut } = makeSut()
-		const resultOrErr = await sut.findActivitiesByDaysOfWeekByUnityOrProf(
+		const resultOrErr = await sut.findActivitiesByDaysOfWeek(
 			'6359660fc109b232759921d4',
 			'2022-12-01',
 			'2024-07-31',
@@ -27,9 +27,20 @@ describe('Census Mongoose Repository (Integration)', () => {
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})
 
-	it('should be count actvities by day in the month', async () => {
+	it('should be count activities by day in the month', async () => {
 		const { sut } = makeSut()
-		const resultOrErr = await sut.findActivitiesByDaysOfMonthByUnityOrProf(
+		const resultOrErr = await sut.findActivitiesByDaysOfMonth(
+			'6359660fc109b232759921d4',
+			'2022-12-01',
+			'2024-07-31',
+		)
+
+		expect(resultOrErr.isRight()).toBeTruthy()
+	})
+
+	it('should be count hours worked by prof', async () => {
+		const { sut } = makeSut()
+		const resultOrErr = await sut.findHoursWorked(
 			'6359660fc109b232759921d4',
 			'2022-12-01',
 			'2024-07-31',

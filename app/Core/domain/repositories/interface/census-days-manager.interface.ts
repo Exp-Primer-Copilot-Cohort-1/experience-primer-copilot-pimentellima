@@ -1,19 +1,30 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared'
-import { ICensusActivitiesByDays, ICensusActivitiesByDaysOfMonth } from 'Types/ICensus'
+import {
+	ICensusActivitiesByDays,
+	ICensusActivitiesByDaysOfMonth,
+	ICensusWorkedHoursByProf,
+} from 'Types/ICensus'
 
 export interface CensusDaysManagerInterface {
-	findActivitiesByDaysOfWeekByUnityOrProf: (
+	findActivitiesByDaysOfWeek: (
 		unity_id: string,
 		date_start: string,
 		date_end: string,
 		prof_id?: string,
 	) => PromiseEither<AbstractError, ICensusActivitiesByDays[]>
 
-	findActivitiesByDaysOfMonthByUnityOrProf: (
+	findActivitiesByDaysOfMonth: (
 		unity_id: string,
 		date_start: string,
 		date_end: string,
 		prof_id?: string,
 	) => PromiseEither<AbstractError, ICensusActivitiesByDaysOfMonth[]>
+
+	findHoursWorked: (
+		unity_id: string,
+		date_start: string,
+		date_end: string,
+		prof_id?: string,
+	) => PromiseEither<AbstractError, ICensusWorkedHoursByProf[]>
 }

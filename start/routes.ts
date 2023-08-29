@@ -436,6 +436,7 @@ Route.group(() => {
 			'CensusController.indexPaymentsParticipation',
 		)
 		Route.get('revenues-activities', 'CensusController.indexRevenuesActivities')
+		Route.get('idleness', 'CensusController.indexIdlenessByProf')
 	}).prefix('census')
 
 	Route.group(() => {

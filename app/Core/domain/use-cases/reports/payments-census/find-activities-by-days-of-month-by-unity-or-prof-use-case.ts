@@ -14,7 +14,7 @@ type FindActivitiesByUnityOrProfProps = {
 	prof_id?: string
 }
 
-export class FindActivitiesByDaysOfMonthByUnityOrProfUseCase
+export class findActivitiesByDaysOfMonthUseCase
 	implements UseCase<FindActivitiesByUnityOrProfProps, ICensusActivitiesByDaysOfMonth[]>
 {
 	constructor(private readonly manager: CensusDaysManagerInterface) { }
@@ -43,7 +43,7 @@ export class FindActivitiesByDaysOfMonthByUnityOrProfUseCase
 		}
 
 		const count_by_daysOrErr =
-			await this.manager.findActivitiesByDaysOfMonthByUnityOrProf(
+			await this.manager.findActivitiesByDaysOfMonth(
 				unity_id,
 				date_start,
 				date_end,

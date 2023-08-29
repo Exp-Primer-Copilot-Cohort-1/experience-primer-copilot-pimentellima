@@ -114,3 +114,15 @@ export type ICensusCost = {
 	prof: string
 	total: number
 }
+
+export type ICensusWorkedHoursByProf = {
+	label: string
+	count: number
+	value: string
+}
+
+export type ICensusIdlenessByProf = {
+	label: string
+	idleness: number
+	value: string
+}

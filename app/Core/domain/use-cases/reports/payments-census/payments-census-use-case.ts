@@ -81,7 +81,7 @@ export class PaymentsCensusByDateUseCase
 				date_end,
 				prof_id,
 			),
-			this.managerDays.findActivitiesByDaysOfMonthByUnityOrProf(
+			this.managerDays.findActivitiesByDaysOfMonth(
 				unity_id,
 				date_start,
 				date_end,

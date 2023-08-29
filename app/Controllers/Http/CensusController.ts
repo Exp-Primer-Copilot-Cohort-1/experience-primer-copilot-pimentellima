@@ -2,6 +2,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import {
 	makeCensusActivitiesProfByProfComposer,
 	makeCensusByMonthByUnityIdComposer,
+	makeCensusIdlenessByProfComposer,
 	makeCensusPaymentsByFormComposer,
 	makeCensusPaymentsByHealthInsuranceComposer,
 	makeCensusPaymentsByMonthByUnityIdComposer,
@@ -44,6 +45,9 @@ class CensusController {
 	}
 	async indexRevenuesActivities(ctx: HttpContextContract) {
 		return withControlRoles(ctx, makeCensusRevenuesActivitiesComposer)
+	}
+	async indexIdlenessByProf(ctx: HttpContextContract) {
+		return withControlRoles(ctx, makeCensusIdlenessByProfComposer)
 	}
 }
 

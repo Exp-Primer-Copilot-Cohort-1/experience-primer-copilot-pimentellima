@@ -10,7 +10,7 @@ import {
 	FindAllHolidaysByUnityUseCase,
 	SaveHolidaysNationalsDefaultUseCase,
 } from '../../holidays'
-import { DayTradesByProfUseCase } from './day-trades-by-prof'
+import { DayTradesIntervalDatesByProfUseCase } from './day-trades-interval-dates'
 
 const makeSut = () => {
 	const repo = new ProfsMongooseRepository()
@@ -23,7 +23,7 @@ const makeSut = () => {
 		repoHoliday,
 		nationalsHolidayUseCase,
 	)
-	const sut = new DayTradesByProfUseCase(repo, holidayUseCase)
+	const sut = new DayTradesIntervalDatesByProfUseCase(repo, holidayUseCase)
 	return {
 		sut,
 	}
@@ -40,10 +40,9 @@ describe('Day Trade By Prof Use Case (Integration)', () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.execute({
 			unity_id: '63528c11c109b232759921d1',
-			month: 1,
-			year: 2021,
 			_id: '63528c12c109b232759921d3',
-			day: 1,
+			date_end: '2023-01-31T03:00:00.000Z',
+			date_start: '2021-01-01T03:00:00.000Z',
 		})
 
 		expect(resultOrErr.isRight()).toBeTruthy()
