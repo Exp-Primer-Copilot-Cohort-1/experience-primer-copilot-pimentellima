@@ -40,9 +40,11 @@ describe('Day Trade By Prof Use Case (Integration)', () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.execute({
 			unity_id: '63528c11c109b232759921d1',
-			_id: '63528c12c109b232759921d3',
+			id: '63528c12c109b232759921d3',
 			date_end: '2023-01-31T03:00:00.000Z',
 			date_start: '2021-01-01T03:00:00.000Z',
+			count: 0,
+			name: 'Teste',
 		})
 
 		expect(resultOrErr.isRight()).toBeTruthy()

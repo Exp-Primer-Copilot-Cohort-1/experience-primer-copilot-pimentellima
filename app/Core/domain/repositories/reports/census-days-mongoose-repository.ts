@@ -8,6 +8,8 @@ import {
 } from 'Types/ICensus'
 import { CensusDaysManagerInterface } from '../interface/census-days-manager.interface'
 
+import Prof from 'App/Models/Prof'
+import { ROLES } from 'App/Roles/types'
 import generateMatch from './generate-match-census'
 
 export class CensusDaysMongooseRepository implements CensusDaysManagerInterface {
@@ -148,7 +150,27 @@ export class CensusDaysMongooseRepository implements CensusDaysManagerInterface 
 		]
 
 		const activities: ICensusWorkedHoursByProf[] = await Activity.aggregate(pipeline)
+		const profs = await Prof.find({
+			unity_id,
+			$or: [{ type: ROLES.ADMIN_PROF }, { type: ROLES.PROF }],
+		}).select('_id name')
 
-		return right(activities)
+		const workedHours: ICensusWorkedHoursByProf[] = []
+
+		for (const prof of profs) {
+			const found = activities.find((item) => item.value === prof._id.toString())
+
+			if (!found) {
+				workedHours.push({
+					value: prof._id.toString(),
+					label: prof.name,
+					count: 0,
+				})
+			} else {
+				workedHours.push(found)
+			}
+		}
+
+		return right(workedHours)
 	}
 }

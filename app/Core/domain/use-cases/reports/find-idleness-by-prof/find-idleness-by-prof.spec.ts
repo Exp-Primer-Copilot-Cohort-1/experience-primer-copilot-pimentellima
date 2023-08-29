@@ -47,8 +47,6 @@ describe('Find Idleness By Prof Use Case (Integration)', () => {
 			date_end: '2024-07-31',
 		})
 
-		console.log(resultOrErr.extract())
-
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})
 })

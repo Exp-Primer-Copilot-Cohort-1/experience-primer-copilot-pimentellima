@@ -130,10 +130,11 @@ export class DayTradesIntervalDatesByProfUseCase
 		const prof = profOrErr.extract()
 
 		const days = getDaysCount(startDate, endDate, prof, holidays) // retorna a quantidade de dias trabalhados
-		const minutes = minutesWorked(prof) // retorna a quantidade de horas trabalhadas
+		const minutes = minutesWorked(prof) // retorna a quantidade de horas que deveriam ser trabalhadas
 
 		const hasMinutesWorked = days * minutes || 0
-		const idleness = (hasMinutesWorked - count) / 60
+
+		const idleness = (hasMinutesWorked - count) / 60 // retorna a quantidade de horas de ociosidade
 
 		return right({
 			value: id,

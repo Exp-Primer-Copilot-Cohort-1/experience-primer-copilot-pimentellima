@@ -78,6 +78,6 @@ export class FindIdlenessByProfUseCase implements UseCaseFindIdlenessByProf {
 			}),
 		)
 
-		return right(idleness)
+		return right(idleness.filter((item) => !!item.idleness))
 	}
 }
