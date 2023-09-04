@@ -52,10 +52,12 @@ export const UnitySchema = new Schema<IUnity>(
 		document: {
 			type: String,
 			required: true,
+			unique: true,
 		},
 		email: {
 			type: String,
 			required: true,
+			unique: true,
 		},
 		is_company: {
 			type: Boolean,
@@ -98,4 +100,18 @@ export const UnitySchema = new Schema<IUnity>(
 		},
 	},
 )
+
+UnitySchema.index(
+	{
+		name: 1,
+		country: 1,
+		state: 1,
+		city: 1,
+		neighborhood: 1,
+		address: 1,
+		address_number: 1,
+	},
+	{ unique: true },
+)
+
 export default Mongoose.model<IUnity>('unities', UnitySchema)

@@ -169,4 +169,10 @@ ActivitySchema.pre('find', function () {
 	this.where({ $in: ['marked', undefined] })
 })
 
+ActivitySchema.index({ 'prof.value': 1 }, { unique: false })
+ActivitySchema.index({ 'client.value': 1 }, { unique: false })
+ActivitySchema.index({ unity_id: 1, scheduled: 1 }, { unique: false })
+ActivitySchema.index({ unity_id: 1, date: 1 }, { unique: false })
+ActivitySchema.index({ unity_id: 1, type: 1 }, { unique: false })
+
 export default Mongoose.model<IActivity>('activities', ActivitySchema, 'activities')
