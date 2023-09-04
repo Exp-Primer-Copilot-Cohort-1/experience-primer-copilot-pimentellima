@@ -83,9 +83,11 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 			unity_id: participation.unity_id,
 		}
 
-		const doc = await PaymentParticipations.findOne(filter)
+		let doc = await PaymentParticipations.findOne(filter)
 
-		if (!doc) throw new AbstractError('Não foi possível criar a participação', 500)
+		if (!doc) {
+			doc = new PaymentParticipations(filter)
+		}
 
 		for (let i = 0; i < doc.prices?.length; i++) {
 			doc.prices[i].active = false
