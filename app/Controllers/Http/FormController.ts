@@ -10,13 +10,13 @@ import { makeFindFormByProfIdComposer } from 'App/Core/composers/form/make-find-
 import { makeUpdateFormComposer } from 'App/Core/composers/form/make-update-form-composer'
 
 class FormController {
-	async findAllForms(ctx: HttpContextContract) {
+	async index(ctx: HttpContextContract) {
 		return adaptRoute(makeFindAllFormsComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
 
-	async findFormById(ctx: HttpContextContract) {
+	async show(ctx: HttpContextContract) {
 		return adaptRoute(makeFindFormByIdComposer(), ctx)
 	}
 
@@ -32,19 +32,18 @@ class FormController {
 		})
 	}
 
-  async createForm(ctx: HttpContextContract) {
-    return adaptRoute(makeCreateFormComposer(), ctx, {
+	async store(ctx: HttpContextContract) {
+		return adaptRoute(makeCreateFormComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
-		});
-  
-  }
-  async updateForm(ctx: HttpContextContract) {
-    return adaptRoute(makeUpdateFormComposer(), ctx);
-  }
+		})
+	}
+	async update(ctx: HttpContextContract) {
+		return adaptRoute(makeUpdateFormComposer(), ctx)
+	}
 
 	async deleteFormById(ctx: HttpContextContract) {
 		return adaptRoute(makeDeleteFormByIdComposer(), ctx)
 	}
 }
 
-module.exports = FormController
+export default FormController
