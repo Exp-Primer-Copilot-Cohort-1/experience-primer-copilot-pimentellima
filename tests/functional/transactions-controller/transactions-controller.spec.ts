@@ -25,7 +25,7 @@ const transaction: ITransaction = {
 	},
 	date: new Date(),
 	paymentForm: 'pix',
-	value: 100,
+	total: 100,
 	installment: false,
 	paid: true,
 }

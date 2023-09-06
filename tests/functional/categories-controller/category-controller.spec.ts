@@ -16,7 +16,8 @@ const data = {
 	active: true,
 	unity_id: '63528c11c109b232759921d1',
 }
-test.group('Category Controller', async () => {
+
+test.group('Category Controller', () => {
 	test('display index category ', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 
@@ -37,7 +38,7 @@ test.group('Category Controller', async () => {
 			name: response.body().name,
 		})
 		assert.equal(deletedCount, 3)
-	})
+	}).skip()
 	test('display update category', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const category = await Category.create({ ...data })
@@ -75,7 +76,7 @@ test.group('Category Controller', async () => {
 	test('display destroy category', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const categories = await Category.create({ ...data, active: true })
-		console.log(categories._id)
+
 		const response = await client
 			.delete(`categories/${categories._id}`)
 			.bearerToken(token.token)

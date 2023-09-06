@@ -217,7 +217,7 @@ export class TransactionEntity extends Entity implements ITransaction {
 					label: z.string(),
 				}),
 				paid: z.boolean().optional(),
-				value: z.number(),
+				total: z.number(),
 				date: z.union([z.string(), z.date()]),
 				paymentForm: z.string(),
 				description: z.string().optional(),

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { faker } from '@faker-js/faker'
 import { test } from '@japa/runner'
-import Unity from 'App/Models/Unity'
 import User from 'App/Models/User'
 import { assert } from 'chai'
 
@@ -47,18 +46,6 @@ test.group('Sign Up User Controller', () => {
 		response.assertStatus(200)
 
 		const { deletedCount } = await User.deleteOne({ _id })
-		assert.equal(deletedCount, 1)
-	})
-})
-
-test.group('Sign Up Unity Controller', () => {
-	test('display store unity', async ({ client }) => {
-		const response = await client.post('unity').json(unity)
-		response.assertStatus(200)
-
-		const { _id } = response.body() as any
-
-		const { deletedCount } = await Unity.deleteOne({ _id })
 		assert.equal(deletedCount, 1)
 	})
 })

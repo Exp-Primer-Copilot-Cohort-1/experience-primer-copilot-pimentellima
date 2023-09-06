@@ -431,4 +431,12 @@ Route.group(() => {
 		Route.get('', 'LogController.index').as('logs.index')
 		Route.get('/:id', 'LogController.show').as('logs.show')
 	}).prefix('logs')
+
+	Route.group(() => {
+		Route.get('', 'UnityController.index').as('unities.index')
+		Route.get('/:id', 'UnityController.show').as('unities.show')
+		Route.put('/:id', 'UnityController.update').as('unities.update')
+		Route.delete('/:id', 'UnityController.destroy').as('unities.destroy')
+		Route.post('', 'UnityController.store').as('unities.store')
+	}).prefix('unities')
 }).middleware(['auth', 'role'])
