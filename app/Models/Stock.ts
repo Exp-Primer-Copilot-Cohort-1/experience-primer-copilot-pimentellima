@@ -1,5 +1,5 @@
-import Mongoose, { Schema } from "@ioc:Mongoose";
-import { IStock } from "Types/IStock";
+import Mongoose, { Schema } from '@ioc:Mongoose'
+import { IStock } from 'Types/IStock'
 
 const StockSchema = new Schema<IStock>(
 	{
@@ -19,7 +19,20 @@ const StockSchema = new Schema<IStock>(
 		active: { type: Boolean, required: true },
 		unity_id: { type: Schema.Types.ObjectId, required: true },
 	},
-	{ timestamps: true }
-);
+	{ timestamps: true },
+)
 
-export default Mongoose.model<IStock>("stocks", StockSchema);
+StockSchema.index({ unity_id: 1, name: 1, active: 1 }, { unique: false })
+StockSchema.index(
+	{
+		unity_id: 1,
+		'batches.date_batch': 1,
+		'batches.quantity': 1,
+		'batches.price_cost': 1,
+		'batches.price_final': 1,
+		active: 1,
+	},
+	{ unique: false },
+)
+
+export default Mongoose.model<IStock>('stocks', StockSchema)

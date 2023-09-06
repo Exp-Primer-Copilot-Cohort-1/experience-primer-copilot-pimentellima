@@ -31,6 +31,8 @@ const FinancialCategorySchema = new Schema<IFinancialCategory>(
 	},
 )
 
+FinancialCategorySchema.index({ unity_id: 1, name: 1, type: 1 }, { unique: true })
+
 export default Mongoose.model<IFinancialCategory>(
 	'financial_categories',
 	FinancialCategorySchema,

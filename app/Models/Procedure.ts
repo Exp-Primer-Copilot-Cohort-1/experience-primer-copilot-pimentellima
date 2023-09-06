@@ -60,4 +60,16 @@ const ProcedureSchema = new Schema<IProcedure>(
 	},
 )
 
+ProcedureSchema.index(
+	{ unity_id: 1, name: 1, 'prof.value': 1, active: 1 },
+	{ unique: false },
+)
+
+ProcedureSchema.index(
+	{ unity_id: 1, 'health_insurance.value': 1, active: 1 },
+	{ unique: false },
+)
+
+ProcedureSchema.index({ unity_id: 1, minutes: 1, active: 1 }, { unique: false })
+
 export default Mongoose.model<IProcedure>('procedures', ProcedureSchema)

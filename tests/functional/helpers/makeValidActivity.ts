@@ -28,7 +28,7 @@ export const makeValidActivity = () => {
 					label: 'PARTICULAR',
 					price: 160,
 				},
-				status: 'PAGO',
+				status: 'paid',
 			},
 		],
 		client: {

@@ -41,7 +41,7 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 		if (!unity_id) return left(new UnitNotFoundError())
 
 		const numberOfTransactions = installments ? installments : 1
-		const value = divideCurrencyByInteger(transaction.value, numberOfTransactions)
+		const total = divideCurrencyByInteger(transaction.total, numberOfTransactions)
 
 		const group_by = activity_id || transaction.group_by || new Types.ObjectId()
 
@@ -52,7 +52,7 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 					activity_id: activity_id.toString(),
 					group_by: group_by.toString(),
 					unity_id,
-					value: value.toString() as any,
+					total: total.toString() as any,
 					installments: numberOfTransactions,
 				},
 				...rest,
@@ -67,7 +67,7 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 					...transaction,
 					group_by: group_by.toString(),
 					unity_id: unity_id.toString(),
-					value,
+					total,
 					installments: numberOfTransactions,
 					installmentCurrent: index + 1,
 					date,

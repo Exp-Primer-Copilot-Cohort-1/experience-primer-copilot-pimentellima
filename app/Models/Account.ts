@@ -90,6 +90,6 @@ const AccountSchema = new Schema<IAccount>(
 	},
 )
 
-AccountSchema.index({ unity_id: 1, name: 1, bank: 1 }, { unique: true })
+AccountSchema.index({ unity_id: 1, name: 1, bank: 1, active: 1 }, { unique: true })
 
 export default Mongoose.model<IAccount>('accounts', AccountSchema)

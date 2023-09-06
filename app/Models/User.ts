@@ -238,4 +238,6 @@ UserSchema.post('findOne', async function (doc) {
 	}
 })
 
+UserSchema.index({ unity_id: 1, email: 1, document: 1 }, { unique: true })
+
 export default Mongoose.model<IUser>('users', UserSchema)

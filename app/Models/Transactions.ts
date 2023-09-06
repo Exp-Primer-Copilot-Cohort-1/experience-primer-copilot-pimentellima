@@ -1,9 +1,9 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { ITransaction } from 'Types/ITransaction'
 
-const schemaDefault = (colection: string) => ({
+const schemaDefault = (collection: string) => ({
 	type: Schema.Types.ObjectId,
-	ref: colection,
+	ref: collection,
 	required: false,
 })
 
@@ -109,7 +109,7 @@ const TransactionsSchema = new Schema<ITransaction>(
 			},
 			_id: false,
 		},
-		value: {
+		total: {
 			type: Number,
 			required: true,
 		},
@@ -175,5 +175,13 @@ const TransactionsSchema = new Schema<ITransaction>(
 		},
 	},
 )
+
+TransactionsSchema.index(
+	{ unity_id: 1, date: 1, total: 1, type: 1, paid: 1, active: 1 },
+	{ unique: false },
+)
+TransactionsSchema.index({ unity_id: 1, occurrences: 1, active: 1 }, { unique: false })
+TransactionsSchema.index({ 'prof.value': 1, unity_id: 1 }, { unique: false })
+TransactionsSchema.index({ unity_id: 1, group_by: 1 }, { unique: false })
 
 export default Mongoose.model('transactions', TransactionsSchema)

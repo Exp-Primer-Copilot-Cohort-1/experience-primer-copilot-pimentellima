@@ -15,4 +15,6 @@ const CostCenterSchema = new Schema<ICostCenter>(
 	},
 )
 
+CostCenterSchema.index({ unity_id: 1, name: 1 }, { unique: true })
+
 export default Mongoose.model<ICostCenter>('cost_centers', CostCenterSchema)

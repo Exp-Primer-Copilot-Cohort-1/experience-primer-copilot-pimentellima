@@ -1,4 +1,4 @@
-import Moongose, { Schema } from '@ioc:Mongoose'
+import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IPartner } from 'Types/IPartner'
 
 const PartnerSchema = new Schema<IPartner>(
@@ -15,4 +15,6 @@ const PartnerSchema = new Schema<IPartner>(
 	},
 )
 
-export default Moongose.model<IPartner>('partners', PartnerSchema)
+PartnerSchema.index({ unity_id: 1, name: 1 }, { unique: true })
+
+export default Mongoose.model<IPartner>('partners', PartnerSchema)

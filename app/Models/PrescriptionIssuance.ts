@@ -1,5 +1,5 @@
-import Mongoose, { Schema } from "@ioc:Mongoose";
-import { IPrescriptionIssuance } from "Types/IPrescriptionIssuance";
+import Mongoose, { Schema } from '@ioc:Mongoose'
+import { IPrescriptionIssuance } from 'Types/IPrescriptionIssuance'
 
 const PrescriptionIssuance = new Schema<IPrescriptionIssuance>(
 	{
@@ -16,13 +16,15 @@ const PrescriptionIssuance = new Schema<IPrescriptionIssuance>(
 	},
 	{
 		timestamps: {
-			createdAt: "created_at",
-			updatedAt: "updated_at",
+			createdAt: 'created_at',
+			updatedAt: 'updated_at',
 		},
-	}
-);
+	},
+)
+
+PrescriptionIssuance.index({ unity_id: 1, 'client.value': 1 }, { unique: false })
 
 export default Mongoose.model<IPrescriptionIssuance>(
-	"prescriptionIssuances",
-	PrescriptionIssuance
-);
+	'prescription_issuances',
+	PrescriptionIssuance,
+)

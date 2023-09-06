@@ -1,5 +1,5 @@
-import Mongoose, { Schema } from "@ioc:Mongoose";
-import { IPaymentActivity } from "Types/ITransaction";
+import Mongoose, { Schema } from '@ioc:Mongoose'
+import { IPaymentActivity } from 'Types/ITransaction'
 
 const ActivityPaymentSchema = new Schema<IPaymentActivity>({
 	activityId: {
@@ -49,9 +49,6 @@ const ActivityPaymentSchema = new Schema<IPaymentActivity>({
 	description: {
 		type: String,
 	},
-});
+})
 
-export default Mongoose.model<IPaymentActivity>(
-	"activities",
-	ActivityPaymentSchema
-);
+export default Mongoose.model<IPaymentActivity>('activities', ActivityPaymentSchema)

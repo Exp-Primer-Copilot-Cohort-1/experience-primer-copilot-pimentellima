@@ -23,6 +23,12 @@ const HealthInsuranceSchema = new Schema<IHealthInsurance>(
 	},
 )
 
+HealthInsuranceSchema.index({ unity_id: 1, name: 1, active: 1 }, { unique: false })
+HealthInsuranceSchema.index(
+	{ unity_id: 1, 'profs.value': 1, active: 1 },
+	{ unique: false },
+)
+
 export default Mongoose.model<IHealthInsurance>(
 	'health_insurances',
 	HealthInsuranceSchema,

@@ -20,7 +20,14 @@ const MedicalCertificateSchema = new Schema<IMedicalCertificate>(
 	},
 )
 
+MedicalCertificateSchema.index({ unity_id: 1, name: 1, active: 1 }, { unique: false })
+
+MedicalCertificateSchema.index(
+	{ unity_id: 1, 'prof.value': 1, active: 1 },
+	{ unique: false },
+)
+
 export default Mongoose.model<IMedicalCertificate>(
-	'medical-certificate',
+	'medical_certificate',
 	MedicalCertificateSchema,
 )

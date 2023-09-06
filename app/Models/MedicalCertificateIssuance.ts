@@ -22,7 +22,10 @@ const MedicalCertificateIssuance = new Schema<IMedicalCertificateIssuance>(
 	},
 )
 
+MedicalCertificateIssuance.index({ unity_id: 1, date: 1 }, { unique: false })
+MedicalCertificateIssuance.index({ unity_id: 1, 'client.value': 1 }, { unique: false })
+
 export default Mongoose.model<IMedicalCertificateIssuance>(
-	'medicalCertificateIssuances',
+	'medical_certificate_issuances',
 	MedicalCertificateIssuance,
 )

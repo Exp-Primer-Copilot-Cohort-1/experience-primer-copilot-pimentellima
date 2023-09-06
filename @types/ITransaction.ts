@@ -51,7 +51,7 @@ export interface ITransaction {
 	}
 	paid?: boolean
 	unity_id: string | ObjectId
-	value: number
+	total: number
 	date: Date
 	paymentForm: string
 	description?: string

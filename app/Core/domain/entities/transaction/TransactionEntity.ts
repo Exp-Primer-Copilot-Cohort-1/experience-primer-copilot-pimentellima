@@ -17,7 +17,7 @@ export class TransactionEntity extends Entity implements ITransaction {
 	_cost_center: { value: string | Schema.Types.ObjectId; label: string }
 	_category: { value: string | Schema.Types.ObjectId; label: string }
 	_paid?: boolean
-	_value: number
+	_total: number
 	_date: Date
 	_paymentForm: string
 	_description?: string | undefined
@@ -59,8 +59,8 @@ export class TransactionEntity extends Entity implements ITransaction {
 		return this._paid
 	}
 
-	get value() {
-		return this._value
+	get total() {
+		return this._total
 	}
 
 	get date() {
@@ -139,8 +139,8 @@ export class TransactionEntity extends Entity implements ITransaction {
 		return this
 	}
 
-	defineValue(value: number) {
-		this._value = value
+	defineTotal(value: number) {
+		this._total = value
 		return this
 	}
 
@@ -240,7 +240,7 @@ export class TransactionEntity extends Entity implements ITransaction {
 					.defineCategory(values.category)
 					.defineGroupBy(values.activity_id || (values.group_by as string))
 					.defineDate(new Date(values.date))
-					.defineValue(values.value)
+					.defineTotal(values.total)
 					.defineUnityId(values.unity_id?.toString())
 					.definePaymentForm(values.paymentForm)
 					.definePaid(values.paid)

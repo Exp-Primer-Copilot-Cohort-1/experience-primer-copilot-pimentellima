@@ -59,4 +59,6 @@ LogSchema.pre(['updateOne', 'findOneAndUpdate'], function (next) {
 	next(new Error('This collection is read-only'))
 })
 
+LogSchema.index({ unity_id: 1, collection_id: 1 })
+
 export default Mongoose.model('logs', LogSchema)

@@ -221,10 +221,8 @@ ClientSchema.post('findOne', async function (doc) {
 	}
 })
 
-// celphone, name, birth_date, unity_id,
-ClientSchema.index({ name: 1, celphone: 1, unity_id: 1, birth_date: 1 }, { unique: true })
-
-// email, name, birth_date, unity_id,
-ClientSchema.index({ name: 1, email: 1, unity_id: 1, birth_date: 1 }, { unique: true })
+ClientSchema.index({ unity_id: 1, name: 1, celphone: 1, birth_date: 1 }, { unique: true })
+ClientSchema.index({ unity_id: 1, name: 1, email: 1, birth_date: 1 }, { unique: true })
+ClientSchema.index({ unity_id: 1, rg: 1, document: 1, active: 1 }, { unique: false })
 
 export default Mongoose.model<IUserClient>('clients', ClientSchema, 'clients')

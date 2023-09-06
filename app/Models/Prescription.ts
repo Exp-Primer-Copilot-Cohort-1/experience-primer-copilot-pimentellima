@@ -1,5 +1,5 @@
-import Mongoose, { Schema } from "@ioc:Mongoose";
-import { IPrescription } from "Types/IPrescription";
+import Mongoose, { Schema } from '@ioc:Mongoose'
+import { IPrescription } from 'Types/IPrescription'
 
 const PrescriptionSchema = new Schema<IPrescription>(
 	{
@@ -24,7 +24,7 @@ const PrescriptionSchema = new Schema<IPrescription>(
 		active: {
 			type: Boolean,
 			required: false,
-			default: true
+			default: true,
 		},
 		unity_id: {
 			type: Schema.Types.ObjectId,
@@ -33,14 +33,16 @@ const PrescriptionSchema = new Schema<IPrescription>(
 	},
 	{
 		timestamps: {
-			createdAt: "created_at",
-			updatedAt: "updated_at",
+			createdAt: 'created_at',
+			updatedAt: 'updated_at',
 		},
-	}
-);
+	},
+)
+
+PrescriptionSchema.index({ unity_id: 1, name: 1, 'prof.value': 1 }, { unique: false })
 
 export default Mongoose.model<IPrescription>(
-	"prescriptions",
+	'prescriptions',
 	PrescriptionSchema,
-	"prescriptions"
-);
+	'prescriptions',
+)

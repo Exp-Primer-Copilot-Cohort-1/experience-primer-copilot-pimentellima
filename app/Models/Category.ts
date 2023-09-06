@@ -35,4 +35,7 @@ const CategorySchema = new Schema<ICategory>(
 	},
 )
 
+CategorySchema.index({ unity_id: 1, name: 1 }, { unique: true })
+CategorySchema.index({ unity_id: 1, 'prof.value': 1 }, { unique: true })
+
 export default Mongoose.model<ICategory>('categories', CategorySchema)
