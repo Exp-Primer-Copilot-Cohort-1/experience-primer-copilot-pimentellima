@@ -1,4 +1,4 @@
-import LogDecorator from 'App/Core/decorators/log-decorator'
+import LogDecorator, { ACTION } from 'App/Core/decorators/log-decorator'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -12,7 +12,7 @@ type TypeParams = {
 export class UpdateAccountByIdUseCase implements UseCase<TypeParams, IAccount> {
 	constructor(private readonly accountManager: AccountManagerInterface) { }
 
-	@LogDecorator('accounts', 'put')
+	@LogDecorator('accounts', ACTION.PUT)
 	public async execute({
 		id,
 		...account

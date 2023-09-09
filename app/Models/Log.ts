@@ -52,6 +52,11 @@ const LogSchema = new Schema(
 			createdAt: 'created_at',
 			updatedAt: false,
 		},
+		// Default 256MB, define a capped collection que não cresce infinitamente, mas sim, deleta os dados
+		// mais antigos quando o limite é atingido
+		capped: {
+			size: 1024 * 1024 * 256, // 256MB
+		},
 	},
 )
 
@@ -59,6 +64,10 @@ LogSchema.pre(['updateOne', 'findOneAndUpdate'], function (next) {
 	next(new Error('This collection is read-only'))
 })
 
-LogSchema.index({ unity_id: 1, collection_id: 1 })
+LogSchema.index({ collection_id: 1, date: 1 })
 
-export default Mongoose.model('logs', LogSchema)
+const generateCollectionLog = async (unity_id: string) => {
+	return Mongoose.model(`logs_${unity_id}`, LogSchema)
+}
+
+export default generateCollectionLog
