@@ -41,14 +41,14 @@ class TransactionsController {
 	async update({ params, request, auth }: HttpContextContract) {
 		const userLogged = auth.user
 		if (!userLogged) throw Error()
-		const data = request.all() as Omit<ITransaction, 'value'> & {
-			value: string
+		const data = request.all() as Omit<ITransaction, 'total'> & {
+			total: string
 		}
 
 		const transactionOrErr = await TransactionEntity.build({
 			...data,
 			unity_id: userLogged.unity_id.toString(),
-			value: parseFloat(data.value?.toString()?.replace(',', '.')),
+			total: parseFloat(data.total?.toString()?.replace(',', '.')),
 		})
 
 		const transaction = await Transaction.updateMany(
