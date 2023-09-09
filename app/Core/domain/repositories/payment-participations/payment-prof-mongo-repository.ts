@@ -39,23 +39,6 @@ const generatePipeline = (match: any, active: boolean) => [
 	},
 ]
 
-function buildUpdateObject(updateFields: any): any {
-	return Object.entries(updateFields).reduce((updateObject: any, [key, value]) => {
-		if (value !== undefined) {
-			if (typeof value === 'object' && value !== null) {
-				for (const subKey in value) {
-					if (value[subKey] !== undefined) {
-						updateObject[`prices.$.${key}.${subKey}`] = value[subKey]
-					}
-				}
-			} else {
-				updateObject[`prices.$.${key}`] = value
-			}
-		}
-		return updateObject
-	}, {})
-}
-
 const createFilter = (participation: IPaymentProf) => ({
 	health_insurance: {
 		label: participation.health_insurance.label,
@@ -73,7 +56,7 @@ const createFilter = (participation: IPaymentProf) => ({
 export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 	constructor(private readonly opts: OptsQuery = OptsQuery.build()) { }
 
-	async createPaymentProf(
+	async createOrUpdatePaymentProf(
 		participation: IPaymentProf,
 	): PromiseEither<AbstractError, IPaymentProf> {
 		if (!participation) return left(new MissingParamsError('participation'))
@@ -83,11 +66,18 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 			unity_id: participation.unity_id,
 		}
 
-		let doc = await PaymentParticipations.findOne(filter)
-
-		if (!doc) {
-			doc = new PaymentParticipations(filter)
-		}
+		const doc = await PaymentParticipations.findOneAndUpdate(
+			filter,
+			{
+				$setOnInsert: {
+					prices: [],
+				},
+			},
+			{
+				upsert: true,
+				new: true,
+			},
+		)
 
 		for (let i = 0; i < doc.prices?.length; i++) {
 			doc.prices[i].active = false
@@ -110,49 +100,6 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 			_id: doc._id.toString(),
 			payment_participations_id: doc._id.toString(),
 		})
-	}
-
-	async updatePaymentProfById(
-		participation: IPaymentProf,
-		id: string,
-		prof_id: string,
-	): PromiseEither<AbstractError, IPaymentProf> {
-		if (!id || !prof_id) return left(new MissingParamsError('id or prof_id'))
-
-		const _id = new ObjectId(id.toString())
-		const set = buildUpdateObject(participation)
-
-		const updateOrErr = await PaymentParticipations.findOneAndUpdate(
-			{
-				_id: new ObjectId(prof_id.toString()),
-				'prices._id': _id,
-			},
-			{
-				$set: set,
-			},
-			{
-				new: true,
-				projection: {
-					prices: {
-						$elemMatch: { _id },
-					},
-				}, // isso fará com que a função retorne apenas o elemento atualizado do array
-			},
-		)
-
-		return right({
-			_id: updateOrErr?._id,
-			payment_participations_id: updateOrErr?._id,
-			value: updateOrErr?.prices[0].abs,
-			percent: updateOrErr?.prices[0].percent,
-			active: updateOrErr?.prices[0].active,
-			health_insurance: updateOrErr?.health_insurance,
-			procedure: updateOrErr?.procedure,
-			prof: updateOrErr?.prof,
-			date_start: updateOrErr?.prices[0].date_start,
-			date_end: updateOrErr?.prices[0].date_end,
-			unity_id: updateOrErr?.unity_id,
-		} as IPaymentProf)
 	}
 
 	async deletePaymentProfById(

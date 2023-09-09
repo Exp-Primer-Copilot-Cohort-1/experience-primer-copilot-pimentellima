@@ -3,13 +3,8 @@ import { PromiseEither } from 'App/Core/shared'
 import { IPaymentProf, ParticipationPrice } from 'Types/IPaymentProf'
 
 export interface PaymentProfManagerInterface {
-	createPaymentProf: (
+	createOrUpdatePaymentProf: (
 		paymentProf: IPaymentProf,
-	) => PromiseEither<AbstractError, IPaymentProf>
-	updatePaymentProfById: (
-		paymentProf: IPaymentProf,
-		id: string,
-		prof_id: string,
 	) => PromiseEither<AbstractError, IPaymentProf>
 	deletePaymentProfById: (id: string) => PromiseEither<AbstractError, IPaymentProf>
 	findPaymentProfById: (id: string) => PromiseEither<AbstractError, IPaymentProf[]>

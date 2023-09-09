@@ -329,7 +329,7 @@ Route.group(() => {
 		Route.delete('/:prof_id/:id', 'PaymentProfController.deletePaymentProfById').as(
 			'payments-prof.destroy',
 		)
-		Route.post('', 'PaymentProfController.createPaymentProf').as(
+		Route.post('', 'PaymentProfController.createOrUpdatePaymentProf').as(
 			'payments-prof.store',
 		)
 	}).prefix('payment-participations')

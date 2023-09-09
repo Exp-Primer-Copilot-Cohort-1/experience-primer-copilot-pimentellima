@@ -28,7 +28,7 @@ class PaymentProfController {
 		})
 	}
 
-	async createPaymentProf(ctx: HttpContextContract) {
+	async createOrUpdatePaymentProf(ctx: HttpContextContract) {
 		return adaptRoute(makeCreatePaymentProfComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})

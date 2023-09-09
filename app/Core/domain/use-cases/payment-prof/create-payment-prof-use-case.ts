@@ -12,7 +12,7 @@ export class CreatePaymentProfUseCase implements UseCase<IPaymentProf, IPaymentP
 	public async execute(
 		paymentProf: IPaymentProf,
 	): PromiseEither<AbstractError, IPaymentProf> {
-		const paymentProfOrErr = await this.paymentProfManager.createPaymentProf(
+		const paymentProfOrErr = await this.paymentProfManager.createOrUpdatePaymentProf(
 			paymentProf,
 		)
 
