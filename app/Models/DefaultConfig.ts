@@ -34,4 +34,8 @@ const DefaultConfigSchema = new Schema<IDefaultConfig>(
 	},
 )
 
-export default Mongoose.model<IDefaultConfig>('unities', DefaultConfigSchema)
+export default Mongoose.model<IDefaultConfig>(
+	'default_configs',
+	DefaultConfigSchema,
+	'unities',
+)
