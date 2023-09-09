@@ -167,15 +167,23 @@ Route.group(() => {
 	}).prefix('partners')
 
 	Route.group(() => {
-		Route.get('prof/:prof_id', 'FormController.findFormByProfId').as('form.prof.show')
-		Route.get('category/:category_id', 'FormController.findFormByCategoryId').as(
-			'form.category.show',
-		)
-		Route.post('', 'FormController.store').as('form.store')
-		Route.get('', 'FormController.index').as('form.index')
-		Route.get(':id', 'FormController.show').as('form.show')
-		Route.put(':id', 'FormController.update').as('form.update')
+		Route.get('', 'FormController.findAllForms')
+		Route.get('single/:id', 'FormController.findFormById')
+		Route.get('inactives', 'FormController.findAllInactiveForms')
+		Route.post('', 'FormController.createNewForm')
+		Route.put(':id', 'FormController.updateForm')
+		Route.put('status/:id', 'FormController.updateFormStatus')
 	}).prefix('forms')
+
+	Route.get('answer-log-by-form/:form_id', 'AdonnisLegadoController.bridge').as(
+		'logAnswer.byFormId',
+	)
+	Route.get('answer', 'AdonnisLegadoController.bridge')
+	Route.get('answer/:id', 'AdonnisLegadoController.bridge')
+	Route.get('answer-by-form/:form_id', 'AdonnisLegadoController.bridge')
+	Route.put('answer/:id', 'AdonnisLegadoController.bridge')
+	Route.delete('answer/:id', 'AdonnisLegadoController.bridge')
+	Route.post('answer', 'AdonnisLegadoController.bridge')
 
 	Route.group(() => {
 		Route.post('', 'AnswerController.createAnswer').as('answer.store')
