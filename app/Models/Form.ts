@@ -35,4 +35,6 @@ const FormSchema = new Schema<IForm>(
 	},
 )
 
+FormSchema.index({ unity_id: 1 }, { unique: false })
+
 export default Mongoose.model<IForm>('forms', FormSchema)

@@ -25,16 +25,6 @@ const DefaultConfigSchema = new Schema<IDefaultConfig>(
 			},
 			required: true,
 		},
-		active: {
-			type: Boolean,
-			required: true,
-		},
-		unity_id: {
-			type: Schema.Types.ObjectId,
-			required: true,
-			ref: 'unities',
-			unique: true,
-		},
 	},
 	{
 		timestamps: {
@@ -44,4 +34,4 @@ const DefaultConfigSchema = new Schema<IDefaultConfig>(
 	},
 )
 
-export default Mongoose.model<IDefaultConfig>('default_configs', DefaultConfigSchema)
+export default Mongoose.model<IDefaultConfig>('unities', DefaultConfigSchema)

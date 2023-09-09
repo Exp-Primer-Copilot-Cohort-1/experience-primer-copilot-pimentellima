@@ -182,6 +182,6 @@ TransactionsSchema.index(
 )
 TransactionsSchema.index({ unity_id: 1, occurrences: 1, active: 1 }, { unique: false })
 TransactionsSchema.index({ 'prof.value': 1, unity_id: 1 }, { unique: false })
-TransactionsSchema.index({ unity_id: 1, group_by: 1 }, { unique: false })
+TransactionsSchema.index({ group_by: 1, unity_id: 1 }, { unique: false })
 
 export default Mongoose.model('transactions', TransactionsSchema)

@@ -39,7 +39,7 @@ const PrescriptionSchema = new Schema<IPrescription>(
 	},
 )
 
-PrescriptionSchema.index({ unity_id: 1, name: 1, 'prof.value': 1 }, { unique: false })
+PrescriptionSchema.index({ unity_id: 1, 'prof.value': 1 }, { unique: false })
 
 export default Mongoose.model<IPrescription>(
 	'prescriptions',
