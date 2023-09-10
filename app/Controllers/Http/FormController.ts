@@ -1,48 +1,52 @@
-'use strict'
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { adaptRoute } from 'App/Core/adapters'
-import { makeCreateFormComposer } from 'App/Core/composers/form/make-create-form-composer'
-import { makeDeleteFormByIdComposer } from 'App/Core/composers/form/make-delete-form-by-id-composer'
-import { makeFindAllFormsComposer } from 'App/Core/composers/form/make-find-all-forms-composer'
-import { makeFindFormByCategoryIdComposer } from 'App/Core/composers/form/make-find-form-by-category-id-composer'
-import { makeFindFormByIdComposer } from 'App/Core/composers/form/make-find-form-by-id-composer'
-import { makeFindFormByProfIdComposer } from 'App/Core/composers/form/make-find-form-by-prof-id-composer'
-import { makeUpdateFormComposer } from 'App/Core/composers/form/make-update-form-composer'
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+;('use strict')
+
+import Form from 'App/Models/Form'
 
 class FormController {
-	async index(ctx: HttpContextContract) {
-		return adaptRoute(makeFindAllFormsComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
+	async findAllForms(ctx: HttpContextContract) {
+		const user = ctx.auth.user
+		const forms = await Form.find({ unity_id: user?.unity_id, active: true })
+		return forms
+	}
+
+	async findFormById(ctx: HttpContextContract) {
+		const form = await Form.findById(ctx.params.id)
+		return form
+	}
+
+	async findAllInactiveForms(ctx: HttpContextContract) {
+		const user = ctx.auth.user
+		const forms = await Form.find({ unity_id: user?.unity_id, active: false })
+		return forms
+	}
+
+	async createNewForm(ctx: HttpContextContract) {
+		const user = ctx.auth.user
+		const data = ctx.request.all()
+		const newForm = await Form.create({...data, unity_id: user?.unity_id})
+		return newForm
+	}
+
+	async updateForm(ctx: HttpContextContract) {
+		const id = ctx.params.id
+		const data = ctx.request.all()
+
+		const form = await Form.findByIdAndUpdate(id, data)
+		return form
+	}
+
+	async updateFormStatus(ctx: HttpContextContract) {
+		const { active } = ctx.request.only(['active'])
+		const id = ctx.params.id
+
+		const form = await Form.findByIdAndUpdate(id, {
+			$set: {
+				active,
+			},
+			new: true,
 		})
-	}
-
-	async show(ctx: HttpContextContract) {
-		return adaptRoute(makeFindFormByIdComposer(), ctx)
-	}
-
-	async findFormByProfId(ctx: HttpContextContract) {
-		return adaptRoute(makeFindFormByProfIdComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
-	}
-
-	async findFormByCategoryId(ctx: HttpContextContract) {
-		return adaptRoute(makeFindFormByCategoryIdComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
-	}
-
-	async store(ctx: HttpContextContract) {
-		return adaptRoute(makeCreateFormComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
-	}
-	async update(ctx: HttpContextContract) {
-		return adaptRoute(makeUpdateFormComposer(), ctx)
-	}
-
-	async deleteFormById(ctx: HttpContextContract) {
-		return adaptRoute(makeDeleteFormByIdComposer(), ctx)
+		return form
 	}
 }
 

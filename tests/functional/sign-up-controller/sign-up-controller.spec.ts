@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { faker } from '@faker-js/faker'
 import { test } from '@japa/runner'
+import Unity from 'App/Models/Unity'
 import User from 'App/Models/User'
 import { assert } from 'chai'
 
-import { cnpj, cpf } from 'cpf-cnpj-validator'
+import { cpf } from 'cpf-cnpj-validator'
 
 const user = {
 	is_company: false,
-	unity_id: '63528c11c109b232759921d1',
-	name: faker.name.fullName(),
+	unity_id: '64d828295238c3cfba24cb92',
+	name: faker.person.fullName(),
 	date_expiration: faker.date.future().toISOString(),
 	password: '@As12340056',
 	email: faker.internet.email(),
@@ -18,16 +19,9 @@ const user = {
 	type: 'admin_prof',
 }
 
-const unity = {
-	name: faker.name.fullName(),
-	email: faker.internet.email(),
-	document: cnpj.generate(),
-	is_company: true,
-	date_expiration: faker.date.future().toISOString(),
-}
-
 test.group('Sign Up User Controller', () => {
 	test('display store user', async ({ client }) => {
+		user.unity_id = await Unity.findOne({}, { _id: 1 })
 		const response = await client.post('user').json(user)
 		response.assertStatus(200)
 

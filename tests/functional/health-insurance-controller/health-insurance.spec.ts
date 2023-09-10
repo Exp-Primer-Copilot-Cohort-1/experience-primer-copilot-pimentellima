@@ -7,7 +7,7 @@ import { loginAndGetToken } from '../helpers/login'
 const healthInsurance = (unity_id) => ({
 	name: faker.person.firstName(),
 	register_code: faker.string.numeric(),
-	carence: faker.string.numeric(),
+	carence: Number(faker.string.numeric()),
 	unity_id: unity_id,
 	profs: [],
 })
@@ -105,9 +105,11 @@ test.group('Health Insurance Controller', () => {
 		const data = response.body()
 		assert.exists(data._id)
 
-		const { deletedCount } = await HealthInsurance.deleteOne({ _id: data._id })
+		const { deletedCount } = await HealthInsurance.deleteMany({
+			carence: data.carence,
+		})
 
-		assert.equal(deletedCount, 1)
+		assert.equal(deletedCount, 2)
 	})
 	test('display delete health insurance', async ({ client }) => {
 		const { token, user } = await loginAndGetToken(client)
@@ -120,7 +122,7 @@ test.group('Health Insurance Controller', () => {
 		})
 
 		const response = await client
-			.delete(`health-insurances/${healthInsurance._id}`)
+			.delete(`health-insurance/${healthInsurance._id}`)
 			.bearerToken(token.token)
 			.send()
 
