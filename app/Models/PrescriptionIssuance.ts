@@ -12,7 +12,7 @@ const PrescriptionIssuance = new Schema<IPrescriptionIssuance>(
 			text: { type: String, required: true },
 		},
 		date: { type: Date, required: true },
-		unity_id: { type: String, required: true },
+		unity_id: { type: Schema.Types.ObjectId, required: true },
 	},
 	{
 		timestamps: {

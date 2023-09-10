@@ -2,6 +2,7 @@
 
 import { encrypt } from 'App/Helpers/encrypt'
 import generateLog from 'App/Models/Log'
+import { AbstractError } from '../errors/error.interface'
 import { Either } from '../shared'
 
 const documents = ['rg', 'document', 'cnh', 'titulo_eleitor', 'passaporte']
@@ -124,7 +125,10 @@ export default function LogDecorator(collectionName: string, action: ACTION) {
 			}
 
 			const date = new Date().toLocaleString() // Pega a data atual
-			const result: Either<any, any> = await originalMethod.apply(this, args) // Executa o método original
+			const result: Either<AbstractError, any> = await originalMethod.apply(
+				this,
+				args,
+			) // Executa o método original
 
 			// Se o método original retornar um erro, não registre o log
 			if (result.isLeft()) {
@@ -133,26 +137,16 @@ export default function LogDecorator(collectionName: string, action: ACTION) {
 
 			const value = result.extract()
 
-			const [before, after] = deepCompare(props, value) // Compara o item que está sendo criado/editado com o item do banco de dados
+			// Compara o item que está sendo criado/editado com o item do banco de dados
+			// não há necessidade de comparar um item criado.
+			const [before, after] =
+				action === ACTION.POST ? ['criado', 'criado'] : deepCompare(props, value)
 
 			// Busca o id do item que está sendo criado/editado
 			const collection_id =
-				value.participation_id?.toString() || value._id?.toString() || value._id
-
-			// Reduzir o tamanho do log para action === 'post', pois o after é o objeto inteiro, sendo redundante
-			if (action === ACTION.POST) {
-				await Log.create({
-					action,
-					collection_name: collectionName,
-					date,
-					after: 'Criado',
-					before: 'Criado',
-					user,
-					collection_id,
-					unity_id: unity_id.toString(),
-				})
-				return result
-			}
+				value?.participation_id?.toString() ||
+				value?._id?.toString() ||
+				value?._id
 
 			await Log.create({
 				action,
