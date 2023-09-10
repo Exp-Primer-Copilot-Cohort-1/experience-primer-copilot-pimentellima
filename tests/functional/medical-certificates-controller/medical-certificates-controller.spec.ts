@@ -1,8 +1,7 @@
 import { test } from '@japa/runner'
 import MedicalCertificate from 'App/Models/MedicalCertificate'
-import { assert } from 'chai'
+import { assert, expect } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
-
 const data = {
 	name: 'test',
 	unity_id: '63528c11c109b232759921d1',
@@ -17,26 +16,26 @@ test.group('Direct Mail Controller', async () => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.get('direct-mails?name=myUnity')
+			.get('medical-certificate?name=myUnity')
 			.headers({ Authorization: `Bearer ${token.token}` })
 		response.assertStatus(200)
 		assert.isArray(response.body())
-	}).skip()
+	})
 	test('display store medicalCertificate', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const response = await client
-			.post('direct-mails')
+			.post('medical-certificate')
 			.json({
 				...data,
 			})
 			.bearerToken(token.token)
 		response.assertStatus(200)
 
-		const { deletedCount } = await MedicalCertificate.deleteOne({
-			_id: response.body()._id,
+		const { deletedCount } = await MedicalCertificate.deleteMany({
+			'prof.value': response.body().prof.value,
 		})
-		assert.equal(deletedCount, 1)
-	}).skip()
+		expect(deletedCount).to.be.greaterThan(0)
+	})
 	test('display destroy medicalCertificate', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const medicalCertificate = await MedicalCertificate.create({
@@ -44,10 +43,10 @@ test.group('Direct Mail Controller', async () => {
 			active: true,
 		})
 		const response = await client
-			.delete(`direct-mails/${medicalCertificate._id}`)
+			.delete(`medical-certificate/${medicalCertificate._id}`)
 			.bearerToken(token.token)
 		response.assertStatus(200)
-	}).skip()
+	})
 	test('display show medicalCertificate', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const medicalCertificate = await MedicalCertificate.create({
@@ -57,14 +56,14 @@ test.group('Direct Mail Controller', async () => {
 		})
 
 		const response = await client
-			.get('direct-mails/' + medicalCertificate._id)
+			.get('medical-certificate/' + medicalCertificate._id)
 			.bearerToken(token.token)
 		response.assertStatus(200)
 		const { deletedCount } = await MedicalCertificate.deleteMany({
 			name: response.body().name,
 		})
-		assert.equal(deletedCount, 1)
-	}).skip()
+		expect(deletedCount).to.be.greaterThan(0)
+	})
 	test('display update medicalCertificate', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const medicalCertificate = await MedicalCertificate.create({
@@ -77,7 +76,7 @@ test.group('Direct Mail Controller', async () => {
 			name: 'Atualizado',
 		}
 		const response = await client
-			.put(`direct-mails/${medicalCertificate._id}`)
+			.put(`medical-certificate/${medicalCertificate._id}`)
 			.json({ ...updatedData })
 			.bearerToken(token.token)
 		response.assertStatus(200)

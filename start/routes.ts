@@ -322,7 +322,7 @@ Route.group(() => {
 		Route.post('', 'MedicalCertificateController.store').as(
 			'medicalCertificate.store',
 		)
-	}).prefix('direct-mails')
+	}).prefix('medical-certificate')
 
 	Route.group(() => {
 		Route.get('', 'PaymentProfController.findAllPaymentProfs').as(

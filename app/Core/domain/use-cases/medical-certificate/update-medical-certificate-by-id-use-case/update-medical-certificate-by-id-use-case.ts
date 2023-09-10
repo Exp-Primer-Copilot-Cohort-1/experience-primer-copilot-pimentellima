@@ -2,7 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 
-import LogDecorator from 'App/Core/decorators/log-decorator'
+import LogDecorator, { ACTION } from 'App/Core/decorators/log-decorator'
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { IMedicalCertificate } from 'Types/IMedicalCertificate'
 import { MedicalCertificateManagerInterface } from '../../../repositories/interface'
@@ -14,7 +14,7 @@ export class UpdateMedicalCertificateByIdUseCase
 		private readonly medicalCertificateManager: MedicalCertificateManagerInterface,
 	) { }
 
-	@LogDecorator('medical-certificates', 'put')
+	@LogDecorator('medical_certificates', ACTION.PUT)
 	public async execute(
 		medicalCertificate: Partial<IMedicalCertificate>,
 	): PromiseEither<AbstractError, IMedicalCertificate> {
@@ -23,7 +23,7 @@ export class UpdateMedicalCertificateByIdUseCase
 		}
 		const medicalCertificateOrErr =
 			await this.medicalCertificateManager.updateMedicalCertificateById(
-				medicalCertificate._id,
+				medicalCertificate._id.toString(),
 				medicalCertificate,
 			)
 
