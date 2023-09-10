@@ -2,7 +2,12 @@ import Mongoose, { Schema } from '@ioc:Mongoose'
 import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
 import type { IActivity } from 'Types/IActivity'
 
-const ActivitySchema = new Schema<IActivity>(
+interface IActivityModel extends Omit<IActivity, 'prof' | 'client'> {
+	prof: Schema.Types.ObjectId
+	client: Schema.Types.ObjectId
+}
+
+const ActivitySchema = new Schema<IActivityModel>(
 	{
 		date: {
 			type: Date,
@@ -22,8 +27,9 @@ const ActivitySchema = new Schema<IActivity>(
 		procedures: [
 			{
 				value: {
-					type: String,
+					type: Schema.Types.ObjectId,
 					required: true,
+					ref: 'procedures',
 				},
 				label: {
 					type: String,
@@ -43,8 +49,9 @@ const ActivitySchema = new Schema<IActivity>(
 				},
 				health_insurance: {
 					value: {
-						type: String,
+						type: Schema.Types.ObjectId,
 						required: false,
+						ref: 'health_insurances',
 					},
 					label: {
 						type: String,
@@ -55,59 +62,29 @@ const ActivitySchema = new Schema<IActivity>(
 						required: false,
 					},
 				},
+				_id: false,
 			},
 		],
 		payment: {
 			required: false,
+			type: {
+				cost_center: Schema.Types.ObjectId,
+				category: Schema.Types.ObjectId,
+				bank: Schema.Types.ObjectId,
+				price: Number,
+				date: Date,
+				description: String,
+				paymentForm: String,
+				installment: Boolean,
+				installments: Number,
+			},
 			default: {},
+			_id: false,
 		},
 		client: {
-			value: {
-				type: String,
-				required: true,
-			},
-			label: {
-				type: String,
-				required: true,
-			},
-			celphone: {
-				type: String,
-				required: false,
-				default: null,
-			},
-			email: {
-				type: String,
-				required: false,
-				default: null,
-			},
-			partner: {
-				type: new Schema(
-					{
-						value: {
-							type: String,
-							validate: {
-								validator: function (v) {
-									return !this.partner || (v && this.partner?.label)
-								},
-								message: (props) =>
-									'Se "partner" é fornecido, "value" e "label" devem ser fornecidos!',
-							},
-						},
-						label: {
-							type: String,
-							validate: {
-								validator: function (v) {
-									return !this.partner || (v && this.partner.value)
-								},
-								message: (props) =>
-									'Se "partner" é fornecido, "value" e "label" devem ser fornecidos!',
-							},
-						},
-					},
-					{ _id: false },
-				), // {_id: false} evita que o Mongoose crie um ID automático para o subdocumento
-				required: false,
-			},
+			type: Schema.Types.ObjectId,
+			required: true,
+			ref: 'clients',
 		},
 		obs: {
 			type: String,
@@ -115,14 +92,9 @@ const ActivitySchema = new Schema<IActivity>(
 			default: null,
 		},
 		prof: {
-			value: {
-				type: String,
-				required: true,
-			},
-			label: {
-				type: String,
-				required: true,
-			},
+			type: Schema.Types.ObjectId,
+			required: true,
+			ref: 'users',
 		},
 		active: {
 			type: Boolean,
@@ -132,16 +104,13 @@ const ActivitySchema = new Schema<IActivity>(
 		unity_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
+			ref: 'unities',
 		},
 		scheduled: {
 			type: String,
 			required: true,
 			enum: Object.values(AppointmentStatus),
 			default: AppointmentStatus.SCHEDULED,
-		},
-		prof_id: {
-			type: Schema.Types.ObjectId,
-			required: true,
 		},
 		started_at: {
 			type: Date,
@@ -165,12 +134,8 @@ const ActivitySchema = new Schema<IActivity>(
 	},
 )
 
-ActivitySchema.pre('find', function () {
-	this.where({ $in: ['marked', undefined] })
-})
-
 ActivitySchema.index({ 'prof.value': 1 }, { unique: false })
 ActivitySchema.index({ 'client.value': 1 }, { unique: false })
 ActivitySchema.index({ unity_id: 1, scheduled: 1, date: 1, type: 1 }, { unique: false })
 
-export default Mongoose.model<IActivity>('activities', ActivitySchema, 'activities')
+export default Mongoose.model<IActivityModel>('activities', ActivitySchema, 'activities')

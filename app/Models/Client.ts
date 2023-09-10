@@ -2,11 +2,9 @@ import Mongoose, { Schema } from '@ioc:Mongoose'
 import { decrypt, encrypt } from 'App/Helpers/encrypt'
 import type { IUserClient } from 'Types/IClient'
 
-const schemaDefault = (colection: string) => ({
-	type: Schema.Types.ObjectId,
-	ref: colection,
-	required: false,
-})
+interface IUserClientModel extends Omit<IUserClient, 'prof'> {
+	partners: Schema.Types.ObjectId
+}
 
 /**
  * @swagger
@@ -139,11 +137,9 @@ const ClientSchema = new Schema<IUserClient>(
 			default: true,
 		},
 		partner: {
-			value: schemaDefault('partners'),
-			label: {
-				type: String,
-				required: false,
-			},
+			type: Schema.Types.ObjectId,
+			ref: 'partners',
+			required: false,
 		},
 		due_date: {
 			type: Date,
@@ -225,4 +221,4 @@ ClientSchema.index({ unity_id: 1, name: 1, celphone: 1, birth_date: 1 }, { uniqu
 ClientSchema.index({ unity_id: 1, name: 1, email: 1, birth_date: 1 }, { unique: true })
 ClientSchema.index({ unity_id: 1, rg: 1, document: 1, active: 1 }, { unique: false })
 
-export default Mongoose.model<IUserClient>('clients', ClientSchema, 'clients')
+export default Mongoose.model<IUserClientModel>('clients', ClientSchema, 'clients')

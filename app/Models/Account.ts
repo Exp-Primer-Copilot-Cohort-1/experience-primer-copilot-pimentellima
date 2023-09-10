@@ -79,7 +79,7 @@ const AccountSchema = new Schema<IAccount>(
 		description: String,
 		user_id: {
 			type: Schema.Types.ObjectId,
-			ref: 'User',
+			ref: 'users',
 		},
 	},
 	{

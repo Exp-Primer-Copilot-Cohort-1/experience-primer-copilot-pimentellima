@@ -114,4 +114,4 @@ UnitySchema.index(
 	{ unique: true },
 )
 
-export default Mongoose.model<IUnity>('unities', UnitySchema)
+export default Mongoose.model<IUnity>('unities', UnitySchema, 'unities')

@@ -2,7 +2,11 @@ import Mongoose, { Schema } from '@ioc:Mongoose'
 import { PaymentStatus } from 'App/Helpers'
 import { IActivityPending } from 'Types/IActivity'
 
-const ActivityPendingSchema = new Schema<IActivityPending>(
+interface IActivityPendingModel extends Omit<IActivityPending, 'prof' | 'client'> {
+	prof: Schema.Types.ObjectId
+	client: Schema.Types.ObjectId
+}
+const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 	{
 		group_id: {
 			type: String,
@@ -17,7 +21,7 @@ const ActivityPendingSchema = new Schema<IActivityPending>(
 		procedures: [
 			{
 				value: {
-					type: String,
+					type: Schema.Types.ObjectId,
 					required: true,
 				},
 				label: {
@@ -38,7 +42,7 @@ const ActivityPendingSchema = new Schema<IActivityPending>(
 				},
 				health_insurance: {
 					value: {
-						type: String,
+						type: Schema.Types.ObjectId,
 						required: false,
 					},
 					label: {
@@ -57,52 +61,8 @@ const ActivityPendingSchema = new Schema<IActivityPending>(
 			default: {},
 		},
 		client: {
-			value: {
-				type: String,
-				required: true,
-			},
-			label: {
-				type: String,
-				required: true,
-			},
-			celphone: {
-				type: String,
-				required: false,
-				default: null,
-			},
-			email: {
-				type: String,
-				required: false,
-				default: null,
-			},
-			partner: {
-				type: new Schema(
-					{
-						value: {
-							type: String,
-							validate: {
-								validator: function (v) {
-									return !this.partner || (v && this.partner?.label)
-								},
-								message: (props) =>
-									'Se "partner" é fornecido, "value" e "label" devem ser fornecidos!',
-							},
-						},
-						label: {
-							type: String,
-							validate: {
-								validator: function (v) {
-									return !this.partner || (v && this.partner.value)
-								},
-								message: (props) =>
-									'Se "partner" é fornecido, "value" e "label" devem ser fornecidos!',
-							},
-						},
-					},
-					{ _id: false },
-				), // {_id: false} evita que o Mongoose crie um ID automático para o subdocumento
-				required: false,
-			},
+			type: Schema.Types.ObjectId,
+			required: true,
 		},
 		obs: {
 			type: String,
@@ -110,14 +70,8 @@ const ActivityPendingSchema = new Schema<IActivityPending>(
 			default: null,
 		},
 		prof: {
-			value: {
-				type: String,
-				required: true,
-			},
-			label: {
-				type: String,
-				required: true,
-			},
+			type: Schema.Types.ObjectId,
+			required: true,
 		},
 		active: {
 			type: Boolean,
@@ -125,11 +79,6 @@ const ActivityPendingSchema = new Schema<IActivityPending>(
 			default: true,
 		},
 		unity_id: {
-			type: Schema.Types.ObjectId,
-			required: true,
-		},
-
-		prof_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
 		},
@@ -147,7 +96,7 @@ const ActivityPendingSchema = new Schema<IActivityPending>(
 	},
 )
 
-export default Mongoose.model<IActivityPending>(
+export default Mongoose.model<IActivityPendingModel>(
 	'activities_pending',
 	ActivityPendingSchema,
 	'activities',

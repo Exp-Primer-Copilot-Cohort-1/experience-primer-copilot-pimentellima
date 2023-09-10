@@ -16,16 +16,8 @@ export class AccountMongoRepository implements AccountManagerInterface {
 		if (!unity_id) return left(new MissingParamsError('unity id'))
 
 		const data = await Account.find({ unity_id })
-		const accounts = await Promise.all(
-			data.map(async (item) => {
-				const accountOrErr = await AccountEntity.build(item.toObject())
-				if (accountOrErr.isLeft()) {
-					return {} as AccountEntity
-				}
-				return accountOrErr.extract().params()
-			}),
-		)
-		return right(accounts)
+
+		return right(data)
 	}
 
 	async createAccount(account: IAccount): PromiseEither<AbstractError, AccountEntity> {

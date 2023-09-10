@@ -1,13 +1,16 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { PaymentStatus } from 'App/Helpers'
 import { IActivityAwait } from 'Types/IActivity'
-
-const ActivityAwaitSchema = new Schema<IActivityAwait>(
+interface IActivityAwaitModel extends Omit<IActivityAwait, 'prof' | 'client'> {
+	prof: Schema.Types.ObjectId
+	client: Schema.Types.ObjectId
+}
+const ActivityAwaitSchema = new Schema<IActivityAwaitModel>(
 	{
 		procedures: [
 			{
 				value: {
-					type: String,
+					type: Schema.Types.ObjectId,
 					required: true,
 				},
 				label: {
@@ -28,7 +31,7 @@ const ActivityAwaitSchema = new Schema<IActivityAwait>(
 				},
 				health_insurance: {
 					value: {
-						type: String,
+						type: Schema.Types.ObjectId,
 						required: false,
 					},
 					label: {
@@ -49,52 +52,8 @@ const ActivityAwaitSchema = new Schema<IActivityAwait>(
 			},
 		],
 		client: {
-			value: {
-				type: String,
-				required: true,
-			},
-			label: {
-				type: String,
-				required: true,
-			},
-			celphone: {
-				type: String,
-				required: false,
-				default: null,
-			},
-			email: {
-				type: String,
-				required: false,
-				default: null,
-			},
-			partner: {
-				type: new Schema(
-					{
-						value: {
-							type: String,
-							validate: {
-								validator: function (v) {
-									return !this.partner || (v && this.partner?.label)
-								},
-								message: (props) =>
-									'Se "partner" é fornecido, "value" e "label" devem ser fornecidos!',
-							},
-						},
-						label: {
-							type: String,
-							validate: {
-								validator: function (v) {
-									return !this.partner || (v && this.partner.value)
-								},
-								message: (props) =>
-									'Se "partner" é fornecido, "value" e "label" devem ser fornecidos!',
-							},
-						},
-					},
-					{ _id: false },
-				), // {_id: false} evita que o Mongoose crie um ID automático para o subdocumento
-				required: false,
-			},
+			type: Schema.Types.ObjectId,
+			required: true,
 		},
 		obs: {
 			type: String,
@@ -102,14 +61,8 @@ const ActivityAwaitSchema = new Schema<IActivityAwait>(
 			default: null,
 		},
 		prof: {
-			value: {
-				type: String,
-				required: true,
-			},
-			label: {
-				type: String,
-				required: true,
-			},
+			type: Schema.Types.ObjectId,
+			required: true,
 		},
 		active: {
 			type: Boolean,
@@ -117,10 +70,6 @@ const ActivityAwaitSchema = new Schema<IActivityAwait>(
 			default: true,
 		},
 		unity_id: {
-			type: Schema.Types.ObjectId,
-			required: true,
-		},
-		prof_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
 		},
@@ -138,7 +87,7 @@ const ActivityAwaitSchema = new Schema<IActivityAwait>(
 	},
 )
 
-export default Mongoose.model<IActivityAwait>(
+export default Mongoose.model<IActivityAwaitModel>(
 	'activity_awaits',
 	ActivityAwaitSchema,
 	'activities',

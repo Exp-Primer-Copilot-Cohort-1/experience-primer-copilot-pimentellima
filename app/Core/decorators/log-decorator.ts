@@ -146,7 +146,7 @@ export default function LogDecorator(collectionName: string, action: ACTION) {
 			const collection_id =
 				value?.participation_id?.toString() ||
 				value?._id?.toString() ||
-				value?._id
+				id?.toString()
 
 			await Log.create({
 				action,

@@ -23,7 +23,10 @@ export interface IUserClient extends Partial<IAddress> {
 	email: string
 	unity_id: ObjectId | string
 	active?: boolean
-	partner?: string
+	partner?: {
+		value: string
+		label: string
+	}
 	due_date?: Date
 	created_at?: Date
 	updated_at?: Date
@@ -34,5 +37,8 @@ export interface IClient {
 	label: string
 	celphone?: string
 	email?: string
-	partner?: string
+	partner?: {
+		value: string
+		label: string
+	}
 }

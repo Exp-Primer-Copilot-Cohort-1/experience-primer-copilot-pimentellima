@@ -2,43 +2,70 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Category from 'App/Models/Category'
 import { ICategory } from 'Types/ICategory'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
 import { CategoriesManagerInterface } from '../interface'
 
 export class CategoriesMongooseRepository implements CategoriesManagerInterface {
+	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor() { }
 
 	async findById(id: string): PromiseEither<AbstractError, ICategory> {
-		const categories = await Category.findById(id)
+		const categories = await Category.findById(id).populate('prof', {
+			_id: 0,
+			label: '$name',
+			value: '$_id',
+		})
+
 		if (!categories) {
-			return left(new UnitNotFoundError())
+			return left(new AbstractError('Categoria não encontrada', 404))
 		}
-		return right(categories)
+		return right(categories as unknown as ICategory)
 	}
 	async findByUnityId(unity_id: string): PromiseEither<AbstractError, ICategory[]> {
-		const categories = await Category.find({ unity_id: unity_id, active: true })
-		if (!categories) {
-			return left(new UnitNotFoundError())
-		}
-		return right(categories)
+		const categories = await Category.find({
+			unity_id: unity_id,
+			active: true,
+		}).populate('prof', {
+			_id: 0,
+			label: '$name',
+			value: '$_id',
+		})
+
+		return right(categories as unknown as ICategory[])
 	}
 	async deleteCategoriesById(id: string): PromiseEither<AbstractError, ICategory> {
 		const category = await Category.findByIdAndDelete(id).orFail()
 
-		return right(category)
+		return right(category as unknown as ICategory)
 	}
+	// o _id precisa ser removido para que o mongoose possa criar o id automaticamente e o
+	// prof precisa ser convertido para o formato que o mongoose espera
+	// o _id precisa ser extraído para que o mongoose retorne o id no formato que o decorators de logs espera
 	public async createCategory({
-		_id,
+		_id, // eslint-disable-line @typescript-eslint/no-unused-vars
 		...data
-	}): PromiseEither<AbstractError, ICategory> {
-		const categories = await Category.create(data)
-		return right(categories.toObject())
+	}: Partial<ICategory>): PromiseEither<AbstractError, ICategory> {
+		const category = await (
+			await Category.create({
+				...data,
+				prof: data.prof?.value,
+			})
+		).populate('prof', {
+			_id: 0,
+			label: '$name',
+			value: '$_id',
+		})
+
+		return right(category.toObject() as unknown as ICategory)
 	}
 	public async updateCategoriesById(
 		data: Partial<ICategory>,
 		id: string,
 	): PromiseEither<AbstractError, ICategory> {
-		const categories = await Category.findByIdAndUpdate(id, data)
+		const categories = await Category.findByIdAndUpdate(id, data).populate('prof', {
+			_id: 0,
+			label: '$name',
+			value: '$_id',
+		})
 
 		if (!categories) {
 			return left(new AbstractError('Categoria não encontrada', 404))

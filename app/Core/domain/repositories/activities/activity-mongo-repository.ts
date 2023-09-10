@@ -2,12 +2,10 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
 import Activity from 'App/Models/Activity'
-import ActivityAwait from 'App/Models/ActivityAwait'
 import ActivityPending from 'App/Models/ActivityPending'
 import {
 	ActivityValues,
 	IActivity,
-	IActivityAwait,
 	IActivityPending,
 	RecurrentActivityValues,
 } from 'Types/IActivity'
@@ -18,34 +16,63 @@ import { ActivityPaymentEntity } from '../../entities/activity-payment/ActivityP
 import ActivityPendingEntity from '../../entities/activity-pending'
 import { ActivityNotFoundError } from '../../errors/activity-not-found'
 import { MissingParamsError } from '../../errors/missing-params'
+import { UnitNotFoundError } from '../../errors/unit-not-found'
 import { ActivitiesManagerInterface } from '../interface/activity-manager.interface'
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor() { }
 
 	async findAllActivities(unity_id: string): PromiseEither<AbstractError, IActivity[]> {
-		if (!unity_id) return left(new MissingParamsError('unity id'))
+		if (!unity_id) return left(new UnitNotFoundError())
 
 		const activities = await Activity.find({
 			unity_id,
-			type: 'marked' || undefined,
+			type: 'marked',
 		})
-		return right(activities)
+			.populate('client', {
+				_id: 0,
+				label: '$name',
+				value: '$_id',
+				celphone: 1,
+				email: 1,
+			})
+			.populate('prof', {
+				_id: 0,
+				label: '$name',
+				value: '$_id',
+			})
+			.sort({ date: -1 })
+
+		return right(activities as unknown as IActivity[])
 	}
 
 	async findActivitiesByProf(
 		unity_id: string,
 		prof_id: string,
 	): PromiseEither<AbstractError, IActivity[]> {
-		if (!unity_id) return left(new MissingParamsError('unity id'))
-		if (!prof_id) return left(new MissingParamsError('prof id'))
+		if (!unity_id) return left(new UnitNotFoundError())
+		if (!prof_id) return left(new MissingParamsError('O prof_id é obrigatório'))
 
 		const activities = await Activity.find({
 			unity_id,
-			'prof.value': prof_id,
-			type: 'marked' || undefined,
+			prof: prof_id,
+			type: 'marked',
 		})
-		return right(activities)
+			.populate('client', {
+				_id: 0,
+				label: '$name',
+				value: '$_id',
+				celphone: 1,
+				email: 1,
+			})
+			.populate('prof', {
+				_id: 0,
+				label: '$name',
+				value: '$_id',
+			})
+			.sort({ date: -1 })
+
+		return right(activities as unknown as IActivity[])
 	}
 
 	async findActivitiesByClient(
@@ -57,11 +84,24 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 		const activities = await Activity.find({
 			unity_id,
-			'client.value': client_id,
-			type: 'marked' || undefined,
+			client: client_id,
+			type: 'marked',
 		})
+			.populate('client', {
+				_id: 0,
+				label: '$name',
+				value: '$_id',
+				celphone: 1,
+				email: 1,
+			})
+			.populate('prof', {
+				_id: 0,
+				label: '$name',
+				value: '$_id',
+			})
+			.sort({ date: -1 })
 
-		return right(activities)
+		return right(activities as unknown as IActivity[])
 	}
 
 	async findAllActivitiesPending(
@@ -77,19 +117,20 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			unity_id,
 			type: 'pending',
 		})
-		return right(activities)
-	}
-
-	async findAllActivitiesAwait(
-		unity_id: string,
-	): PromiseEither<AbstractError, IActivityAwait[]> {
-		if (!unity_id) return left(new MissingParamsError('unity id'))
-
-		const activities = await ActivityAwait.find({
-			unity_id,
-			type: 'await',
-		})
-		return right(activities)
+			.populate('client', {
+				_id: 0,
+				label: '$name',
+				value: '$_id',
+				celphone: 1,
+				email: 1,
+			})
+			.populate('prof', {
+				_id: 0,
+				label: '$name',
+				value: '$_id',
+			})
+			.sort({ date: -1 })
+		return right(activities as unknown as IActivityPending[])
 	}
 
 	async updateActivityStartedAt(
@@ -237,29 +278,74 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		if (!unity_id) return left(new MissingParamsError('unity_id'))
 		const activityOrErr = await ActivityEntity.build(params)
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract())
-		const newActivity = await Activity.create(
-			activityOrErr.extract().defineUnityId(unity_id).params(),
-		)
+		const activity = activityOrErr.extract().params() as IActivity
 
-		return right(newActivity)
+		const newActivity = await Activity.create({
+			...activity,
+			client: activity.client.value,
+			prof: activity.prof.value,
+			unity_id,
+		})
+
+		const populateActivity = await (
+			await newActivity.populate('client', {
+				_id: 0,
+				label: '$name',
+				value: '$_id',
+				celphone: 1,
+				email: 1,
+			})
+		).populate('prof', {
+			_id: 0,
+			label: '$name',
+			value: '$_id',
+		})
+
+		return right(populateActivity as unknown as IActivity)
 	}
 
 	async findActivityById(id: string): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new MissingParamsError('id'))
 
 		const activity = await Activity.findById(id)
+			.populate('client', {
+				_id: 0,
+				label: '$name',
+				value: '$_id',
+				celphone: 1,
+				email: 1,
+			})
+			.populate('prof', {
+				_id: 0,
+				label: '$name',
+				value: '$_id',
+			})
+			.sort({ date: -1 })
 		if (!activity) return left(new ActivityNotFoundError())
 
-		return right(activity)
+		return right(activity as unknown as IActivity)
 	}
 
 	async deleteActivityById(id: string): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new MissingParamsError('id'))
 
 		const activity = await Activity.findByIdAndDelete(id)
+			.populate('client', {
+				_id: 0,
+				label: '$name',
+				value: '$_id',
+				celphone: 1,
+				email: 1,
+			})
+			.populate('prof', {
+				_id: 0,
+				label: '$name',
+				value: '$_id',
+			})
+			.sort({ date: -1 })
 		if (!activity) return left(new ActivityNotFoundError())
 
-		return right(activity)
+		return right(activity as unknown as IActivity)
 	}
 
 	async updateActivityById(
@@ -295,6 +381,19 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 				returnDocument: 'after',
 			},
 		)
+			.populate('client', {
+				_id: 0,
+				label: '$name',
+				value: '$_id',
+				celphone: 1,
+				email: 1,
+			})
+			.populate('prof', {
+				_id: 0,
+				label: '$name',
+				value: '$_id',
+			})
+			.sort({ date: -1 })
 		if (!updatedActivity)
 			return left(new AbstractError('Error updating activity', 500))
 		return right(updatedActivity.toObject())

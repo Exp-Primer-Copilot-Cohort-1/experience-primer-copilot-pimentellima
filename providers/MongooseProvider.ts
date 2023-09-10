@@ -26,7 +26,11 @@ export default class MongoProvider {
 	public register() {
 		const mongoose = new Mongoose()
 
-		mongoose.connect(Env.get('DB_CONNECTION_STRING'))
+		mongoose.connect(Env.get('DB_CONNECTION_STRING'), {
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+		})
+		mongoose.set('strictQuery', false)
 
 		this.app.container.singleton('Mongoose', () => mongoose)
 	}
