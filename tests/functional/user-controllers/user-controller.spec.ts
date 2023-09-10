@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { test } from '@japa/runner'
+import Unity from 'App/Models/Unity'
 import User from 'App/Models/User'
 import { assert } from 'chai'
 
@@ -19,8 +20,10 @@ const user = {
 
 test.group('User Controller', () => {
 	test('display store user admin_prof', async ({ client }) => {
+		const unity = await Unity.findOne({}, { _id: 1 })
 		const response = await client.post('users').json({
 			...user,
+			unity_id: unity,
 		})
 		// .headers({ Authorization: `Bearer ${token.token}` });
 		response.assertStatus(200)
