@@ -10,6 +10,28 @@ class UnityController {
 		return adaptRoute(makeUnityFindAllByNameComposer(), ctx)
 	}
 
+	public async findByName({ params, response }: HttpContextContract) {
+		const { email } = params
+
+		const unity = await Unity.findOne(
+			{
+				email,
+				active: true,
+			},
+			{ _id: 0, name: 1 },
+		)
+
+		if (!unity) {
+			return response.status(404).send({
+				error: {
+					message: 'Unidade não encontrada.',
+				},
+			})
+		}
+
+		return unity
+	}
+
 	public async store({ request, response }: HttpContextContract) {
 		const data = request.only([
 			'name',

@@ -146,6 +146,7 @@ export default function LogDecorator(collectionName: string, action: ACTION) {
 					collection_name: collectionName,
 					date,
 					after: 'Criado',
+					before: 'Criado',
 					user,
 					collection_id,
 					unity_id: unity_id.toString(),

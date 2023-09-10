@@ -33,7 +33,7 @@ Route.get('script', 'AdminController.script')
 
 Route.post('users', 'UserController.store')
 
-Route.get('unity', 'UnityController.index')
+Route.get('unities/:email', 'UnityController.findByName')
 
 Route.get('activity/single/:id', 'ActivityController.findActivityById')
 
