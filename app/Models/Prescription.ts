@@ -1,21 +1,19 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IPrescription } from 'Types/IPrescription'
 
-const PrescriptionSchema = new Schema<IPrescription>(
+interface IPrescriptionModel extends Omit<IPrescription, 'prof'> {
+	prof: Schema.Types.ObjectId
+}
+
+const PrescriptionSchema = new Schema<IPrescriptionModel>(
 	{
 		name: {
 			type: String,
 			required: true,
 		},
 		prof: {
-			value: {
-				type: String,
-				required: true,
-			},
-			label: {
-				type: String,
-				required: true,
-			},
+			type: Schema.Types.ObjectId,
+			required: true,
 		},
 		text: {
 			type: String,
@@ -39,10 +37,6 @@ const PrescriptionSchema = new Schema<IPrescription>(
 	},
 )
 
-PrescriptionSchema.index({ unity_id: 1, 'prof.value': 1 }, { unique: false })
+PrescriptionSchema.index({ unity_id: 1, prof: 1 }, { unique: false })
 
-export default Mongoose.model<IPrescription>(
-	'prescriptions',
-	PrescriptionSchema,
-	'prescriptions',
-)
+export default Mongoose.model<IPrescriptionModel>('prescriptions', PrescriptionSchema)

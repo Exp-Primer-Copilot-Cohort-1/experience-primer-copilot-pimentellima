@@ -1,7 +1,14 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IPaymentParticipations } from 'Types/IPaymentProf'
 
-const PaymentParticipations = new Schema<IPaymentParticipations>(
+interface IPaymentParticipationsModel
+	extends Omit<IPaymentParticipations, 'prof' | 'health_insurance' | 'procedure'> {
+	prof: Schema.Types.ObjectId
+	health_insurance: Schema.Types.ObjectId
+	procedure: Schema.Types.ObjectId
+}
+
+const PaymentParticipations = new Schema<IPaymentParticipationsModel>(
 	{
 		prices: {
 			type: [
@@ -15,21 +22,12 @@ const PaymentParticipations = new Schema<IPaymentParticipations>(
 			],
 			default: [],
 		},
-		prof: {
-			label: { type: String, required: true },
-			value: { type: Schema.Types.ObjectId, ref: 'users', required: true },
-		},
-		procedure: {
-			label: { type: String, required: true },
-			value: { type: Schema.Types.ObjectId, ref: 'procedures', required: true },
-		},
+		prof: { type: Schema.Types.ObjectId, ref: 'users', required: true },
+		procedure: { type: Schema.Types.ObjectId, ref: 'procedures', required: true },
 		health_insurance: {
-			label: { type: String, required: true },
-			value: {
-				type: Schema.Types.ObjectId,
-				ref: 'health_insurances',
-				required: true,
-			},
+			type: Schema.Types.ObjectId,
+			ref: 'health_insurances',
+			required: true,
 		},
 		unity_id: {
 			type: Mongoose.Schema.Types.ObjectId,
@@ -46,7 +44,7 @@ const PaymentParticipations = new Schema<IPaymentParticipations>(
 )
 
 PaymentParticipations.index(
-	{ 'prof.value': 1, 'procedure.value': 1, 'health_insurance.value': 1 },
+	{ prof: 1, procedure: 1, health_insurance: 1 },
 	{ unique: true },
 )
 
@@ -81,7 +79,7 @@ PaymentParticipations.pre('save', function (next) {
 	next()
 })
 
-export default Mongoose.model<IPaymentParticipations>(
+export default Mongoose.model<IPaymentParticipationsModel>(
 	'payment_participations',
 	PaymentParticipations,
 )

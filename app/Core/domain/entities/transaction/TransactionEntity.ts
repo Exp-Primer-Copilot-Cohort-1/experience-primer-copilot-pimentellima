@@ -7,15 +7,19 @@ import * as z from 'zod'
 import { Entity } from '../abstract/entity.abstract'
 import zProcedure from './z-procedure'
 export class TransactionEntity extends Entity implements ITransaction {
+	activity_id?: string | undefined
+	account: { value: string | Schema.Types.ObjectId; label: string }
+	installments?: number | undefined
+	active?: boolean | undefined
 	_group_by: string
 	_activity_id?: string
 	_unity_id: string
 	_prof?: { value: string; label: string }
 	_client?: { value: string; label: string }
 	_procedures?: IProcedureTransaction[]
-	_bank: { value: string | Schema.Types.ObjectId; label: string }
+	_account: { value: string | Schema.Types.ObjectId; label: string }
 	_cost_center: { value: string | Schema.Types.ObjectId; label: string }
-	_category: { value: string | Schema.Types.ObjectId; label: string }
+	_financial_category: { value: string | Schema.Types.ObjectId; label: string }
 	_paid?: boolean
 	_total: number
 	_date: Date
@@ -44,15 +48,15 @@ export class TransactionEntity extends Entity implements ITransaction {
 	}
 
 	get bank() {
-		return this._bank
+		return this._account
 	}
 
 	get cost_center() {
 		return this._cost_center
 	}
 
-	get category() {
-		return this._category
+	get financial_category() {
+		return this._financial_category
 	}
 
 	get paid() {
@@ -125,7 +129,7 @@ export class TransactionEntity extends Entity implements ITransaction {
 	}
 
 	defineBank(bank: { value: string | ObjectId; label: string }) {
-		this._bank = bank
+		this._account = bank
 		return this
 	}
 
@@ -134,8 +138,8 @@ export class TransactionEntity extends Entity implements ITransaction {
 		return this
 	}
 
-	defineCategory(category: { value: string | ObjectId; label: string }) {
-		this._category = category
+	defineFinancialCategory(category: { value: string | ObjectId; label: string }) {
+		this._financial_category = category
 		return this
 	}
 
@@ -204,7 +208,7 @@ export class TransactionEntity extends Entity implements ITransaction {
 					.array(zProcedure.optional().nullable())
 					.optional()
 					.nullable(),
-				bank: z.object({
+				account: z.object({
 					value: z.string(),
 					label: z.string(),
 				}),
@@ -212,7 +216,7 @@ export class TransactionEntity extends Entity implements ITransaction {
 					value: z.string(),
 					label: z.string(),
 				}),
-				category: z.object({
+				financial_category: z.object({
 					value: z.string(),
 					label: z.string(),
 				}),
@@ -233,11 +237,11 @@ export class TransactionEntity extends Entity implements ITransaction {
 
 			return right(
 				new TransactionEntity()
-					.defineBank(values.bank)
+					.defineBank(values.account)
 					.defineClient(values.client)
 					.defineProf(values.prof)
 					.defineCostCenter(values.cost_center)
-					.defineCategory(values.category)
+					.defineFinancialCategory(values.financial_category)
 					.defineGroupBy(values.activity_id || (values.group_by as string))
 					.defineDate(new Date(values.date))
 					.defineTotal(values.total)

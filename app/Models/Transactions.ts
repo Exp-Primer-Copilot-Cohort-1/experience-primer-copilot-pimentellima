@@ -7,27 +7,33 @@ const schemaDefault = (collection: string) => ({
 	required: false,
 })
 
-const TransactionsSchema = new Schema<ITransaction>(
+interface ITransactionModel
+	extends Omit<
+		ITransaction,
+		'prof' | 'client' | 'account' | 'financial_category' | 'cost_center'
+	> {
+	prof: Schema.Types.ObjectId
+	client?: Schema.Types.ObjectId
+	account?: Schema.Types.ObjectId
+	cost_center?: Schema.Types.ObjectId
+	financial_category?: Schema.Types.ObjectId
+}
+
+const TransactionsSchema = new Schema<ITransactionModel>(
 	{
 		group_by: {
 			type: String,
 			required: true,
 		},
 		prof: {
-			value: schemaDefault('users'),
-			label: {
-				type: String,
-				required: false,
-			},
-			_id: false,
+			type: Schema.Types.ObjectId,
+			ref: 'users',
+			required: false,
 		},
 		client: {
-			value: schemaDefault('clients'),
-			label: {
-				type: String,
-				required: false,
-			},
-			_id: false,
+			type: Schema.Types.ObjectId,
+			ref: 'clients',
+			required: false,
 		},
 		// Array de procedimentos
 		procedures: {
@@ -61,7 +67,7 @@ const TransactionsSchema = new Schema<ITransaction>(
 					},
 					payment_participation: {
 						type: {
-							value: Schema.Types.ObjectId,
+							value: schemaDefault('payment_participations'),
 							price: Number,
 							percent: Number,
 						},
@@ -85,29 +91,20 @@ const TransactionsSchema = new Schema<ITransaction>(
 				},
 			],
 		},
-		bank: {
-			value: schemaDefault('banks'),
-			label: {
-				type: String,
-				required: false,
-			},
-			_id: false,
+		account: {
+			type: Schema.Types.ObjectId,
+			ref: 'accounts',
+			required: false,
 		},
 		cost_center: {
-			value: schemaDefault('cost_centers'),
-			label: {
-				type: String,
-				required: false,
-			},
-			_id: false,
+			type: Schema.Types.ObjectId,
+			required: false,
+			ref: 'cost_centers',
 		},
-		category: {
-			value: schemaDefault('financial_categories'),
-			label: {
-				type: String,
-				required: false,
-			},
-			_id: false,
+		financial_category: {
+			type: Schema.Types.ObjectId,
+			ref: 'financial_categories',
+			required: false,
 		},
 		total: {
 			type: Number,
@@ -181,7 +178,7 @@ TransactionsSchema.index(
 	{ unique: false },
 )
 TransactionsSchema.index({ unity_id: 1, occurrences: 1, active: 1 }, { unique: false })
-TransactionsSchema.index({ 'prof.value': 1, unity_id: 1 }, { unique: false })
+TransactionsSchema.index({ prof: 1, unity_id: 1 }, { unique: false })
 TransactionsSchema.index({ group_by: 1, unity_id: 1 }, { unique: false })
 
 export default Mongoose.model('transactions', TransactionsSchema)

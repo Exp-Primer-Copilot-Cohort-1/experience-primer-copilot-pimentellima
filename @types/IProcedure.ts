@@ -6,11 +6,11 @@ export interface IProcedure {
 	active: boolean
 	value: number
 	color: string
-	prof: IProf[]
+	profs: IProf[]
 	name: string
 	avgPrice?: number
 	minutes: number
-	health_insurance: {
+	health_insurances: {
 		value: string
 		label: string
 		price: string

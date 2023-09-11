@@ -28,6 +28,10 @@ class TransactionsController {
 				$gte: date_start,
 				$lte: date_end,
 			},
+		}).populate('prof client financial_category cost_center account', {
+			label: '$name',
+			value: '$_id',
+			_id: 0,
 		})
 
 		return transactions

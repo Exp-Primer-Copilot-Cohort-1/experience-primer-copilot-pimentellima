@@ -1,4 +1,4 @@
-import LogDecorator from 'App/Core/decorators/log-decorator'
+import LogDecorator, { ACTION } from 'App/Core/decorators/log-decorator'
 import { TransactionEntity } from 'App/Core/domain/entities/transaction/TransactionEntity'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
@@ -27,7 +27,7 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 		>,
 	) { }
 
-	@LogDecorator('transactions', 'post')
+	@LogDecorator('transactions', ACTION.POST)
 	public async execute(
 		{
 			unity_id,

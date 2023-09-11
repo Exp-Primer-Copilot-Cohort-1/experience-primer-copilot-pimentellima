@@ -1,8 +1,15 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IProcedure } from 'Types/IProcedure'
-import { HealthInsuranceSchemaHelper, ProfSchemaHelper } from './helpers'
 
-const ProcedureSchema = new Schema<IProcedure>(
+interface IProcedureModel extends Omit<IProcedure, 'profs' | 'health_insurances'> {
+	profs: Schema.Types.ObjectId[]
+	health_insurances: {
+		info: Schema.Types.ObjectId
+		price: number
+	}[]
+}
+
+const ProcedureSchema = new Schema<IProcedureModel>(
 	{
 		active: {
 			type: Boolean,
@@ -20,8 +27,27 @@ const ProcedureSchema = new Schema<IProcedure>(
 			type: Number,
 			required: true,
 		},
-		prof: [ProfSchemaHelper],
-		health_insurance: [HealthInsuranceSchemaHelper],
+		profs: [
+			{
+				_id: false,
+				type: Schema.Types.ObjectId,
+				ref: 'profs',
+			},
+		],
+		health_insurances: [
+			{
+				_id: false,
+				info: {
+					type: Schema.Types.ObjectId,
+					required: true,
+					ref: 'health_insurances',
+				},
+				price: {
+					type: Number,
+					required: true,
+				},
+			},
+		],
 		products: [
 			{
 				_id: false,
@@ -60,16 +86,10 @@ const ProcedureSchema = new Schema<IProcedure>(
 	},
 )
 
-ProcedureSchema.index(
-	{ unity_id: 1, name: 1, 'prof.value': 1, active: 1 },
-	{ unique: false },
-)
+ProcedureSchema.index({ unity_id: 1, name: 1, prof: 1, active: 1 }, { unique: false })
 
-ProcedureSchema.index(
-	{ unity_id: 1, 'health_insurance.value': 1, active: 1 },
-	{ unique: false },
-)
+ProcedureSchema.index({ unity_id: 1, health_insurance: 1, active: 1 }, { unique: false })
 
 ProcedureSchema.index({ unity_id: 1, minutes: 1, active: 1 }, { unique: false })
 
-export default Mongoose.model<IProcedure>('procedures', ProcedureSchema)
+export default Mongoose.model<IProcedureModel>('procedures', ProcedureSchema)

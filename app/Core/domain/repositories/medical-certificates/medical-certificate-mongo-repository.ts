@@ -6,7 +6,9 @@ import { UnitNotFoundError } from '../../errors/unit-not-found'
 import { MedicalCertificateManagerInterface } from '../interface'
 
 export class MedicalCertificateMongooseRepository
+	// eslint-disable-next-line prettier/prettier
 	implements MedicalCertificateManagerInterface {
+	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor() { }
 
 	async updateMedicalCertificateActive(
@@ -19,11 +21,13 @@ export class MedicalCertificateMongooseRepository
 				$set: { active },
 			},
 			{ new: true },
-		)
+		).populate('prof', { label: '$name', value: '$_id', _id: 0 })
+
 		if (!medicalCertificate) {
 			return left(new UnitNotFoundError())
 		}
-		return right(medicalCertificate)
+
+		return right(medicalCertificate as unknown as IMedicalCertificate)
 	}
 
 	async findByName(
@@ -34,12 +38,12 @@ export class MedicalCertificateMongooseRepository
 			name: { $regex: new RegExp(`.*${name}.*`) },
 			active: true,
 			unity_id,
-		})
+		}).populate('prof', { label: '$name', value: '$_id', _id: 0 })
 
 		if (!medicalCertificate) {
 			return left(new UnitNotFoundError())
 		}
-		return right(medicalCertificate)
+		return right(medicalCertificate as unknown as IMedicalCertificate[])
 	}
 	async findByNameInatives(
 		name: string,
@@ -49,29 +53,39 @@ export class MedicalCertificateMongooseRepository
 			name: { $regex: new RegExp(`.*${name}.*`) },
 			active: false,
 			unity_id,
-		})
+		}).populate('prof', { label: '$name', value: '$_id', _id: 0 })
 
 		if (!medicalCertificate) {
 			return left(new UnitNotFoundError())
 		}
-		return right(medicalCertificate)
+		return right(medicalCertificate as unknown as IMedicalCertificate[])
 	}
 	async findById(id: string): PromiseEither<AbstractError, IMedicalCertificate> {
-		const medicalCertificate = await MedicalCertificate.findById(id)
+		const medicalCertificate = await MedicalCertificate.findById(id).populate(
+			'prof',
+			{ label: '$name', value: '$_id', _id: 0 },
+		)
 		if (!medicalCertificate) {
 			return left(new UnitNotFoundError())
 		}
-		return right(medicalCertificate)
+		return right(medicalCertificate as unknown as IMedicalCertificate)
 	}
 	public async createMedicalCertificate(
 		data: Partial<IMedicalCertificate>,
 	): PromiseEither<AbstractError, IMedicalCertificate> {
 		const medicalCertificate = await MedicalCertificate.create({
 			...data,
+			prof: data.prof?.value,
 			active: true,
 		})
 
-		return right(medicalCertificate)
+		return right(
+			await medicalCertificate.populate('prof', {
+				label: '$name',
+				value: '$_id',
+				_id: 0,
+			}),
+		)
 	}
 	public async updateMedicalCertificateById(
 		id: string,
@@ -79,11 +93,11 @@ export class MedicalCertificateMongooseRepository
 	): PromiseEither<AbstractError, IMedicalCertificate> {
 		const medicalCertificate = await MedicalCertificate.findByIdAndUpdate(id, data, {
 			new: true,
-		})
+		}).populate('prof', { label: '$name', value: '$_id', _id: 0 })
 		if (!medicalCertificate) {
 			return left(new UnitNotFoundError())
 		}
-		return right(medicalCertificate)
+		return right(medicalCertificate as unknown as IMedicalCertificate)
 	}
 	public async deleteMedicalCertificateById(
 		id: string,
@@ -93,6 +107,6 @@ export class MedicalCertificateMongooseRepository
 			return left(new UnitNotFoundError())
 		}
 		await medicalCertificate.remove()
-		return right(medicalCertificate)
+		return right(medicalCertificate as unknown as IMedicalCertificate)
 	}
 }

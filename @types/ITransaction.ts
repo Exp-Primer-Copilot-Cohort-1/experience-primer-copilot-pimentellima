@@ -37,7 +37,7 @@ export interface ITransaction {
 		label: string
 	}
 	procedures?: IProcedureTransaction[]
-	bank: {
+	account: {
 		value: string | ObjectId
 		label: string
 	}
@@ -45,7 +45,7 @@ export interface ITransaction {
 		value: string | ObjectId
 		label: string
 	}
-	category: {
+	financial_category: {
 		value: string | ObjectId
 		label: string
 	}

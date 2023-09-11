@@ -22,6 +22,30 @@ const generatePipeline = (match: any, active: boolean) => [
 		},
 	},
 	{
+		$lookup: {
+			from: 'procedures',
+			localField: 'procedure',
+			foreignField: '_id',
+			as: 'procedure_data',
+		},
+	},
+	{
+		$lookup: {
+			from: 'health_insurances',
+			localField: 'health_insurance',
+			foreignField: '_id',
+			as: 'health_insurance_data',
+		},
+	},
+	{
+		$lookup: {
+			from: 'users',
+			localField: 'prof',
+			foreignField: '_id',
+			as: 'prof_data',
+		},
+	},
+	{
 		$project: {
 			_id: '$prices._id',
 			participation_id: '$_id',
@@ -29,9 +53,18 @@ const generatePipeline = (match: any, active: boolean) => [
 			abs: '$prices.abs',
 			percent: '$prices.percent',
 			active: '$prices.active',
-			procedure: 1,
-			health_insurance: 1,
-			prof: 1,
+			procedure: {
+				label: '$procedure_data.name',
+				value: '$procedure_data._id',
+			},
+			health_insurance: {
+				label: '$health_insurance_data.name',
+				value: '$health_insurance_data._id',
+			},
+			prof: {
+				label: '$prof_data.name',
+				value: '$prof_data._id',
+			},
 			unity_id: 1,
 			date_start: '$prices.date_start',
 			date_end: '$prices.date_end',
@@ -40,20 +73,12 @@ const generatePipeline = (match: any, active: boolean) => [
 ]
 
 const createFilter = (participation: IPaymentProf) => ({
-	health_insurance: {
-		label: participation.health_insurance.label,
-		value: new ObjectId(participation.health_insurance.value.toString()),
-	},
-	procedure: {
-		label: participation.procedure.label,
-		value: new ObjectId(participation.procedure.value.toString()),
-	},
-	prof: {
-		label: participation.prof.label,
-		value: new ObjectId(participation.prof.value.toString()),
-	},
+	health_insurance: new ObjectId(participation.health_insurance.value.toString()),
+	procedure: new ObjectId(participation.procedure.value.toString()),
+	prof: new ObjectId(participation.prof.value.toString()),
 })
 export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
+	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(private readonly opts: OptsQuery = OptsQuery.build()) { }
 
 	async createOrUpdatePaymentProf(
@@ -121,7 +146,7 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 		if (!id) return left(new MissingParamsError('id'))
 
 		const pipeline = generatePipeline(
-			{ 'prof.value': new ObjectId(id.toString()) },
+			{ prof: new ObjectId(id.toString()) },
 			this.opts.active,
 		)
 
@@ -153,9 +178,9 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 	): PromiseEither<AbstractError, ParticipationPrice> {
 		const pipeline = generatePipeline(
 			{
-				'prof.value': new ObjectId(prof_id.toString()),
-				'health_insurance.value': new ObjectId(health_insurance_id.toString()),
-				'procedure.value': new ObjectId(procedure_id.toString()),
+				prof: new ObjectId(prof_id.toString()),
+				health_insurance: new ObjectId(health_insurance_id.toString()),
+				procedure: new ObjectId(procedure_id.toString()),
 				unity_id: new ObjectId(unity_id.toString()),
 			},
 			true,

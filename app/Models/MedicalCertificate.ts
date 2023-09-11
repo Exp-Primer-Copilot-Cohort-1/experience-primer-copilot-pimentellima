@@ -1,13 +1,18 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IMedicalCertificate } from 'Types/IMedicalCertificate'
 
-const MedicalCertificateSchema = new Schema<IMedicalCertificate>(
+interface IMedicalCertificateModel extends Omit<IMedicalCertificate, 'prof'> {
+	prof: Schema.Types.ObjectId
+}
+
+const MedicalCertificateSchema = new Schema<IMedicalCertificateModel>(
 	{
 		name: { type: String, required: true },
 		description: { type: String, required: true },
 		prof: {
-			value: { type: String, required: true },
-			label: { type: String, required: true },
+			type: Schema.Types.ObjectId,
+			ref: 'users',
+			required: true,
 		},
 		active: { type: Boolean, required: true },
 		unity_id: { type: Schema.Types.ObjectId, required: true },
@@ -20,9 +25,9 @@ const MedicalCertificateSchema = new Schema<IMedicalCertificate>(
 	},
 )
 
-MedicalCertificateSchema.index({ unity_id: 1, 'prof.value': 1 }, { unique: false })
+MedicalCertificateSchema.index({ unity_id: 1, prof: 1 }, { unique: false })
 
-export default Mongoose.model<IMedicalCertificate>(
+export default Mongoose.model<IMedicalCertificateModel>(
 	'medical_certificates',
 	MedicalCertificateSchema,
 )

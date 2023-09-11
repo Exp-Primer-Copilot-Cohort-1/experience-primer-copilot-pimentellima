@@ -8,21 +8,21 @@ const prescriptionSchema = z.object({
 })
 
 class PrescriptionController {
-	async index({ request, auth }) {
+	async index({ auth }) {
 		const userLogged = auth.user
 		const prescriptions = await Prescription.where({
 			unity_id: userLogged.unity_id,
 			active: true,
-		})
+		}).populate('prof', { label: '$name', value: '$_id', _id: 0 })
 		return prescriptions
 	}
 
-	async findAllInatives({ request, auth }) {
+	async findAllInatives({ auth }) {
 		const userLogged = auth.user
 		const prescriptions = await Prescription.where({
 			unity_id: userLogged.unity_id,
 			active: false,
-		})
+		}).populate('prof', { label: '$name', value: '$_id', _id: 0 })
 
 		return prescriptions
 	}
@@ -33,10 +33,13 @@ class PrescriptionController {
 
 		prescriptionSchema.parse(data)
 
-		const prescription = await Prescription.create({
-			...data,
-			unity_id: userLogged.unity_id,
-		})
+		const prescription = await (
+			await Prescription.create({
+				...data,
+				prof: data.prof.value,
+				unity_id: userLogged.unity_id,
+			})
+		).populate('prof', { label: '$name', value: '$_id', _id: 0 })
 
 		return prescription
 	}
@@ -46,9 +49,16 @@ class PrescriptionController {
 
 		prescriptionSchema.parse(data)
 
-		const prescription = await Prescription.findByIdAndUpdate(params.id, data, {
-			new: true,
-		})
+		const prescription = await Prescription.findByIdAndUpdate(
+			params.id,
+			{
+				...data,
+				prof: data.prof.value,
+			},
+			{
+				new: true,
+			},
+		).populate('prof', { label: '$name', value: '$_id', _id: 0 })
 
 		return prescription
 	}
@@ -62,7 +72,7 @@ class PrescriptionController {
 				$set: { active: data.status },
 			},
 			{ new: true },
-		)
+		).populate('prof', { label: '$name', value: '$_id', _id: 0 })
 
 		return prescription
 	}
@@ -70,7 +80,9 @@ class PrescriptionController {
 	async show({ params }) {
 		const prescriptions = await Prescription.where({
 			_id: params.id,
-		}).orFail()
+		})
+			.populate('prof', { label: '$name', value: '$_id', _id: 0 })
+			.orFail()
 
 		return prescriptions
 	}
