@@ -28,7 +28,8 @@
 		"@adonisjs/session",
 		"@adonisjs/mail",
 		"adonis5-swagger",
-		"@adonisjs/view"
+		"@adonisjs/view",
+		"@adonisjs/shield"
 	],
 	"aceProviders": [
 		"@adonisjs/repl"
