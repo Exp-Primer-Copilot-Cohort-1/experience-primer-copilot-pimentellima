@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { test } from '@japa/runner'
 import Account from 'App/Models/Account'
-import { assert } from 'chai'
+import { assert, expect } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 
 import { Types } from '@ioc:Mongoose'
@@ -36,7 +36,7 @@ test.group('Account Controller', () => {
 		response.assertStatus(200)
 
 		const { deletedCount } = await Account.deleteOne({ _id: response.body()._id })
-		assert.equal(deletedCount, 1)
+		expect(deletedCount).to.greaterThan(0)
 	})
 
 	test('display account by id', async ({ client }) => {
@@ -49,7 +49,7 @@ test.group('Account Controller', () => {
 
 		const { deletedCount } = await Account.deleteOne({ _id: id })
 
-		assert.equal(deletedCount, 1)
+		expect(deletedCount).to.greaterThan(0)
 	})
 
 	test('display account not found', async ({ client }) => {
@@ -84,7 +84,7 @@ test.group('Account Controller', () => {
 
 		const body = response.body()
 		const { deletedCount } = await Account.deleteOne({ _id: id })
-		assert.equal(deletedCount, 1)
+		expect(deletedCount).to.greaterThan(0)
 		assert.equal(body.name, 'new name')
 	})
 })
