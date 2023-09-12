@@ -1,13 +1,13 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { HealthInsuranceParams, IHealthInsurance, Prof } from 'Types/IHealthInsurance'
+import { HealthInsuranceParams, IHealthInsurance } from 'Types/IHealthInsurance'
 import * as z from 'zod'
 import { Entity } from '../abstract/entity.abstract'
 
 export class HealthInsuranceEntity extends Entity implements IHealthInsurance {
 	private _register_code: string
 	private _carence: number
-	private _profs: Prof[]
+	private _profs: string[]
 	private _active: boolean
 	private _unity_id: string
 	private _name: string
@@ -20,7 +20,7 @@ export class HealthInsuranceEntity extends Entity implements IHealthInsurance {
 		return this._carence
 	}
 
-	get profs(): Prof[] {
+	get profs(): string[] {
 		return this._profs
 	}
 
@@ -50,11 +50,8 @@ export class HealthInsuranceEntity extends Entity implements IHealthInsurance {
 		return this
 	}
 
-	defineProfs(profs: Prof[] = []): HealthInsuranceEntity {
-		this._profs = profs?.map((prof) => ({
-			value: prof.value,
-			label: prof.label,
-		}))
+	defineProfs(profs: string[] = []): HealthInsuranceEntity {
+		this._profs = profs
 		return this
 	}
 
@@ -87,12 +84,7 @@ export class HealthInsuranceEntity extends Entity implements IHealthInsurance {
 		try {
 			z.object({
 				name: z.string(),
-				profs: z.array(
-					z.object({
-						value: z.string(),
-						label: z.string(),
-					}),
-				),
+				profs: z.array(z.string()),
 				register_code: z.string().refine((val) => /^[0-9]*$/.test(val)),
 				carence: z.number(),
 			}).parse(params)
@@ -102,7 +94,7 @@ export class HealthInsuranceEntity extends Entity implements IHealthInsurance {
 					.defineName(params.name)
 					.defineRegisterCode(params.register_code)
 					.defineCarence(params.carence)
-					.defineProfs(params.profs)
+					.defineProfs(params.profs as string[])
 					.defineActive(true),
 			)
 		} catch (error) {

@@ -5,7 +5,7 @@ export interface IHealthInsurance {
 	name: string
 	register_code: string
 	carence: number
-	profs: Prof[]
+	profs: string[] | ObjectId[]
 	active: boolean
 	unity_id: ObjectId | string
 	created_at: Date | string
@@ -13,14 +13,14 @@ export interface IHealthInsurance {
 }
 
 export type Prof = {
-	value: string,
+	value: string
 	label: string
 }
 
 export type HealthInsuranceParams = {
 	_id?: string
 	name: string
-	profs: Prof[]
+	profs: Prof[] | string[]
 	register_code: string
 	carence: number
-  }
+}

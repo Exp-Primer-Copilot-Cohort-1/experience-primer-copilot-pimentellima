@@ -1,12 +1,14 @@
 import { isValidObjectId } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import HealthInsurance from 'App/Models/HealthInsurance'
+import HealthInsurance, { COLLECTIONS } from 'App/Models/HealthInsurance'
 import { HealthInsuranceParams, IHealthInsurance } from 'Types/IHealthInsurance'
 import { HealthInsuranceEntity } from '../../entities/health-insurances/health-insurance'
 import { OptsQuery } from '../../entities/helpers/opts-query'
 import { HealthInsuranceNotFoundError } from '../../errors/health-insurance-not-found'
 import { MissingParamsError } from '../../errors/missing-params'
+import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { PROJECTION_DEFAULT } from '../helpers/projections'
 import { HealthInsuranceManagerInterface } from '../interface/health-insurance-manager.interface'
 
 export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInterface {
@@ -15,25 +17,19 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 	async findAllByUnityId(
 		unity_id: string,
 	): PromiseEither<AbstractError, IHealthInsurance[]> {
-		if (!unity_id) {
-			return left(new MissingParamsError('unity_id'))
-		}
+		if (!unity_id) return left(new UnitNotFoundError())
 
-		const healthInsurances = await HealthInsurance.find({
+		const doc = await HealthInsurance.find({
 			unity_id,
+			active: this.opts.active,
 		})
-			.populate('profs', {
-				_id: 0,
-				label: '$name',
-				value: '$_id',
-			})
+			.populate(COLLECTIONS.PROFS, PROJECTION_DEFAULT)
 			.sort(this.opts.sort)
 			.limit(this.opts.limit)
 			.skip(this.opts.skip)
-			.where({ active: this.opts.active })
 			.exec()
 
-		return right(healthInsurances as unknown as IHealthInsurance[])
+		return right(doc)
 	}
 
 	async findAllByName(
@@ -52,19 +48,14 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 			name: { $regex: new RegExp(`.*${name.toUpperCase()}.*`) },
 			unity_id,
 		})
-			.populate('profs', {
-				_id: 0,
-				label: '$name',
-				value: '$_id',
-			})
+			.populate(COLLECTIONS.PROFS, PROJECTION_DEFAULT)
 			.sort(this.opts.sort)
 			.limit(this.opts.limit)
 			.skip(this.opts.skip)
 			.where({ active: this.opts.active })
-
 			.exec()
 
-		return right(healthInsurances as unknown as IHealthInsurance[])
+		return right(healthInsurances)
 	}
 
 	async findById(id: string): PromiseEither<AbstractError, IHealthInsurance> {
@@ -72,17 +63,16 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 			return left(new HealthInsuranceNotFoundError())
 		}
 
-		const healthInsurance = await HealthInsurance.findById(id).populate('profs', {
-			_id: 0,
-			label: '$name',
-			value: '$_id',
-		})
+		const healthInsurance = await HealthInsurance.findById(id).populate(
+			COLLECTIONS.PROFS,
+			PROJECTION_DEFAULT,
+		)
 
 		if (!healthInsurance) {
 			return left(new HealthInsuranceNotFoundError())
 		}
 
-		return right(healthInsurance as unknown as IHealthInsurance)
+		return right(healthInsurance)
 	}
 
 	async update(
@@ -95,36 +85,36 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 
 		const healthInsurance = await HealthInsurance.findByIdAndUpdate(id, entity, {
 			new: true,
-		}).populate('profs', {
-			_id: 0,
-			label: '$name',
-			value: '$_id',
-		})
+		}).populate(COLLECTIONS.PROFS, PROJECTION_DEFAULT)
 
 		if (!healthInsurance) {
 			return left(new HealthInsuranceNotFoundError())
 		}
 
-		return right(healthInsurance as unknown as IHealthInsurance)
+		return right(healthInsurance)
 	}
 
 	async create(
 		unity_id: string,
-		params: HealthInsuranceParams,
+		{
+			_id, // eslint-disable-line @typescript-eslint/no-unused-vars
+			...params
+		}: HealthInsuranceParams,
 	): PromiseEither<AbstractError, IHealthInsurance> {
 		const healthInsuranceOrErr = await HealthInsuranceEntity.build(params)
-		if (healthInsuranceOrErr.isLeft()) return left(healthInsuranceOrErr.extract())
+		if (healthInsuranceOrErr.isLeft()) return healthInsuranceOrErr
 
 		const healthInsurance = healthInsuranceOrErr
 			.extract()
 			.params() as IHealthInsurance
 
-		const doc = await HealthInsurance.create({
+		const created = await HealthInsurance.create({
 			...healthInsurance,
 			unity_id,
-			profs: healthInsurance.profs?.map?.((prof) => prof.value),
 		})
 
-		return right(doc as unknown as IHealthInsurance)
+		const doc = await created.populate(COLLECTIONS.PROFS, PROJECTION_DEFAULT)
+
+		return right(doc)
 	}
 }
