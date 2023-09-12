@@ -63,14 +63,9 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 			return left(new HealthInsuranceNotFoundError())
 		}
 
-		const healthInsurance = await HealthInsurance.findById(id).populate(
-			COLLECTIONS.PROFS,
-			PROJECTION_DEFAULT,
-		)
-
-		if (!healthInsurance) {
-			return left(new HealthInsuranceNotFoundError())
-		}
+		const healthInsurance = await HealthInsurance.findById(id)
+			.populate(COLLECTIONS.PROFS, PROJECTION_DEFAULT)
+			.orFail(new HealthInsuranceNotFoundError())
 
 		return right(healthInsurance)
 	}
@@ -83,15 +78,13 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 			return left(new HealthInsuranceNotFoundError())
 		}
 
-		const healthInsurance = await HealthInsurance.findByIdAndUpdate(id, entity, {
+		const doc = await HealthInsurance.findByIdAndUpdate(id, entity, {
 			new: true,
-		}).populate(COLLECTIONS.PROFS, PROJECTION_DEFAULT)
+		})
+			.populate(COLLECTIONS.PROFS, PROJECTION_DEFAULT)
+			.orFail(new HealthInsuranceNotFoundError())
 
-		if (!healthInsurance) {
-			return left(new HealthInsuranceNotFoundError())
-		}
-
-		return right(healthInsurance)
+		return right(doc)
 	}
 
 	async create(
@@ -101,12 +94,10 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 			...params
 		}: HealthInsuranceParams,
 	): PromiseEither<AbstractError, IHealthInsurance> {
-		const healthInsuranceOrErr = await HealthInsuranceEntity.build(params)
-		if (healthInsuranceOrErr.isLeft()) return healthInsuranceOrErr
+		const hOrErr = await HealthInsuranceEntity.build(params)
+		if (hOrErr.isLeft()) return hOrErr
 
-		const healthInsurance = healthInsuranceOrErr
-			.extract()
-			.params() as IHealthInsurance
+		const healthInsurance = hOrErr.extract().params() as IHealthInsurance
 
 		const created = await HealthInsurance.create({
 			...healthInsurance,

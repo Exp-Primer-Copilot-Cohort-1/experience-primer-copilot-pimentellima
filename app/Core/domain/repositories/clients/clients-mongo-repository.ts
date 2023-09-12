@@ -14,16 +14,15 @@ export class ClientsMongooseRepository implements ClientManagerInterface {
 		data: Partial<IUserClient>,
 		unity_id: string,
 	): PromiseEither<AbstractError, IUserClient> {
-		const doc = await (
-			await Client.create({
-				...data,
-				email: data.email?.trim().toLowerCase(),
-				partner: data.partner?.value,
-				unity_id,
-			})
-		).populate(COLLECTIONS.PARTNERS, PROJECTION_DEFAULT)
+		const created = await Client.create({
+			...data,
+			email: data.email?.trim().toLowerCase(),
+			partner: data.partner?.value,
+			unity_id,
+		})
+		const doc = await created.populate(COLLECTIONS.PARTNERS, PROJECTION_DEFAULT)
 
-		return right(doc.toObject() as IUserClient)
+		return right(doc.toObject())
 	}
 
 	async updateById(
@@ -39,11 +38,14 @@ export class ClientsMongooseRepository implements ClientManagerInterface {
 			return left(new ClientNotFoundError())
 		}
 
-		return right(doc)
+		return right(doc.toObject())
 	}
 
 	async findById(id: string): PromiseEither<AbstractError, IUserClient> {
-		const client = await Client.findById(id).populate('partners', PROJECTION_DEFAULT)
+		const client = await Client.findById(id).populate(
+			COLLECTIONS.PARTNERS,
+			PROJECTION_DEFAULT,
+		)
 
 		if (!client) {
 			return left(new ClientNotFoundError())

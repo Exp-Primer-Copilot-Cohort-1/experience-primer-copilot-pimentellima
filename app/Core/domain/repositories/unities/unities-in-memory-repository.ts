@@ -88,4 +88,8 @@ export class UnitiesInMemoryRepository implements UnitiesManagerInterface {
 
 		return right(unity)
 	}
+	public async create(unity: IUnity): PromiseEither<AbstractError, IUnity> {
+		this.items.push(unity)
+		return right(unity)
+	}
 }
