@@ -2,13 +2,13 @@ import { cnpj, cpf } from 'cpf-cnpj-validator'
 import { Validate } from '../abstract/validate.abstract'
 
 class Document extends Validate {
-	private constructor(document: string) {
+	private constructor(document: string, force: boolean) {
 		super(document)
-		this.validate(document)
+		this.validate(document, force)
 	}
 
-	public validate(document: string): this {
-		if (process.env.NODE_ENV === 'test') {
+	public validate(document: string, force: boolean): this {
+		if (process.env.NODE_ENV === 'test' && !force) {
 			return this
 		}
 
@@ -19,8 +19,8 @@ class Document extends Validate {
 		return this
 	}
 
-	public static build(document: string): Document {
-		return new Document(document)
+	public static build(document: string, force = false): Document {
+		return new Document(document, force)
 	}
 }
 

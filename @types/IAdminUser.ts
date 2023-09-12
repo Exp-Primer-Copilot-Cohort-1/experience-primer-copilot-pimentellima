@@ -5,16 +5,15 @@ import { IDaysOffice } from './IDaysOffice'
 
 export type IAdminUser = {
 	_id: string | ObjectId
-	is_company: boolean
 	unity_id: string
 	name: string
-	date_expiration: string
+	date_expiration?: string
 	password: string
 	active: boolean
 	email: string | Email
 	document: string | Document
 	celphone: string
-	dayOfTrade: IDaysOffice | null
+	dayOfTrade?: IDaysOffice
 	type: 'admin' | 'admin_prof'
 	avatar: string
 	created_at: Date

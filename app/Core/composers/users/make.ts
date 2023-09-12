@@ -4,16 +4,28 @@ import {
 	AdminMongooseRepository,
 	UnitiesMongooseRepository,
 } from 'App/Core/domain/repositories'
-import { CreateUserUseCase } from 'App/Core/domain/use-cases'
+import {
+	CreateUnityUseCase,
+	CreateUserAdminUseCase,
+	CreateUserUseCase,
+} from 'App/Core/domain/use-cases'
 
 import { CreatePasswordUseCase } from 'App/Core/domain/use-cases'
 
-export const makeCreateAdminUserComposer = (): ControllerGeneric => {
+export const makeCreateUserComposer = (): ControllerGeneric => {
 	return new Controller(
-		new CreateUserUseCase(
-			new UnitiesMongooseRepository(),
-			new AdminMongooseRepository(),
-			new CreatePasswordUseCase(),
+		new CreateUserUseCase(new AdminMongooseRepository(), new CreatePasswordUseCase()),
+	)
+}
+
+export const makeCreateAdminComposer = (): ControllerGeneric => {
+	return new Controller(
+		new CreateUserAdminUseCase(
+			new CreateUserUseCase(
+				new AdminMongooseRepository(),
+				new CreatePasswordUseCase(),
+			),
+			new CreateUnityUseCase(new UnitiesMongooseRepository()),
 		),
 	)
 }

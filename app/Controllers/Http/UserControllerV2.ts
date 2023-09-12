@@ -3,6 +3,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
 
+import { ROLES } from 'App/Roles/types'
 import SELECTS from '../user-select'
 
 const fetchUserByType = async (type, unityId, active = true) =>
@@ -17,10 +18,9 @@ const fetchUserByType = async (type, unityId, active = true) =>
 class UserControllerV2 {
 	public async findAllUsersProfs({ auth }: HttpContextContract) {
 		const userLogged = auth.user
-
 		switch (userLogged?.type) {
-			case 'prof':
-				return await User.where({
+			case ROLES.PROF:
+				return await User.find({
 					_id: userLogged?._id,
 					unity_id: userLogged?.unity_id,
 					active: true,
@@ -29,11 +29,11 @@ class UserControllerV2 {
 					},
 				}).select('-payment_participations -password')
 			default:
-				return await User.where({
+				return await User.find({
 					unity_id: userLogged?.unity_id,
 					active: true,
 					type: {
-						$in: ['prof', 'admin_prof'],
+						$in: [ROLES.ADMIN_PROF, ROLES.PROF],
 					},
 				}).select('-payment_participations -password')
 		}
@@ -43,8 +43,8 @@ class UserControllerV2 {
 		const userLogged = auth.user
 
 		switch (userLogged?.type) {
-			case 'prof':
-				return await User.where({
+			case ROLES.PROF:
+				return await User.find({
 					_id: userLogged?._id,
 					unity_id: userLogged?.unity_id,
 					active: false,
@@ -53,7 +53,7 @@ class UserControllerV2 {
 					},
 				}).select('-payment_participations -password')
 			default:
-				return await User.where({
+				return await User.find({
 					unity_id: userLogged?.unity_id,
 					active: false,
 					type: {

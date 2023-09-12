@@ -1,16 +1,16 @@
 import { adaptRoute } from 'App/Core/adapters'
-import { makeCreateAdminUserComposer } from 'App/Core/composers'
+import { makeCreateAdminComposer, makeCreateUserComposer } from 'App/Core/composers'
 import User from 'App/Models/User'
 // const Mail = use('Mail');
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ROLES } from 'App/Roles/types'
 
 class UserController {
-	public async index({ auth }) {
+	public async index({ auth }: HttpContextContract) {
 		const userLogged = auth.user
 		try {
 			const users = await User.where({
-				unity_id: userLogged.unity_id,
+				unity_id: userLogged?.unity_id,
 			})
 				.select('-password')
 				.exec()
@@ -22,8 +22,12 @@ class UserController {
 		}
 	}
 
-	public async store(ctx) {
-		return adaptRoute(makeCreateAdminUserComposer(), ctx)
+	public async store(ctx: HttpContextContract) {
+		return adaptRoute(makeCreateUserComposer(), ctx)
+	}
+
+	public async storeAdmin(ctx: HttpContextContract) {
+		return adaptRoute(makeCreateAdminComposer(), ctx)
 	}
 
 	public async update({ params, request, auth }: HttpContextContract) {
@@ -54,16 +58,11 @@ class UserController {
 		return user
 	}
 
-	public async show({ params }) {
+	public async show({ params }: HttpContextContract) {
 		const user = await User.findById(params.id).select('-password').orFail()
 
 		return user
 	}
-
-	// public async destroy({ params }) {
-	// 	const user = await User.where({ _id: params.id }).orFail()
-	// 	await user.delete()
-	// }
 }
 
 export default UserController

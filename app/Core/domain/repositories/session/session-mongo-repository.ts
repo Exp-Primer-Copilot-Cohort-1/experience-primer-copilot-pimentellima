@@ -8,7 +8,7 @@ import { ISession, SessionManagerInterface } from '../interface/session-manager.
 
 const production = process.env.NODE_ENV === 'production'
 export class SessionRepository implements SessionManagerInterface {
-	constructor(private readonly auth: AuthContract) { }
+	constructor(private readonly auth: AuthContract) { } // eslint-disable-line
 
 	public async signIn(
 		email: string,

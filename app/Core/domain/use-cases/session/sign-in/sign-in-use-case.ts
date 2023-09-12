@@ -14,7 +14,7 @@ export class SignInUseCase implements UseCase<Credentials, ISession> {
 		private readonly sessionManager: SessionManagerInterface,
 		private readonly unitiesManager: UnitiesManagerInterface,
 		private readonly unityValidationUseCase: UseCase<IUnity, IUnity>,
-	) { }
+	) { } // eslint-disable-line
 
 	public async execute({
 		email,

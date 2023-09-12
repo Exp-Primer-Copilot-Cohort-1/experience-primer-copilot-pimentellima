@@ -1,32 +1,23 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
+import { ROLES } from 'App/Roles/types'
 import { IAdminUser } from 'Types/IAdminUser'
 import { SystemUser } from '../abstract/system-user.abstract'
 import DaysOfTrade from '../helpers/days-of-trade'
 
 class AdminUser extends SystemUser implements IAdminUser {
-	private _is_company: boolean
-	protected _type: 'admin' | 'admin_prof'
+	protected _type: ROLES.ADMIN | ROLES.ADMIN_PROF
 
 	private constructor() {
 		super()
 	}
 
-	public get type(): 'admin' | 'admin_prof' {
+	public get type(): ROLES.ADMIN | ROLES.ADMIN_PROF {
 		return this._type
 	}
 
-	public get is_company(): boolean {
-		return this._is_company
-	}
-
-	public defineType(type: 'admin' | 'admin_prof'): this {
+	public defineType(type: ROLES.ADMIN | ROLES.ADMIN_PROF): this {
 		super.defineType(type)
-		return this
-	}
-
-	public defineIsCompany(is_company = false): this {
-		this._is_company = is_company
 		return this
 	}
 
@@ -42,12 +33,11 @@ class AdminUser extends SystemUser implements IAdminUser {
 					.defineName(admin?.name)
 					.defineCelphone(admin?.celphone)
 					.defineEmail(admin?.email)
-					.defineIsCompany(admin?.is_company)
 					.defineDateExpiration(admin?.date_expiration)
 					.defineDocument(admin?.document)
 					.definePassword(admin?.password)
 					.defineUnityId(admin?.unity_id)
-					.defineType(admin?.type)
+					.defineType(admin?.type as ROLES.ADMIN | ROLES.ADMIN_PROF)
 					.defineDayOfTrade(dayOfTradeEntityOrErr.extract() as DaysOfTrade)
 					.defineActive(admin?.active)
 					.defineCreatedAt(admin?.created_at)

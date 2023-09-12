@@ -1,10 +1,7 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest'
 import { CreateUserUseCase } from './create-user-use-case'
 
-import {
-	AdminInMemoryRepository,
-	UnitiesInMemoryRepository,
-} from 'App/Core/domain/repositories'
+import { AdminInMemoryRepository } from 'App/Core/domain/repositories'
 import { CreatePasswordUseCase } from '../create-password/create-password-use-case'
 
 import { faker } from '@faker-js/faker'
@@ -12,7 +9,6 @@ import { IAdminUser } from 'Types/IAdminUser'
 import { cpf } from 'cpf-cnpj-validator'
 
 const user: IAdminUser = {
-	is_company: faker.datatype.boolean(),
 	unity_id: '63528c11c109b232759921d1',
 	name: faker.name.fullName(),
 	date_expiration: '2021-01-01',
@@ -21,7 +17,6 @@ const user: IAdminUser = {
 	document: cpf.generate(),
 	celphone: faker.phone.number('(99) 99999-9999'),
 	type: 'admin_prof',
-	dayOfTrade: null,
 	_id: '',
 	active: false,
 	avatar: '',
@@ -31,7 +26,6 @@ const user: IAdminUser = {
 
 const makeSut = () => {
 	const sut = new CreateUserUseCase(
-		new UnitiesInMemoryRepository(),
 		new AdminInMemoryRepository(),
 		new CreatePasswordUseCase(),
 	)

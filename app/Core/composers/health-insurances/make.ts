@@ -31,13 +31,13 @@ export const makeHealthInsuranceFindByIdComposer = (): ControllerGeneric => {
 	)
 }
 
-export const makeHealtInsuranceUpdateComposer = (): ControllerGeneric => {
+export const makeHealthInsuranceUpdateComposer = (): ControllerGeneric => {
 	return new Controller(
 		new UpdateHealthInsuranceUseCase(new HealthInsuranceMongoRepository()),
 	)
 }
 
-export const makeHealtInsuranceCreateComposer = (): ControllerGeneric => {
+export const makeHealthInsuranceCreateComposer = (): ControllerGeneric => {
 	return new Controller(
 		new CreateHealthInsuranceUseCase(new HealthInsuranceMongoRepository()),
 	)
