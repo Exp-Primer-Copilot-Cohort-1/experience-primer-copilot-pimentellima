@@ -9,6 +9,8 @@ import {
 } from 'App/Core/composers/clients/make'
 import { IUserClient } from 'Types/IClient'
 import SELECTS from '../user-select'
+import { IFormAnswer } from 'Types/IFormAnswer'
+import { IForm } from 'Types/IForm'
 
 class ClientController {
 	async verifyExistenceClient({ request, auth, response }: HttpContextContract) {
@@ -130,6 +132,38 @@ class ClientController {
 		return adaptRoute(makeClientUpdateComposer(), ctx, {
 			unity_id,
 		})
+	}
+
+	public async getAnswers(ctx: HttpContextContract) {
+		const clientId = ctx.params.id
+
+		const client = await Client.findById(clientId)
+		if (!client)
+			return ctx.response.status(404).json({ message: 'Cliente não encontrado' })
+		return client.form_answers
+	}
+
+	public async putAnswer(ctx: HttpContextContract) {
+		const data = ctx.request.only(['field_answers', 'form', 'activity_id'])
+		const client_id = ctx.params.client_id
+		const form = data.form
+		const activity_id = data.activity_id
+		const field_answers: { question: string; answer: string }[] = data.field_answers
+
+		const client = await Client.findById(client_id)
+		if (!client)
+			return ctx.response.status(404).json({ message: 'Cliente não encontrado' })
+
+		const form_answers: IFormAnswer[] = [
+			...client.form_answers,
+			{ form, field_answers, activity_id },
+		]
+
+		const updatedClient = await Client.findByIdAndUpdate(client_id, {
+			$set: { form_answers },
+		})
+		if(!updatedClient) return ctx.response.status(500)
+		return updatedClient
 	}
 }
 

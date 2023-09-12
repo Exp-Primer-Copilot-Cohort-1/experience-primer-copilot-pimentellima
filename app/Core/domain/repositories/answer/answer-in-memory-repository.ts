@@ -1,6 +1,6 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import { IAnswer } from "Types/IAnswer";
+import { IAnswer } from "Types/IFormSubmission";
 import { AnswerManagerInterface } from "../interface/answer-manager-interface";
 import { AnswerEntity } from "../../entities/answer/answer";
 import { MissingParamsError } from "../../errors/missing-params";

@@ -1,6 +1,6 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither } from "App/Core/shared";
-import { IAnswer } from "Types/IAnswer";
+import { IAnswer } from "Types/IFormSubmission";
 
 export interface AnswerManagerInterface {
     createAnswer: (answer : IAnswer) => PromiseEither<AbstractError, IAnswer>;
