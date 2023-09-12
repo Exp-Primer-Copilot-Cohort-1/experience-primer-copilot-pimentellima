@@ -3,11 +3,13 @@
 import { ObjectId } from '@ioc:Mongoose'
 
 import { IAddress } from './IAddress'
+import { IFormAnswer } from './IFormAnswer'
 
 export interface IUserClient extends Partial<IAddress> {
 	_id?: string
 	name: string
 	avatar?: string
+	form_answers: IFormAnswer[]
 	birth_date: string | Date
 	gender?: 'male' | 'female' | 'other' | 'not informed'
 	document: string

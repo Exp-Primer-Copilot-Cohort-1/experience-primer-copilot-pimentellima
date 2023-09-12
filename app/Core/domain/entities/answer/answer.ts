@@ -1,4 +1,4 @@
-import { IQuestion, IAnswerOption, IAnswer } from "Types/IAnswer";
+import { IQuestion, IAnswerOption, IAnswer } from "Types/IFormSubmission";
 import { Entity } from "../abstract/entity.abstract";
 import { ObjectId } from "mongoose";
 import { PromiseEither, left, right } from "App/Core/shared";

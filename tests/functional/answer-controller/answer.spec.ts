@@ -1,5 +1,5 @@
 import { test } from '@japa/runner'
-import Answer from 'App/Models/Answer'
+import Answer from 'App/Models/FormAnswer'
 import { assert } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 

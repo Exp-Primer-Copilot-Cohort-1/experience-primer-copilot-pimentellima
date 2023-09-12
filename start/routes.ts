@@ -78,6 +78,8 @@ Route.group(() => {
 		)
 		Route.put(':id', 'ClientController.update').as('clients.update')
 		Route.post('', 'ClientController.create').as('clients.store')
+		Route.put('answer/:client_id', 'ClientController.putAnswer')
+		Route.get('answer/:id', 'ClientController.getAnswers')
 		Route.post('/many', 'ClientController.createMany').as('clients.storeMany')
 	}).prefix('clients')
 

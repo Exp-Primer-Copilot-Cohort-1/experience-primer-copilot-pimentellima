@@ -81,6 +81,27 @@ const ClientSchema = new Schema<IUserClient>(
 			type: String,
 			required: true,
 		},
+		form_answers: [
+			{
+				form: {
+					id: { type: Mongoose.Types.ObjectId, required: true },
+					name: { type: String, required: true }
+				},
+				activity_id: { type: Mongoose.Types.ObjectId, required: true },
+				field_answers: [
+					{
+						question: {
+							type: String,
+							required: true,
+						},
+						answer: {
+							type: String,
+							required: true,
+						},
+					},
+				],
+			},
+		],
 		avatar: {
 			type: String,
 		},
@@ -138,8 +159,7 @@ const ClientSchema = new Schema<IUserClient>(
 			default: true,
 		},
 		partner: {
-			type: Mongoose.Schema.Types.ObjectId,
-			ref: 'partners',
+			type: Schema.Types.ObjectId,
 			required: false,
 			default: null,
 		},

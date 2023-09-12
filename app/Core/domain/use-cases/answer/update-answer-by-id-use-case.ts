@@ -1,5 +1,5 @@
 import { UseCase } from "App/Core/interfaces/use-case.interface";
-import { IAnswer } from "Types/IAnswer";
+import { IAnswer } from "Types/IFormSubmission";
 import { AnswerEntity } from "../../entities/answer/answer";
 import { AnswerManagerInterface } from "../../repositories/interface/answer-manager-interface";
 import { PromiseEither, left, right } from "App/Core/shared";
