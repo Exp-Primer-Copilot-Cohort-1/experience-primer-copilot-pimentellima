@@ -4,68 +4,58 @@ import { PromiseEither, left, right } from 'App/Core/shared'
 import Account from 'App/Models/Account'
 import { IAccount } from 'Types/IAccount'
 import AccountEntity from '../../entities/account/account'
-import { AccountNotFoundError } from '../../errors/account-not-found-error'
-import { InvalidParamsError } from '../../errors/invalid-params-error'
-import { MissingParamsError } from '../../errors/missing-params'
+import { AccountNotFoundError, UnitNotFoundError } from '../../errors'
 import { AccountManagerInterface } from '../interface/account-manager-interface'
-
 export class AccountMongoRepository implements AccountManagerInterface {
-	constructor() { }
+	constructor() { } // eslint-disable-line
 
 	async findAllAccounts(unity_id: string): PromiseEither<AbstractError, IAccount[]> {
-		if (!unity_id) return left(new MissingParamsError('unity id'))
+		if (!unity_id) return left(new UnitNotFoundError())
 
 		const data = await Account.find({ unity_id })
 
 		return right(data)
 	}
 
-	async createAccount(account: IAccount): PromiseEither<AbstractError, AccountEntity> {
-		const newAccountOrErr = await AccountEntity.build(account)
-		if (newAccountOrErr.isLeft()) return left(newAccountOrErr.extract())
-		const newAccount = newAccountOrErr.extract()
+	async createAccount({
+		_id, // eslint-disable-line
+		...account
+	}: IAccount): PromiseEither<AbstractError, AccountEntity> {
+		const entityOrErr = await AccountEntity.build(account)
 
-		const { _id } = await Account.create(newAccount.params())
-		newAccount.defineId(_id.toString())
-		return right(newAccount)
+		if (entityOrErr.isLeft()) return entityOrErr
+
+		const newAccount = entityOrErr.extract().params()
+
+		const created = await Account.create(newAccount)
+
+		return right(created.toObject())
 	}
 
 	async updateAccountById(
 		account: IAccount,
 		id: string,
 	): PromiseEither<AbstractError, IAccount> {
-		if (!id) return left(new MissingParamsError('id'))
+		if (!id) return left(new AccountNotFoundError())
 
-		const doc = (
-			await Account.findByIdAndUpdate(id, account, { new: true })
-		)?.toObject()
+		const doc = await Account.findByIdAndUpdate(id, account, { new: true }).orFail()
 
-		return right(doc as IAccount)
+		return right(doc?.toObject())
 	}
 
 	async findAccountById(id: string): PromiseEither<AbstractError, AccountEntity> {
-		if (!id) return left(new MissingParamsError('id'))
+		if (!id || !isValidObjectId(id)) return left(new AccountNotFoundError())
 
-		if (!isValidObjectId(id)) return left(new InvalidParamsError())
+		const item = await Account.findById(id).orFail(new AccountNotFoundError())
 
-		const item = await Account.findById(id)
-		if (!item) return left(new AccountNotFoundError())
-
-		const accountOrErr = await AccountEntity.build(item.toObject())
-		if (accountOrErr.isLeft()) return left(new InvalidParamsError())
-
-		return right(accountOrErr.extract())
+		return right(item.toObject())
 	}
 
 	async deleteAccountById(id: string): PromiseEither<AbstractError, AccountEntity> {
-		if (!id) return left(new MissingParamsError('id'))
+		if (!id) return left(new AccountNotFoundError())
 
-		const item = await Account.findByIdAndDelete(id)
-		if (!item) return left(new AccountNotFoundError())
+		const doc = await Account.findByIdAndDelete(id).orFail(new AccountNotFoundError())
 
-		const accountOrErr = await AccountEntity.build(item.toObject())
-		if (accountOrErr.isLeft()) return left(new AbstractError('Invalid params', 400))
-
-		return right(accountOrErr.extract())
+		return right(doc.toObject())
 	}
 }

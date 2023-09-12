@@ -1,10 +1,13 @@
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IPaymentProf, ParticipationPrice } from 'Types/IPaymentProf'
 import { Types } from 'mongoose'
-import { OptsQuery } from '../../entities/helpers/opts-query'
-import { PaymentProfEntity } from '../../entities/payment-prof/paymentProf'
-import { MissingParamsError } from '../../errors/missing-params'
+import {
+	MissingParamsError,
+	PaymentParticipationsNotFoundError,
+	UnitNotFoundError,
+} from '../../errors'
 import { PaymentProfManagerInterface } from '../interface/payment-prof-manager-interface'
 
 import PaymentParticipations from 'App/Models/PaymentParticipations'
@@ -127,23 +130,18 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 		})
 	}
 
-	async deletePaymentProfById(
-		id: string,
-	): PromiseEither<AbstractError, PaymentProfEntity> {
-		if (!id) return left(new MissingParamsError('id'))
+	async deletePaymentProfById(id: string): PromiseEither<AbstractError, IPaymentProf> {
+		if (!id) return left(new PaymentParticipationsNotFoundError())
 
-		const item = await PaymentParticipations.findByIdAndDelete(id)
-		if (!item) return left(new AbstractError('PaymentProf not found', 404))
+		const item = await PaymentParticipations.findByIdAndDelete(id).orFail(
+			new PaymentParticipationsNotFoundError(),
+		)
 
-		const paymentProfOrErr = await PaymentProfEntity.build(item.toObject())
-		if (paymentProfOrErr.isLeft())
-			return left(new AbstractError('Internal Error', 500))
-
-		return right(paymentProfOrErr.extract())
+		return right(item.toObject())
 	}
 
 	async findPaymentProfById(id: string): PromiseEither<AbstractError, IPaymentProf[]> {
-		if (!id) return left(new MissingParamsError('id'))
+		if (!id) return left(new PaymentParticipationsNotFoundError())
 
 		const pipeline = generatePipeline(
 			{ prof: new ObjectId(id.toString()) },
@@ -158,7 +156,7 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 	async findAllPaymentProfs(
 		unity_id: string,
 	): PromiseEither<AbstractError, IPaymentProf[]> {
-		if (!unity_id) return left(new MissingParamsError('unity id'))
+		if (!unity_id) return left(new UnitNotFoundError())
 
 		const pipeline = generatePipeline(
 			{ unity_id: new ObjectId(unity_id.toString()) },
@@ -188,8 +186,7 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 
 		const data = await PaymentParticipations.aggregate(pipeline)
 
-		if (!data || data.length === 0)
-			return left(new AbstractError('Participation not found', 404))
+		if (!data?.length) return left(new PaymentParticipationsNotFoundError())
 
 		return right(data[0])
 	}

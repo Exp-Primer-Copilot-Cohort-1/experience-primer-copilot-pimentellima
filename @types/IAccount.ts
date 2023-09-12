@@ -1,7 +1,7 @@
 import { ObjectId } from '@ioc:Mongoose'
 
 export interface IAccount {
-	_id: string | ObjectId
+	_id?: string | ObjectId
 	name: string
 	cash: number
 	date: Date
