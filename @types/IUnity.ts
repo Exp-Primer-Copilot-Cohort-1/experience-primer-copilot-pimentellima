@@ -9,6 +9,7 @@ export type IUnity = {
 	is_company?: boolean
 	document: string
 	date_expiration?: Date
+	franchised: boolean
 	active: boolean
 	created_at?: Date
 	updated_at?: Date

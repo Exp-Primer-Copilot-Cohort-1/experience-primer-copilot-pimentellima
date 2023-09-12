@@ -4,7 +4,9 @@ import {
 	AdminMongooseRepository,
 	UnitiesMongooseRepository,
 } from 'App/Core/domain/repositories'
+import { DrPerformanceMongoose } from 'App/Core/domain/repositories/dr_performance'
 import {
+	CreateFranchiseDrPerformanceUseCase,
 	CreateUnityUseCase,
 	CreateUserAdminUseCase,
 	CreateUserUseCase,
@@ -26,6 +28,7 @@ export const makeCreateAdminComposer = (): ControllerGeneric => {
 				new CreatePasswordUseCase(),
 			),
 			new CreateUnityUseCase(new UnitiesMongooseRepository()),
+			new CreateFranchiseDrPerformanceUseCase(new DrPerformanceMongoose()),
 		),
 	)
 }

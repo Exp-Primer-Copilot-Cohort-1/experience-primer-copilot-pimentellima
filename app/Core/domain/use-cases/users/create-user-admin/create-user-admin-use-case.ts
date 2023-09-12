@@ -5,11 +5,13 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import type { IAdminUser } from 'Types/IAdminUser'
 import type { IUnity } from 'Types/IUnity'
+import { NewDrPerformanceUseCase } from '../create-user-dr-performance/create-user-dr-performance-use-case'
 
 export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {
 	constructor(
 		private readonly createUser: UseCase<IAdminUser, IAdminUser>,
 		private readonly createUnity: UseCase<IUnity, IUnity>,
+		private readonly createDrPerformance: NewDrPerformanceUseCase,
 	) { } // eslint-disable-line
 
 	public async execute(data: IAdminUser): PromiseEither<AbstractError, IAdminUser> {
@@ -30,13 +32,20 @@ export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {
 				date_expiration: unity.date_expiration?.toString(),
 			})
 
-			if (adminEntityOrErr.isLeft()) return adminEntityOrErr
+			if (adminEntityOrErr.isLeft()) throw adminEntityOrErr.extract() // error
 
 			const admin = adminEntityOrErr.extract().params() as IAdminUser
 
 			const adminOrErr = await this.createUser.execute(admin as IAdminUser, session)
 
 			if (adminOrErr.isLeft()) throw adminOrErr.extract() // error
+
+			await this.createDrPerformance.execute({
+				admin: adminOrErr.extract(),
+				unity,
+				session,
+				franchised: data.franchised,
+			})
 
 			await session.commitTransaction()
 

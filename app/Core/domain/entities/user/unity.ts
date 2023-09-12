@@ -65,6 +65,7 @@ export class UnityEntity extends Entity implements IUnity {
 	private _state: string
 	private _revenue_reports: { [key: number]: IBilling }
 	private _holidays: IHoliday[]
+	private _franchise: boolean
 
 	get name(): string {
 		return this._name
@@ -72,6 +73,10 @@ export class UnityEntity extends Entity implements IUnity {
 
 	get is_company(): boolean {
 		return this._is_company
+	}
+
+	get franchised(): boolean {
+		return this._franchise
 	}
 
 	get document(): string {
@@ -160,6 +165,11 @@ export class UnityEntity extends Entity implements IUnity {
 
 	defineName(name = ''): this {
 		this._name = name
+		return this
+	}
+
+	defineFranchise(franchised = false): this {
+		this._franchise = franchised
 		return this
 	}
 
@@ -295,6 +305,7 @@ export class UnityEntity extends Entity implements IUnity {
 				.defineRevenueReports(params.revenue_reports)
 				.defineSite(params.site)
 				.defineState(params.state)
+				.defineFranchise(params.franchised)
 				.defineCreatedAt(params.created_at)
 				.defineUpdatedAt(params.updated_at)
 

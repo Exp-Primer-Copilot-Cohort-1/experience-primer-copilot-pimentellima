@@ -1,6 +1,7 @@
 import { ObjectId } from '@ioc:Mongoose'
 import Document from 'App/Core/domain/entities/validations/document'
 import Email from 'App/Core/domain/entities/validations/email'
+import { ROLES } from 'App/Roles/types'
 import { IDaysOffice } from './IDaysOffice'
 
 export type IAdminUser = {
@@ -14,7 +15,8 @@ export type IAdminUser = {
 	document: string | Document
 	celphone: string
 	dayOfTrade?: IDaysOffice
-	type: 'admin' | 'admin_prof'
+	franchised?: boolean
+	type: ROLES.ADMIN | ROLES.ADMIN_PROF
 	avatar: string
 	created_at: Date
 	updated_at: Date
