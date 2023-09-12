@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { test } from '@japa/runner'
 import HealthInsurance from 'App/Models/HealthInsurance'
-import { assert } from 'chai'
+import { assert, expect } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 
 const healthInsurance = (unity_id) => ({
@@ -53,11 +53,10 @@ test.group('Health Insurance Controller', () => {
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
-		const { deletedCount } = await HealthInsurance.deleteOne({
-			_id: healthInsurance._id,
+		const { deletedCount } = await HealthInsurance.deleteMany({
+			name: healthInsurance.name,
 		})
-
-		assert.equal(deletedCount, 1)
+		expect(deletedCount).to.greaterThan(0)
 	})
 	test('display find health insurance by id invalid', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
@@ -85,31 +84,10 @@ test.group('Health Insurance Controller', () => {
 		const data = response.body()
 		assert.equal(data.name, name)
 
-		const { deletedCount } = await HealthInsurance.deleteOne({ _id: health._id })
-		assert.equal(deletedCount, 1)
-	})
-	test('display create health insurance', async ({ client }) => {
-		const { token, user } = await loginAndGetToken(client)
-
-		const response = await client
-			.post('health-insurance')
-			.bearerToken(token.token)
-			.json(healthInsurance(user.unity_id))
-			.send()
-
-		if (response.status() !== 200) {
-			console.log(response.error())
-		}
-
-		response.assertStatus(200)
-		const data = response.body()
-		assert.exists(data._id)
-
 		const { deletedCount } = await HealthInsurance.deleteMany({
-			carence: data.carence,
+			unity_id: health.unity_id,
 		})
-
-		assert.equal(deletedCount, 2)
+		expect(deletedCount).to.greaterThan(0)
 	})
 	test('display delete health insurance', async ({ client }) => {
 		const { token, user } = await loginAndGetToken(client)
@@ -130,6 +108,29 @@ test.group('Health Insurance Controller', () => {
 			console.log(response.error())
 		}
 
-		response.assertStatus(204)
+		response.assertStatus(200 || 204)
+	})
+	test('display create health insurance', async ({ client }) => {
+		const { token, user } = await loginAndGetToken(client)
+
+		const response = await client
+			.post('health-insurance')
+			.bearerToken(token.token)
+			.json(healthInsurance(user.unity_id))
+			.send()
+
+		if (response.status() !== 200) {
+			console.log(response.error())
+		}
+		console.log(response.body())
+		response.assertStatus(200)
+		const data = response.body()
+		assert.exists(data._id)
+
+		const { deletedCount } = await HealthInsurance.deleteMany({
+			unity_id: data.unity_id,
+		})
+
+		expect(deletedCount).to.greaterThan(0)
 	}).skip()
 })

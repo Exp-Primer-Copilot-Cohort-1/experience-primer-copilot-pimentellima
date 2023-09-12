@@ -1,5 +1,6 @@
 import { test } from '@japa/runner'
 import PaymentParticipations from 'App/Models/PaymentParticipations'
+import { assert } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 
 const paymentProf = {
@@ -39,9 +40,10 @@ test.group('PaymentProf Controller', () => {
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
-		const prof_id: any = await PaymentParticipations.findOne({}, { _id: 1 })
+		const prof_id: any = paymentProf.prof.value.toString()
+
 		const updatedDocument = await PaymentParticipations.findOneAndUpdate(
-			{ _id: prof_id },
+			{ prof: prof_id },
 			{
 				$pull: {
 					prices: { active: { $in: [true, false] } },
@@ -51,6 +53,7 @@ test.group('PaymentProf Controller', () => {
 				new: true,
 			},
 		)
+		assert.equal(updatedDocument?.prices.length, 0)
 	})
 
 	test('Find payment_prof by id', async ({ client }) => {
