@@ -1,4 +1,4 @@
-import LogDecorator from 'App/Core/decorators/log-decorator'
+import LogDecorator, { ACTION } from 'App/Core/decorators/log-decorator'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, right } from 'App/Core/shared'
@@ -10,9 +10,9 @@ type TypeParams = {
 } & IUserClient
 
 export class UpdateClientsByIdUseCase implements UseCase<TypeParams, IUserClient> {
-	constructor(private readonly manager: ClientManagerInterface) { }
+	constructor(private readonly manager: ClientManagerInterface) { } // eslint-disable-line
 
-	@LogDecorator('clients', 'put')
+	@LogDecorator('clients', ACTION.PUT)
 	public async execute({
 		id,
 		...client

@@ -91,6 +91,10 @@ class ClientController {
 		const clients = await Client.find({
 			unity_id: userLogged?.unity_id,
 			active: false,
+		}).populate('partner', {
+			_id: 0,
+			label: '$name',
+			value: '$_id',
 		})
 
 		return clients
@@ -100,15 +104,23 @@ class ClientController {
 		const userLogged = auth.user
 
 		const clients = await Client.find({
-			unity_id: userLogged?.unity_id,
+			unity_id: userLogged?.unity_id.toString(),
 			active: true,
+		}).populate('partner', {
+			_id: 0,
+			label: '$name',
+			value: '$_id',
 		})
 
 		return clients
 	}
 
 	public async findUserClientByID({ params }) {
-		const user = await Client.findById(params.id)
+		const user = await Client.findById(params.id).populate('partner', {
+			_id: 0,
+			label: '$name',
+			value: '$_id',
+		})
 
 		return user
 	}

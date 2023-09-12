@@ -137,9 +137,10 @@ const ClientSchema = new Schema<IUserClient>(
 			default: true,
 		},
 		partner: {
-			type: Schema.Types.ObjectId,
+			type: Mongoose.Schema.Types.ObjectId,
 			ref: 'partners',
 			required: false,
+			default: null,
 		},
 		due_date: {
 			type: Date,
