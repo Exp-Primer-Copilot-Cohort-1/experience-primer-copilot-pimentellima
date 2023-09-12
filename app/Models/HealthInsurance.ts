@@ -5,6 +5,8 @@ interface IHealthInsuranceModel extends Omit<IHealthInsurance, 'profs'> {
 	profs: Schema.Types.ObjectId[]
 }
 
+export const COLLECTION_NAME = 'health_insurances'
+
 const HealthInsuranceSchema = new Schema<IHealthInsuranceModel>(
 	{
 		name: { type: String, required: true },
@@ -37,6 +39,12 @@ HealthInsuranceSchema.index({ unity_id: 1, register_code: 1, name: 1 }, { unique
 HealthInsuranceSchema.index({ unity_id: 1, profs: 1, active: 1 }, { unique: false })
 
 export default Mongoose.model<IHealthInsuranceModel>(
-	'health_insurances',
+	COLLECTION_NAME,
 	HealthInsuranceSchema,
 )
+
+// enum de como as coleções referências são chamadas na collection de planos de saúde
+export enum COLLECTIONS {
+	PROFS = 'profs',
+	UNITIES = 'unity_id',
+}

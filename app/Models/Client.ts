@@ -6,6 +6,8 @@ interface IUserClientModel extends Omit<IUserClient, 'prof'> {
 	partners: Schema.Types.ObjectId
 }
 
+const COLLECTION_NAME = 'clients'
+
 /**
  * @swagger
  * components:
@@ -73,7 +75,6 @@ interface IUserClientModel extends Omit<IUserClient, 'prof'> {
  *         - email
  *         - unity_id
  */
-
 const ClientSchema = new Schema<IUserClient>(
 	{
 		name: {
@@ -222,4 +223,10 @@ ClientSchema.index({ unity_id: 1, name: 1, celphone: 1, birth_date: 1 }, { uniqu
 ClientSchema.index({ unity_id: 1, name: 1, email: 1, birth_date: 1 }, { unique: true })
 ClientSchema.index({ unity_id: 1, rg: 1, document: 1, active: 1 }, { unique: false })
 
-export default Mongoose.model<IUserClientModel>('clients', ClientSchema, 'clients')
+// enum de como as coleções referências são chamadas na collection de clientes
+export enum COLLECTIONS {
+	PARTNERS = 'partner',
+	UNITIES = 'unity_id',
+}
+
+export default Mongoose.model<IUserClientModel>(COLLECTION_NAME, ClientSchema)

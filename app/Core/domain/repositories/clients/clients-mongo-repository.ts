@@ -1,7 +1,9 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
-import Client from 'App/Models/Client'
+import Client, { COLLECTIONS } from 'App/Models/Client'
 import { IClient, IUserClient } from 'Types/IClient'
+import { ClientNotFoundError } from '../../errors/clients-not-found'
+import { PROJECTION_DEFAULT } from '../helpers/projections'
 import { ClientManagerInterface } from '../interface'
 
 export class ClientsMongooseRepository implements ClientManagerInterface {
@@ -12,19 +14,16 @@ export class ClientsMongooseRepository implements ClientManagerInterface {
 		data: Partial<IUserClient>,
 		unity_id: string,
 	): PromiseEither<AbstractError, IUserClient> {
-		const client = await (
+		const doc = await (
 			await Client.create({
 				...data,
 				email: data.email?.trim().toLowerCase(),
 				partner: data.partner?.value,
 				unity_id,
 			})
-		).populate('partners', {
-			_id: 0,
-			label: '$name',
-			value: '$_id',
-		})
-		return right(client.toObject() as unknown as IUserClient)
+		).populate(COLLECTIONS.PARTNERS, PROJECTION_DEFAULT)
+
+		return right(doc.toObject() as IUserClient)
 	}
 
 	async updateById(
@@ -32,41 +31,32 @@ export class ClientsMongooseRepository implements ClientManagerInterface {
 		id: string,
 	): PromiseEither<AbstractError, IUserClient> {
 		const doc = await Client.findByIdAndUpdate(id, data, { new: true }).populate(
-			'partners',
-			{
-				_id: 0,
-				label: '$name',
-				value: '$_id',
-			},
+			COLLECTIONS.PARTNERS,
+			PROJECTION_DEFAULT,
 		)
 
 		if (!doc) {
-			return left(new AbstractError('Não foi Encontrado o documento', 404))
+			return left(new ClientNotFoundError())
 		}
 
-		return right(doc.toObject())
+		return right(doc)
 	}
 
 	async findById(id: string): PromiseEither<AbstractError, IUserClient> {
-		const client = await Client.findById(id).populate('partners', {
-			_id: 0,
-			label: '$name',
-			value: '$_id',
-		})
+		const client = await Client.findById(id).populate('partners', PROJECTION_DEFAULT)
 
 		if (!client) {
-			return left(new AbstractError('Não foi Encontrado o cliente', 404))
+			return left(new ClientNotFoundError())
 		}
 
 		return right(client.toObject())
 	}
 
 	async findAll(unity_id: string): PromiseEither<AbstractError, IUserClient[]> {
-		const clients = await Client.find({ unity_id }).populate('partners', {
-			_id: 0,
-			label: '$name',
-			value: '$_id',
-		})
+		const clients = await Client.find({ unity_id }).populate(
+			COLLECTIONS.PARTNERS,
+			PROJECTION_DEFAULT,
+		)
 
 		return right(clients.map((client) => client.toObject()) || [])
 	}
