@@ -23,8 +23,8 @@ test.group('Sessions Controller', () => {
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
-			.post('/logout')
+			.post('/sessions/logout')
 			.headers({ Authorization: `Bearer ${token.token}` })
 		response.assertStatus(200)
-	}).skip()
+	})
 })
