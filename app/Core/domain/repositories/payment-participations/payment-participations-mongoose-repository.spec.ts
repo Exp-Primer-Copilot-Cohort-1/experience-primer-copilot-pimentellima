@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import PaymentParticipations from 'App/Models/PaymentParticipations'
-import { IPaymentProf } from 'Types/IPaymentProf'
+import { IPaymentProf } from 'App/Types/IPaymentProf'
 import { Types } from 'mongoose'
 import { PaymentProfManagerInterface } from '../interface/payment-prof-manager-interface'
 import { PaymentProfMongoRepository } from './payment-prof-mongo-repository'

@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { ROLES } from 'App/Roles/types'
-import { IAdminUser } from 'Types/IAdminUser'
+import { IAdminUser } from 'App/Types/IAdminUser'
 import { SystemUser } from '../abstract/system-user.abstract'
 import DaysOfTrade from '../helpers/days-of-trade'
 

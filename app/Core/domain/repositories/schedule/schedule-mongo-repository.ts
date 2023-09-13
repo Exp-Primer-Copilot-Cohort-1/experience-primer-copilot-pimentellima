@@ -1,7 +1,7 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import User from "App/Models/User";
-import { IUser } from "Types/IUser";
+import { IUser } from "App/Types/IUser";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ScheduleManagerInterface } from "../interface/schedule-manager-interface";
 

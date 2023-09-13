@@ -4,7 +4,7 @@ import { err, ok } from 'App/Core/adapters/helpers/http-helper'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { IUser } from 'Types/IUser'
+import { IUser } from 'App/Types/IUser'
 import { ControllerGeneric } from '../helpers/controller-generic'
 
 export class Controller implements ControllerGeneric {

@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { ITransaction } from 'Types/ITransaction'
+import { ITransaction } from 'App/Types/ITransaction'
 import { UnitNotFoundError } from '../../../errors/unit-not-found'
 import { TransactionsManagerInterface } from '../../../repositories/interface/transactions-manager-interface'
 import { TransactionWithoutProcedure } from '../helpers'

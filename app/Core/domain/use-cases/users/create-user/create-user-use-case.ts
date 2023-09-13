@@ -3,7 +3,7 @@ import { AdminManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
-import type { IAdminUser } from 'Types/IAdminUser'
+import type { IAdminUser } from 'App/Types/IAdminUser'
 
 import { UnitNotFoundError } from 'App/Core/domain/errors/unit-not-found'
 import SendSignUpConfirmEmail from 'App/Mail/emails/send-sign-up-confirm-email'

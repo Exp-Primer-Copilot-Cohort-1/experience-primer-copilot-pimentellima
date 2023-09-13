@@ -2,7 +2,7 @@ import type { ProviderUserContract, UserProviderContract } from '@ioc:Adonis/Add
 import type { HashContract } from '@ioc:Adonis/Core/Hash'
 
 import User from 'App/Models/User'
-import { IUser } from 'Types/IUser'
+import { IUser } from 'App/Types/IUser'
 
 /**
  * The shape of configuration accepted by the MongoDbAuthProvider.

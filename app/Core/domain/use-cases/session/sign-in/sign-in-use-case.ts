@@ -6,7 +6,7 @@ import {
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
-import { IUnity } from 'Types/IUnity'
+import { IUnity } from 'App/Types/IUnity'
 import { Credentials } from '../../helpers/credentials'
 
 export class SignInUseCase implements UseCase<Credentials, ISession> {

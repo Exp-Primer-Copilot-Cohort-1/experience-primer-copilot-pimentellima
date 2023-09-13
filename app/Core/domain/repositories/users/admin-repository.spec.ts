@@ -1,4 +1,4 @@
-import { IAdminUser } from 'Types/IAdminUser';
+import { IAdminUser } from 'App/Types/IAdminUser';
 import { Model } from '__mocks__/model';
 import { cpf } from 'cpf-cnpj-validator';
 import { beforeAll, describe, expect, it, vi } from 'vitest';

@@ -1,18 +1,25 @@
-import { ObjectId } from '@ioc:Mongoose'
-import { AppointmentStatus, PaymentStatus } from '../app/Helpers'
+import { ObjectId } from '@ioc:Mongoose';
+import { AppointmentStatus, PaymentStatus } from '../Helpers';
 
 export type HealthInsurance = {
-	value: string
-	label: string
+	info: { value: string; label: string }
 	price: string
 }
 
+export enum STATUS_ACTIVITY {
+	AWAIT = 'await',
+	PENDING = 'pending',
+	MARKED = 'marked',
+}
+
 export type Procedure = {
-	value: string
-	label: string
+	info: {
+		value: string
+		label: string
+	}
 	minutes: number
 	color: string
-	val: string
+	val: number
 	health_insurance: HealthInsurance
 }
 
@@ -30,19 +37,10 @@ export type Prof = {
 }
 
 export type ActivityPayment = {
-	cost_center: {
-		value: string | ObjectId
-		label: string
-	}
-	category: {
-		value: string | ObjectId
-		label: string
-	}
-	bank: {
-		value: string | ObjectId
-		label: string
-	}
-	value: string
+	cost_center: string | ObjectId
+	category: string | ObjectId
+	bank: string | ObjectId
+	value: number
 	date: Date
 	description?: string
 	paymentForm: string
@@ -53,9 +51,9 @@ export type ActivityPayment = {
 export interface IAbstractActivity {
 	_id: string | ObjectId
 	procedures: Procedure[]
-	client: Client
+	client: Client | string
 	obs?: string
-	prof: Prof
+	prof: Prof | string
 	active: boolean
 	status: PaymentStatus
 	unity_id: string | ObjectId
@@ -67,7 +65,7 @@ export interface IAbstractActivity {
 export interface IActivityAwait {
 	_id: string | ObjectId
 	procedures: Procedure[]
-	type: 'await'
+	type: STATUS_ACTIVITY.AWAIT
 	client: Client
 	obs?: string
 	prof: Prof
@@ -83,10 +81,10 @@ export interface IActivityPending {
 	_id: string | ObjectId
 	group_id: string
 	procedures: Procedure[]
-	type: 'pending'
-	client: Client
+	type: STATUS_ACTIVITY.PENDING
+	client: Client | ObjectId
 	obs?: string
-	prof: Prof
+	prof: Prof | ObjectId
 	active: boolean
 	status: PaymentStatus
 	payment?: ActivityPayment
@@ -98,24 +96,23 @@ export interface IActivityPending {
 
 export interface IActivity {
 	_id?: string | ObjectId
-	type: 'marked'
+	type?: STATUS_ACTIVITY.MARKED
 	date: Date | string
 	hour_start: string
 	hour_end: string
 	status: PaymentStatus
 	procedures: Procedure[]
-	client: Client
-	prof: Prof
-	active: boolean
-	unity_id: string | ObjectId
-	scheduled: AppointmentStatus
-	prof_id: string | ObjectId
+	client: Client | ObjectId | string
+	prof: Prof | ObjectId | string
+	active?: boolean
+	unity_id?: string | ObjectId
+	scheduled?: AppointmentStatus
 	payment?: ActivityPayment
 	obs?: string
 	started_at?: Date
 	finished_at?: Date
-	created_at: Date
-	updated_at: Date
+	created_at?: Date
+	updated_at?: Date
 }
 
 type DateValues = {

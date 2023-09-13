@@ -1,10 +1,10 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import { IForm } from "Types/IForm";
+import { IForm } from "App/Types/IForm";
 import FormEntity from "../../entities/form/form";
-import { FormManagerInterface } from "../interface/form-manager-interface";
-import { MissingParamsError } from "../../errors/missing-params";
 import { FormNotFoundError } from "../../errors/form-not-found-error";
+import { MissingParamsError } from "../../errors/missing-params";
+import { FormManagerInterface } from "../interface/form-manager-interface";
 
 export class FormInMemoryRepository implements FormManagerInterface {
 	public forms: any[] = [];
@@ -108,5 +108,5 @@ export class FormInMemoryRepository implements FormManagerInterface {
 		return right(formOrErr.extract());
 	}
 
-	deleteFormById : (id: string) => PromiseEither<AbstractError, FormEntity>;
+	deleteFormById: (id: string) => PromiseEither<AbstractError, FormEntity>;
 }

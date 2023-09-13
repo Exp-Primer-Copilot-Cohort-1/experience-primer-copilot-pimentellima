@@ -1,5 +1,7 @@
 export * from './activity-await-manager-interface'
+export * from './activity-manager-attendance.interface'
 export * from './activity-manager.interface'
+export * from './activity-recurrent-manager.interface'
 export * from './admin-manager.interface'
 export * from './categories-manager.interface'
 export * from './census-clients-manager.interface'

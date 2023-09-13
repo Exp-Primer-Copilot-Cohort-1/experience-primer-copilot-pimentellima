@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import ActivityAwait from 'App/Models/ActivityAwait'
-import { IActivityAwait } from 'Types/IActivity'
+import { IActivityAwait } from 'App/Types/IActivity'
 import ActivityAwaitEntity from '../../entities/activity-await/activity-await'
 import { ActivityNotFoundError } from '../../errors/activity-not-found'
 import { MissingParamsError } from '../../errors/missing-params'

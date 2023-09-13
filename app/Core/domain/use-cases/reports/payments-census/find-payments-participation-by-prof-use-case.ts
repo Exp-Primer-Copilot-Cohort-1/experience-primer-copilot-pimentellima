@@ -4,7 +4,7 @@ import { CensusPaymentParticipationsManagerInterface } from 'App/Core/domain/rep
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { ICensusParticipationPaymentByProf } from 'Types/ICensus'
+import { ICensusParticipationPaymentByProf } from 'App/Types/ICensus'
 
 type FindPaymentsParticipationByProfProps = {
 	unity_id: string

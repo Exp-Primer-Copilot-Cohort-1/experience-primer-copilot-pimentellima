@@ -7,7 +7,7 @@ import {
 	makeClientCreateComposer,
 	makeClientUpdateComposer,
 } from 'App/Core/composers/clients/make'
-import { IUserClient } from 'Types/IClient'
+import { IUserClient } from 'App/Types/IClient'
 import SELECTS from '../user-select'
 
 class ClientController {

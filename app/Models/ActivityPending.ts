@@ -1,6 +1,7 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { PaymentStatus } from 'App/Helpers'
-import { IActivityPending } from 'Types/IActivity'
+import { IActivityPending } from 'App/Types/IActivity'
+import { COLLECTION_NAME } from './Activity'
 
 interface IActivityPendingModel extends Omit<IActivityPending, 'prof' | 'client'> {
 	prof: Schema.Types.ObjectId
@@ -99,5 +100,5 @@ const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 export default Mongoose.model<IActivityPendingModel>(
 	'activities_pending',
 	ActivityPendingSchema,
-	'activities',
+	COLLECTION_NAME,
 )

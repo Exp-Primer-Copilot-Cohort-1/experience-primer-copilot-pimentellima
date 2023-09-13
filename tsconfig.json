@@ -27,7 +27,7 @@
 				"./database/*"
 			],
 			"Types/*": [
-				"./@types/*"
+				"app/Types/*"
 			],
 			"Providers/*": [
 				"./providers/*"

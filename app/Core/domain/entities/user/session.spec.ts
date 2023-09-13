@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { faker } from '@faker-js/faker'
-import { IUser } from 'Types/IUser'
+import { IUser } from 'App/Types/IUser'
 import User from './session'
 
 import { cpf } from 'cpf-cnpj-validator'

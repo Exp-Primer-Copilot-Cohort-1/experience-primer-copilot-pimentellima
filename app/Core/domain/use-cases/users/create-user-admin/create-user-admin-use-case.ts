@@ -3,8 +3,8 @@ import AdminUser from 'App/Core/domain/entities/user/admin'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
-import type { IAdminUser } from 'Types/IAdminUser'
-import type { IUnity } from 'Types/IUnity'
+import type { IAdminUser } from 'App/Types/IAdminUser'
+import type { IUnity } from 'App/Types/IUnity'
 import { NewDrPerformanceUseCase } from '../create-user-dr-performance/create-user-dr-performance-use-case'
 
 export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {

@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, right } from 'App/Core/shared'
 import Transactions from 'App/Models/Transactions'
-import { ICensusParticipationPaymentByProf } from 'Types/ICensus'
+import { ICensusParticipationPaymentByProf } from 'App/Types/ICensus'
 import { CensusPaymentParticipationsManagerInterface } from '../interface/census-payment-participations.interface'
 import generateMatch from './generate-match-census'
 

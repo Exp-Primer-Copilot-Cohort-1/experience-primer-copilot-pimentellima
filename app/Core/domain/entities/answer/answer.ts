@@ -1,8 +1,8 @@
-import { IQuestion, IAnswerOption, IAnswer } from "Types/IAnswer";
-import { Entity } from "../abstract/entity.abstract";
-import { ObjectId } from "mongoose";
-import { PromiseEither, left, right } from "App/Core/shared";
 import { AbstractError } from "App/Core/errors/error.interface";
+import { PromiseEither, left, right } from "App/Core/shared";
+import { IAnswer, IAnswerOption, IQuestion } from "App/Types/IAnswer";
+import { ObjectId } from "mongoose";
+import { Entity } from "../abstract/entity.abstract";
 
 export class AnswerEntity extends Entity implements IAnswer {
 	private _name: string;
@@ -14,37 +14,37 @@ export class AnswerEntity extends Entity implements IAnswer {
 	private _category_id: string | ObjectId;
 	private _unity_id: string | ObjectId;
 	private _active: boolean;
-    private _form_id: string | ObjectId;
+	private _form_id: string | ObjectId;
 
 	defineName(name: string): AnswerEntity {
 		this._name = name;
 		return this;
 	}
 
-	defineClientId(client_id : string | ObjectId) : AnswerEntity {
+	defineClientId(client_id: string | ObjectId): AnswerEntity {
 		this._client_id = client_id;
 		return this;
 	}
 
-	defineProfId(prof_id : string | ObjectId) : AnswerEntity {
+	defineProfId(prof_id: string | ObjectId): AnswerEntity {
 		this._prof_id = prof_id;
 		return this;
 	}
 
-	defineActivityId(activity_id : string | ObjectId) : AnswerEntity {
+	defineActivityId(activity_id: string | ObjectId): AnswerEntity {
 		this._activity_id = activity_id;
 		return this;
 	}
 
-	defineAnswers(answers : IAnswerOption[]) : AnswerEntity {
+	defineAnswers(answers: IAnswerOption[]): AnswerEntity {
 		this._answers = answers;
 		return this;
 	}
 
-    defineFormId(form_id: string | ObjectId) {
-        this._form_id = form_id;
-        return this;
-    }
+	defineFormId(form_id: string | ObjectId) {
+		this._form_id = form_id;
+		return this;
+	}
 
 	defineQuestions(questions: IQuestion[]): AnswerEntity {
 		this._questions = questions;
@@ -70,19 +70,19 @@ export class AnswerEntity extends Entity implements IAnswer {
 		return this._name;
 	}
 
-	public get client_id() : string | ObjectId {
+	public get client_id(): string | ObjectId {
 		return this._client_id;
 	}
 
-	public get prof_id() : string | ObjectId {
+	public get prof_id(): string | ObjectId {
 		return this._prof_id;
 	}
 
-	public get activity_id() : string | ObjectId {
+	public get activity_id(): string | ObjectId {
 		return this._activity_id;
 	}
 
-	public get answers() : IAnswerOption[] {
+	public get answers(): IAnswerOption[] {
 		return this._answers;
 	}
 
@@ -102,30 +102,30 @@ export class AnswerEntity extends Entity implements IAnswer {
 		return this._active;
 	}
 
-    public get form_id(): string | ObjectId {
-        return this._form_id;
-    }
+	public get form_id(): string | ObjectId {
+		return this._form_id;
+	}
 
 	public static async build(
 		params: IAnswer
 	): PromiseEither<AbstractError, AnswerEntity> {
-        try {
-            return right(new AnswerEntity()
-                .defineId(params._id?.toString())
-                .defineName(params.name)
+		try {
+			return right(new AnswerEntity()
+				.defineId(params._id?.toString())
+				.defineName(params.name)
 				.defineClientId(params.client_id)
 				.defineProfId(params.prof_id)
 				.defineActivityId(params.activity_id)
-                .defineFormId(params.form_id)
+				.defineFormId(params.form_id)
 				.defineAnswers(params.answers)
-                .defineActive(params.active)
-                .defineCategoryId(params.category_id)
-                .defineUnityId(params.unity_id)
-                .defineQuestions(params.questions)
-            )
-        }
-        catch(error) {
-            return left(new AbstractError("", 500, error));
-        }
-    }
+				.defineActive(params.active)
+				.defineCategoryId(params.category_id)
+				.defineUnityId(params.unity_id)
+				.defineQuestions(params.questions)
+			)
+		}
+		catch (error) {
+			return left(new AbstractError("", 500, error));
+		}
+	}
 }

@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IDefaultConfig } from 'Types/IDefaultConfig'
+import { IDefaultConfig } from 'App/Types/IDefaultConfig'
 import { UnitNotFoundError } from '../../errors/unit-not-found'
 import { DefaultConfigsManagerInterface } from '../interface'
 

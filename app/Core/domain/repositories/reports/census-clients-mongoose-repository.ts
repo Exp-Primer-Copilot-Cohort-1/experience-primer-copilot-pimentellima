@@ -5,7 +5,7 @@ import {
 	ICensusCountPartners,
 	ICensusGenderClient,
 	ICensusNewAndOldClients,
-} from 'Types/ICensus'
+} from 'App/Types/ICensus'
 import { CensusClientsManagerInterface } from '../interface/census-clients-manager.interface'
 
 import generateMatch from './generate-match-census'

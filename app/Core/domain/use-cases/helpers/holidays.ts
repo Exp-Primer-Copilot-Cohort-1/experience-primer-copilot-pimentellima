@@ -1,4 +1,4 @@
-import { IHoliday } from 'Types/IHoliday'
+import { IHoliday } from 'App/Types/IHoliday'
 import axios from 'axios'
 
 export type FindAllHolidaysByUnityParams = {

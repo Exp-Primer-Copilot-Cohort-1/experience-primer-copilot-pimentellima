@@ -2,7 +2,7 @@ import { CategoriesManagerInterface } from 'App/Core/domain/repositories/interfa
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
-import { ICategory } from 'Types/ICategory'
+import { ICategory } from 'App/Types/ICategory'
 import { MissingParamsError } from '../../../errors/missing-params'
 
 type FindAllProps = {

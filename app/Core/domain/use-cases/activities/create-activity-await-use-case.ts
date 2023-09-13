@@ -1,21 +1,22 @@
-import LogDecorator from 'App/Core/decorators/log-decorator'
-import { ActivitiesManagerInterface } from 'App/Core/domain/repositories/interface'
+import LogDecorator, { ACTION } from 'App/Core/decorators/log-decorator'
+import { ActivityAwaitManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { ActivityValues, IActivityAwait } from 'Types/IActivity'
+import { COLLECTION_NAME } from 'App/Models/Activity'
+import { IActivityAwait } from 'App/Types/IActivity'
 
-type Props = ActivityValues & {
-	unity_id: string
-}
+export class CreateActivityAwaitUseCase
+	implements UseCase<IActivityAwait, IActivityAwait>
+{
+	constructor(private readonly activitiesManager: ActivityAwaitManagerInterface) { } // eslint-disable-line
 
-export class CreateActivityAwaitUseCase implements UseCase<Props, IActivityAwait> {
-	constructor(private readonly activitiesManager: ActivitiesManagerInterface) { }
-
-	@LogDecorator('activities', 'post')
-	public async execute(params: Props): PromiseEither<AbstractError, IActivityAwait> {
-		const newActivityOrErr = await this.activitiesManager.createActivityAwait(
-			params.unity_id,
+	@LogDecorator(COLLECTION_NAME, ACTION.POST)
+	public async execute(
+		params: IActivityAwait,
+	): PromiseEither<AbstractError, IActivityAwait> {
+		const newActivityOrErr = await this.activitiesManager.createActivity(
+			params.unity_id?.toString(),
 			params,
 		)
 

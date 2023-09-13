@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared'
-import { ICensusRevenuesOfYearByUnityByProf } from 'Types/ICensus'
+import { ICensusRevenuesOfYearByUnityByProf } from 'App/Types/ICensus'
 
 export interface CensusRevenuesManagerInterface {
 	findRevenuesAccrualRegimeActivities: (

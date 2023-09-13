@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import type { ICategory } from 'Types/ICategory'
+import type { ICategory } from 'App/Types/ICategory'
 
 interface ICategoryModel extends Omit<ICategory, 'prof'> {
 	prof: Schema.Types.ObjectId

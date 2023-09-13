@@ -6,7 +6,7 @@ import {
 	ICensusCountProcedure,
 	ICensusMediaTimeAttendance,
 	ICensusScheduledEvent,
-} from 'Types/ICensus'
+} from 'App/Types/ICensus'
 
 export interface CensusUnitiesManagerInterface {
 	findCensusActivitiesOfScheduledByUnityOrProf: (

@@ -1,11 +1,11 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import { IAnswer } from "Types/IAnswer";
-import { AnswerManagerInterface } from "../interface/answer-manager-interface";
-import { AnswerEntity } from "../../entities/answer/answer";
 import Answer from "App/Models/Answer";
-import { MissingParamsError } from "../../errors/missing-params";
+import { IAnswer } from "App/Types/IAnswer";
+import { AnswerEntity } from "../../entities/answer/answer";
 import { AnswerNotFoundError } from "../../errors/answer-not-found-error";
+import { MissingParamsError } from "../../errors/missing-params";
+import { AnswerManagerInterface } from "../interface/answer-manager-interface";
 
 export class AnswerMongoRepository implements AnswerManagerInterface {
 	async findAnswerById(

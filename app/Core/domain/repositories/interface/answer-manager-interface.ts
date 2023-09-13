@@ -1,10 +1,10 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither } from "App/Core/shared";
-import { IAnswer } from "Types/IAnswer";
+import { IAnswer } from "App/Types/IAnswer";
 
 export interface AnswerManagerInterface {
-    createAnswer: (answer : IAnswer) => PromiseEither<AbstractError, IAnswer>;
-    updateAnswerById: (answer : IAnswer, id: string) => PromiseEither<AbstractError, IAnswer>;
+    createAnswer: (answer: IAnswer) => PromiseEither<AbstractError, IAnswer>;
+    updateAnswerById: (answer: IAnswer, id: string) => PromiseEither<AbstractError, IAnswer>;
     deleteAnswerById: (id: string) => PromiseEither<AbstractError, IAnswer>;
     findAllAnswers: (unity_id: string) => PromiseEither<AbstractError, IAnswer[]>;
     findAnswerById: (id: string) => PromiseEither<AbstractError, IAnswer>;

@@ -3,7 +3,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
 
 import LogDecorator from 'App/Core/decorators/log-decorator'
-import { IPartner } from 'Types/IPartner'
+import { IPartner } from 'App/Types/IPartner'
 import { PartnerManagerInterface } from '../../../repositories/interface'
 
 export class CreatePartnersUseCase implements UseCase<Partial<IPartner>, IPartner> {

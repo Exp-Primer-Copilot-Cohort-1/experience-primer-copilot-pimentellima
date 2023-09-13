@@ -3,7 +3,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
 
 import LogDecorator from 'App/Core/decorators/log-decorator'
-import { IDefaultConfig } from 'Types/IDefaultConfig'
+import { IDefaultConfig } from 'App/Types/IDefaultConfig'
 import { DefaultConfigsManagerInterface } from '../../../repositories/interface'
 
 export class CreateDefaultConfigsUseCase

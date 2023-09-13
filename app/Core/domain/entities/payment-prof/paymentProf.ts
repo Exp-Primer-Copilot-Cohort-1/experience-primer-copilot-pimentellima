@@ -1,8 +1,8 @@
-import { IPaymentProf } from "Types/IPaymentProf";
-import { Entity } from "../abstract/entity.abstract";
 import { ObjectId } from "@ioc:Mongoose";
-import { PromiseEither, left, right } from "App/Core/shared";
 import { AbstractError } from "App/Core/errors/error.interface";
+import { PromiseEither, left, right } from "App/Core/shared";
+import { IPaymentProf } from "App/Types/IPaymentProf";
+import { Entity } from "../abstract/entity.abstract";
 
 export class PaymentProfEntity extends Entity implements IPaymentProf {
 	private _value: number;
@@ -88,21 +88,21 @@ export class PaymentProfEntity extends Entity implements IPaymentProf {
 	public static async build(
 		params: IPaymentProf
 	): PromiseEither<AbstractError, PaymentProfEntity> {
-        try {
-            return right(
+		try {
+			return right(
 				new PaymentProfEntity()
-				.defineId(params._id?.toString())
-				.defineValue(params.value)
-				.definePercent(params.percent)
-				.defineProcedure(params.procedure)
-				.defineHealthInsurance(params.health_insurance)
-				.defineProf(params.prof)
-				.defineActive(params.active)
-				.defineUnityId(params.unity_id)
+					.defineId(params._id?.toString())
+					.defineValue(params.value)
+					.definePercent(params.percent)
+					.defineProcedure(params.procedure)
+					.defineHealthInsurance(params.health_insurance)
+					.defineProf(params.prof)
+					.defineActive(params.active)
+					.defineUnityId(params.unity_id)
 			)
-        }
-        catch(error) {
-            return left(new AbstractError("", 500));
-        }
-    }
+		}
+		catch (error) {
+			return left(new AbstractError("", 500));
+		}
+	}
 }

@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IFinancialCategory } from 'Types/IFinancialCategory'
+import { IFinancialCategory } from 'App/Types/IFinancialCategory'
 
 const FinancialCategorySchema = new Schema<IFinancialCategory>(
 	{

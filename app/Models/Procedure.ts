@@ -1,5 +1,9 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IProcedure } from 'Types/IProcedure'
+import { IProcedure } from 'App/Types/IProcedure'
+
+import { COLLECTION_NAME as COLLECTION_HEALTH_INSURANCE_NAME } from './HealthInsurance'
+import { COLLECTION_NAME as COLLECTION_UNITY_NAME } from './Unity'
+import { COLLECTION_NAME as COLLECTION_USER_NAME } from './User'
 
 interface IProcedureModel extends Omit<IProcedure, 'profs' | 'health_insurances'> {
 	profs: Schema.Types.ObjectId[]
@@ -8,6 +12,8 @@ interface IProcedureModel extends Omit<IProcedure, 'profs' | 'health_insurances'
 		price: number
 	}[]
 }
+
+export const COLLECTION_NAME = 'procedures'
 
 const ProcedureSchema = new Schema<IProcedureModel>(
 	{
@@ -31,7 +37,7 @@ const ProcedureSchema = new Schema<IProcedureModel>(
 			{
 				_id: false,
 				type: Schema.Types.ObjectId,
-				ref: 'profs',
+				ref: COLLECTION_USER_NAME,
 			},
 		],
 		health_insurances: [
@@ -40,7 +46,7 @@ const ProcedureSchema = new Schema<IProcedureModel>(
 				info: {
 					type: Schema.Types.ObjectId,
 					required: true,
-					ref: 'health_insurances',
+					ref: COLLECTION_HEALTH_INSURANCE_NAME,
 				},
 				price: {
 					type: Number,
@@ -76,6 +82,7 @@ const ProcedureSchema = new Schema<IProcedureModel>(
 		unity_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
+			ref: COLLECTION_UNITY_NAME,
 		},
 	},
 	{
@@ -92,4 +99,9 @@ ProcedureSchema.index({ unity_id: 1, health_insurance: 1, active: 1 }, { unique:
 
 ProcedureSchema.index({ unity_id: 1, minutes: 1, active: 1 }, { unique: false })
 
-export default Mongoose.model<IProcedureModel>('procedures', ProcedureSchema)
+export enum COLLECTIONS_REFS {
+	PROFS = 'profs',
+	HEALTH_INSURANCES = 'health_insurances.info',
+}
+
+export default Mongoose.model<IProcedureModel>(COLLECTION_NAME, ProcedureSchema)

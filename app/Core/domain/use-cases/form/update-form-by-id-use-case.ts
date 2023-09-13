@@ -2,7 +2,7 @@ import LogDecorator from 'App/Core/decorators/log-decorator'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IForm } from 'Types/IForm'
+import { IForm } from 'App/Types/IForm'
 import FormEntity from '../../entities/form/form'
 import { FormManagerInterface } from '../../repositories/interface/form-manager-interface'
 

@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Partner from 'App/Models/Partner'
-import { IPartner } from 'Types/IPartner'
+import { IPartner } from 'App/Types/IPartner'
 import { OptsQuery } from '../../entities/helpers/opts-query'
 import { UnitNotFoundError } from '../../errors/unit-not-found'
 import { PartnerManagerInterface } from '../interface/partner-manage-interface'

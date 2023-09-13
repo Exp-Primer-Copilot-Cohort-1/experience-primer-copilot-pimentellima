@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IProcedureTransaction } from 'Types/ITransaction'
+import { IProcedureTransaction } from 'App/Types/ITransaction'
 import { z } from 'zod'
 import zProcedure from './z-procedure'
 

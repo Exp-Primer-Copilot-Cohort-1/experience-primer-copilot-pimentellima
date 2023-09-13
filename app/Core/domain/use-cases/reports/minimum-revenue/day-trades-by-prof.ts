@@ -2,8 +2,8 @@ import { ProfManagerInterface } from 'App/Core/domain/repositories/interface/pro
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IHoliday } from 'Types/IHoliday'
-import { IUser } from 'Types/IUser'
+import { IHoliday } from 'App/Types/IHoliday'
+import { IUser } from 'App/Types/IUser'
 import { FindAllHolidaysByUnityParams } from '../../helpers/holidays'
 
 type workedDays = number

@@ -4,7 +4,7 @@ import {
 	ICensusActivitiesByHealthInsurance,
 	ICensusPaymentByProf,
 	ICensusPaymentForm,
-} from 'Types/ICensus'
+} from 'App/Types/ICensus'
 
 export interface CensusPaymentsManagerInterface {
 	findPaymentsByHealthInsurance: (

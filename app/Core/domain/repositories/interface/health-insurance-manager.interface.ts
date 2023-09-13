@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
-import { HealthInsuranceParams, IHealthInsurance } from 'Types/IHealthInsurance'
+import { HealthInsuranceParams, IHealthInsurance } from 'App/Types/IHealthInsurance'
 
 export interface HealthInsuranceManagerInterface {
 	findAllByUnityId: (

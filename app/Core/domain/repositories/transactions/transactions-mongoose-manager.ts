@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, right } from 'App/Core/shared/either'
 import Transactions from 'App/Models/Transactions'
-import { ITransaction } from 'Types/ITransaction'
+import { ITransaction } from 'App/Types/ITransaction'
 import { TransactionsManagerInterface } from '../interface/transactions-manager-interface'
 
 export class TransactionsMongooseRepository implements TransactionsManagerInterface {

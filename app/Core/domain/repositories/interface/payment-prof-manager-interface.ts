@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared'
-import { IPaymentProf, ParticipationPrice } from 'Types/IPaymentProf'
+import { IPaymentProf, ParticipationPrice } from 'App/Types/IPaymentProf'
 
 export interface PaymentProfManagerInterface {
 	createOrUpdatePaymentProf: (

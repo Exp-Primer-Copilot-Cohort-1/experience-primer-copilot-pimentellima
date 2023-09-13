@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IAnswer } from 'Types/IAnswer'
+import { IAnswer } from 'App/Types/IAnswer'
 
 const AnswerSchema = new Schema<IAnswer>(
 	{},

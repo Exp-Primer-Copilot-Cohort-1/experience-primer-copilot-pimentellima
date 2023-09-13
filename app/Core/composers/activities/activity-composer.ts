@@ -1,8 +1,10 @@
 import { Controller } from 'App/Core/adapters/controller'
 import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
 import {
+	ActivityAttendanceMongoRepository,
 	ActivityAwaitMongoRepository,
 	ActivityMongoRepository,
+	ActivityRecurrentMongoRepository,
 } from 'App/Core/domain/repositories'
 import { FindAllActivitiesUseCase } from 'App/Core/domain/use-cases'
 import { CreateActivityAwaitUseCase } from 'App/Core/domain/use-cases/activities/create-activity-await-use-case'
@@ -25,15 +27,19 @@ export const makeCreateActivityComposer = (): ControllerGeneric => {
 }
 
 export const makeCreateActivityAwaitComposer = (): ControllerGeneric => {
-	return new Controller(new CreateActivityAwaitUseCase(new ActivityMongoRepository()))
+	return new Controller(
+		new CreateActivityAwaitUseCase(new ActivityAwaitMongoRepository()),
+	)
 }
 
 export const makeUpdateActivityPaymentComposer = (): ControllerGeneric => {
-	return new Controller(new UpdateActivityPaymentUseCase(new ActivityMongoRepository()))
+	return new Controller(
+		new UpdateActivityPaymentUseCase(new ActivityAttendanceMongoRepository()),
+	)
 }
 export const makeCreateRecurrentActivityComposer = (): ControllerGeneric => {
 	return new Controller(
-		new CreateRecurrentActivityUseCase(new ActivityMongoRepository()),
+		new CreateRecurrentActivityUseCase(new ActivityRecurrentMongoRepository()),
 	)
 }
 export const makeDeleteActivityByIdComposer = (): ControllerGeneric => {
@@ -64,7 +70,7 @@ export const makeFindAllActivitiesAwaitComposer = (): ControllerGeneric => {
 
 export const makeFindAllActivitiesPendingComposer = (): ControllerGeneric => {
 	return new Controller(
-		new FindAllActivitiesPendingUseCase(new ActivityMongoRepository()),
+		new FindAllActivitiesPendingUseCase(new ActivityRecurrentMongoRepository()),
 	)
 }
 
@@ -74,18 +80,18 @@ export const makeUpdateActivityByIdComposer = (): ControllerGeneric => {
 
 export const makeUpdateActivityStatusComposer = (): ControllerGeneric => {
 	return new Controller(
-		new UpdateActivityStatusByIdUseCase(new ActivityMongoRepository()),
+		new UpdateActivityStatusByIdUseCase(new ActivityAttendanceMongoRepository()),
 	)
 }
 
 export const makeUpdateActivityStartedAtComposer = (): ControllerGeneric => {
 	return new Controller(
-		new UpdateActivityStartedAtUseCase(new ActivityMongoRepository()),
+		new UpdateActivityStartedAtUseCase(new ActivityAttendanceMongoRepository()),
 	)
 }
 
 export const makeUpdateActivityFinishedAtComposer = (): ControllerGeneric => {
 	return new Controller(
-		new UpdateActivityFinishedAtUseCase(new ActivityMongoRepository()),
+		new UpdateActivityFinishedAtUseCase(new ActivityAttendanceMongoRepository()),
 	)
 }

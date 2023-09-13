@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { faker } from '@faker-js/faker'
 import { UnityEntity } from './unity'
 
-import { IUnity } from 'Types/IUnity'
+import { IUnity } from 'App/Types/IUnity'
 import { cnpj, cpf } from 'cpf-cnpj-validator'
 import { addDays } from 'date-fns'
 

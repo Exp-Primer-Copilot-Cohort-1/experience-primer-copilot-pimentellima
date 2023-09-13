@@ -5,7 +5,7 @@ import { PaymentProfManagerInterface } from 'App/Core/domain/repositories/interf
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IProcedureTransaction, ITransaction } from 'Types/ITransaction'
+import { IProcedureTransaction, ITransaction } from 'App/Types/ITransaction'
 import { TransactionsManagerInterface } from '../../../repositories/interface/transactions-manager-interface'
 import { TransactionWithProcedure } from '../helpers'
 

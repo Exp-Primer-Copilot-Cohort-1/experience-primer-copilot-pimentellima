@@ -4,7 +4,7 @@ import { ProceduresManagerInterface } from 'App/Core/domain/repositories/interfa
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
-import { IProcedure } from 'Types/IProcedure'
+import { IProcedure } from 'App/Types/IProcedure'
 
 export class UpdateProceduresByIdUseCase
 	implements UseCase<Partial<IProcedure>, IProcedure>

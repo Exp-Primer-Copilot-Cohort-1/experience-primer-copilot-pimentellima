@@ -2,7 +2,7 @@ import { ActivityAwaitManagerInterface } from 'App/Core/domain/repositories/inte
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IActivityAwait } from 'Types/IActivity'
+import { IActivityAwait } from 'App/Types/IActivity'
 
 type ActivityAwaitParams = {
 	unity_id: string

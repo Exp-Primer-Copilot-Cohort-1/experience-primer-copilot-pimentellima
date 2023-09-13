@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
 import Transactions from 'App/Models/Transactions'
-import { ITransaction } from 'Types/ITransaction'
+import { ITransaction } from 'App/Types/ITransaction'
 import { assert } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 

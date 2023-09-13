@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IBusinessFranchises } from 'Types/IBusinessFranchises'
+import { IBusinessFranchises } from 'App/Types/IBusinessFranchises'
 
 const COLLECTION_NAME = 'business_franchises'
 

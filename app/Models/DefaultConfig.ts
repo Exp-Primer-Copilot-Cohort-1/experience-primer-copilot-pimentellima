@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IDefaultConfig } from 'Types/IDefaultConfig'
+import { IDefaultConfig } from 'App/Types/IDefaultConfig'
 
 const DefaultConfigSchema = new Schema<IDefaultConfig>(
 	{

@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Client, { COLLECTIONS } from 'App/Models/Client'
-import { IClient, IUserClient } from 'Types/IClient'
+import { IClient, IUserClient } from 'App/Types/IClient'
 import { ClientNotFoundError } from '../../errors/clients-not-found'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
 import { ClientManagerInterface } from '../interface'

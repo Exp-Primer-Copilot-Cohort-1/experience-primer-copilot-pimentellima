@@ -1,15 +1,15 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import { IAnswer } from "Types/IAnswer";
-import { AnswerManagerInterface } from "../interface/answer-manager-interface";
+import { IAnswer } from "App/Types/IAnswer";
 import { AnswerEntity } from "../../entities/answer/answer";
-import { MissingParamsError } from "../../errors/missing-params";
 import { AnswerNotFoundError } from "../../errors/answer-not-found-error";
+import { MissingParamsError } from "../../errors/missing-params";
+import { AnswerManagerInterface } from "../interface/answer-manager-interface";
 
 export class AnswerInMemoryRepository implements AnswerManagerInterface {
 	public answers: any[] = [];
 	findAnswersByClientId: (unity_id: string, client_id: string) => PromiseEither<AbstractError, AnswerEntity[]>;
-	
+
 	findAnswerById: (id: string) => PromiseEither<AbstractError, AnswerEntity>;
 	async createAnswer(answer: IAnswer): PromiseEither<AbstractError, AnswerEntity> {
 		const newAnswerOrErr = await AnswerEntity.build(answer);
@@ -22,7 +22,7 @@ export class AnswerInMemoryRepository implements AnswerManagerInterface {
 		answer: IAnswer,
 		id: string
 	): PromiseEither<AbstractError, AnswerEntity> {
-		if(!id) return left(new MissingParamsError(id));
+		if (!id) return left(new MissingParamsError(id));
 		const oldAnswer = this.answers.find((ans) => ans._id === id);
 		if (!oldAnswer) return left(new AnswerNotFoundError());
 		const answerOrErr = await AnswerEntity.build({

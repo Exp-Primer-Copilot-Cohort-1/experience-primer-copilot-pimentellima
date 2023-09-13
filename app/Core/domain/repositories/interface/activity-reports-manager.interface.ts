@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
-import { IActivity } from 'Types/IActivity'
+import { IActivity } from 'App/Types/IActivity'
 
 export interface ActivitiesReportsManagerInterface {
 	findAllActivitiesByMonth: (

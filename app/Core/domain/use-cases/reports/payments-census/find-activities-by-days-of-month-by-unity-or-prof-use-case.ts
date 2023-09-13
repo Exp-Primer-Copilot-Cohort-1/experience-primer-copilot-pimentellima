@@ -5,7 +5,7 @@ import { CensusDaysManagerInterface } from 'App/Core/domain/repositories/interfa
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { ICensusActivitiesByDaysOfMonth } from 'Types/ICensus'
+import { ICensusActivitiesByDaysOfMonth } from 'App/Types/ICensus'
 
 type FindActivitiesByUnityOrProfProps = {
 	unity_id: string

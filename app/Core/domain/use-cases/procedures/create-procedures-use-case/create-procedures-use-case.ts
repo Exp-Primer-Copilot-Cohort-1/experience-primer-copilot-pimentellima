@@ -3,7 +3,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
 
 import LogDecorator from 'App/Core/decorators/log-decorator'
-import { IProcedure } from 'Types/IProcedure'
+import { IProcedure } from 'App/Types/IProcedure'
 import { ProceduresManagerInterface } from '../../../repositories/interface'
 
 export class CreateProceduresUseCase implements UseCase<Partial<IProcedure>, IProcedure> {

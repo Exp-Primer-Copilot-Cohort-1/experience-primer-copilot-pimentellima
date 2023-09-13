@@ -1,4 +1,4 @@
-import { IProcedureTransaction, ITransaction } from 'Types/ITransaction'
+import { IProcedureTransaction, ITransaction } from 'App/Types/ITransaction'
 
 export type TransactionWithoutProcedure = Omit<ITransaction, 'procedures'>
 

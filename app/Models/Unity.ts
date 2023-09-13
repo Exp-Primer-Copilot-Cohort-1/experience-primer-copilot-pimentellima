@@ -1,7 +1,9 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { decrypt, encrypt } from 'App/Helpers/encrypt'
-import { IPhone, IUnity } from 'Types/IUnity'
+import { IPhone, IUnity } from 'App/Types/IUnity'
 import { HolidaySchemaHelper } from './helpers/Holiday'
+
+export const COLLECTION_NAME = 'unities'
 
 export const UnitySchema = new Schema<IUnity>(
 	{
@@ -149,4 +151,4 @@ UnitySchema.post('findOne', async function (doc) {
 	}
 })
 
-export default Mongoose.model<IUnity>('unities', UnitySchema, 'unities')
+export default Mongoose.model<IUnity>(COLLECTION_NAME, UnitySchema)

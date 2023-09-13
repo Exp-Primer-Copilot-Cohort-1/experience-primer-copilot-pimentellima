@@ -2,7 +2,7 @@ import { ReportsUnitiesManagerInterface } from 'App/Core/domain/repositories/int
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, right } from 'App/Core/shared'
-import { IBilling } from 'Types/IBilling'
+import { IBilling } from 'App/Types/IBilling'
 
 type RevenueReportsByYear = {
 	unity_id: string

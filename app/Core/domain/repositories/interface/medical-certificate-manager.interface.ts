@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
-import { IMedicalCertificate } from 'Types/IMedicalCertificate'
+import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
 
 export interface MedicalCertificateManagerInterface {
 	findByName: (

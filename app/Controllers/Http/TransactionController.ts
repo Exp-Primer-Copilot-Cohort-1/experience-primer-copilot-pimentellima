@@ -3,7 +3,7 @@ import { adaptRoute } from 'App/Core/adapters'
 import { makeCreateTransactionComposer } from 'App/Core/composers'
 import { TransactionEntity } from 'App/Core/domain/entities/transaction/TransactionEntity'
 import Transaction from 'App/Models/Transactions'
-import { ITransaction } from 'Types/ITransaction'
+import { ITransaction } from 'App/Types/ITransaction'
 
 class TransactionsController {
 	async index({ auth, request }: HttpContextContract) {

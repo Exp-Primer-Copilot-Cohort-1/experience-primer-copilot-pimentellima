@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IDaysOffice } from 'Types/IDaysOffice'
+import { IDaysOffice } from 'App/Types/IDaysOffice'
 import { Entity } from '../abstract/entity.abstract'
 
 class DaysOfTrade extends Entity implements IDaysOffice {

@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { test } from '@japa/runner'
-import { IUserClient } from 'Types/IClient'
+import { IUserClient } from 'App/Types/IClient'
 import { assert } from 'chai'
 
 import Client from 'App/Models/Client'

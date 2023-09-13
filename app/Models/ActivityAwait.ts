@@ -1,6 +1,8 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { PaymentStatus } from 'App/Helpers'
-import { IActivityAwait } from 'Types/IActivity'
+import { IActivityAwait } from 'App/Types/IActivity'
+import { COLLECTION_NAME } from './Activity'
+
 interface IActivityAwaitModel extends Omit<IActivityAwait, 'prof' | 'client'> {
 	prof: Schema.Types.ObjectId
 	client: Schema.Types.ObjectId
@@ -90,5 +92,5 @@ const ActivityAwaitSchema = new Schema<IActivityAwaitModel>(
 export default Mongoose.model<IActivityAwaitModel>(
 	'activity_awaits',
 	ActivityAwaitSchema,
-	'activities',
+	COLLECTION_NAME,
 )

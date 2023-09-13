@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import type { IUser } from 'Types/IUser'
+import type { IUser } from 'App/Types/IUser'
 import { UserNotValidError } from '../../errors/user-not-valid'
 import { SystemUser } from '../abstract/system-user.abstract'
 import ExtractValueEntitiesValidations from '../decorators/extract-value-entities-validations'

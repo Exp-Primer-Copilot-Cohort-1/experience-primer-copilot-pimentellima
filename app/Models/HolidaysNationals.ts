@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IHoliday } from 'Types/IHoliday'
+import { IHoliday } from 'App/Types/IHoliday'
 
 type YearHoliday = {
 	year: number

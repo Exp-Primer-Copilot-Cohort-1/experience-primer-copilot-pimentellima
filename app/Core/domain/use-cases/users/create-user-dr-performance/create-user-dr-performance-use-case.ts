@@ -3,8 +3,8 @@ import { DrPerformanceManager } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import type { IAdminUser } from 'Types/IAdminUser'
-import { IUnity } from 'Types/IUnity'
+import type { IAdminUser } from 'App/Types/IAdminUser'
+import { IUnity } from 'App/Types/IUnity'
 
 type NewDrPerformance = {
 	unity: IUnity

@@ -3,7 +3,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
 
 import LogDecorator, { ACTION } from 'App/Core/decorators/log-decorator'
-import { IMedicalCertificate } from 'Types/IMedicalCertificate'
+import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
 import { MedicalCertificateManagerInterface } from '../../../repositories/interface'
 
 export class CreateMedicalCertificateUseCase

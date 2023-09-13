@@ -3,7 +3,7 @@ import { CensusRevenuesManagerInterface } from 'App/Core/domain/repositories/int
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { ICensusRevenuesOfYearByUnityByProf } from 'Types/ICensus'
+import { ICensusRevenuesOfYearByUnityByProf } from 'App/Types/ICensus'
 
 type FindRevenuesActivitiesProps = {
 	unity_id: string

@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
-import { IBilling } from 'Types/IBilling'
+import { IBilling } from 'App/Types/IBilling'
 
 export interface ReportsUnitiesManagerInterface {
 	findAllBillingByYear: (

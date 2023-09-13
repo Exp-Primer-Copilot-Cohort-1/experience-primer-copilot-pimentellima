@@ -1,11 +1,18 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
-import type { IActivity } from 'Types/IActivity'
+import { STATUS_ACTIVITY, type IActivity } from 'App/Types/IActivity'
+import { COLLECTION_NAME as COLLECTION_CLIENT_NAME } from './Client'
+import { COLLECTION_NAME as COLLECTION_HEALTH_INSURANCE_NAME } from './HealthInsurance'
+import { COLLECTION_NAME as COLLECTION_PROCEDURE_NAME } from './Procedure'
+import { COLLECTION_NAME as COLLECTION_UNITY_NAME } from './Unity'
+import { COLLECTION_NAME as COLLECTION_USER_NAME } from './User'
 
 interface IActivityModel extends Omit<IActivity, 'prof' | 'client'> {
 	prof: Schema.Types.ObjectId
 	client: Schema.Types.ObjectId
 }
+
+export const COLLECTION_NAME = 'activities'
 
 const ActivitySchema = new Schema<IActivityModel>(
 	{
@@ -26,14 +33,10 @@ const ActivitySchema = new Schema<IActivityModel>(
 		},
 		procedures: [
 			{
-				value: {
+				info: {
 					type: Schema.Types.ObjectId,
 					required: true,
-					ref: 'procedures',
-				},
-				label: {
-					type: String,
-					required: true,
+					ref: COLLECTION_PROCEDURE_NAME,
 				},
 				minutes: {
 					type: Number,
@@ -43,19 +46,15 @@ const ActivitySchema = new Schema<IActivityModel>(
 					type: String,
 					required: true,
 				},
-				val: {
-					type: String,
+				price: {
+					type: Number,
 					required: true,
 				},
 				health_insurance: {
-					value: {
+					info: {
 						type: Schema.Types.ObjectId,
 						required: false,
-						ref: 'health_insurances',
-					},
-					label: {
-						type: String,
-						required: false,
+						ref: COLLECTION_HEALTH_INSURANCE_NAME,
 					},
 					price: {
 						type: String,
@@ -84,7 +83,7 @@ const ActivitySchema = new Schema<IActivityModel>(
 		client: {
 			type: Schema.Types.ObjectId,
 			required: true,
-			ref: 'clients',
+			ref: COLLECTION_CLIENT_NAME,
 		},
 		obs: {
 			type: String,
@@ -94,7 +93,7 @@ const ActivitySchema = new Schema<IActivityModel>(
 		prof: {
 			type: Schema.Types.ObjectId,
 			required: true,
-			ref: 'users',
+			ref: COLLECTION_USER_NAME,
 		},
 		active: {
 			type: Boolean,
@@ -104,7 +103,7 @@ const ActivitySchema = new Schema<IActivityModel>(
 		unity_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
-			ref: 'unities',
+			ref: COLLECTION_UNITY_NAME,
 		},
 		scheduled: {
 			type: String,
@@ -123,7 +122,8 @@ const ActivitySchema = new Schema<IActivityModel>(
 		type: {
 			type: String,
 			required: false,
-			default: 'marked',
+			enum: Object.values(STATUS_ACTIVITY),
+			default: STATUS_ACTIVITY.MARKED,
 		},
 	},
 	{
@@ -134,8 +134,20 @@ const ActivitySchema = new Schema<IActivityModel>(
 	},
 )
 
-ActivitySchema.index({ 'prof.value': 1 }, { unique: false })
-ActivitySchema.index({ 'client.value': 1 }, { unique: false })
+ActivitySchema.index({ prof: 1 }, { unique: false })
+ActivitySchema.index({ client: 1 }, { unique: false })
 ActivitySchema.index({ unity_id: 1, scheduled: 1, date: 1, type: 1 }, { unique: false })
 
-export default Mongoose.model<IActivityModel>('activities', ActivitySchema, 'activities')
+export enum COLLECTIONS_REFS {
+	PROFS = 'prof',
+	UNITIES = 'unity_id',
+	HEALTH_INSURANCES = 'health_insurance',
+	PROCEDURES = 'procedures.info',
+	CLIENTS = 'client',
+}
+
+export default Mongoose.model<IActivityModel>(
+	COLLECTION_NAME,
+	ActivitySchema,
+	COLLECTION_NAME,
+)

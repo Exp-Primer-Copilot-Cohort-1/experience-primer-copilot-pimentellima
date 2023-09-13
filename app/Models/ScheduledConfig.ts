@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import type { IUser } from 'Types/IUser'
+import type { IUser } from 'App/Types/IUser'
 
 /**
  * @swagger

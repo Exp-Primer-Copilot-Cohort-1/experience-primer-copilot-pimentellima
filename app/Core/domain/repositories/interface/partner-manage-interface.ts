@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
-import { IPartner } from 'Types/IPartner'
+import { IPartner } from 'App/Types/IPartner'
 
 export interface PartnerManagerInterface {
 	findAll: (unity_id: string) => PromiseEither<AbstractError, IPartner[]>

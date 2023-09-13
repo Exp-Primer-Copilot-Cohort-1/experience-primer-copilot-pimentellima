@@ -5,7 +5,7 @@ import {
 	ICensusActivitiesByDays,
 	ICensusActivitiesByDaysOfMonth,
 	ICensusWorkedHoursByProf,
-} from 'Types/ICensus'
+} from 'App/Types/ICensus'
 import { CensusDaysManagerInterface } from '../interface/census-days-manager.interface'
 
 import Prof from 'App/Models/Prof'

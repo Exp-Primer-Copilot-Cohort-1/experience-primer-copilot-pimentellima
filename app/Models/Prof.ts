@@ -1,7 +1,7 @@
 import Hash from '@ioc:Adonis/Core/Hash'
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { decrypt, encrypt } from 'App/Helpers/encrypt'
-import type { IUser } from 'Types/IUser'
+import type { IUser } from 'App/Types/IUser'
 
 /**
  * @swagger
