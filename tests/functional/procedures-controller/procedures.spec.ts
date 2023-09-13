@@ -1,12 +1,13 @@
 import { test } from '@japa/runner'
 
+import { faker } from '@faker-js/faker'
 import Procedure from 'App/Models/Procedure'
-import { assert } from 'chai'
+import { assert, expect } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 const procedureData = {
 	value: 0,
 	color: '#e0594b',
-	name: 'teste',
+	name: faker.person.firstName(),
 	minutes: 50,
 	prof: [
 		{
@@ -25,8 +26,8 @@ const procedureData = {
 const proceduresData = {
 	value: 0,
 	color: '#e0594b',
-	name: 'teste',
-	minutes: 50,
+	name: faker.person.firstName(),
+	minutes: 60,
 	prof: [
 		{
 			value: '63597857c109b232759921d9',
@@ -64,10 +65,10 @@ test.group('Procedure Controller', async () => {
 
 		response.assertStatus(200)
 
-		const { deletedCount } = await Procedure.deleteOne({
-			_id: response.body()._id,
+		const { deletedCount } = await Procedure.deleteMany({
+			name: response.body().name,
 		})
-		assert.equal(deletedCount, 1)
+		expect(deletedCount).to.greaterThan(0)
 	})
 	test('display update procedure', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
@@ -82,12 +83,14 @@ test.group('Procedure Controller', async () => {
 			.json({ ...updatedData })
 			.headers({ Authorization: `Bearer ${token.token}` })
 		response.assertStatus(200)
-		const updatedProcedure = await Procedure.findById(procedure._id)
+		const updatedProcedure: any = await Procedure.findById(procedure._id)
 
 		assert.equal(updatedProcedure?.name, updatedData.name)
 
-		const { deletedCount } = await Procedure.deleteOne({ _id: procedure._id })
-		assert.equal(deletedCount, 1)
+		const { deletedCount } = await Procedure.deleteMany({
+			name: updatedProcedure.name,
+		})
+		expect(deletedCount).to.greaterThan(0)
 	})
 	test('display delete procedure', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
