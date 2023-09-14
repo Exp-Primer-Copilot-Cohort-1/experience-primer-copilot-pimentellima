@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
-import { IUnity } from 'Types/IUnity'
+import { IUnity } from 'App/Types/IUnity'
 import { MissingParamsError } from '../../errors/missing-params'
 import { UnitDateExpiredError } from '../../errors/unit-date-expired'
 import { UnitiesManagerInterface } from '../../repositories/interface'

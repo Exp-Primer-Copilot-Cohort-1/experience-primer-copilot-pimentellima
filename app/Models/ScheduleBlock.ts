@@ -1,19 +1,19 @@
-import Mongoose, { Schema } from "@ioc:Mongoose";
-import { IScheduleBlock } from "Types/IScheduleBlock";
+import Mongoose, { Schema } from '@ioc:Mongoose'
+import { IScheduleBlock } from 'App/Types/IScheduleBlock'
 
 const ScheduleBlockSchema = new Schema<IScheduleBlock>(
 	{
 		date: {
 			type: Date,
-			required: true
+			required: true,
 		},
 		hour_start: {
 			type: String,
-			required: true
+			required: true,
 		},
 		hour_end: {
 			type: String,
-			required: true
+			required: true,
 		},
 		obs: {
 			type: String,
@@ -22,7 +22,7 @@ const ScheduleBlockSchema = new Schema<IScheduleBlock>(
 		},
 		all_day: {
 			type: Boolean,
-			required: true
+			required: true,
 		},
 		prof: {
 			value: {
@@ -41,10 +41,10 @@ const ScheduleBlockSchema = new Schema<IScheduleBlock>(
 	},
 	{
 		timestamps: {
-			createdAt: "created_at",
-			updatedAt: "updated_at",
+			createdAt: 'created_at',
+			updatedAt: 'updated_at',
 		},
-	}
-);
+	},
+)
 
-export default Mongoose.model<IScheduleBlock>("schedule_block", ScheduleBlockSchema);
+export default Mongoose.model<IScheduleBlock>('schedule_block', ScheduleBlockSchema)

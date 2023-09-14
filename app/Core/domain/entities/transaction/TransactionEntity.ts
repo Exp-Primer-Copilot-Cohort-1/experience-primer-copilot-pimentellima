@@ -1,7 +1,7 @@
 import { ObjectId } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IProcedureTransaction, ITransaction } from 'Types/ITransaction'
+import { IProcedureTransaction, ITransaction } from 'App/Types/ITransaction'
 import { Schema } from 'mongoose'
 import * as z from 'zod'
 import { Entity } from '../abstract/entity.abstract'

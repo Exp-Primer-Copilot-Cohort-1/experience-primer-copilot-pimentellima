@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
-import { IUserClient } from 'Types/IClient'
+import { IUserClient } from 'App/Types/IClient'
 
 export interface ClientManagerInterface {
 	findAll: (unity_id: string) => PromiseEither<AbstractError, IUserClient[]>

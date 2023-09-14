@@ -4,7 +4,7 @@ import { HealthInsuranceManagerInterface } from 'App/Core/domain/repositories/in
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IHealthInsurance } from 'Types/IHealthInsurance'
+import { IHealthInsurance } from 'App/Types/IHealthInsurance'
 
 export class UpdateHealthInsuranceUseCase
 	implements UseCase<Partial<IHealthInsurance>, IHealthInsurance>

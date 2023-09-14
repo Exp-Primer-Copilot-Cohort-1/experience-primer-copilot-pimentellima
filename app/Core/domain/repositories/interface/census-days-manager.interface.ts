@@ -4,7 +4,7 @@ import {
 	ICensusActivitiesByDays,
 	ICensusActivitiesByDaysOfMonth,
 	ICensusWorkedHoursByProf,
-} from 'Types/ICensus'
+} from 'App/Types/ICensus'
 
 export interface CensusDaysManagerInterface {
 	findActivitiesByDaysOfWeek: (

@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { ICostCenter } from 'Types/ICostCenter'
+import { ICostCenter } from 'App/Types/ICostCenter'
 
 const CostCenterSchema = new Schema<ICostCenter>(
 	{

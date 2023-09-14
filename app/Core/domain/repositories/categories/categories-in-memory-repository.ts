@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { ICategory } from 'Types/ICategory'
+import { ICategory } from 'App/Types/ICategory'
 import { UnitNotFoundError } from '../../errors/unit-not-found'
 import { CategoriesManagerInterface } from '../interface'
 

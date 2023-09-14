@@ -4,7 +4,7 @@ import { PromiseEither, left } from 'App/Core/shared'
 
 import LogDecorator, { ACTION } from 'App/Core/decorators/log-decorator'
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
-import { IMedicalCertificate } from 'Types/IMedicalCertificate'
+import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
 import { MedicalCertificateManagerInterface } from '../../../repositories/interface'
 
 export class UpdateMedicalCertificateByIdUseCase

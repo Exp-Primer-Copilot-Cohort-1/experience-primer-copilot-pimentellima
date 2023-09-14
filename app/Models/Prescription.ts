@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IPrescription } from 'Types/IPrescription'
+import { IPrescription } from 'App/Types/IPrescription'
 
 interface IPrescriptionModel extends Omit<IPrescription, 'prof'> {
 	prof: Schema.Types.ObjectId

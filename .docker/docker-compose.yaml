@@ -2,28 +2,28 @@ version: '3.3'
 
 name: dpsystem-db
 services:
-  mongo:
-    image: mongo
-    restart: always
-    ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
-    volumes:
-      - './data:/data/db'
+#   mongo:
+#     image: mongo
+#     restart: always
+#     ports:
+#       - "27017:27017"
+#     environment:
+#       MONGO_INITDB_ROOT_USERNAME: admin
+#       MONGO_INITDB_ROOT_PASSWORD: admin
+#     volumes:
+#       - './data:/data/db'
 
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
-      ME_CONFIG_MONGODB_URL: mongodb://admin:admin@mongo:27017/
-    depends_on:
-      - mongo
+#   mongo-express:
+#     image: mongo-express
+#     restart: always
+#     ports:
+#       - 8081:8081
+#     environment:
+#       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+#       ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+#       ME_CONFIG_MONGODB_URL: mongodb://admin:admin@mongo:27017/
+#     depends_on:
+#       - mongo
 
   redis:
     image: redis
@@ -36,10 +36,9 @@ services:
     image: mongo-express
     restart: 'no'
     ports:
-      - 8082:8082
+      - 8082:8081
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: ${DB_USERNAME}
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${DB_PASSWORD}
       ME_CONFIG_MONGODB_URL: ${DB_CONNECTION_STRING}
-    depends_on:
-      - mongo
+

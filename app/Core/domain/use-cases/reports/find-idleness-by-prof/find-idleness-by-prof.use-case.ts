@@ -3,7 +3,7 @@ import { CensusDaysManagerInterface } from 'App/Core/domain/repositories/interfa
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { ICensusIdlenessByProf } from 'Types/ICensus'
+import { ICensusIdlenessByProf } from 'App/Types/ICensus'
 import { DaysTradesIntervalDatesParams } from './day-trades-interval-dates'
 
 type FinIdlenessIn = {

@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IMedicalCertificate } from 'Types/IMedicalCertificate'
+import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
 
 interface IMedicalCertificateModel extends Omit<IMedicalCertificate, 'prof'> {
 	prof: Schema.Types.ObjectId

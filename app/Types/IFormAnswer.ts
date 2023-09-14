@@ -1,4 +1,4 @@
-import { ObjectId } from '@ioc:Mongoose'
+import { ObjectId } from '@ioc:Mongoose';
 
 export interface IFormAnswer {
 	_id?: ObjectId

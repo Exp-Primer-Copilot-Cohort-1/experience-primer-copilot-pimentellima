@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
-import { IPartner } from 'Types/IPartner'
+import { IPartner } from 'App/Types/IPartner'
 import { PartnerManagerInterface } from '../../../repositories/interface'
 
 type FindAllProps = {

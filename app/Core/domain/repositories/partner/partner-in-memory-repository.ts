@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IPartner } from 'Types/IPartner'
+import { IPartner } from 'App/Types/IPartner'
 import { UnitNotFoundError } from '../../errors/unit-not-found'
 import { PartnerManagerInterface } from '../interface'
 

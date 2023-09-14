@@ -3,7 +3,7 @@ import { CensusPaymentsManagerInterface } from 'App/Core/domain/repositories/int
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { ICensusPaymentByProf } from 'Types/ICensus'
+import { ICensusPaymentByProf } from 'App/Types/ICensus'
 
 type FindPaymentsByProfProps = {
 	unity_id: string

@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import MedicalCertificate from 'App/Models/MedicalCertificate'
-import { IMedicalCertificate } from 'Types/IMedicalCertificate'
+import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
 import { UnitNotFoundError } from '../../errors/unit-not-found'
 import { MedicalCertificateManagerInterface } from '../interface'
 

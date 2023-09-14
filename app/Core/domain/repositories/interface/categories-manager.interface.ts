@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
-import { ICategory } from 'Types/ICategory'
+import { ICategory } from 'App/Types/ICategory'
 
 export interface CategoriesManagerInterface {
 	findById: (id: string) => PromiseEither<AbstractError, ICategory>

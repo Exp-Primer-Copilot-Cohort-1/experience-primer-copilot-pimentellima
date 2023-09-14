@@ -1,7 +1,11 @@
 import Hash from '@ioc:Adonis/Core/Hash'
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { decrypt, encrypt } from 'App/Helpers/encrypt'
-import type { IUser } from 'Types/IUser'
+import type { IUser } from 'App/Types/IUser'
+
+import { COLLECTION_NAME as COLLECTION_UNITY_NAME } from './Unity'
+
+export const COLLECTION_NAME = 'users'
 
 /**
  * @swagger
@@ -108,7 +112,7 @@ const UserSchema = new Schema<IUser>(
 		},
 		unity_id: {
 			type: Mongoose.Schema.Types.ObjectId,
-			ref: 'unities',
+			ref: COLLECTION_UNITY_NAME,
 			required: true,
 		},
 		type: {
@@ -240,4 +244,4 @@ UserSchema.post('findOne', async function (doc) {
 
 UserSchema.index({ unity_id: 1, email: 1, document: 1 }, { unique: true })
 
-export default Mongoose.model<IUser>('users', UserSchema)
+export default Mongoose.model<IUser>(COLLECTION_NAME, UserSchema)

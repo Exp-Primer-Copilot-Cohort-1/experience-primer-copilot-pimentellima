@@ -5,8 +5,8 @@ import {
 	IScheduleBlock,
 	Prof,
 	ScheduleBlockParams,
-} from "Types/IScheduleBlock";
-import { IUser } from "Types/IUser";
+} from "App/Types/IScheduleBlock";
+import { IUser } from "App/Types/IUser";
 import { isAfter, startOfYesterday } from "date-fns";
 import * as z from "zod";
 import { Entity } from "../abstract/entity.abstract";

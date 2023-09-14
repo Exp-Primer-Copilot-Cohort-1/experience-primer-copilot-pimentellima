@@ -2,16 +2,16 @@ import { DefaultConfigsManagerInterface } from 'App/Core/domain/repositories/int
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
-import { IDefaultConfig } from 'Types/IDefaultConfig'
+import { IDefaultConfig } from 'App/Types/IDefaultConfig'
 import { MissingParamsError } from '../../../errors/missing-params'
 type FindAllProps = {
 	unity_id: string
 }
 
 export class FindDefaultConfigByUnityUseCase
-implements UseCase<FindAllProps, IDefaultConfig[]>
+	implements UseCase<FindAllProps, IDefaultConfig[]>
 {
-	constructor(private readonly configsManager: DefaultConfigsManagerInterface) {}
+	constructor(private readonly configsManager: DefaultConfigsManagerInterface) { }
 
 	public async execute(
 		input: FindAllProps,

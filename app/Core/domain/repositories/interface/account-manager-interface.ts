@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
-import { IAccount } from 'Types/IAccount'
+import { IAccount } from 'App/Types/IAccount'
 import AccountEntity from '../../entities/account/account'
 
 export interface AccountManagerInterface {

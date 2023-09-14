@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IPrescriptionIssuance } from 'Types/IPrescriptionIssuance'
+import { IPrescriptionIssuance } from 'App/Types/IPrescriptionIssuance'
 
 const PrescriptionIssuance = new Schema<IPrescriptionIssuance>(
 	{

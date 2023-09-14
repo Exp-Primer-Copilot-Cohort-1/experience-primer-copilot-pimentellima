@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IHealthInsurance } from 'Types/IHealthInsurance'
+import { IHealthInsurance } from 'App/Types/IHealthInsurance'
 
 interface IHealthInsuranceModel extends Omit<IHealthInsurance, 'profs'> {
 	profs: Schema.Types.ObjectId[]

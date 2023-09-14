@@ -2,7 +2,7 @@ import LogDecorator, { ACTION } from 'App/Core/decorators/log-decorator'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import type { IAccount } from 'Types/IAccount'
+import type { IAccount } from 'App/Types/IAccount'
 import { AccountManagerInterface } from '../../repositories/interface/account-manager-interface'
 
 export class CreateAccountUseCase implements UseCase<IAccount, IAccount> {

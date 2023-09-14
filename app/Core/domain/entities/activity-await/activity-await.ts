@@ -1,28 +1,25 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { AbstractError } from "App/Core/errors/error.interface";
-import { PromiseEither, left, right } from "App/Core/shared";
-import { ActivityAwaitValues, IActivityAwait } from "Types/IActivity";
-import * as z from "zod";
-import { AbstractActivity } from "../abstract/activity-abstract";
+import { AbstractError } from 'App/Core/errors/error.interface'
+import { PromiseEither, left, right } from 'App/Core/shared'
+import { ActivityAwaitValues, IActivityAwait } from 'App/Types/IActivity'
+import * as z from 'zod'
+import { AbstractActivity } from '../abstract/activity-abstract'
 
-export class ActivityAwaitEntity
-	extends AbstractActivity
-	implements IActivityAwait
-{
-	private _type: "await";
+export class ActivityAwaitEntity extends AbstractActivity implements IActivityAwait {
+	private _type: 'await'
 
 	public get type() {
-		return this._type;
+		return this._type
 	}
 
-	defineType(type: "await"): ActivityAwaitEntity {
-		this._type = type;
-		return this;
+	defineType(type: 'await'): ActivityAwaitEntity {
+		this._type = type
+		return this
 	}
 
 	public static async build(
-		params: ActivityAwaitValues
+		params: ActivityAwaitValues,
 	): PromiseEither<AbstractError, ActivityAwaitEntity> {
 		try {
 			z.object({
@@ -38,10 +35,10 @@ export class ActivityAwaitEntity
 					z.object({
 						value: z.string(),
 						label: z.string(),
-					})
+					}),
 				),
 				obs: z.string().optional(),
-			}).parse(params);
+			}).parse(params)
 
 			return right(
 				new ActivityAwaitEntity()
@@ -51,13 +48,13 @@ export class ActivityAwaitEntity
 					.defineType('await')
 					.defineProf(params.prof)
 					.defineActive(true)
-					.defineProfId(params.prof.value)
-			);
+					.defineProfId(params.prof.value),
+			)
 		} catch (err) {
-			console.log(err);
-			return left(err);
+			console.log(err)
+			return left(err)
 		}
 	}
 }
 
-export default ActivityAwaitEntity;
+export default ActivityAwaitEntity

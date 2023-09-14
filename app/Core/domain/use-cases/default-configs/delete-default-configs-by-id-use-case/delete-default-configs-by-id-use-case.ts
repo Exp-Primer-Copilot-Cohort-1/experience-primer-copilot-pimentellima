@@ -4,7 +4,7 @@ import { DefaultConfigsManagerInterface } from 'App/Core/domain/repositories/int
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
-import { IDefaultConfig } from 'Types/IDefaultConfig'
+import { IDefaultConfig } from 'App/Types/IDefaultConfig'
 
 type Input = {
 	id: string

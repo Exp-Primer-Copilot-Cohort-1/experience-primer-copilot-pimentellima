@@ -8,7 +8,7 @@ import {
 import { CreatePasswordUseCase } from '../create-password/create-password-use-case'
 
 import { faker } from '@faker-js/faker'
-import { IAdminUser } from 'Types/IAdminUser'
+import { IAdminUser } from 'App/Types/IAdminUser'
 import { cpf } from 'cpf-cnpj-validator'
 
 const user: IAdminUser = {

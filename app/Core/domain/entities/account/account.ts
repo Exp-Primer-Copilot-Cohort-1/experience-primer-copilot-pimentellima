@@ -2,7 +2,7 @@
 import { ObjectId } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IAccount } from 'Types/IAccount'
+import { IAccount } from 'App/Types/IAccount'
 import { InvalidParamsError } from '../../errors/invalid-params-error'
 import { Entity } from '../abstract/entity.abstract'
 

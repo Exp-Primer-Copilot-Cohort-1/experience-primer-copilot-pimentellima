@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IHoliday } from 'Types/IHoliday'
+import { IHoliday } from 'App/Types/IHoliday'
 import { Entity } from '../abstract/entity.abstract'
 
 export class EntityHoliday extends Entity implements IHoliday {

@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IHealthInsurance } from 'Types/IHealthInsurance'
+import { IHealthInsurance } from 'App/Types/IHealthInsurance'
 import { HealtInsuranceEntity } from '../../entities/health-insurances/health-insurance'
 import { MissingParamsError } from '../../errors/missing-params'
 import { HealthInsuranceManagerInterface } from '../interface/health-insurance-manager.interface'

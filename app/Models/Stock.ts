@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IStock } from 'Types/IStock'
+import { IStock } from 'App/Types/IStock'
 
 const StockSchema = new Schema<IStock>(
 	{

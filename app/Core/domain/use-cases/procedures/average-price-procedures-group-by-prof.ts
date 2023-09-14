@@ -2,7 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, right } from 'App/Core/shared'
 import Procedure from 'App/Models/Procedure'
-import { IProcedure } from 'Types/IProcedure'
+import { IProcedure } from 'App/Types/IProcedure'
 import mongoose from 'mongoose'
 
 const ObjectId = mongoose.Types.ObjectId

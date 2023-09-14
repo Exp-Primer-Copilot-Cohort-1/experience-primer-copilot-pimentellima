@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
-import { IHoliday } from 'Types/IHoliday'
+import { IHoliday } from 'App/Types/IHoliday'
 
 export interface HolidaysManagerInterface {
 	findAllHolidays: (unity_id: string) => PromiseEither<AbstractError, IHoliday[]>

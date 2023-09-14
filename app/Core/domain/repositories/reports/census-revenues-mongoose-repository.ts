@@ -2,7 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, right } from 'App/Core/shared'
 import Activity from 'App/Models/Activity'
 import Transactions from 'App/Models/Transactions'
-import { ICensusRevenuesOfYearByUnityByProf } from 'Types/ICensus'
+import { ICensusRevenuesOfYearByUnityByProf } from 'App/Types/ICensus'
 import { CensusRevenuesManagerInterface } from '../interface/census-revenues-manager.interface'
 import generateMatch from './generate-match-census'
 

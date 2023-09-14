@@ -4,7 +4,7 @@ import { PromiseEither, left } from 'App/Core/shared'
 
 import LogDecorator from 'App/Core/decorators/log-decorator'
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
-import { IPartner } from 'Types/IPartner'
+import { IPartner } from 'App/Types/IPartner'
 import { PartnerManagerInterface } from '../../../repositories/interface'
 
 export class UpdatePartnersByIdUseCase implements UseCase<Partial<IPartner>, IPartner> {

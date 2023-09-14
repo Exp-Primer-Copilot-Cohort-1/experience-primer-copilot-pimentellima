@@ -1,6 +1,6 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither } from "App/Core/shared";
-import { IScheduleBlock, ScheduleBlockParams } from "Types/IScheduleBlock";
+import { IScheduleBlock, ScheduleBlockParams } from "App/Types/IScheduleBlock";
 
 export interface ScheduleBlockManagerInterface {
 	createScheduleBlock: (

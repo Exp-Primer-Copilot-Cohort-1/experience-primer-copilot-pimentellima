@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { ITransaction } from 'Types/ITransaction'
+import { ITransaction } from 'App/Types/ITransaction'
 
 const schemaDefault = (collection: string) => ({
 	type: Schema.Types.ObjectId,

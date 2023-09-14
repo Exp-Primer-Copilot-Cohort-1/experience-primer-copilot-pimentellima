@@ -1,12 +1,16 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { decrypt, encrypt } from 'App/Helpers/encrypt'
-import type { IUserClient } from 'Types/IClient'
-
+import type { IUserClient } from 'App/Types/IClient'
 interface IUserClientModel extends Omit<IUserClient, 'prof'> {
 	partners: Schema.Types.ObjectId
 }
 
-const COLLECTION_NAME = 'clients'
+export const COLLECTION_NAME = 'clients'
+
+export enum COLLECTIONS {
+	PARTNERS = 'partner',
+	UNITIES = 'unity_id',
+}
 
 /**
  * @swagger
@@ -244,9 +248,5 @@ ClientSchema.index({ unity_id: 1, name: 1, email: 1, birth_date: 1 }, { unique: 
 ClientSchema.index({ unity_id: 1, rg: 1, document: 1, active: 1 }, { unique: false })
 
 // enum de como as coleções referências são chamadas na collection de clientes
-export enum COLLECTIONS {
-	PARTNERS = 'partner',
-	UNITIES = 'unity_id',
-}
 
 export default Mongoose.model<IUserClientModel>(COLLECTION_NAME, ClientSchema)

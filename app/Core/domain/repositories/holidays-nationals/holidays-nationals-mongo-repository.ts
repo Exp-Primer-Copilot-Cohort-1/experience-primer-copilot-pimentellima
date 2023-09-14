@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import HolidaysNationals from 'App/Models/HolidaysNationals'
-import { IHoliday } from 'Types/IHoliday'
+import { IHoliday } from 'App/Types/IHoliday'
 import { HolidaysNationalsManagerInterface } from '../interface/holidays-nationals.interface'
 
 export class HolidaysNationalsMongoRepository

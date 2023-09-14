@@ -6,8 +6,8 @@ import {
 	ICensusCountHealthInsurances,
 	ICensusCountProcedure,
 	ICensusMediaTimeAttendance,
-	ICensusScheduledEvent
-} from 'Types/ICensus'
+	ICensusScheduledEvent,
+} from 'App/Types/ICensus'
 import { CensusUnitiesManagerInterface } from '../interface/census-manager.interface'
 
 import generateMatch from './generate-match-census'

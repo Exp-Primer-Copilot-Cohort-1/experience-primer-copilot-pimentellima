@@ -5,7 +5,7 @@ import { AdminManagerInterface } from '../interface/admin-manager.interface'
 import type { ClientSession } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import User from 'App/Models/User'
-import { IAdminUser } from 'Types/IAdminUser'
+import { IAdminUser } from 'App/Types/IAdminUser'
 import { UserNotFoundError } from '../../errors/user-not-found'
 
 export class AdminMongooseRepository implements AdminManagerInterface {

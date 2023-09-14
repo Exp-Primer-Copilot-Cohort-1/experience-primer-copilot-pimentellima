@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IPaymentActivity } from 'Types/ITransaction'
+import { IPaymentActivity } from 'App/Types/ITransaction'
 
 const ActivityPaymentSchema = new Schema<IPaymentActivity>({
 	activityId: {

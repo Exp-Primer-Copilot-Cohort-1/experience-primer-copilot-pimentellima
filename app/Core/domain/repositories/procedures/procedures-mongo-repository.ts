@@ -1,33 +1,25 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { PromiseEither, left, right } from 'App/Core/shared/either'
-import Procedure from 'App/Models/Procedure'
-import { IProcedure } from 'Types/IProcedure'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { PromiseEither, right } from 'App/Core/shared/either'
+import Procedure, { COLLECTIONS_REFS } from 'App/Models/Procedure'
+import { IProcedure } from 'App/Types/IProcedure'
+import { ProcedureNotFoundError } from '../../errors/procedure-not-found'
+import { PROJECTION_DEFAULT } from '../helpers/projections'
 import { ProceduresManagerInterface } from '../interface/procedures-manager.interface'
 
 export class ProceduresMongooseRepository implements ProceduresManagerInterface {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor() { }
 
-	async findById(unity_id: string): PromiseEither<AbstractError, IProcedure[]> {
+	async findByUnityId(unity_id: string): PromiseEither<AbstractError, IProcedure[]> {
 		const procedures = await Procedure.find({
 			unity_id: unity_id,
 		})
-			.populate('profs', {
-				label: '$name',
-				value: '$_id',
-				_id: 0,
-			})
-			.populate('health_insurances.info', {
-				label: '$name',
-				value: '$_id',
-				_id: 0,
-			})
-		if (!procedures) {
-			return left(new UnitNotFoundError())
-		}
+			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
+			.populate(COLLECTIONS_REFS.HEALTH_INSURANCES, PROJECTION_DEFAULT)
+
 		return right(procedures as unknown as IProcedure[])
 	}
+
 	async findByProcedureId(
 		id: string,
 		unity_id: string,
@@ -36,23 +28,11 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 			_id: id,
 			unity_id: unity_id.toString(),
 		})
-			.populate('profs', {
-				label: '$name',
-				value: '$_id',
-				_id: 0,
-			})
-			.populate('health_insurances.info', {
-				label: '$name',
-				value: '$_id',
-				_id: 0,
-			})
+			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
+			.populate(COLLECTIONS_REFS.HEALTH_INSURANCES, PROJECTION_DEFAULT)
+			.orFail(new ProcedureNotFoundError())
 
-		if (!procedure) {
-			return left(
-				new AbstractError('Procedimento não encontrado no Banco de Dados', 404),
-			)
-		}
-		return right(procedure as unknown as IProcedure)
+		return right(procedure.toObject())
 	}
 
 	async findByName(
@@ -63,38 +43,18 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 			name: { $regex: new RegExp(`.*${name}.*`) },
 			unity_id: unity_id,
 		})
-			.populate('profs', {
-				label: '$name',
-				value: '$_id',
-				_id: 0,
-			})
-			.populate('health_insurances.info', {
-				label: '$name',
-				value: '$_id',
-				_id: 0,
-			})
-		if (!procedure) {
-			return left(new UnitNotFoundError())
-		}
+			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
+			.populate(COLLECTIONS_REFS.HEALTH_INSURANCES, PROJECTION_DEFAULT)
+			.orFail(new ProcedureNotFoundError())
+
 		return right(procedure as unknown as IProcedure[])
 	}
+
 	async deleteById(id: string): PromiseEither<AbstractError, IProcedure> {
-		const procedure = await Procedure.findById(id)
-			.populate('profs', {
-				label: '$name',
-				value: '$_id',
-				_id: 0,
-			})
-			.populate('health_insurances.info', {
-				label: '$name',
-				value: '$_id',
-				_id: 0,
-			})
-		if (!procedure) {
-			return left(new UnitNotFoundError())
-		}
-		await procedure.remove()
-		return right(procedure as unknown as IProcedure)
+		const procedure = await Procedure.findById(id).orFail(
+			new ProcedureNotFoundError(),
+		)
+		return right(procedure?.toObject())
 	}
 
 	// Remove o _id do objeto e retorna o objeto com o _id gerado pelo mongo
@@ -111,19 +71,17 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 			})),
 		})
 
-		let populatedProcedure = await procedure.populate('profs', {
-			label: '$name',
-			value: '$_id',
-			_id: 0,
-		})
+		let populatedProcedure = await procedure.populate(
+			COLLECTIONS_REFS.PROFS,
+			PROJECTION_DEFAULT,
+		)
 
-		populatedProcedure = await populatedProcedure.populate('health_insurances.info', {
-			label: '$name',
-			value: '$_id',
-			_id: 0,
-		})
+		populatedProcedure = await populatedProcedure.populate(
+			COLLECTIONS_REFS.HEALTH_INSURANCES,
+			PROJECTION_DEFAULT,
+		)
 
-		return right(populatedProcedure as unknown as IProcedure)
+		return right(populatedProcedure.toObject())
 	}
 
 	async updateProceduresById(
@@ -131,19 +89,9 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 		data: Partial<IProcedure>,
 	): PromiseEither<AbstractError, IProcedure> {
 		const procedures = await Procedure.findByIdAndUpdate(id, data, { new: true })
-			.populate('profs', {
-				label: '$name',
-				value: '$_id',
-				_id: 0,
-			})
-			.populate('health_insurances.info', {
-				label: '$name',
-				value: '$_id',
-				_id: 0,
-			})
-		if (!procedures) {
-			return left(new UnitNotFoundError())
-		}
+			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
+			.populate(COLLECTIONS_REFS.HEALTH_INSURANCES, PROJECTION_DEFAULT)
+			.orFail(new ProcedureNotFoundError())
 		return right(procedures as unknown as IProcedure)
 	}
 }

@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IPaymentParticipations } from 'Types/IPaymentProf'
+import { IPaymentParticipations } from 'App/Types/IPaymentProf'
 
 interface IPaymentParticipationsModel
 	extends Omit<IPaymentParticipations, 'prof' | 'health_insurance' | 'procedure'> {

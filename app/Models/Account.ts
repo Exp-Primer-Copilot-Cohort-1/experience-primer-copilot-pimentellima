@@ -1,5 +1,9 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IAccount } from 'Types/IAccount'
+import { IAccount } from 'App/Types/IAccount'
+import { COLLECTION_NAME as COLLECTION_UNITY_NAME } from './Unity'
+import { COLLECTION_NAME as COLLECTION_USER_NAME } from './User'
+
+export const COLLECTION_NAME = 'accounts'
 
 /**
  * @swagger
@@ -74,12 +78,12 @@ const AccountSchema = new Schema<IAccount>(
 		unity_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
-			ref: 'unities',
+			ref: COLLECTION_UNITY_NAME,
 		},
 		description: String,
 		user_id: {
 			type: Schema.Types.ObjectId,
-			ref: 'users',
+			ref: COLLECTION_USER_NAME,
 		},
 	},
 	{
@@ -92,4 +96,4 @@ const AccountSchema = new Schema<IAccount>(
 
 AccountSchema.index({ unity_id: 1, active: 1, name: 1 }, { unique: true })
 
-export default Mongoose.model<IAccount>('accounts', AccountSchema)
+export default Mongoose.model<IAccount>(COLLECTION_NAME, AccountSchema)

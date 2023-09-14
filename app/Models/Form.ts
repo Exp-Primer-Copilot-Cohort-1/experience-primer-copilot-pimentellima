@@ -1,5 +1,5 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IForm } from 'Types/IForm'
+import { IForm } from 'App/Types/IForm'
 
 const FormSchema = new Schema<IForm>(
 	{
@@ -21,7 +21,7 @@ const FormSchema = new Schema<IForm>(
 					type: String,
 					required: true,
 				},
-				_id : false
+				_id: false
 			},
 		],
 		fields: [{}],

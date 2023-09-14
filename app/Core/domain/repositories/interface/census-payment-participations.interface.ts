@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared'
-import { ICensusParticipationPaymentByProf } from 'Types/ICensus'
+import { ICensusParticipationPaymentByProf } from 'App/Types/ICensus'
 
 export interface CensusPaymentParticipationsManagerInterface {
 	findPaymentsParticipation: (

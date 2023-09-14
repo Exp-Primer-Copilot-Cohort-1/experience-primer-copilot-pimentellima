@@ -14,7 +14,7 @@ import {
 	ICensusPaymentForm,
 	ICensusRevenuesOfYearByUnityByProf,
 	ICensusScheduledEvent,
-} from 'Types/ICensus'
+} from 'App/Types/ICensus'
 
 export type ICensusCount = {
 	procedures: ICensusCountProcedure[]

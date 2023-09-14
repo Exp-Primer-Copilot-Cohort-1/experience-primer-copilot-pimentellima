@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Prof from 'App/Models/Prof'
-import { IUser as IProf } from 'Types/IUser'
+import { IUser as IProf } from 'App/Types/IUser'
 import { UserNotFoundError } from '../../errors/user-not-found'
 import { ProfManagerInterface } from '../interface/prof-manage-interface'
 

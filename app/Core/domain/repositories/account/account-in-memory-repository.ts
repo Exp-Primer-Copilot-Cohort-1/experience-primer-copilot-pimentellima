@@ -1,18 +1,18 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import { IAccount } from "Types/IAccount";
+import { IAccount } from "App/Types/IAccount";
 import AccountEntity from "../../entities/account/account";
-import { AccountManagerInterface } from "../interface/account-manager-interface";
-import { MissingParamsError } from "../../errors/missing-params";
 import { AccountNotFoundError } from "../../errors/account-not-found-error";
 import { InvalidParamsError } from "../../errors/invalid-params-error";
+import { MissingParamsError } from "../../errors/missing-params";
+import { AccountManagerInterface } from "../interface/account-manager-interface";
 
 export class AccountInMemoryRepository implements AccountManagerInterface {
-    public accounts: any[] = [];
+	public accounts: any[] = [];
 
-	constructor() {}
+	constructor() { }
 
-    async findAllAccounts(
+	async findAllAccounts(
 		unity_id: string
 	): PromiseEither<AbstractError, AccountEntity[]> {
 		if (!unity_id) return left(new MissingParamsError("unity id"));
@@ -30,7 +30,7 @@ export class AccountInMemoryRepository implements AccountManagerInterface {
 		return right(accounts);
 	}
 
-    async createAccount(
+	async createAccount(
 		account: IAccount
 	): PromiseEither<AbstractError, AccountEntity> {
 
@@ -40,7 +40,7 @@ export class AccountInMemoryRepository implements AccountManagerInterface {
 		return right(newAccount);
 	}
 
-    async updateAccountById(
+	async updateAccountById(
 		account: IAccount,
 		id: string
 	): PromiseEither<AbstractError, AccountEntity> {
@@ -57,8 +57,8 @@ export class AccountInMemoryRepository implements AccountManagerInterface {
 
 		return right(newAccount);
 	}
-    
-    async findAccountById(id: string): PromiseEither<AbstractError, AccountEntity> {
+
+	async findAccountById(id: string): PromiseEither<AbstractError, AccountEntity> {
 		if (!id) return left(new MissingParamsError("id"));
 
 		const item = this.accounts.find(acc => acc._id === id);
@@ -71,7 +71,7 @@ export class AccountInMemoryRepository implements AccountManagerInterface {
 		return right(accountOrErr.extract());
 	}
 
-    deleteAccountById : (
+	deleteAccountById: (
 		id: string
 	) => PromiseEither<AbstractError, AccountEntity>;
 }

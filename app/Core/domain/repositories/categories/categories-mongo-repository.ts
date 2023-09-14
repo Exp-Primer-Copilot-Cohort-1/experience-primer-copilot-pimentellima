@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Category from 'App/Models/Category'
-import { ICategory } from 'Types/ICategory'
+import { ICategory } from 'App/Types/ICategory'
 import { CategoriesManagerInterface } from '../interface'
 
 export class CategoriesMongooseRepository implements CategoriesManagerInterface {

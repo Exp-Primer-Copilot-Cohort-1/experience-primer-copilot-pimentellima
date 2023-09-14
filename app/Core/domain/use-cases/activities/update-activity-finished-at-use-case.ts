@@ -1,13 +1,13 @@
-import LogDecorator from 'App/Core/decorators/log-decorator'
-import { ActivitiesManagerInterface } from 'App/Core/domain/repositories/interface'
+import LogDecorator, { ACTION } from 'App/Core/decorators/log-decorator'
+import { ActivitiesManagerAttendanceInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import Activity from 'App/Models/Activity'
+import Activity, { COLLECTION_NAME } from 'App/Models/Activity'
 import Procedure from 'App/Models/Procedure'
 import Stock from 'App/Models/Stock'
-import { IActivity } from 'Types/IActivity'
-import { IStock } from 'Types/IStock'
+import { IActivity } from 'App/Types/IActivity'
+import { IStock } from 'App/Types/IStock'
 import { ActivityNotFoundError } from '../../errors/activity-not-found'
 
 type Props = {
@@ -16,9 +16,11 @@ type Props = {
 }
 
 export class UpdateActivityFinishedAtUseCase implements UseCase<Props, IActivity> {
-	constructor(private readonly activitiesManager: ActivitiesManagerInterface) { }
+	constructor(
+		private readonly activitiesManager: ActivitiesManagerAttendanceInterface,
+	) { } // eslint-disable-line
 
-	@LogDecorator('activities', 'put')
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	public async execute(params: Props): PromiseEither<AbstractError, IActivity> {
 		const activity = await Activity.findById(params.id)
 		if (!activity) return left(new ActivityNotFoundError())
@@ -27,13 +29,13 @@ export class UpdateActivityFinishedAtUseCase implements UseCase<Props, IActivity
 		const stocksData = await Stock.find()
 		const proceduresData = await Procedure.find({
 			_id: {
-				$in: activity.procedures.map((p) => p.value),
+				$in: activity.procedures.map((p) => p.info.value),
 			},
 		})
 		const productsWithQuantities = new Object()
 		activity.procedures.forEach((procedure) => {
 			const products = proceduresData.find(
-				(p) => p._id.toString() === procedure.value,
+				(p) => p._id.toString() === procedure.info.value,
 			)?.products
 
 			if (!products) return

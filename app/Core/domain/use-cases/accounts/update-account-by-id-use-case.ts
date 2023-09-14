@@ -2,7 +2,7 @@ import LogDecorator, { ACTION } from 'App/Core/decorators/log-decorator'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IAccount } from 'Types/IAccount'
+import { IAccount } from 'App/Types/IAccount'
 import { AccountManagerInterface } from '../../repositories/interface/account-manager-interface'
 
 type TypeParams = {

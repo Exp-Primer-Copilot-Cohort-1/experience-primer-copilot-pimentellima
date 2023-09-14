@@ -4,7 +4,7 @@ import {
 	ICensusCountPartners,
 	ICensusGenderClient,
 	ICensusNewAndOldClients,
-} from 'Types/ICensus'
+} from 'App/Types/ICensus'
 
 export interface CensusClientsManagerInterface {
 	findCensusGenderClientByUnityOrProf: (

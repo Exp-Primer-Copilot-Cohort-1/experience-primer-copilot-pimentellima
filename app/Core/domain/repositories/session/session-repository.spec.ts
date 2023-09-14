@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { AuthContract } from '@ioc:Adonis/Addons/Auth'
-import { IUser } from 'Types/IUser'
+import { IUser } from 'App/Types/IUser'
 import { cpf } from 'cpf-cnpj-validator'
 import { describe, expect, it } from 'vitest'
 import { SessionRepository } from './session-mongo-repository'

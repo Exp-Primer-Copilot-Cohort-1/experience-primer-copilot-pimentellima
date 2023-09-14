@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
-import { IUnity } from 'Types/IUnity'
+import { IUnity } from 'App/Types/IUnity'
 import { cnpj } from 'cpf-cnpj-validator'
 import { UnitNotFoundError } from '../../errors/unit-not-found'
 import { UnitiesManagerInterface } from '../interface/unities-manager.interface'

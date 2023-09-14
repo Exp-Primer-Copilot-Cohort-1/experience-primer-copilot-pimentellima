@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IProcedure } from 'Types/IProcedure'
+import { IProcedure } from 'App/Types/IProcedure'
 import { UnitNotFoundError } from '../../errors/unit-not-found'
 import { ProceduresManagerInterface } from '../interface'
 

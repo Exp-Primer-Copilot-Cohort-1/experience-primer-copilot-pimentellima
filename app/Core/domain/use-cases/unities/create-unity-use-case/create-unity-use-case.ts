@@ -3,7 +3,7 @@ import { UnitiesManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
-import { IUnity } from 'Types/IUnity'
+import { IUnity } from 'App/Types/IUnity'
 
 export class CreateUnityUseCase implements UseCase<IUnity, IUnity> {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier

@@ -1,14 +1,13 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import { ScheduleBlockParams, IScheduleBlock } from "Types/IScheduleBlock";
-import { ScheduleBlockManagerInterface } from "../interface/schedule-block-manager-interface";
-import { MissingParamsError } from "../../errors/missing-params";
 import ScheduleBlock from "App/Models/ScheduleBlock";
+import { IScheduleBlock, ScheduleBlockParams } from "App/Types/IScheduleBlock";
 import { ScheduleBlockEntity } from "../../entities/schedule-block/ScheduleBlock";
+import { MissingParamsError } from "../../errors/missing-params";
+import { ScheduleBlockManagerInterface } from "../interface/schedule-block-manager-interface";
 
 export class ScheduleBlockMongoRepository
-	implements ScheduleBlockManagerInterface
-{
+	implements ScheduleBlockManagerInterface {
 	async createScheduleBlock(
 		unity_id: string,
 		schedule_block: ScheduleBlockParams
