@@ -33,7 +33,7 @@ const ActivitySchema = new Schema<IActivityModel>(
 		},
 		procedures: [
 			{
-				info: {
+				_id: {
 					type: Schema.Types.ObjectId,
 					required: true,
 					ref: COLLECTION_PROCEDURE_NAME,
@@ -51,31 +51,22 @@ const ActivitySchema = new Schema<IActivityModel>(
 					required: true,
 				},
 				health_insurance: {
-					info: {
-						type: Schema.Types.ObjectId,
-						required: false,
-						ref: COLLECTION_HEALTH_INSURANCE_NAME,
-					},
-					price: {
-						type: String,
-						required: false,
-					},
+					type: Schema.Types.ObjectId,
+					required: false,
+					ref: COLLECTION_HEALTH_INSURANCE_NAME,
 				},
-				_id: false,
 			},
 		],
 		payment: {
 			required: false,
 			type: {
-				cost_center: Schema.Types.ObjectId,
-				category: Schema.Types.ObjectId,
-				bank: Schema.Types.ObjectId,
+				_id: {
+					type: Schema.Types.ObjectId,
+					ref: 'transactions',
+				},
 				price: Number,
 				date: Date,
-				description: String,
 				paymentForm: String,
-				installment: Boolean,
-				installments: Number,
 			},
 			default: {},
 			_id: false,
@@ -141,8 +132,8 @@ ActivitySchema.index({ unity_id: 1, scheduled: 1, date: 1, type: 1 }, { unique: 
 export enum COLLECTIONS_REFS {
 	PROFS = 'prof',
 	UNITIES = 'unity_id',
-	HEALTH_INSURANCES = 'health_insurance',
-	PROCEDURES = 'procedures.info',
+	HEALTH_INSURANCES = 'procedures.health_insurance',
+	PROCEDURES = 'procedures._id',
 	CLIENTS = 'client',
 }
 

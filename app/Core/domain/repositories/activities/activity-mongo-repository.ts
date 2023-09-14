@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import Activity, { COLLECTIONS_REFS, STATUS_ACTIVITY } from 'App/Models/Activity'
-import { ActivityValues, IActivity } from 'App/Types/IActivity'
+import Activity, { COLLECTIONS_REFS } from 'App/Models/Activity'
+import { ActivityValues, STATUS_ACTIVITY, type IActivity } from 'App/Types/IActivity'
 import ActivityEntity from '../../entities/activities/activity'
 import { ClientNotFoundError, UserNotFoundError } from '../../errors'
 import { ActivityNotFoundError } from '../../errors/activity-not-found'
@@ -22,6 +22,8 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		})
 			.populate(COLLECTIONS_REFS.CLIENTS, PROJECTION_CLIENT)
 			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
+			.populate(COLLECTIONS_REFS.PROCEDURES, PROJECTION_DEFAULT)
+			.populate(COLLECTIONS_REFS.HEALTH_INSURANCES, PROJECTION_DEFAULT)
 			.sort({ date: -1 })
 
 		return right(activities)

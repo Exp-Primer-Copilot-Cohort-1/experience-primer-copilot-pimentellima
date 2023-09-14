@@ -16,14 +16,8 @@ import { AbstractActivity } from '../abstract/activity-abstract'
 const validationActivity = (profData, scheduleBlocks) =>
 	z
 		.object({
-			prof: z.object({
-				value: z.string(),
-				label: z.string(),
-			}),
-			client: z.object({
-				value: z.string(),
-				label: z.string(),
-			}),
+			prof: z.string(),
+			client: z.string(),
 			date: z
 				.string()
 				.refine((val) => isAfter(new Date(val), startOfYesterday()))
@@ -46,8 +40,10 @@ const validationActivity = (profData, scheduleBlocks) =>
 			hour_end: z.string(),
 			procedures: z.array(
 				z.object({
-					value: z.string(),
-					label: z.string(),
+					_id: z.string(),
+					minutes: z.number(),
+					price: z.number(),
+					health_insurance: z.string(),
 				}),
 			),
 			obs: z.string().optional(),
