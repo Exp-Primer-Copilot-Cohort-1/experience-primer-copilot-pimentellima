@@ -1,36 +1,21 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IProcedureTransaction } from 'App/Types/ITransaction'
-import { z } from 'zod'
+import { Generic, IProcedureTransaction, StockProcedure } from 'App/Types/ITransaction'
 import zProcedure from './z-procedure'
 
-type StockProcedure = {
-	value: string
-	label: string
-	quantity: number
-	price_cost: number
-	price_final: number
-}
-
 export class ProcedureTransactionEntity implements IProcedureTransaction {
-	value: string
-	label: string
+	_id: string
 	price: number
 	color: string
 	minutes: number
-	health_insurance: { value: string; label: string }
+	health_insurance: string
 	payment_participation: { value: string; price: number; percent: number }
 	stock?: StockProcedure[]
 
-	private constructor() { }
+	private constructor() { } // eslint-disable-line
 
-	defineValue(value: string): this {
-		this.value = value
-		return this
-	}
-
-	defineLabel(label: string): this {
-		this.label = label
+	defineId(value: string): this {
+		this._id = value
 		return this
 	}
 
@@ -49,7 +34,10 @@ export class ProcedureTransactionEntity implements IProcedureTransaction {
 		return this
 	}
 
-	defineHealthInsurance(health_insurance: { value: string; label: string }): this {
+	defineHealthInsurance(health_insurance: string | Generic): this {
+		if (typeof health_insurance === 'object')
+			health_insurance = health_insurance.value as string
+
 		this.health_insurance = health_insurance
 		return this
 	}
@@ -79,25 +67,23 @@ export class ProcedureTransactionEntity implements IProcedureTransaction {
 		procedure: IProcedureTransaction,
 	): PromiseEither<AbstractError, ProcedureTransactionEntity> {
 		try {
-			const price = z
-				.string()
-				.or(z.number())
-				.transform((value) => Number(value.toString().replace(',', '.')))
-				.parse(procedure.price)
+			const p = new ProcedureTransactionEntity()
+				.defineId(procedure._id?.toString() as string)
+				.definePrice(procedure.price)
+				.defineColor(procedure.color)
+				.defineMinutes(procedure.minutes)
+				.defineHealthInsurance(procedure.health_insurance as string | Generic)
+				.definePaymentParticipation(
+					procedure.payment_participation,
+					procedure.price,
+				)
+				.defineStock(procedure.stock)
 
-			zProcedure.parse({ ...procedure, price })
-			return right(
-				new ProcedureTransactionEntity()
-					.defineValue(procedure.value)
-					.defineLabel(procedure.label)
-					.definePrice(price)
-					.defineColor(procedure.color)
-					.defineMinutes(procedure.minutes)
-					.defineHealthInsurance(procedure.health_insurance)
-					.definePaymentParticipation(procedure.payment_participation, price)
-					.defineStock(procedure.stock),
-			)
+			zProcedure.parse(p)
+
+			return right(p)
 		} catch (error) {
+			console.log(error)
 			return left(
 				new AbstractError('Erro ao criar entidade de procedimento', 400, error),
 			)

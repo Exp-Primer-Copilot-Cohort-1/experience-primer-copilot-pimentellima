@@ -1,12 +1,13 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
 import { STATUS_ACTIVITY, type IActivity } from 'App/Types/IActivity'
+
 import { COLLECTION_NAME as COLLECTION_CLIENT_NAME } from './Client'
 import { COLLECTION_NAME as COLLECTION_HEALTH_INSURANCE_NAME } from './HealthInsurance'
 import { COLLECTION_NAME as COLLECTION_PROCEDURE_NAME } from './Procedure'
+import { COLLECTION_NAME as COLLECTION_TRANSACTIONS_NAME } from './Transactions'
 import { COLLECTION_NAME as COLLECTION_UNITY_NAME } from './Unity'
 import { COLLECTION_NAME as COLLECTION_USER_NAME } from './User'
-
 interface IActivityModel extends Omit<IActivity, 'prof' | 'client'> {
 	prof: Schema.Types.ObjectId
 	client: Schema.Types.ObjectId
@@ -62,7 +63,7 @@ const ActivitySchema = new Schema<IActivityModel>(
 			type: {
 				_id: {
 					type: Schema.Types.ObjectId,
-					ref: 'transactions',
+					ref: COLLECTION_TRANSACTIONS_NAME,
 				},
 				price: Number,
 				date: Date,

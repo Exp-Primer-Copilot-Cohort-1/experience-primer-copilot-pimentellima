@@ -5,7 +5,7 @@ import { IPaymentProf, ParticipationPrice } from 'App/Types/IPaymentProf'
 import { Types } from 'mongoose'
 import {
 	MissingParamsError,
-	PaymentParticipationsNotFoundError,
+	ParticipationPaymentsNotFoundError,
 	UnitNotFoundError,
 } from '../../errors'
 import { PaymentProfManagerInterface } from '../interface/payment-prof-manager-interface'
@@ -26,10 +26,10 @@ const generatePipeline = (match: any, active: boolean) => [
 	},
 	{
 		$lookup: {
-			from: 'procedures',
-			localField: 'procedure',
+			from: 'users',
+			localField: 'prof',
 			foreignField: '_id',
-			as: 'procedure_data',
+			as: 'profObj',
 		},
 	},
 	{
@@ -37,15 +37,15 @@ const generatePipeline = (match: any, active: boolean) => [
 			from: 'health_insurances',
 			localField: 'health_insurance',
 			foreignField: '_id',
-			as: 'health_insurance_data',
+			as: 'health_insuranceObj',
 		},
 	},
 	{
 		$lookup: {
-			from: 'users',
-			localField: 'prof',
+			from: 'procedures',
+			localField: 'procedure',
 			foreignField: '_id',
-			as: 'prof_data',
+			as: 'procedureObj',
 		},
 	},
 	{
@@ -54,20 +54,20 @@ const generatePipeline = (match: any, active: boolean) => [
 			participation_id: '$_id',
 			value: '$prices.abs',
 			abs: '$prices.abs',
-			percent: '$prices.percent',
-			active: '$prices.active',
-			procedure: {
-				label: '$procedure_data.name',
-				value: '$procedure_data._id',
+			prof: {
+				value: { $arrayElemAt: ['$profObj._id', 0] },
+				label: { $arrayElemAt: ['$profObj.name', 0] },
 			},
 			health_insurance: {
-				label: '$health_insurance_data.name',
-				value: '$health_insurance_data._id',
+				value: { $arrayElemAt: ['$health_insuranceObj._id', 0] },
+				label: { $arrayElemAt: ['$health_insuranceObj.name', 0] },
 			},
-			prof: {
-				label: '$prof_data.name',
-				value: '$prof_data._id',
+			procedure: {
+				value: { $arrayElemAt: ['$procedureObj._id', 0] },
+				label: { $arrayElemAt: ['$procedureObj.name', 0] },
 			},
+			percent: '$prices.percent',
+			active: '$prices.active',
 			unity_id: 1,
 			date_start: '$prices.date_start',
 			date_end: '$prices.date_end',
@@ -164,7 +164,6 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 		)
 
 		const data = await PaymentParticipations.aggregate(pipeline)
-
 		return right(data)
 	}
 
@@ -186,7 +185,7 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 
 		const data = await PaymentParticipations.aggregate(pipeline)
 
-		if (!data?.length) return left(new PaymentParticipationsNotFoundError())
+		if (!data?.length) return left(new ParticipationPaymentsNotFoundError())
 
 		return right(data[0])
 	}

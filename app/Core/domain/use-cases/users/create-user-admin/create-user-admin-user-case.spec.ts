@@ -8,11 +8,11 @@ import {
 import { CreatePasswordUseCase } from '../create-password/create-password-use-case'
 
 import { faker } from '@faker-js/faker'
+import { ROLES } from 'App/Roles/types'
 import { IAdminUser } from 'App/Types/IAdminUser'
 import { cpf } from 'cpf-cnpj-validator'
 
 const user: IAdminUser = {
-	is_company: faker.datatype.boolean(),
 	unity_id: '63528c11c109b232759921d1',
 	name: faker.name.fullName(),
 	date_expiration: '2021-01-01',
@@ -20,8 +20,7 @@ const user: IAdminUser = {
 	email: faker.internet.email(),
 	document: cpf.generate(),
 	celphone: faker.phone.number('(99) 99999-9999'),
-	type: 'admin_prof',
-	dayOfTrade: null,
+	type: ROLES.ADMIN_PROF,
 	_id: '',
 	active: false,
 	avatar: '',

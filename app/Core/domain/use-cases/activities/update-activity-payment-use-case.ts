@@ -15,13 +15,17 @@ export class UpdateActivityPaymentUseCase
 	) { } // eslint-disable-line
 
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	public async execute(
-		params: TransactionWithActivity,
-	): PromiseEither<AbstractError, IActivity> {
-		const { activity_id, unity_id, ...transaction } = params
+	public async execute({
+		activity_id,
+		...transaction
+	}: TransactionWithActivity): PromiseEither<AbstractError, IActivity> {
+		if (!activity_id)
+			return left(
+				new AbstractError('Id da atividade não foi passado como parâmetro', 400),
+			)
+
 		const activityOrErr = await this.activitiesManager.updateActivityPayment(
 			activity_id,
-			unity_id,
 			transaction,
 		)
 

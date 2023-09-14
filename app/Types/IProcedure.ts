@@ -11,13 +11,11 @@ export interface IProcedure {
 	avgPrice?: number
 	minutes: number
 	health_insurances: {
-		value: string
-		label: string
+		_id: string | ObjectId
 		price: string
 	}[]
 	products?: {
-		value: string
-		label: string
+		_id: string | ObjectId
 		quantity: number
 		price_cost: number
 		price_final: number

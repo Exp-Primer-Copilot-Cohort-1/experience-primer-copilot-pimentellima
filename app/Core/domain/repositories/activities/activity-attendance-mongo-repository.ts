@@ -75,20 +75,16 @@ export class ActivityAttendanceMongoRepository
 
 	async updateActivityPayment(
 		id: string,
-		unity_id: string,
 		values: Partial<ITransaction>,
 	): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new MissingParamsError('ID de Atividade'))
 
-		const paymentOrErr = await ActivityPaymentEntity.build({
-			...(values as any),
-			date: new Date(values.date || ''),
-		})
+		const paymentOrErr = await ActivityPaymentEntity.build(values as ITransaction)
 
 		if (paymentOrErr.isLeft()) return left(paymentOrErr.extract())
 
 		const updatedActivity = await Activity.findOneAndUpdate(
-			{ _id: id, unity_id: unity_id.toString() },
+			{ _id: id },
 			{
 				$set: {
 					payment: paymentOrErr.extract(),

@@ -20,14 +20,8 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 		return right(procedures as unknown as IProcedure[])
 	}
 
-	async findByProcedureId(
-		id: string,
-		unity_id: string,
-	): PromiseEither<AbstractError, IProcedure> {
-		const procedure = await Procedure.findOne({
-			_id: id,
-			unity_id: unity_id.toString(),
-		})
+	async findByProcedureId(id: string): PromiseEither<AbstractError, IProcedure> {
+		const procedure = await Procedure.findById(id)
 			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
 			.populate(COLLECTIONS_REFS.HEALTH_INSURANCES, PROJECTION_DEFAULT)
 			.orFail(new ProcedureNotFoundError())
@@ -66,22 +60,12 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 			...data,
 			profs: data.profs?.map((prof) => prof.value),
 			health_insurances: data.health_insurances?.map((health_insurance) => ({
-				info: health_insurance.value,
-				price: Number(health_insurance.price.replace(',', '.')),
+				_id: (health_insurance as any).value,
+				price: health_insurance.price,
 			})),
 		})
 
-		let populatedProcedure = await procedure.populate(
-			COLLECTIONS_REFS.PROFS,
-			PROJECTION_DEFAULT,
-		)
-
-		populatedProcedure = await populatedProcedure.populate(
-			COLLECTIONS_REFS.HEALTH_INSURANCES,
-			PROJECTION_DEFAULT,
-		)
-
-		return right(populatedProcedure.toObject())
+		return right(procedure.toObject())
 	}
 
 	async updateProceduresById(

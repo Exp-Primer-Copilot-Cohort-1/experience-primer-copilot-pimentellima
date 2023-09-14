@@ -1,5 +1,7 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IFinancialCategory } from 'App/Types/IFinancialCategory'
+import { COLLECTION_NAME as COLLECTION_UNITIES_NAME } from './Unity'
+export const COLLECTION_NAME = 'financial_categories'
 
 const FinancialCategorySchema = new Schema<IFinancialCategory>(
 	{
@@ -19,7 +21,7 @@ const FinancialCategorySchema = new Schema<IFinancialCategory>(
 		},
 		unity_id: {
 			type: Mongoose.Schema.Types.ObjectId,
-			ref: 'unities',
+			ref: COLLECTION_UNITIES_NAME,
 			required: true,
 		},
 	},
@@ -34,6 +36,6 @@ const FinancialCategorySchema = new Schema<IFinancialCategory>(
 FinancialCategorySchema.index({ unity_id: 1, name: 1, type: 1 }, { unique: true })
 
 export default Mongoose.model<IFinancialCategory>(
-	'financial_categories',
+	COLLECTION_NAME,
 	FinancialCategorySchema,
 )

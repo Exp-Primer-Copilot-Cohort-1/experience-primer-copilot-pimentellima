@@ -38,9 +38,9 @@ export type Prof = {
 
 export type ActivityPayment = {
 	cost_center: string | ObjectId
-	category: string | ObjectId
-	bank: string | ObjectId
-	value: number
+	financial_category: string | ObjectId
+	account: string | ObjectId
+	total: number
 	date: Date
 	description?: string
 	paymentForm: string

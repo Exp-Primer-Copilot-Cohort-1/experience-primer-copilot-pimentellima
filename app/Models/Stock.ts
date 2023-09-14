@@ -1,6 +1,8 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IStock } from 'App/Types/IStock'
 
+export const COLLECTION_NAME = 'stocks'
+
 const StockSchema = new Schema<IStock>(
 	{
 		name: { type: String, required: true },
@@ -35,4 +37,4 @@ StockSchema.index(
 	{ unique: false },
 )
 
-export default Mongoose.model<IStock>('stocks', StockSchema)
+export default Mongoose.model<IStock>(COLLECTION_NAME, StockSchema)

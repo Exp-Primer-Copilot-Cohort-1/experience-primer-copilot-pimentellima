@@ -2,32 +2,44 @@ import { ObjectId } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { ActivityPayment } from 'App/Types/IActivity'
-import { Schema } from 'mongoose'
+import { ITransaction } from 'App/Types/ITransaction'
 import * as z from 'zod'
 
+const validation = z.object({
+	cost_center: z.string(),
+	financial_category: z.string(),
+	account: z.string(),
+	total: z.number(),
+	date: z.date(),
+	description: z.string().optional(),
+	paymentForm: z.string(),
+	installment: z.boolean(),
+	installments: z.number().optional(),
+})
 export class ActivityPaymentEntity implements ActivityPayment {
-	bank: { value: string | Schema.Types.ObjectId; label: string }
-	cost_center: { value: string | ObjectId; label: string }
-	category: { value: string | ObjectId; label: string }
-	value: string
+	amount: number
+	total: number
+	account: ObjectId | string
+	cost_center: ObjectId | string
+	financial_category: ObjectId | string
 	paymentForm: string
 	date: Date
 	description?: string | undefined
 	installment: boolean
 	installments?: number
 
-	defineBank(values: { value: string | Schema.Types.ObjectId; label: string }) {
-		this.bank = values
+	defineAccount(values: ObjectId | string) {
+		this.account = values
 		return this
 	}
 
-	defineCategory(values: { value: string | Schema.Types.ObjectId; label: string }) {
-		this.category = values
+	defineFinancialCategory(values: ObjectId | string) {
+		this.financial_category = values
 		return this
 	}
 
-	defineValue(value: string) {
-		this.value = value
+	defineTotal(total: number) {
+		this.total = total
 		return this
 	}
 
@@ -56,43 +68,24 @@ export class ActivityPaymentEntity implements ActivityPayment {
 		return this
 	}
 
-	defineCostCenter(value: { value: string | Schema.Types.ObjectId; label: string }) {
+	defineCostCenter(value: ObjectId | string) {
 		this.cost_center = value
 		return this
 	}
 
 	public static async build(
-		values: ActivityPayment,
+		values: ITransaction,
 	): PromiseEither<AbstractError, ActivityPaymentEntity> {
 		try {
-			z.object({
-				cost_center: z.object({
-					value: z.string(),
-					label: z.string(),
-				}),
-				category: z.object({
-					value: z.string(),
-					label: z.string(),
-				}),
-				bank: z.object({
-					value: z.string(),
-					label: z.string(),
-				}),
-				value: z.string(),
-				date: z.date(),
-				description: z.string().optional(),
-				paymentForm: z.string(),
-				installment: z.boolean(),
-				installments: z.number().optional(),
-			}).parse(values)
+			validation.parse(values)
 
 			return right(
 				new ActivityPaymentEntity()
-					.defineBank(values.bank)
-					.defineCostCenter(values.cost_center)
-					.defineCategory(values.category)
+					.defineAccount(values.account as string)
+					.defineCostCenter(values.cost_center as string)
+					.defineFinancialCategory(values.financial_category as string)
 					.defineDate(new Date(values.date))
-					.defineValue(values.value)
+					.defineTotal(values.amount)
 					.definePaymentForm(values.paymentForm)
 					.defineInstallment(values.installment)
 					.defineInstallments(values.installments)
