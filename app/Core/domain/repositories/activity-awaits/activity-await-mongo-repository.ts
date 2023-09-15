@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import ActivityAwait from 'App/Models/ActivityAwait'
+import ActivityAwait, { COLLECTION_REFS } from 'App/Models/ActivityAwait'
 import { IActivityAwait } from 'App/Types/IActivity'
 import ActivityAwaitEntity from '../../entities/activity-await/activity-await'
 import { ActivityNotFoundError } from '../../errors/activity-not-found'
@@ -8,22 +8,29 @@ import { MissingParamsError } from '../../errors/missing-params'
 import { generateScores } from '../helpers/scores'
 import { ActivityAwaitManagerInterface } from '../interface/activity-await-manager-interface'
 
+import { Generic } from 'App/Types/ITransaction'
 import { Types } from 'mongoose'
+import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
 
 export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterface {
-	constructor() { }
+	constructor() { } // eslint-disable-line
 
 	async createActivity(
 		unity_id: string,
 		values: IActivityAwait,
 	): PromiseEither<AbstractError, IActivityAwait> {
-		const activityOrErr = await ActivityAwaitEntity.build(values as any)
+		const activityOrErr = await ActivityAwaitEntity.build({
+			...values,
+			unity_id,
+		})
+
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract())
 
-		const newActivity = await ActivityAwait.create(
-			activityOrErr.extract().defineUnityId(unity_id).params(),
-		)
-		return right(newActivity)
+		const activity = activityOrErr.extract()
+
+		const created = await ActivityAwait.create(activity)
+
+		return right(created)
 	}
 
 	async findAllActivities(
@@ -37,19 +44,19 @@ export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterfa
 
 		const scoreMap = await generateScores(id as any)
 
-		const activities = await ActivityAwait.aggregate([
-			{
-				$match: {
-					...attrs,
-					type: 'await',
-					unity_id: id,
-				},
-			},
-		])
+		const activities = await ActivityAwait.find({
+			...attrs,
+			type: 'await',
+			unity_id: id,
+		})
+			.populate(COLLECTION_REFS.CLIENTS, PROJECTION_CLIENT)
+			.populate(COLLECTION_REFS.PROFS, PROJECTION_DEFAULT)
+			.populate(COLLECTION_REFS.HEALTH_INSURANCE, PROJECTION_DEFAULT)
+			.populate(COLLECTION_REFS.PROCEDURES, PROJECTION_DEFAULT)
 
 		// Adiciona a pontuação de cada cliente
 		for (const activity of activities) {
-			activity.score = scoreMap[activity.client.value] || 0
+			activity.score = scoreMap[(activity.client as Generic).value] || 0
 		}
 
 		return right(activities)

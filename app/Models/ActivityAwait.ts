@@ -1,23 +1,29 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { PaymentStatus } from 'App/Helpers'
-import { IActivityAwait } from 'App/Types/IActivity'
+import { IActivityAwait, STATUS_ACTIVITY } from 'App/Types/IActivity'
+import { Generic } from 'App/Types/ITransaction'
 import { COLLECTION_NAME } from './Activity'
 
 interface IActivityAwaitModel extends Omit<IActivityAwait, 'prof' | 'client'> {
-	prof: Schema.Types.ObjectId
-	client: Schema.Types.ObjectId
+	prof: Schema.Types.ObjectId | Generic
+	client: Schema.Types.ObjectId | Generic
 }
+
+export enum COLLECTION_REFS {
+	CLIENTS = 'client',
+	PROFS = 'prof',
+	HEALTH_INSURANCE = 'procedures.health_insurance',
+	PROCEDURES = 'procedures._id',
+}
+
 const ActivityAwaitSchema = new Schema<IActivityAwaitModel>(
 	{
 		procedures: [
 			{
-				value: {
+				_id: {
 					type: Schema.Types.ObjectId,
 					required: true,
-				},
-				label: {
-					type: String,
-					required: true,
+					ref: 'procedures',
 				},
 				minutes: {
 					type: Number,
@@ -27,35 +33,27 @@ const ActivityAwaitSchema = new Schema<IActivityAwaitModel>(
 					type: String,
 					required: true,
 				},
-				val: {
-					type: String,
+				price: {
+					type: Number,
 					required: true,
 				},
 				health_insurance: {
-					value: {
-						type: Schema.Types.ObjectId,
-						required: false,
-					},
-					label: {
-						type: String,
-						required: false,
-					},
-					price: {
-						type: String,
-						required: false,
-					},
-				},
-				status: {
-					type: String,
+					type: Schema.Types.ObjectId,
 					required: true,
-					enum: Object.values(PaymentStatus),
-					default: PaymentStatus.PENDING,
+					ref: 'health_insurances',
 				},
 			},
 		],
+		status: {
+			type: String,
+			required: true,
+			enum: Object.values(PaymentStatus),
+			default: PaymentStatus.PENDING,
+		},
 		client: {
 			type: Schema.Types.ObjectId,
 			required: true,
+			ref: 'clients',
 		},
 		obs: {
 			type: String,
@@ -65,6 +63,7 @@ const ActivityAwaitSchema = new Schema<IActivityAwaitModel>(
 		prof: {
 			type: Schema.Types.ObjectId,
 			required: true,
+			ref: 'users',
 		},
 		active: {
 			type: Boolean,
@@ -74,11 +73,12 @@ const ActivityAwaitSchema = new Schema<IActivityAwaitModel>(
 		unity_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
+			ref: 'unities',
 		},
 		type: {
 			type: String,
 			required: false,
-			default: 'await',
+			default: STATUS_ACTIVITY.AWAIT,
 		},
 	},
 	{

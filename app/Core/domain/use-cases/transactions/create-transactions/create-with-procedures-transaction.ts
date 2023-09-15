@@ -1,11 +1,13 @@
 import { ProcedureTransactionEntity } from 'App/Core/domain/entities/transaction/ProcedureTransactionEntity'
 import { TransactionEntity } from 'App/Core/domain/entities/transaction/TransactionEntity'
+import { ParticipationPaymentsNotFoundError } from 'App/Core/domain/errors/participation-payments-not-found'
+import { ProcedureNotFoundError } from 'App/Core/domain/errors/procedure-not-found'
 import { ProceduresManagerInterface } from 'App/Core/domain/repositories/interface'
 import { PaymentProfManagerInterface } from 'App/Core/domain/repositories/interface/payment-prof-manager-interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
-import { PromiseEither, left, right } from 'App/Core/shared'
-import { IProcedureTransaction, ITransaction } from 'App/Types/ITransaction'
+import { PromiseEither, left } from 'App/Core/shared'
+import { Generic, IProcedureTransaction, ITransaction } from 'App/Types/ITransaction'
 import { TransactionsManagerInterface } from '../../../repositories/interface/transactions-manager-interface'
 import { TransactionWithProcedure } from '../helpers'
 
@@ -16,42 +18,34 @@ export class CreateWithProceduresTransactionUseCase
 		private readonly manager: TransactionsManagerInterface,
 		private readonly proceduresManager: ProceduresManagerInterface,
 		private readonly paymentParticipationsManager: PaymentProfManagerInterface,
-	) { }
+	) { } // eslint-disable-line
 
 	public async execute({
 		procedures,
 		...transaction
 	}: TransactionWithProcedure): PromiseEither<AbstractError, ITransaction> {
-		if (!procedures)
-			return left(
-				new AbstractError('Procedimento não foi passado como parâmetro', 400),
-			)
+		if (!procedures?.length) return left(new ProcedureNotFoundError())
 
 		const proceduresTransactions: IProcedureTransaction[] = await Promise.all(
 			procedures.map(async (procedure) => {
 				const procedureDocOrErr = await this.proceduresManager.findByProcedureId(
-					procedure.value,
-					transaction.unity_id.toString(),
+					procedure._id as string,
 				)
 
-				if (procedureDocOrErr.isLeft())
-					throw new AbstractError(procedureDocOrErr.extract().message, 400)
+				if (procedureDocOrErr.isLeft()) throw procedureDocOrErr
 
 				const procedureDoc = procedureDocOrErr.extract()
 
 				const paymentParticipationsOrErr =
 					await this.paymentParticipationsManager.findCurrentPaymentParticipation(
 						transaction.unity_id.toString(),
-						transaction.prof.value,
-						procedure.health_insurance.value,
-						procedure.value,
+						transaction.prof,
+						(procedure.health_insurance as Generic)?.value as string,
+						procedure._id?.toString() as string,
 					)
 
 				if (paymentParticipationsOrErr.isLeft())
-					throw new AbstractError(
-						'Não foi possível encontrar a participação do procedimento, cadastre-a primeiro',
-						400,
-					)
+					throw new ParticipationPaymentsNotFoundError()
 
 				const paymentParticipations = paymentParticipationsOrErr.extract()
 
@@ -79,21 +73,17 @@ export class CreateWithProceduresTransactionUseCase
 
 		const t = await TransactionEntity.build(transaction)
 
-		if (t.isLeft()) return left(t.extract())
+		if (t.isLeft()) throw t.extract()
 
-		let transactionDoc = t.extract()
-
-		transactionDoc = transactionDoc.defineProcedures(proceduresTransactions)
+		const transactionDoc = t.extract().defineProcedures(proceduresTransactions)
 
 		const docOrErr = await this.manager.create(
-			transactionDoc.params(),
+			transactionDoc,
 			transaction.unity_id.toString(),
 		)
 
-		if (docOrErr.isLeft()) return left(docOrErr.extract())
+		if (docOrErr.isLeft()) throw docOrErr.extract()
 
-		const doc = docOrErr.extract()
-
-		return right(doc)
+		return docOrErr
 	}
 }

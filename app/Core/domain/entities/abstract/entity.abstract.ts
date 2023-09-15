@@ -9,31 +9,20 @@ interface IEntity {
 }
 
 export abstract class Entity implements IEntity {
-	private _id_: string
-	private _created_at: Date
-	private _updated_at: Date
+	_id: string
+	created_at: Date
+	updated_at: Date
 
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor() { }
 
-	public get _id(): string {
-		return this._id_
-	}
-
-	public get created_at(): Date {
-		return this._created_at
-	}
-
-	public get updated_at(): Date {
-		return this._updated_at
-	}
 
 	public defineId(id = ''): this {
 		if (!id) {
 			return this
 		}
 
-		this._id_ = id
+		this._id = id
 		return this
 	}
 
@@ -56,7 +45,7 @@ export abstract class Entity implements IEntity {
 			return this
 		}
 
-		this._created_at = date
+		this.created_at = date
 		return this
 	}
 
@@ -67,7 +56,7 @@ export abstract class Entity implements IEntity {
 			return this
 		}
 
-		this._updated_at = date
+		this.updated_at = date
 		return this
 	}
 

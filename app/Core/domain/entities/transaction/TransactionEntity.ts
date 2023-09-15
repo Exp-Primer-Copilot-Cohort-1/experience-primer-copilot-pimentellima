@@ -1,185 +1,154 @@
-import { ObjectId } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IProcedureTransaction, ITransaction } from 'App/Types/ITransaction'
-import { Schema } from 'mongoose'
+import { Generic, IProcedureTransaction, ITransaction } from 'App/Types/ITransaction'
 import * as z from 'zod'
 import { Entity } from '../abstract/entity.abstract'
 import zProcedure from './z-procedure'
+
+const validation = z.object({
+	group_by: z.string(),
+	activity_id: z.string().optional(),
+	prof: z.string().optional().nullable(),
+	client: z.string().optional().nullable(),
+	procedures: z.array(zProcedure.optional().nullable()).optional().nullable(),
+	account: z.string(),
+	cost_center: z.string(),
+	financial_category: z.string(),
+	paid: z.boolean().optional(),
+	amount: z.number(),
+	date: z.union([z.string(), z.date()]),
+	paymentForm: z.string(),
+	description: z.string().optional(),
+	type: z.enum(['income', 'expense']),
+	occurrences: z.enum(['once', 'daily', 'weekly', 'biweekly', 'monthly']).optional(),
+	installment: z.boolean(),
+	installmentCurrent: z.number().optional(),
+	installments: z.number().optional(),
+	active: z.boolean().optional(),
+})
 export class TransactionEntity extends Entity implements ITransaction {
-	activity_id?: string | undefined
-	account: { value: string | Schema.Types.ObjectId; label: string }
-	installments?: number | undefined
+	amount: number
+	activity_id?: string
 	active?: boolean | undefined
-	_group_by: string
-	_activity_id?: string
-	_unity_id: string
-	_prof?: { value: string; label: string }
-	_client?: { value: string; label: string }
-	_procedures?: IProcedureTransaction[]
-	_account: { value: string | Schema.Types.ObjectId; label: string }
-	_cost_center: { value: string | Schema.Types.ObjectId; label: string }
-	_financial_category: { value: string | Schema.Types.ObjectId; label: string }
-	_paid?: boolean
-	_total: number
-	_date: Date
-	_paymentForm: string
-	_description?: string | undefined
-	_type: 'income' | 'expense'
-	_occurrences?: 'once' | 'daily' | 'weekly' | 'biweekly' | 'monthly' | undefined
-	_installment: boolean
-	_installmentCurrent?: number | undefined
-	_installments?: number | undefined
-
-	get group_by() {
-		return this._group_by
-	}
-
-	get prof() {
-		return this._prof
-	}
-
-	get client() {
-		return this._client
-	}
-
-	get procedures() {
-		return this._procedures
-	}
-
-	get bank() {
-		return this._account
-	}
-
-	get cost_center() {
-		return this._cost_center
-	}
-
-	get financial_category() {
-		return this._financial_category
-	}
-
-	get paid() {
-		return this._paid
-	}
-
-	get total() {
-		return this._total
-	}
-
-	get date() {
-		return this._date
-	}
-
-	get paymentForm() {
-		return this._paymentForm
-	}
-
-	get description() {
-		return this._description
-	}
-
-	get type() {
-		return this._type
-	}
-
-	get occurrences() {
-		return this._occurrences
-	}
-
-	get installment() {
-		return this._installment
-	}
-
-	get installmentCurrent() {
-		return this._installmentCurrent
-	}
-
-	get unity_id() {
-		return this._unity_id
-	}
+	group_by: string
+	unity_id: string
+	prof?: string
+	client?: string
+	procedures?: IProcedureTransaction[]
+	account: string
+	cost_center: string
+	financial_category: string
+	paid?: boolean
+	date: Date
+	paymentForm: string
+	description?: string
+	type: 'income' | 'expense'
+	occurrences?: 'once' | 'daily' | 'weekly' | 'biweekly' | 'monthly'
+	installment: boolean
+	installmentCurrent?: number
+	installments?: number
 
 	defineGroupBy(group_by: string) {
-		this._group_by = group_by
+		this.group_by = group_by
 		return this
 	}
 
-	defineProf(prof?: { value: string; label: string }) {
-		this._prof = prof
+	defineProf(prof?: string | Generic) {
+		if (typeof prof === 'string') {
+			this.prof = prof
+		} else {
+			this.prof = prof?.value as string
+		}
 		return this
 	}
-	defineClient(client?: { value: string; label: string }) {
-		this._client = client
+	defineClient(client?: string | Generic) {
+		if (typeof client === 'string') {
+			this.client = client
+		} else {
+			this.client = client?.value as string
+		}
 		return this
 	}
 
 	defineProcedures(procedures: IProcedureTransaction[] = []) {
-		this._procedures = procedures
+		this.procedures = procedures
 		return this
 	}
 
 	defineInstallmentCurrent(installmentCurrent = 1) {
-		this._installmentCurrent = installmentCurrent
+		this.installmentCurrent = installmentCurrent
 		return this
 	}
 
 	defineType(type: 'expense' | 'income') {
-		this._type = type
+		this.type = type
 		return this
 	}
 
-	defineBank(bank: { value: string | ObjectId; label: string }) {
-		this._account = bank
+	defineAccount(account: string | Generic) {
+		if (typeof account === 'string') {
+			this.account = account
+		} else {
+			this.account = account?.value as string
+		}
 		return this
 	}
 
 	defineUnityId(unity_id: string) {
-		this._unity_id = unity_id
+		this.unity_id = unity_id
 		return this
 	}
 
-	defineFinancialCategory(category: { value: string | ObjectId; label: string }) {
-		this._financial_category = category
+	defineFinancialCategory(financial_category: string | Generic) {
+		if (typeof financial_category === 'string') {
+			this.financial_category = financial_category
+		} else {
+			this.financial_category = financial_category?.value as string
+		}
 		return this
 	}
 
-	defineTotal(value: number) {
-		this._total = value
+	defineAmount(amount: number) {
+		this.amount = amount
 		return this
 	}
 
 	definePaymentForm(value: string) {
-		this._paymentForm = value
+		this.paymentForm = value
 		return this
 	}
 
 	defineDate(value: Date) {
-		this._date = value
+		this.date = value
 		return this
 	}
 
 	defineDescription(value?: string) {
-		this._description = value
+		this.description = value
 		return this
 	}
 
 	defineInstallment(value: boolean) {
-		this._installment = value
+		this.installment = value
 		return this
 	}
 
 	defineInstallments(value?: number) {
-		this._installments = value
+		this.installments = value
 		return this
 	}
 
-	defineCostCenter(cost_center: { value: string | ObjectId; label: string }) {
-		this._cost_center = cost_center
+	defineCostCenter(cost_center: string | Generic) {
+		if (typeof cost_center === 'string') {
+			this.cost_center = cost_center
+		} else {
+			this.cost_center = cost_center?.value as string
+		}
 		return this
 	}
 
 	definePaid(paid = true) {
-		this._paid = paid
+		this.paid = paid
 		return this
 	}
 
@@ -187,77 +156,30 @@ export class TransactionEntity extends Entity implements ITransaction {
 		values: ITransaction,
 	): PromiseEither<AbstractError, TransactionEntity> {
 		try {
-			z.object({
-				group_by: z.string(),
-				activity_id: z.string().optional(),
-				prof: z
-					.object({
-						value: z.string(),
-						label: z.string(),
-					})
-					.optional()
-					.nullable(),
-				client: z
-					.object({
-						value: z.string(),
-						label: z.string(),
-					})
-					.optional()
-					.nullable(),
-				procedures: z
-					.array(zProcedure.optional().nullable())
-					.optional()
-					.nullable(),
-				account: z.object({
-					value: z.string(),
-					label: z.string(),
-				}),
-				cost_center: z.object({
-					value: z.string(),
-					label: z.string(),
-				}),
-				financial_category: z.object({
-					value: z.string(),
-					label: z.string(),
-				}),
-				paid: z.boolean().optional(),
-				total: z.number(),
-				date: z.union([z.string(), z.date()]),
-				paymentForm: z.string(),
-				description: z.string().optional(),
-				type: z.enum(['income', 'expense']),
-				occurrences: z
-					.enum(['once', 'daily', 'weekly', 'biweekly', 'monthly'])
-					.optional(),
-				installment: z.boolean(),
-				installmentCurrent: z.number().optional(),
-				installments: z.number().optional(),
-				active: z.boolean().optional(),
-			}).parse(values)
+			const t = new TransactionEntity()
+				.defineAccount(values.account as string | Generic)
+				.defineClient(values.client as string | Generic)
+				.defineProf(values.prof as string | Generic)
+				.defineCostCenter(values.cost_center as string | Generic)
+				.defineFinancialCategory(values.financial_category as string | Generic)
+				.defineGroupBy(values.activity_id || (values.group_by as string))
+				.defineDate(new Date(values.date))
+				.defineAmount(values.amount)
+				.defineUnityId(values.unity_id?.toString())
+				.definePaymentForm(values.paymentForm)
+				.definePaid(values.paid)
+				.defineType(values.type)
+				.defineProcedures(values.procedures)
+				.defineInstallment(values.installment)
+				.defineInstallments(values.installments)
+				.defineInstallmentCurrent(values.installmentCurrent)
+				.defineDescription(values.description)
 
-			return right(
-				new TransactionEntity()
-					.defineBank(values.account)
-					.defineClient(values.client)
-					.defineProf(values.prof)
-					.defineCostCenter(values.cost_center)
-					.defineFinancialCategory(values.financial_category)
-					.defineGroupBy(values.activity_id || (values.group_by as string))
-					.defineDate(new Date(values.date))
-					.defineTotal(values.total)
-					.defineUnityId(values.unity_id?.toString())
-					.definePaymentForm(values.paymentForm)
-					.definePaid(values.paid)
-					.defineType(values.type)
-					.defineProcedures(values.procedures)
-					.defineInstallment(values.installment)
-					.defineInstallments(values.installments)
-					.defineInstallmentCurrent(values.installmentCurrent)
-					.defineDescription(values.description),
-			)
+			validation.parse(t)
+
+			return right(t)
 		} catch (err) {
-			console.log(err)
-			return left(new AbstractError('Error validating payment', 500))
+			return left(new AbstractError('Error Zod Validation', 401, err))
 		}
 	}
 }

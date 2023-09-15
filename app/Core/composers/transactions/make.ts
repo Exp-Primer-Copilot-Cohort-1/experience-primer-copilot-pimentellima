@@ -1,7 +1,7 @@
 import { Controller } from 'App/Core/adapters/controller'
 import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
 import {
-	ActivityMongoRepository,
+	ActivityAttendanceMongoRepository,
 	PaymentProfMongoRepository,
 	ProceduresMongooseRepository,
 	TransactionsMongooseRepository,
@@ -22,7 +22,7 @@ export const makeCreateTransactionComposer = (): ControllerGeneric => {
 				new ProceduresMongooseRepository(),
 				new PaymentProfMongoRepository(),
 			),
-			new UpdateActivityPaymentUseCase(new ActivityMongoRepository()),
+			new UpdateActivityPaymentUseCase(new ActivityAttendanceMongoRepository()),
 		),
 	)
 }

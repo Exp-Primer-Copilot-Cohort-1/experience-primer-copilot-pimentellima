@@ -8,6 +8,8 @@ interface IPaymentParticipationsModel
 	procedure: Schema.Types.ObjectId
 }
 
+export const COLLECTION_NAME = 'payment_participations'
+
 const PaymentParticipations = new Schema<IPaymentParticipationsModel>(
 	{
 		prices: {
@@ -80,6 +82,6 @@ PaymentParticipations.pre('save', function (next) {
 })
 
 export default Mongoose.model<IPaymentParticipationsModel>(
-	'payment_participations',
+	COLLECTION_NAME,
 	PaymentParticipations,
 )

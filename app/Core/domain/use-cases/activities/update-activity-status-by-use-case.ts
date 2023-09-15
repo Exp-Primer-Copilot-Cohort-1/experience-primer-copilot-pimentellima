@@ -30,7 +30,7 @@ export class UpdateActivityStatusByIdUseCase implements UseCase<Props, IActivity
 
 		if (updatedActivityOrErr.isLeft()) return left(updatedActivityOrErr.extract())
 
-		if (params.status === AppointmentStatus.COMPLETED) {
+		/* if (params.status === AppointmentStatus.COMPLETED) {
 			const activity = await Activity.findById(params.id)
 			if (!activity) return left(new AbstractError('', 500))
 			const stocksData = await Stock.find()
@@ -93,7 +93,8 @@ export class UpdateActivityStatusByIdUseCase implements UseCase<Props, IActivity
 					)
 				}),
 			)
-		}
+		} */
+		console.log(updatedActivityOrErr.extract())
 
 		return right(updatedActivityOrErr.extract())
 	}

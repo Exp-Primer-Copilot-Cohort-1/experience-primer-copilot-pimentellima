@@ -12,8 +12,8 @@ import { ApiClient } from '@japa/api-client'
 
 export async function loginAndGetToken(client: ApiClient): Promise<CredentialsSuccess> {
 	const login = await client.post('/sessions').json({
-		email: 'rmmorais2@gmail.com',
-		password: '123456',
+		email: 'murilomontinojr@hotmail.com',
+		password: process.env.PASSWORD as string,
 	})
 
 	if (login.error()) {

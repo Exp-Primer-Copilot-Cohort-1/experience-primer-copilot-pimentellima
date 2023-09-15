@@ -224,9 +224,7 @@ Route.group(() => {
 		)
 		Route.put(':id', 'ActivityController.updateActivityById').as('activity.update')
 		Route.get('', 'ActivityController.findAllActivities').as('activity.index')
-		Route.get('await', 'ActivityController.findAllActivitiesAwait').as(
-			'activity.indexAwait',
-		)
+
 		Route.get('pending', 'ActivityController.findAllActivitiesPending').as(
 			'activity.indexPending',
 		)
@@ -237,9 +235,6 @@ Route.group(() => {
 			'activity.byClientId',
 		)
 		Route.post('', 'ActivityController.createActivity').as('activity.store')
-		Route.post('await', 'ActivityController.createActivityAwait').as(
-			'activity.storeAwait',
-		)
 		Route.post('recurrent', 'ActivityController.createRecurrentActivity').as(
 			'activity.storeRecurrent',
 		)
@@ -250,6 +245,16 @@ Route.group(() => {
 			'activity.destroy',
 		)
 	}).prefix('activity')
+
+	Route.group(() => {
+		Route.post('await', 'ActivityController.createActivityAwait').as(
+			'activity.storeAwait',
+		)
+
+		Route.get('await', 'ActivityController.findAllActivitiesAwait').as(
+			'activity.indexAwait',
+		)
+	}).prefix('activities')
 
 	Route.group(() => {
 		Route.get('', 'ProcedureController.index').as('procedure.index')

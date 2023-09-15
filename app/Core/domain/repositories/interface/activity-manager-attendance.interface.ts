@@ -19,7 +19,6 @@ export interface ActivitiesManagerAttendanceInterface {
 	) => PromiseEither<AbstractError, IActivity>
 	updateActivityPayment: (
 		id: string,
-		unity_id: string,
 		values: Partial<ITransaction>,
 	) => PromiseEither<AbstractError, IActivity>
 }

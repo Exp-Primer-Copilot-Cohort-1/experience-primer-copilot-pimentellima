@@ -1,5 +1,6 @@
-import { ObjectId } from '@ioc:Mongoose';
-import { AppointmentStatus, PaymentStatus } from '../Helpers';
+import { ObjectId } from '@ioc:Mongoose'
+import { AppointmentStatus, PaymentStatus } from '../Helpers'
+import { Generic } from './ITransaction'
 
 export type HealthInsurance = {
 	info: { value: string; label: string }
@@ -38,9 +39,9 @@ export type Prof = {
 
 export type ActivityPayment = {
 	cost_center: string | ObjectId
-	category: string | ObjectId
-	bank: string | ObjectId
-	value: number
+	financial_category: string | ObjectId
+	account: string | ObjectId
+	amount: number
 	date: Date
 	description?: string
 	paymentForm: string
@@ -57,7 +58,6 @@ export interface IAbstractActivity {
 	active: boolean
 	status: PaymentStatus
 	unity_id: string | ObjectId
-	prof_id: string | ObjectId
 	created_at: Date
 	updated_at: Date
 }
@@ -66,13 +66,13 @@ export interface IActivityAwait {
 	_id: string | ObjectId
 	procedures: Procedure[]
 	type: STATUS_ACTIVITY.AWAIT
-	client: Client
+	client: Generic | string | ObjectId
 	obs?: string
-	prof: Prof
+	prof: Generic | string | ObjectId
 	active: boolean
+	score?: number
 	status: PaymentStatus
 	unity_id: string | ObjectId
-	prof_id: string | ObjectId
 	created_at: Date
 	updated_at: Date
 }
@@ -89,7 +89,6 @@ export interface IActivityPending {
 	status: PaymentStatus
 	payment?: ActivityPayment
 	unity_id: string | ObjectId
-	prof_id: string | ObjectId
 	created_at: Date
 	updated_at: Date
 }
@@ -135,6 +134,7 @@ export type ActivityAwaitValues = {
 	client: Client
 	procedures: Procedure[]
 	obs?: string
+	unity_id: string
 }
 
 export type ActivityPendingValues = {

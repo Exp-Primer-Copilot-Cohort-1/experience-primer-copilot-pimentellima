@@ -16,11 +16,12 @@ import {
 	makeUpdateActivityStartedAtComposer,
 	makeUpdateActivityStatusComposer,
 } from 'App/Core/composers/activities/activity-composer'
+import { ROLES } from 'App/Roles/types'
 
 class ActivityController {
 	async findAllActivities(ctx: HttpContextContract) {
 		switch (ctx.auth.user?.type) {
-			case 'prof':
+			case ROLES.PROF:
 				return adaptRoute(makeFindActivitiesByProfIdComposer(), ctx, {
 					unity_id: ctx.auth.user?.unity_id,
 					prof_id: ctx.auth.user?._id,
@@ -35,10 +36,10 @@ class ActivityController {
 
 	async findAllActivitiesAwait(ctx: HttpContextContract) {
 		switch (ctx.auth.user?.type) {
-			case 'prof':
+			case ROLES.PROF:
 				return adaptRoute(makeFindAllActivitiesAwaitComposer(), ctx, {
 					unity_id: ctx.auth.user?.unity_id,
-					'prof.value': ctx.auth.user?._id,
+					prof: ctx.auth.user?._id,
 				})
 
 			default:
@@ -50,10 +51,10 @@ class ActivityController {
 
 	async findAllActivitiesPending(ctx: HttpContextContract) {
 		switch (ctx.auth.user?.type) {
-			case 'prof':
+			case ROLES.PROF:
 				return adaptRoute(makeFindAllActivitiesPendingComposer(), ctx, {
 					unity_id: ctx.auth.user?.unity_id,
-					'prof.value': ctx.auth.user?._id,
+					prof: ctx.auth.user?._id,
 				})
 
 			default:

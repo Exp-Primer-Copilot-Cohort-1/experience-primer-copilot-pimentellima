@@ -3,10 +3,12 @@ import { TransactionEntity } from 'App/Core/domain/entities/transaction/Transact
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
+import { COLLECTION_NAME } from 'App/Models/Transactions'
 import { IActivity } from 'App/Types/IActivity'
+import { addMonths } from 'date-fns'
+
 import type { ITransaction } from 'App/Types/ITransaction'
 import divideCurrencyByInteger from 'App/utils/divide-currency'
-import { addMonths } from 'date-fns'
 import { Types } from 'mongoose'
 import { UnitNotFoundError } from '../../../errors/unit-not-found'
 import { TransactionWithProcedure, TransactionWithoutProcedure } from '../helpers'
@@ -25,70 +27,63 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 			TransactionWithoutProcedure,
 			IActivity
 		>,
-	) { }
+	) { } // eslint-disable-line
 
-	@LogDecorator('transactions', ACTION.POST)
-	public async execute(
-		{
-			unity_id,
-			installments,
-			procedures = [],
-			activity_id,
-			...transaction
-		}: ITransaction,
-		...rest
-	): PromiseEither<AbstractError, ITransaction> {
+	@LogDecorator(COLLECTION_NAME, ACTION.POST)
+	public async execute({
+		unity_id,
+		installments = 1,
+		procedures = [],
+		activity_id,
+		...transaction
+	}: ITransaction): PromiseEither<AbstractError, ITransaction> {
 		if (!unity_id) return left(new UnitNotFoundError())
 
-		const numberOfTransactions = installments ? installments : 1
-		const total = divideCurrencyByInteger(transaction.total, numberOfTransactions)
-
+		const total = divideCurrencyByInteger(transaction.amount, installments)
 		const group_by = activity_id || transaction.group_by || new Types.ObjectId()
 
-		if (activity_id) {
-			const transactionOrErr = await this.createWithActivity.execute(
-				{
-					...transaction,
-					activity_id: activity_id.toString(),
-					group_by: group_by.toString(),
-					unity_id,
-					total: total.toString() as any,
-					installments: numberOfTransactions,
-				},
-				...rest,
-			)
-			if (transactionOrErr.isLeft()) throw transactionOrErr.extract()
+		const createdWithActivity = await this.createWithActivity.execute({
+			...transaction,
+			activity_id,
+			installments,
+			unity_id,
+		})
+
+		// Caso seja uma atividade e não tenha sido criada, então retorna left
+		if (createdWithActivity.isLeft() && activity_id) {
+			throw createdWithActivity.extract()
 		}
 
 		const transactions: ITransaction[] = await Promise.all(
-			Array.from({ length: numberOfTransactions }).map(async (_, index) => {
+			Array.from({ length: installments }).map(async (_, index) => {
 				const date = addMonths(new Date(transaction.date), index)
+
 				const transactionOrErr = await TransactionEntity.build({
 					...transaction,
 					group_by: group_by.toString(),
 					unity_id: unity_id.toString(),
-					total,
-					installments: numberOfTransactions,
+					amount: total,
+					installments,
 					installmentCurrent: index + 1,
 					date,
 				})
 				if (transactionOrErr.isLeft()) throw transactionOrErr.extract()
 
-				const t = transactionOrErr.extract().params() as ITransaction
+				const t = transactionOrErr.extract()
 
-				if (procedures?.length > 0) {
-					const transactionWithProcedureOrErr =
-						await this.createWithProcedure.execute({
-							...t,
-							procedures,
-						} as TransactionWithProcedure)
-					if (transactionWithProcedureOrErr.isLeft())
-						throw transactionWithProcedureOrErr.extract()
-					return transactionWithProcedureOrErr.extract()
-				}
+				// Este caso de uso trata de criar uma transação com procedimentos
+				// caso não haja procedimentos, então ele retorna left e continua
+				const withProcedures = await this.createWithProcedure.execute({
+					...t,
+					procedures,
+				})
 
+				if (withProcedures.isRight()) return withProcedures.extract()
+
+				// Caso não haja procedimentos, então ele retorna left e continua
+				// a criação da transação sem procedimentos
 				const transactionOnlyOneOrErr = await this.createWithoutProcedure.execute(
-					t,
+					{ ...t, procedures },
 				)
 
 				if (transactionOnlyOneOrErr.isLeft())
@@ -98,6 +93,6 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 			}),
 		)
 
-		return right(transactions[0] as ITransaction)
+		return right(transactions[0])
 	}
 }

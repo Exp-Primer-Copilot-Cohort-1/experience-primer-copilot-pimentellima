@@ -92,6 +92,6 @@ export const makeUpdateActivityStartedAtComposer = (): ControllerGeneric => {
 
 export const makeUpdateActivityFinishedAtComposer = (): ControllerGeneric => {
 	return new Controller(
-		new UpdateActivityFinishedAtUseCase(new ActivityAttendanceMongoRepository()),
+		new UpdateActivityFinishedAtUseCase(new ActivityAttendanceMongoRepository(), new ActivityMongoRepository()),
 	)
 }

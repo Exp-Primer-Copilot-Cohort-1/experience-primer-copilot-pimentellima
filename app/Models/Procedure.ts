@@ -2,13 +2,13 @@ import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IProcedure } from 'App/Types/IProcedure'
 
 import { COLLECTION_NAME as COLLECTION_HEALTH_INSURANCE_NAME } from './HealthInsurance'
+import { COLLECTION_NAME as COLLECTION_STOCKS_NAME } from './Stock'
 import { COLLECTION_NAME as COLLECTION_UNITY_NAME } from './Unity'
 import { COLLECTION_NAME as COLLECTION_USER_NAME } from './User'
-
 interface IProcedureModel extends Omit<IProcedure, 'profs' | 'health_insurances'> {
 	profs: Schema.Types.ObjectId[]
 	health_insurances: {
-		info: Schema.Types.ObjectId
+		_id: Schema.Types.ObjectId
 		price: number
 	}[]
 }
@@ -42,8 +42,7 @@ const ProcedureSchema = new Schema<IProcedureModel>(
 		],
 		health_insurances: [
 			{
-				_id: false,
-				info: {
+				_id: {
 					type: Schema.Types.ObjectId,
 					required: true,
 					ref: COLLECTION_HEALTH_INSURANCE_NAME,
@@ -56,14 +55,10 @@ const ProcedureSchema = new Schema<IProcedureModel>(
 		],
 		products: [
 			{
-				_id: false,
-				value: {
+				_id: {
 					type: Schema.Types.ObjectId,
 					required: true,
-				},
-				label: {
-					type: String,
-					required: true,
+					ref: COLLECTION_STOCKS_NAME,
 				},
 				quantity: {
 					type: Number,
@@ -101,7 +96,8 @@ ProcedureSchema.index({ unity_id: 1, minutes: 1, active: 1 }, { unique: false })
 
 export enum COLLECTIONS_REFS {
 	PROFS = 'profs',
-	HEALTH_INSURANCES = 'health_insurances.info',
+	HEALTH_INSURANCES = 'health_insurances._id',
+	STOCKS = 'products',
 }
 
 export default Mongoose.model<IProcedureModel>(COLLECTION_NAME, ProcedureSchema)
