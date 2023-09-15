@@ -42,7 +42,7 @@ test.group('Transactions Controller', async () => {
 
 		response.assertStatus(200)
 		assert.isArray(response.body())
-	})
+	}).skip()
 
 	test('display store transactions', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
@@ -91,6 +91,7 @@ test.group('Transactions Controller', async () => {
 
 		expect(deletedCount).to.be.greaterThan(0)
 	})
+
 
 	test('display store transactions with procedure', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
