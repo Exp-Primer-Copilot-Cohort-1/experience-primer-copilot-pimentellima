@@ -42,6 +42,18 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 		const total = divideCurrencyByInteger(transaction.amount, installments)
 		const group_by = activity_id || transaction.group_by || new Types.ObjectId()
 
+		const createdWithActivity = await this.createWithActivity.execute({
+			...transaction,
+			activity_id,
+			installments,
+			unity_id,
+		})
+
+		// Caso seja uma atividade e não tenha sido criada, então retorna left
+		if (createdWithActivity.isLeft() && activity_id) {
+			throw createdWithActivity.extract()
+		}
+
 		const transactions: ITransaction[] = await Promise.all(
 			Array.from({ length: installments }).map(async (_, index) => {
 				const date = addMonths(new Date(transaction.date), index)
@@ -59,13 +71,19 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 
 				const t = transactionOrErr.extract()
 
-				await this.createWithProcedure.execute({
+				// Este caso de uso trata de criar uma transação com procedimentos
+				// caso não haja procedimentos, então ele retorna left e continua
+				const withProcedures = await this.createWithProcedure.execute({
 					...t,
 					procedures,
-				} as TransactionWithProcedure)
+				})
 
+				if (withProcedures.isRight()) return withProcedures.extract()
+
+				// Caso não haja procedimentos, então ele retorna left e continua
+				// a criação da transação sem procedimentos
 				const transactionOnlyOneOrErr = await this.createWithoutProcedure.execute(
-					t,
+					{ ...t, procedures },
 				)
 
 				if (transactionOnlyOneOrErr.isLeft())
@@ -74,18 +92,6 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 				return transactionOnlyOneOrErr.extract()
 			}),
 		)
-
-		const createdWithActivity = await this.createWithActivity.execute({
-			...transaction,
-			activity_id,
-			amount: total,
-			installments,
-			unity_id,
-		})
-
-		if (createdWithActivity.isLeft() && activity_id) {
-			throw left(createdWithActivity.extract())
-		}
 
 		return right(transactions[0])
 	}

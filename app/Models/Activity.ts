@@ -5,7 +5,6 @@ import { STATUS_ACTIVITY, type IActivity } from 'App/Types/IActivity'
 import { COLLECTION_NAME as COLLECTION_CLIENT_NAME } from './Client'
 import { COLLECTION_NAME as COLLECTION_HEALTH_INSURANCE_NAME } from './HealthInsurance'
 import { COLLECTION_NAME as COLLECTION_PROCEDURE_NAME } from './Procedure'
-import { COLLECTION_NAME as COLLECTION_TRANSACTIONS_NAME } from './Transactions'
 import { COLLECTION_NAME as COLLECTION_UNITY_NAME } from './Unity'
 import { COLLECTION_NAME as COLLECTION_USER_NAME } from './User'
 interface IActivityModel extends Omit<IActivity, 'prof' | 'client'> {
@@ -61,16 +60,20 @@ const ActivitySchema = new Schema<IActivityModel>(
 		payment: {
 			required: false,
 			type: {
-				_id: {
-					type: Schema.Types.ObjectId,
-					ref: COLLECTION_TRANSACTIONS_NAME,
+				amount: {
+					type: Number,
+					required: false,
 				},
-				price: Number,
-				date: Date,
-				paymentForm: String,
+				date: {
+					type: Date,
+					required: false,
+				},
+				paymentForm: {
+					type: String,
+					required: false,
+				},
 			},
 			default: {},
-			_id: false,
 		},
 		client: {
 			type: Schema.Types.ObjectId,

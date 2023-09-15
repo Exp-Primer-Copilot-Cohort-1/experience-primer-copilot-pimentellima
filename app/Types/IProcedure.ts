@@ -1,5 +1,6 @@
 import { ObjectId } from '@ioc:Mongoose'
 import { IProf } from './IProf'
+import { StockProcedure } from './ITransaction'
 
 export interface IProcedure {
 	_id: string
@@ -14,12 +15,7 @@ export interface IProcedure {
 		_id: string | ObjectId
 		price: string
 	}[]
-	products?: {
-		_id: string | ObjectId
-		quantity: number
-		price_cost: number
-		price_final: number
-	}[]
+	products?: StockProcedure[]
 	unity_id: string | ObjectId
 	created_at: Date | string
 	updated_at: Date | string

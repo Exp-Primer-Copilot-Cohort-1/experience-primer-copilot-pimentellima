@@ -7,8 +7,8 @@ export type TransactionWithProcedure = Omit<
 	'procedures' | 'prof' | 'client'
 > & {
 	procedures: IProcedureTransaction[]
-	prof: string
-	client: string
+	prof?: string
+	client?: string
 }
 
 export type TransactionWithActivity = ITransaction & {

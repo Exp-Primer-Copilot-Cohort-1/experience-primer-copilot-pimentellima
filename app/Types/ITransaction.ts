@@ -2,7 +2,7 @@ import { ObjectId } from '@ioc:Mongoose'
 
 export type Generic = {
 	label: string
-	value: string | ObjectId
+	value: string
 }
 
 export type StockProcedure = {

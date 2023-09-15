@@ -44,7 +44,7 @@ export enum COLLECTION_REFS {
 const TransactionsSchema = new Schema<ITransactionModel>(
 	{
 		group_by: {
-			type: String,
+			type: Schema.Types.ObjectId,
 			required: true,
 		},
 		prof: {

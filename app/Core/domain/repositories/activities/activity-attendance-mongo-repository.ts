@@ -5,7 +5,8 @@ import Activity from 'App/Models/Activity'
 import { IActivity } from 'App/Types/IActivity'
 import { ITransaction } from 'App/Types/ITransaction'
 import { ActivityPaymentEntity } from '../../entities/activity-payment/ActivityPaymentEntity'
-import { MissingParamsError } from '../../errors/missing-params'
+import { ActivityNotFoundError } from '../../errors'
+import { PaymentAlreadyError } from '../../errors/payment-already-error'
 import { ActivitiesManagerAttendanceInterface } from '../interface/activity-manager-attendance.interface'
 
 export class ActivityAttendanceMongoRepository
@@ -77,28 +78,30 @@ export class ActivityAttendanceMongoRepository
 		id: string,
 		values: Partial<ITransaction>,
 	): PromiseEither<AbstractError, IActivity> {
-		if (!id) return left(new MissingParamsError('ID de Atividade'))
+		if (!id) return left(new ActivityNotFoundError())
 
 		const paymentOrErr = await ActivityPaymentEntity.build(values as ITransaction)
 
 		if (paymentOrErr.isLeft()) return left(paymentOrErr.extract())
 
+		const payments = paymentOrErr.extract()
+
 		const updatedActivity = await Activity.findOneAndUpdate(
-			{ _id: id },
+			{ _id: id, 'payment.price': { $exists: false } },
 			{
 				$set: {
-					payment: paymentOrErr.extract(),
+					payment: {
+						amount: payments.amount,
+						date: payments.date,
+						paymentForm: payments.paymentForm,
+					},
 					status: PaymentStatus.PAID,
 				},
 			},
 			{
-				returnDocument: 'after',
+				new: true,
 			},
-		)
-
-		if (!updatedActivity) {
-			return left(new AbstractError('Error updating activity', 500))
-		}
+		).orFail(new PaymentAlreadyError())
 
 		return right(updatedActivity.toObject())
 	}

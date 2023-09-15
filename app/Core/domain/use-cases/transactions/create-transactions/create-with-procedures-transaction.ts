@@ -1,6 +1,7 @@
 import { ProcedureTransactionEntity } from 'App/Core/domain/entities/transaction/ProcedureTransactionEntity'
 import { TransactionEntity } from 'App/Core/domain/entities/transaction/TransactionEntity'
 import { ParticipationPaymentsNotFoundError } from 'App/Core/domain/errors/participation-payments-not-found'
+import { ProcedureNotFoundError } from 'App/Core/domain/errors/procedure-not-found'
 import { ProceduresManagerInterface } from 'App/Core/domain/repositories/interface'
 import { PaymentProfManagerInterface } from 'App/Core/domain/repositories/interface/payment-prof-manager-interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
@@ -23,10 +24,7 @@ export class CreateWithProceduresTransactionUseCase
 		procedures,
 		...transaction
 	}: TransactionWithProcedure): PromiseEither<AbstractError, ITransaction> {
-		if (!procedures?.length)
-			return left(
-				new AbstractError('Procedimento não foi passado como parâmetro', 400),
-			)
+		if (!procedures?.length) return left(new ProcedureNotFoundError())
 
 		const proceduresTransactions: IProcedureTransaction[] = await Promise.all(
 			procedures.map(async (procedure) => {

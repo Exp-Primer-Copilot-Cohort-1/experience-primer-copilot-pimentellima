@@ -1,15 +1,14 @@
-import { ObjectId } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { ActivityPayment } from 'App/Types/IActivity'
-import { ITransaction } from 'App/Types/ITransaction'
+import { Generic, ITransaction } from 'App/Types/ITransaction'
 import * as z from 'zod'
 
 const validation = z.object({
 	cost_center: z.string(),
 	financial_category: z.string(),
 	account: z.string(),
-	total: z.number(),
+	amount: z.number(),
 	date: z.date(),
 	description: z.string().optional(),
 	paymentForm: z.string(),
@@ -18,28 +17,35 @@ const validation = z.object({
 })
 export class ActivityPaymentEntity implements ActivityPayment {
 	amount: number
-	total: number
-	account: ObjectId | string
-	cost_center: ObjectId | string
-	financial_category: ObjectId | string
+	account: string
+	cost_center: string
+	financial_category: string
 	paymentForm: string
 	date: Date
 	description?: string | undefined
 	installment: boolean
 	installments?: number
 
-	defineAccount(values: ObjectId | string) {
+	defineAccount(values: Generic | string) {
+		if (typeof values === 'object') {
+			this.account = values.value
+			return this
+		}
 		this.account = values
 		return this
 	}
 
-	defineFinancialCategory(values: ObjectId | string) {
+	defineFinancialCategory(values: Generic | string) {
+		if (typeof values === 'object') {
+			this.financial_category = values.value
+			return this
+		}
 		this.financial_category = values
 		return this
 	}
 
-	defineTotal(total: number) {
-		this.total = total
+	defineAmount(amount: number) {
+		this.amount = amount
 		return this
 	}
 
@@ -68,7 +74,11 @@ export class ActivityPaymentEntity implements ActivityPayment {
 		return this
 	}
 
-	defineCostCenter(value: ObjectId | string) {
+	defineCostCenter(value: Generic | string) {
+		if (typeof value === 'object') {
+			this.cost_center = value.value
+			return this
+		}
 		this.cost_center = value
 		return this
 	}
@@ -77,20 +87,19 @@ export class ActivityPaymentEntity implements ActivityPayment {
 		values: ITransaction,
 	): PromiseEither<AbstractError, ActivityPaymentEntity> {
 		try {
-			validation.parse(values)
+			const payments = new ActivityPaymentEntity()
+				.defineAccount(values.account as string)
+				.defineCostCenter(values.cost_center as string)
+				.defineFinancialCategory(values.financial_category as string)
+				.defineDate(new Date(values.date))
+				.defineAmount(values.amount)
+				.definePaymentForm(values.paymentForm)
+				.defineInstallment(values.installment)
+				.defineInstallments(values.installments)
+				.defineDescription(values.description)
+			validation.parse(payments)
 
-			return right(
-				new ActivityPaymentEntity()
-					.defineAccount(values.account as string)
-					.defineCostCenter(values.cost_center as string)
-					.defineFinancialCategory(values.financial_category as string)
-					.defineDate(new Date(values.date))
-					.defineTotal(values.amount)
-					.definePaymentForm(values.paymentForm)
-					.defineInstallment(values.installment)
-					.defineInstallments(values.installments)
-					.defineDescription(values.description),
-			)
+			return right(payments)
 		} catch (err) {
 			console.log(err)
 			return left(new AbstractError('Error validating payment', 500))
