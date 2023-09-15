@@ -2,64 +2,64 @@
 
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { ActivityPendingValues, IActivityPending } from 'App/Types/IActivity'
+import {
+	ActivityPayment,
+	ActivityPendingValues,
+	IActivityPending,
+	STATUS_ACTIVITY,
+} from 'App/Types/IActivity'
 import * as z from 'zod'
 import { AbstractActivity } from '../abstract/activity-abstract'
 
+const validation = z.object({
+	prof: z.string(),
+	client: z.string(),
+	procedures: z.array(
+		z.object({
+			_id: z.string(),
+		}),
+	),
+	obs: z.string().optional(),
+	unity_id: z.string(),
+})
+
 export class ActivityPendingEntity extends AbstractActivity implements IActivityPending {
-	private _type: 'pending'
-	private _group_id: string
-
-	public get type() {
-		return this._type
-	}
-
-	public get group_id() {
-		return this._group_id
-	}
+	payment?: ActivityPayment
+	type: STATUS_ACTIVITY.PENDING
+	group_id: string
 
 	defineGroupId(group_id: string): ActivityPendingEntity {
-		this._group_id = group_id
+		this.group_id = group_id
 		return this
 	}
 
-	defineType(type: 'pending'): ActivityPendingEntity {
-		this._type = type
+	defineType(type: STATUS_ACTIVITY.PENDING): ActivityPendingEntity {
+		this.type = type
+		return this
+	}
+
+	definePayment(payment: ActivityPayment): ActivityPendingEntity {
+		this.payment = payment
 		return this
 	}
 
 	public static async build(
-		params: ActivityPendingValues,
+		params: ActivityPendingValues & { group_id: string },
 	): PromiseEither<AbstractError, ActivityPendingEntity> {
+		console.log(params)
 		try {
-			z.object({
-				prof: z.object({
-					value: z.string(),
-					label: z.string(),
-				}),
-				client: z.object({
-					value: z.string(),
-					label: z.string(),
-				}),
-				procedures: z.array(
-					z.object({
-						value: z.string(),
-						label: z.string(),
-					}),
-				),
-				obs: z.string().optional(),
-			}).parse(params)
+			const activityPending = new ActivityPendingEntity()
+				.defineProcedures(params.procedures)
+				.defineClient(params.client)
+				.defineType(STATUS_ACTIVITY.PENDING)
+				.defineObs(params.obs)
+				.defineProf(params.prof)
+				.defineActive(true)
+				.defineUnityId(params.unity_id?.toString())
+				.defineGroupId(params.group_id)
+			validation.parse(activityPending)
 
-			return right(
-				new ActivityPendingEntity()
-					.defineProcedures(params.procedures)
-					.defineClient(params.client)
-					.defineType('pending')
-					.defineObs(params.obs)
-					.defineProf(params.prof)
-					.defineActive(true)
-					.defineProfId(params.prof.value),
-			)
+			return right(activityPending)
 		} catch (err) {
 			console.log(err)
 			return left(err)

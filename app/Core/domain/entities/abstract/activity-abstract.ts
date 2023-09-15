@@ -13,7 +13,7 @@ export abstract class AbstractActivity extends Entity implements IAbstractActivi
 	active: boolean
 	unity_id: string
 
-	public defineStatus(status: PaymentStatus): this {
+	public defineStatus(status = PaymentStatus.PENDING): this {
 		this.status = status
 		return this
 	}

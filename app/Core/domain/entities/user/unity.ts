@@ -43,239 +43,147 @@ const validateSchema = z.object({
 })
 
 export class UnityEntity extends Entity implements IUnity {
-	private _name: string
-	private _is_company: boolean
-	private _document: string
-	private _date_expiration: Date
-	private _active: boolean
-	private _email: string
-	private _address: string
-	private _address_number: string
-	private _avatar: string
-	private _cep: string
-	private _city: string
-	private _cnaes: string
-	private _complement: string
-	private _country: string
-	private _name_company: string
-	private _neighborhood: string
-	private _obs: string
-	private _phones: Nullable<{ value: string; id: number }>[]
-	private _site: string
-	private _state: string
-	private _revenue_reports: { [key: number]: IBilling }
-	private _holidays: IHoliday[]
-	private _franchise: boolean
-
-	get name(): string {
-		return this._name
-	}
-
-	get is_company(): boolean {
-		return this._is_company
-	}
-
-	get franchised(): boolean {
-		return this._franchise
-	}
-
-	get document(): string {
-		return this._document
-	}
-
-	get date_expiration(): Date {
-		return this._date_expiration
-	}
-
-	get active(): boolean {
-		return this._active
-	}
-
-	get email(): string {
-		return this._email
-	}
-
-	get address(): string {
-		return this._address
-	}
-
-	get address_number(): string {
-		return this._address_number
-	}
-
-	get avatar(): string {
-		return this._avatar
-	}
-
-	get cep(): string {
-		return this._cep
-	}
-
-	get city(): string {
-		return this._city
-	}
-
-	get cnaes(): string {
-		return this._cnaes
-	}
-
-	get complement(): string {
-		return this._complement
-	}
-
-	get country(): string {
-		return this._country
-	}
-
-	get name_company(): string {
-		return this._name_company
-	}
-
-	get neighborhood(): string {
-		return this._neighborhood
-	}
-
-	get obs(): string {
-		return this._obs
-	}
-
-	get phones(): Nullable<{ value: string; id: number }>[] {
-		return this._phones
-	}
-
-	get site(): string {
-		return this._site
-	}
-
-	get state(): string {
-		return this._state
-	}
-
-	get revenue_reports(): { [key: number]: IBilling } {
-		return this._revenue_reports
-	}
-
-	get holidays(): IHoliday[] {
-		return this._holidays
-	}
+	name: string
+	is_company: boolean
+	document: string
+	date_expiration: Date
+	active: boolean
+	email: string
+	address: string
+	address_number: string
+	avatar: string
+	cep: string
+	city: string
+	cnaes: string
+	complement: string
+	country: string
+	name_company: string
+	neighborhood: string
+	obs: string
+	phones: Nullable<{ value: string; id: number }>[]
+	site: string
+	state: string
+	revenue_reports: { [key: number]: IBilling }
+	holidays: IHoliday[]
+	franchised: boolean
 
 	private constructor() {
 		super()
 	}
 
 	defineName(name = ''): this {
-		this._name = name
+		this.name = name
 		return this
 	}
 
-	defineFranchise(franchised = false): this {
-		this._franchise = franchised
+	defineFranchised(franchised = false): this {
+		this.franchised = franchised
 		return this
 	}
 
 	defineIsCompany(is_company = true): this {
-		this._is_company = is_company
+		this.is_company = is_company
 		return this
 	}
 
 	defineDocument(document = '', force = false): this {
 		const numbers = document.replace(/\D/g, '')
-		this._document = Document.build(numbers, force).value
+		this.document = Document.build(numbers, force).value
 		return this
 	}
 
 	defineDateExpiration(date_expiration = addDays(new Date(), 5)): this {
-		this._date_expiration = date_expiration
+		this.date_expiration = date_expiration
 		return this
 	}
 
 	defineActive(active = false): this {
-		this._active = active
+		this.active = active
 		return this
 	}
 
 	defineEmail(email = ''): this {
-		this._email = Email.build(email).value
+		this.email = Email.build(email).value
 		return this
 	}
 
 	defineAddress(address = ''): this {
-		this._address = address
+		this.address = address
 		return this
 	}
 
 	defineAddressNumber(address_number = ''): this {
-		this._address_number = address_number
+		this.address_number = address_number
 		return this
 	}
 
 	defineAvatar(avatar = ''): this {
-		this._avatar = avatar
+		this.avatar = avatar
 		return this
 	}
 
 	defineCep(cep = ''): this {
-		this._cep = cep
+		this.cep = cep
 		return this
 	}
 
 	defineCity(city = ''): this {
-		this._city = city
+		this.city = city
 		return this
 	}
 
 	defineCnaes(cnaes = ''): this {
-		this._cnaes = cnaes
+		this.cnaes = cnaes
 		return this
 	}
 
 	defineComplement(complement = ''): this {
-		this._complement = complement
+		this.complement = complement
 		return this
 	}
 
 	defineCountry(country = ''): this {
-		this._country = country
+		this.country = country
 		return this
 	}
 
 	defineNameCompany(name_company = ''): this {
-		this._name_company = name_company
+		this.name_company = name_company
 		return this
 	}
 
 	defineNeighborhood(neighborhood = ''): this {
-		this._neighborhood = neighborhood
+		this.neighborhood = neighborhood
 		return this
 	}
 
 	defineObs(obs = ''): this {
-		this._obs = obs
+		this.obs = obs
 		return this
 	}
 
 	definePhones(phones: Nullable<{ value: string; id: number }>[] = []): this {
-		this._phones = phones
+		this.phones = phones
 		return this
 	}
 
 	defineSite(site = ''): this {
-		this._site = site
+		this.site = site
 		return this
 	}
 
 	defineState(state = ''): this {
-		this._state = state
+		this.state = state
 		return this
 	}
 
 	defineRevenueReports(revenue_reports: { [key: number]: IBilling } = {}): this {
-		this._revenue_reports = revenue_reports
+		this.revenue_reports = revenue_reports
 		return this
 	}
 
 	defineHolidays(holidays: IHoliday[] = []): this {
-		this._holidays = holidays
+		this.holidays = holidays
 		return this
 	}
 
@@ -305,7 +213,7 @@ export class UnityEntity extends Entity implements IUnity {
 				.defineRevenueReports(params.revenue_reports)
 				.defineSite(params.site)
 				.defineState(params.state)
-				.defineFranchise(params.franchised)
+				.defineFranchised(params.franchised)
 				.defineCreatedAt(params.created_at)
 				.defineUpdatedAt(params.updated_at)
 

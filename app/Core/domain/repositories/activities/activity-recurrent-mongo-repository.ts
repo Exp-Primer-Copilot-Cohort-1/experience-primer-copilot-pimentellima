@@ -53,28 +53,28 @@ export class ActivityRecurrentMongoRepository
 			const activityOrErr = await ActivityEntity.build({
 				...date,
 				...values,
+				unity_id,
 			})
 			if (activityOrErr.isLeft()) {
 				return left(activityOrErr.extract())
 			}
-			validatedActivities.push(
-				activityOrErr.extract().defineUnityId(unity_id).params(),
-			)
+
+			validatedActivities.push(activityOrErr.extract())
 		}
 
-		const pendingActivityOrErr = await ActivityPendingEntity.build(values)
+		const group_id = new mongoose.Types.ObjectId().toString()
+
+		const pendingActivityOrErr = await ActivityPendingEntity.build({
+			...values,
+			unity_id,
+			group_id,
+		})
+
 		if (pendingActivityOrErr.isLeft())
 			return left(new AbstractError('Error validating pending activities', 500))
 
-		const groupId = new mongoose.Types.ObjectId().toString()
 		for (let i = 0; i < pending; i++) {
-			await ActivityPending.create(
-				pendingActivityOrErr
-					.extract()
-					.defineUnityId(unity_id)
-					.defineGroupId(groupId)
-					.params(),
-			)
+			await ActivityPending.create(pendingActivityOrErr.extract())
 		}
 
 		const newActivities = await Promise.all(

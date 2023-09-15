@@ -81,9 +81,14 @@ export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterfa
 	}
 
 	async findActivityById(id: string): PromiseEither<AbstractError, IActivityAwait> {
-		if (!id) return left(new MissingParamsError('id'))
+		if (!id) return left(new ActivityNotFoundError())
 
 		const activity = await ActivityAwait.findById(id)
+			.populate(COLLECTION_REFS.CLIENTS, PROJECTION_CLIENT)
+			.populate(COLLECTION_REFS.PROFS, PROJECTION_DEFAULT)
+			.populate(COLLECTION_REFS.HEALTH_INSURANCE, PROJECTION_DEFAULT)
+			.populate(COLLECTION_REFS.PROCEDURES, PROJECTION_DEFAULT)
+
 		if (!activity) return left(new ActivityNotFoundError())
 
 		return right(activity)

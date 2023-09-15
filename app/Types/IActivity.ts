@@ -82,9 +82,9 @@ export interface IActivityPending {
 	group_id: string
 	procedures: Procedure[]
 	type: STATUS_ACTIVITY.PENDING
-	client: Client | ObjectId
+	client: Generic | string | ObjectId
 	obs?: string
-	prof: Prof | ObjectId
+	prof: Generic | string | ObjectId
 	active: boolean
 	status: PaymentStatus
 	payment?: ActivityPayment
@@ -99,7 +99,7 @@ export interface IActivity {
 	date: Date | string
 	hour_start: string
 	hour_end: string
-	status: PaymentStatus
+	status?: PaymentStatus
 	procedures: Procedure[]
 	client: Client | ObjectId | string
 	prof: Prof | ObjectId | string
@@ -142,6 +142,7 @@ export type ActivityPendingValues = {
 	client: Client
 	procedures: Procedure[]
 	obs?: string
+	unity_id: string | ObjectId
 }
 
 export type RecurrentActivityValues = {

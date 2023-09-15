@@ -1,6 +1,6 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { PaymentStatus } from 'App/Helpers'
-import { IActivityPending } from 'App/Types/IActivity'
+import { IActivityPending, STATUS_ACTIVITY } from 'App/Types/IActivity'
 import { COLLECTION_NAME } from './Activity'
 
 interface IActivityPendingModel extends Omit<IActivityPending, 'prof' | 'client'> {
@@ -21,12 +21,8 @@ const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 		},
 		procedures: [
 			{
-				value: {
+				_id: {
 					type: Schema.Types.ObjectId,
-					required: true,
-				},
-				label: {
-					type: String,
 					required: true,
 				},
 				minutes: {
@@ -37,23 +33,13 @@ const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 					type: String,
 					required: true,
 				},
-				val: {
+				price: {
 					type: String,
 					required: true,
 				},
 				health_insurance: {
-					value: {
-						type: Schema.Types.ObjectId,
-						required: false,
-					},
-					label: {
-						type: String,
-						required: false,
-					},
-					price: {
-						type: String,
-						required: false,
-					},
+					type: Schema.Types.ObjectId,
+					required: false,
 				},
 			},
 		],
@@ -86,7 +72,7 @@ const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 		type: {
 			type: String,
 			required: false,
-			default: 'pending',
+			default: STATUS_ACTIVITY.PENDING,
 		},
 	},
 	{

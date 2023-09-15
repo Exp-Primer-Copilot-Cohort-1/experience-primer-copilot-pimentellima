@@ -64,43 +64,27 @@ const validationActivity = (profData, scheduleBlocks) =>
 			return true
 		})
 export class ActivityEntity extends AbstractActivity implements IActivity {
-	private _date: Date
-	private _hour_start: string
-	private _hour_end: string
-	private _scheduled: AppointmentStatus
-	private _type: STATUS_ACTIVITY.MARKED
-	private _started_at?: Date
-	private _finished_at?: Date
-	private _payment?: ActivityPayment
-
-	public get type() {
-		return this._type
-	}
-
-	public get payment() {
-		return this._payment
-	}
+	date: Date
+	hour_start: string
+	hour_end: string
+	scheduled: AppointmentStatus
+	type: STATUS_ACTIVITY.MARKED
+	started_at?: Date
+	finished_at?: Date
+	payment?: ActivityPayment
 
 	defineType(type: STATUS_ACTIVITY.MARKED): ActivityEntity {
-		this._type = type
+		this.type = type
 		return this
 	}
 
-	public get started_at(): Date | undefined {
-		return this._started_at
-	}
-
-	public get finished_at(): Date | undefined {
-		return this._finished_at
-	}
-
 	defineStartedAt(started_at: Date | undefined) {
-		this._started_at = started_at
+		this.started_at = started_at
 		return this
 	}
 
 	defineFinishedAt(finished_at: Date | undefined) {
-		this._finished_at = finished_at
+		this.finished_at = finished_at
 		return this
 	}
 
@@ -108,36 +92,20 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		super()
 	}
 
-	public get date(): Date {
-		return this._date
-	}
-
-	public get hour_start(): string {
-		return this._hour_start
-	}
-
-	public get hour_end(): string {
-		return this._hour_end
-	}
-
-	public get scheduled(): AppointmentStatus {
-		return this._scheduled
-	}
-
 	defineDate(date: Date): this {
-		this._date = date
+		this.date = date
 		return this
 	}
 	defineHourStart(date: string): this {
-		this._hour_start = date
+		this.hour_start = date
 		return this
 	}
 	defineHourEnd(date: string): this {
-		this._hour_end = date
+		this.hour_end = date
 		return this
 	}
 	defineScheduled(scheduled: AppointmentStatus): this {
-		this._scheduled = scheduled
+		this.scheduled = scheduled
 		return this
 	}
 
@@ -169,7 +137,8 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 					.defineType(STATUS_ACTIVITY.MARKED)
 					.defineObs(params.obs)
 					.defineProf(params.prof?.toString())
-					.defineActive(true),
+					.defineActive(true)
+					.defineUnityId(params.unity_id as string),
 			)
 		} catch (err) {
 			console.log(err)
