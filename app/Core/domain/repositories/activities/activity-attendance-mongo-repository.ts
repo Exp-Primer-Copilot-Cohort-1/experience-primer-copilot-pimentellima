@@ -1,17 +1,20 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
-import Activity from 'App/Models/Activity'
+import Activity, { COLLECTIONS_REFS } from 'App/Models/Activity'
 import { IActivity } from 'App/Types/IActivity'
 import { ITransaction } from 'App/Types/ITransaction'
 import { ActivityPaymentEntity } from '../../entities/activity-payment/ActivityPaymentEntity'
 import { ActivityNotFoundError } from '../../errors'
 import { PaymentAlreadyError } from '../../errors/payment-already-error'
 import { ActivitiesManagerAttendanceInterface } from '../interface/activity-manager-attendance.interface'
+import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
 
 export class ActivityAttendanceMongoRepository
-	implements ActivitiesManagerAttendanceInterface { // eslint-disable-line
-	constructor() { } // eslint-disable-line
+	implements ActivitiesManagerAttendanceInterface
+{
+	// eslint-disable-line
+	constructor() {} // eslint-disable-line
 
 	async updateActivityStartedAt(
 		id: string,
@@ -69,6 +72,12 @@ export class ActivityAttendanceMongoRepository
 				returnDocument: 'after',
 			},
 		)
+			.populate(COLLECTIONS_REFS.CLIENTS, PROJECTION_CLIENT)
+			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
+			.populate(COLLECTIONS_REFS.PROCEDURES, PROJECTION_DEFAULT)
+			.populate(COLLECTIONS_REFS.HEALTH_INSURANCES, PROJECTION_DEFAULT)
+			.sort({ date: -1 })
+			.orFail(new ActivityNotFoundError())
 		if (!activity) return left(new AbstractError('Error updating activity', 500))
 
 		return right(activity.toObject())
