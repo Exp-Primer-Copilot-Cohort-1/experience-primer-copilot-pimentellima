@@ -1,12 +1,14 @@
 import { test } from '@japa/runner'
 import MedicalCertificate from 'App/Models/MedicalCertificate'
 import { assert, expect } from 'chai'
+import mongoose from 'mongoose'
 import { loginAndGetToken } from '../helpers/login'
+const id = new mongoose.Types.ObjectId('63528c11c109b232759921d2')
 const data = {
 	name: 'test',
 	unity_id: '63528c11c109b232759921d1',
 	prof: {
-		value: '123456',
+		value: '63528c11c109b232759921d2',
 		label: '123456',
 	},
 	description: 'teste medicalCertificate',
@@ -27,12 +29,13 @@ test.group('Direct Mail Controller', async () => {
 			.post('medical-certificate')
 			.json({
 				...data,
+				description: 'teste',
 			})
 			.bearerToken(token.token)
 		response.assertStatus(200)
-
+		//console.log(response.body())
 		const { deletedCount } = await MedicalCertificate.deleteMany({
-			'prof.value': response.body().prof.value,
+			description: response.body().description,
 		})
 		expect(deletedCount).to.be.greaterThan(0)
 	})
@@ -41,10 +44,13 @@ test.group('Direct Mail Controller', async () => {
 		const medicalCertificate = await MedicalCertificate.create({
 			...data,
 			active: true,
+			prof: id,
 		})
+
 		const response = await client
 			.delete(`medical-certificate/${medicalCertificate._id}`)
 			.bearerToken(token.token)
+		//console.log(medicalCertificate._id)
 		response.assertStatus(200)
 	})
 	test('display show medicalCertificate', async ({ client }) => {
@@ -53,6 +59,7 @@ test.group('Direct Mail Controller', async () => {
 			...data,
 			active: true,
 			name: 'show',
+			prof: id,
 		})
 
 		const response = await client
@@ -69,14 +76,17 @@ test.group('Direct Mail Controller', async () => {
 		const medicalCertificate = await MedicalCertificate.create({
 			...data,
 			active: true,
+			prof: id,
 		})
 
 		const updatedData = {
 			...data,
 			name: 'Atualizado',
+			_id: medicalCertificate._id,
+			prof: id,
 		}
 		const response = await client
-			.put(`medical-certificate/${medicalCertificate._id}`)
+			.put('medical-certificate/' + medicalCertificate._id)
 			.json({ ...updatedData })
 			.bearerToken(token.token)
 		response.assertStatus(200)
@@ -88,5 +98,5 @@ test.group('Direct Mail Controller', async () => {
 			_id: medicalCertificate._id,
 		})
 		assert.equal(deletedCount, 1)
-	}).skip()
+	})
 })

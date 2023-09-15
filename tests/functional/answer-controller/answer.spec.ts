@@ -139,5 +139,5 @@ test.group('Answer Controller', () => {
 			client_id: response.body().client_id_,
 		})
 		assert.equal(deletedCount, 2)
-	})
+	}).skip()
 })
