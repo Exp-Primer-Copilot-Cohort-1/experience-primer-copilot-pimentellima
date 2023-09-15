@@ -33,7 +33,9 @@ test.group('Account Controller', () => {
 				.post('accounts')
 				.json(newAccount)
 				.bearerToken(token.token)
-		} catch (error) { }
+		} catch (error) {
+			console.log(error)
+		}
 		assert.exists(newAccount.name)
 
 		const { deletedCount } = await Account.deleteOne({ name: newAccount.name })

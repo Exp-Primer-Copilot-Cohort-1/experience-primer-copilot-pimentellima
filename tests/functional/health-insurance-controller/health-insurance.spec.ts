@@ -118,7 +118,9 @@ test.group('Health Insurance Controller', () => {
 				.bearerToken(token.token)
 				.json(healthInsurance(user.unity_id))
 				.send()
-		} catch (error) { }
+		} catch (error) {
+			console.log(error)
+		}
 		assert.exists(user._id)
 
 		const { deletedCount } = await HealthInsurance.deleteOne({
