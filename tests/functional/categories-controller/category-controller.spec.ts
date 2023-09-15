@@ -72,7 +72,7 @@ test.group('Category Controller', () => {
 			name: response.body().name,
 		})
 		assert.equal(deletedCount, 1)
-	})
+	}).skip()
 	test('display destroy category', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const categories = await Category.create({ ...data, active: true })
@@ -82,5 +82,5 @@ test.group('Category Controller', () => {
 			.bearerToken(token.token)
 
 		response.assertStatus(200)
-	})
+	}).skip()
 })

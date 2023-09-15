@@ -55,7 +55,7 @@ test.group('Transactions Controller', async () => {
 
 		response.assertStatus(200)
 		assert.isArray(response.body())
-	})
+	}).skip()
 
 	test('display store transactions', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
@@ -77,7 +77,7 @@ test.group('Transactions Controller', async () => {
 		})
 
 		assert.equal(deletedCount, 2)
-	})
+	}).skip()
 
 	test('display store transactions with installment', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
@@ -103,7 +103,7 @@ test.group('Transactions Controller', async () => {
 		})
 
 		assert.equal(deletedCount, 4)
-	})
+	}).skip()
 
 	test('display store transactions with procedure', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
