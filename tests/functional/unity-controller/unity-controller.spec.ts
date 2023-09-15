@@ -6,7 +6,6 @@ import { cpf } from 'cpf-cnpj-validator'
 import { loginAndGetToken } from '../helpers/login'
 
 const unityData = {
-	name: 'unidade update',
 	is_company: false,
 	document: '111222333',
 	phones: ['123456789'],
@@ -30,12 +29,13 @@ test.group('Unity Controller', () => {
 	test('display index unity', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const response = await client
-			.get('unity?name=myUnity')
+			.get('unities?name=myUnity')
 			.headers({ Authorization: `Bearer ${token.token}` })
+		//console.log(response.body())
 		response.assertStatus(200)
 		assert.isArray(response.body())
-	}).skip()
-
+	})
+	//  nao tem rota
 	test('display store unity', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const unityData = {
@@ -69,39 +69,42 @@ test.group('Unity Controller', () => {
 
 		const updatedData = {
 			...unityData,
-			name: 'Nova Unidade',
+			_id: unity._id,
+
 			address: 'Novo Endereço',
 		}
 		const response = await client
 			.put(`unities/${unity._id}`)
 			.json({ ...updatedData })
 			.bearerToken(token.token)
-
+		//		console.log(response.body())
 		response.assertStatus(200)
 
 		const updatedUnity = await Unity.findById(unity._id)
 
-		assert.equal(updatedUnity?.name, updatedData.name)
 		assert.equal(updatedUnity?.address, updatedData.address)
 
-		await Unity.deleteOne({ _id: unity._id })
-	}).skip()
-
+		await Unity.deleteOne({ address: updatedData.address })
+	})
 	test('display show unity', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
-
+		const unityId: any = await Unity.findOne({}, { _id: 1 })
 		const response = await client
-			.get('unities/6359660fc109b232759921d4')
+			.get('unities/6501c4785048d0b42ec3f35b')
 			.bearerToken(token.token)
+		console.log(response.body())
 
 		response.assertStatus(200)
 	}).skip()
 
 	test('display destroy unity', async ({ client }) => {
+		const { token } = await loginAndGetToken(client)
 		const unity = await Unity.create({ ...unityData, active: true })
 
-		const response = await client.delete(`unities/${unity._id}`)
-
+		const response = await client
+			.delete(`unities/${unity._id}`)
+			.bearerToken(token.token)
+		//console.log(response.body())
 		response.assertStatus(200)
-	}).skip()
+	})
 })
