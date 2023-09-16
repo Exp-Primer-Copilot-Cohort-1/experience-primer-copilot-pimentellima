@@ -248,11 +248,17 @@ Route.group(() => {
 
 	Route.group(() => {
 		Route.post('await', 'ActivityController.createActivityAwait').as(
-			'activity.storeAwait',
+			'activities.storeAwait',
 		)
+		Route.get('', 'ActivityController.findAllActivities').as('activities.index')
 
 		Route.get('await', 'ActivityController.findAllActivitiesAwait').as(
-			'activity.indexAwait',
+			'activities.indexAwait',
+		)
+
+		Route.post('', 'ActivityController.createActivity').as('activities.store')
+		Route.post('recurrent', 'ActivityController.createRecurrentActivity').as(
+			'activities.storeRecurrent',
 		)
 	}).prefix('activities')
 

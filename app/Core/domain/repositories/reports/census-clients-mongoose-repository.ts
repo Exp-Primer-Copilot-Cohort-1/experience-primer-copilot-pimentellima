@@ -26,17 +26,12 @@ export class CensusClientsMongooseRepository implements CensusClientsManagerInte
 
 		const pipeline = [
 			{
-				$addFields: {
-					client_id: { $toObjectId: '$client.value' },
-				},
-			},
-			{
 				$match: match,
 			},
 			{
 				$lookup: {
 					from: 'clients', // substitua com o nome da sua coleção de clientes
-					localField: 'client_id', // substitua com o nome do campo que referencia o cliente no seu modelo de Atividade
+					localField: 'client', // substitua com o nome do campo que referencia o cliente no seu modelo de Atividade
 					foreignField: '_id',
 					as: 'client',
 				},
@@ -87,14 +82,9 @@ export class CensusClientsMongooseRepository implements CensusClientsManagerInte
 				$match: match,
 			},
 			{
-				$addFields: {
-					client_id: { $toObjectId: '$client.value' },
-				},
-			},
-			{
 				$lookup: {
 					from: 'clients', // substitua com o nome da sua coleção de clientes
-					localField: 'client_id', // substitua com o nome do campo que referencia o cliente no seu modelo de Atividade
+					localField: 'client', // substitua com o nome do campo que referencia o cliente no seu modelo de Atividade
 					foreignField: '_id',
 					as: 'client',
 				},
@@ -106,11 +96,11 @@ export class CensusClientsMongooseRepository implements CensusClientsManagerInte
 				$group: {
 					_id: {
 						$cond: {
-							if: { $eq: ['$client.partner.label', ''] }, // Condição
+							if: { $eq: ['$client.partner', ''] }, // Condição
 							then: 'SEM PARCEIROS', // Valor se a condição for verdadeira
 							else: {
 								$ifNull: [
-									'$client.partner.label', // Expressão a ser avaliada
+									'$client.partner', // Expressão a ser avaliada
 									'SEM PARCEIROS', // Valor a ser usado se a expressão for nula ou inexistente
 								],
 							}, // Valor se a condição for falsa
@@ -151,14 +141,9 @@ export class CensusClientsMongooseRepository implements CensusClientsManagerInte
 				$match: match,
 			},
 			{
-				$addFields: {
-					client_id: { $toObjectId: '$client.value' },
-				},
-			},
-			{
 				$lookup: {
 					from: 'clients', // substitua com o nome da sua coleção de clientes
-					localField: 'client_id', // substitua com o nome do campo que referencia o cliente no seu modelo de Atividade
+					localField: 'client', // substitua com o nome do campo que referencia o cliente no seu modelo de Atividade
 					foreignField: '_id',
 					as: 'client',
 				},

@@ -73,17 +73,19 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 	async createActivity(
 		unity_id: string,
-		params: IActivity,
+		{
+			_id, // eslint-disable-line
+			...params
+		}: IActivity,
 	): PromiseEither<AbstractError, IActivity> {
 		if (!unity_id) return left(new UnitNotFoundError())
 		const activityOrErr = await ActivityEntity.build(params)
+
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract())
-		const activity = activityOrErr.extract().params() as IActivity
+		const activity = activityOrErr.extract()
 
 		const created = await Activity.create({
 			...activity,
-			client: activity.client,
-			prof: activity.prof,
 			unity_id,
 		})
 
