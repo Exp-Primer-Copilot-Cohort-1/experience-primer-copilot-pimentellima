@@ -108,7 +108,7 @@ UnitySchema.index(
 		address: 1,
 		address_number: 1,
 	},
-	{ unique: true },
+	{ unique: false },
 )
 
 UnitySchema.pre('save', async function (next) {

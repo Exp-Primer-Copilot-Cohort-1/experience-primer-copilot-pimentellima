@@ -1,4 +1,3 @@
-import { ClientSession } from '@ioc:Mongoose'
 import { DrPerformanceManager } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
@@ -9,7 +8,6 @@ import { IUnity } from 'App/Types/IUnity'
 type NewDrPerformance = {
 	unity: IUnity
 	admin: IAdminUser
-	session: ClientSession
 	franchised?: boolean
 }
 
@@ -22,7 +20,6 @@ export class CreateFranchiseDrPerformanceUseCase implements NewDrPerformanceUseC
 
 	public async execute({
 		admin,
-		session,
 		unity,
 		franchised = false,
 	}: NewDrPerformance): PromiseEither<AbstractError, Message> {
@@ -31,8 +28,8 @@ export class CreateFranchiseDrPerformanceUseCase implements NewDrPerformanceUseC
 
 		if (!franchised) return right({ message: 'not franchised' })
 
-		await this.manager.addAdmin(admin, session)
-		await this.manager.addUnity(unity, session)
+		await this.manager.addAdmin(admin)
+		await this.manager.addUnity(unity)
 
 		return right({ message: 'ok' })
 	}

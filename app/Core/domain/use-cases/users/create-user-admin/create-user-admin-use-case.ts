@@ -1,6 +1,6 @@
-import db from '@ioc:Mongoose'
 import AdminUser from 'App/Core/domain/entities/user/admin'
 import { AbstractError } from 'App/Core/errors/error.interface'
+import { ISessionTransaction } from 'App/Core/helpers/session-transaction'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import type { IAdminUser } from 'App/Types/IAdminUser'
@@ -12,15 +12,17 @@ export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {
 		private readonly createUser: UseCase<IAdminUser, IAdminUser>,
 		private readonly createUnity: UseCase<IUnity, IUnity>,
 		private readonly createDrPerformance: NewDrPerformanceUseCase,
+		private readonly session: ISessionTransaction,
 	) { } // eslint-disable-line
 
 	public async execute(data: IAdminUser): PromiseEither<AbstractError, IAdminUser> {
-		const session = await db.startSession()
-
 		try {
-			session.startTransaction()
+			this.session.startSession()
 
-			const unityOrErr = await this.createUnity.execute(data as IUnity, session)
+			const unityOrErr = await this.createUnity.execute(
+				data as IUnity,
+				this.session,
+			)
 
 			if (unityOrErr.isLeft()) throw unityOrErr.extract() // error
 
@@ -36,22 +38,24 @@ export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {
 
 			const admin = adminEntityOrErr.extract().params() as IAdminUser
 
-			const adminOrErr = await this.createUser.execute(admin as IAdminUser, session)
+			const adminOrErr = await this.createUser.execute(
+				admin as IAdminUser,
+				this.session,
+			)
 
 			if (adminOrErr.isLeft()) throw adminOrErr.extract() // error
 
 			await this.createDrPerformance.execute({
 				admin: adminOrErr.extract(),
 				unity,
-				session,
 				franchised: data.franchised,
 			})
 
-			await session.commitTransaction()
+			await this.session.commitTransaction()
 
 			return adminOrErr
 		} catch (error) {
-			await session.abortTransaction()
+			await this.session.abortTransaction()
 
 			return left(error)
 		}

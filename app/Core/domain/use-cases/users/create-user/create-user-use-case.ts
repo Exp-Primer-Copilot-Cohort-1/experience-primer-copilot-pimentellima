@@ -19,10 +19,7 @@ export class CreateUserUseCase implements UseCase<IAdminUser, IAdminUser> {
 	) { } // eslint-disable-line
 
 	@SendSignUpConfirmEmail
-	public async execute(
-		data: IAdminUser,
-		session = undefined,
-	): PromiseEither<AbstractError, IAdminUser> {
+	public async execute(data: IAdminUser): PromiseEither<AbstractError, IAdminUser> {
 		if (!data.unity_id) return left(new UnitNotFoundError())
 
 		const adminOrErr = await AdminUser.build(data)
@@ -41,7 +38,7 @@ export class CreateUserUseCase implements UseCase<IAdminUser, IAdminUser> {
 
 		admin.definePassword(passwordOrErr.extract())
 
-		const userOrErr = await this.adminManager.create(admin.params(), session)
+		const userOrErr = await this.adminManager.create(admin.params())
 
 		return userOrErr
 	}

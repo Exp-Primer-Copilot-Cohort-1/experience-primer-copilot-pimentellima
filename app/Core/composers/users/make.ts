@@ -13,22 +13,31 @@ import {
 } from 'App/Core/domain/use-cases'
 
 import { CreatePasswordUseCase } from 'App/Core/domain/use-cases'
+import { SessionTransaction } from 'App/Core/helpers/session-transaction'
 
 export const makeCreateUserComposer = (): ControllerGeneric => {
+	const session = new SessionTransaction()
+
 	return new Controller(
-		new CreateUserUseCase(new AdminMongooseRepository(), new CreatePasswordUseCase()),
+		new CreateUserUseCase(
+			new AdminMongooseRepository(session),
+			new CreatePasswordUseCase(),
+		),
 	)
 }
 
 export const makeCreateAdminComposer = (): ControllerGeneric => {
+	const session = new SessionTransaction()
+
 	return new Controller(
 		new CreateUserAdminUseCase(
 			new CreateUserUseCase(
-				new AdminMongooseRepository(),
+				new AdminMongooseRepository(session),
 				new CreatePasswordUseCase(),
 			),
-			new CreateUnityUseCase(new UnitiesMongooseRepository()),
-			new CreateFranchiseDrPerformanceUseCase(new DrPerformanceMongoose()),
+			new CreateUnityUseCase(new UnitiesMongooseRepository(session)),
+			new CreateFranchiseDrPerformanceUseCase(new DrPerformanceMongoose(session)),
+			session,
 		),
 	)
 }

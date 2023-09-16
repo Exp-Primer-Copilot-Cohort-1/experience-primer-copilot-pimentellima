@@ -2,23 +2,20 @@ import AdminEntity from 'App/Core/domain/entities/user/admin'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import { AdminManagerInterface } from '../interface/admin-manager.interface'
 
-import type { ClientSession } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
+import { ISessionTransaction } from 'App/Core/helpers/session-transaction'
 import User from 'App/Models/User'
 import { IAdminUser } from 'App/Types/IAdminUser'
 import { UserNotFoundError } from '../../errors/user-not-found'
 
 export class AdminMongooseRepository implements AdminManagerInterface {
-	constructor() { } // eslint-disable-line
+	constructor(private readonly session: ISessionTransaction) { } // eslint-disable-line
 
-	public async create(
-		{
-			_id, // eslint-disable-line
-			...admin
-		}: IAdminUser,
-		session: ClientSession,
-	): PromiseEither<AbstractError, IAdminUser> {
-		const user = await User.create([admin], { session })
+	public async create({
+		_id, // eslint-disable-line
+		...admin
+	}: IAdminUser): PromiseEither<AbstractError, IAdminUser> {
+		const user = await User.create([admin], { session: this.session.manager })
 
 		if (!user) {
 			return left(new AbstractError('Não foi possível criar o usuário', 401))

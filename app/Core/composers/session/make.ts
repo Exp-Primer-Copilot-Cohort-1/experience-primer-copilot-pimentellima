@@ -6,13 +6,18 @@ import {
 	UnitiesMongooseRepository,
 } from 'App/Core/domain/repositories'
 import { SignInUseCase, UnityValidationUseCase } from 'App/Core/domain/use-cases'
+import { SessionAuth } from 'App/Core/helpers/session-auth'
+import { SessionTransaction } from 'App/Core/helpers/session-transaction'
 
 export const makeSignInComposer = ({ auth }: HttpContextContract): ControllerGeneric => {
+	const session = new SessionTransaction()
+	const manager = new SessionAuth(auth)
+
 	return new Controller(
 		new SignInUseCase(
-			new SessionRepository(auth),
-			new UnitiesMongooseRepository(),
-			new UnityValidationUseCase(new UnitiesMongooseRepository()),
+			new SessionRepository(manager),
+			new UnitiesMongooseRepository(session),
+			new UnityValidationUseCase(new UnitiesMongooseRepository(session)),
 		),
 	)
 }

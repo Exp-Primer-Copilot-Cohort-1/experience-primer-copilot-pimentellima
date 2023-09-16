@@ -1,4 +1,3 @@
-import LogDecorator from 'App/Core/decorators/log-decorator'
 import { HealthInsuranceManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
@@ -12,7 +11,6 @@ type Props = HealthInsuranceParams & {
 export class CreateHealthInsuranceUseCase implements UseCase<Props, IHealthInsurance> {
 	constructor(private readonly manager: HealthInsuranceManagerInterface) { }
 
-	@LogDecorator('health_insurances', 'post')
 	public async execute(params: Props): PromiseEither<AbstractError, IHealthInsurance> {
 		const healthInsuranceOrErr = await this.manager.create(params.unity_id, params)
 

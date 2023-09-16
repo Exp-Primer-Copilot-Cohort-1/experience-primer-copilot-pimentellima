@@ -5,7 +5,6 @@ import { makeDeleteAccountComposer } from 'App/Core/composers/accounts/make-dele
 import { makeFindAccountComposer } from 'App/Core/composers/accounts/make-find-account-by-id-composer'
 import { makeFindAllAccountsComposer } from 'App/Core/composers/accounts/make-find-all-accounts-composer'
 import { makeUpdateAccountByIdComposer } from 'App/Core/composers/accounts/make-update-account-by-id-composer'
-
 class AccountController {
 	async findAllAccounts(ctx: HttpContextContract) {
 		return adaptRoute(makeFindAllAccountsComposer(), ctx, {

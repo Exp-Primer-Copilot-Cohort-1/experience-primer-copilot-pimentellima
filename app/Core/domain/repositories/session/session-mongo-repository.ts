@@ -1,21 +1,22 @@
-import { AuthContract } from '@ioc:Adonis/Addons/Auth'
 import promiseErrorHandler from 'App/Core/adapters/controller/helpers/promise-err-handler'
 import { AbstractError } from 'App/Core/errors/error.interface'
+import { ISessionAuth } from 'App/Core/helpers/session-auth'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import { SessionUser } from '../../entities/user/session'
 import { InvalidCredentialsError } from '../../errors/invalid-credentials'
+import { UserNotActiveError } from '../../errors/user-not-on'
 import { ISession, SessionManagerInterface } from '../interface/session-manager.interface'
 
 const production = process.env.NODE_ENV === 'production'
 export class SessionRepository implements SessionManagerInterface {
-	constructor(private readonly auth: AuthContract) { } // eslint-disable-line
+	constructor(private readonly auth: ISessionAuth) { } // eslint-disable-line
 
 	public async signIn(
 		email: string,
 		password: string,
 	): PromiseEither<AbstractError, ISession> {
 		const [err, userAuth] = await promiseErrorHandler(
-			this.auth.use('api').attempt(email, password),
+			this.auth.signIn(email, password),
 		)
 
 		if (err) {
@@ -35,9 +36,7 @@ export class SessionRepository implements SessionManagerInterface {
 
 		const user = sessionOrErr.extract().params() as unknown as SessionUser
 
-		if (!user.active && production) {
-			return left(new InvalidCredentialsError('Usuário não está ativado'))
-		}
+		if (!user.active && production) return left(new UserNotActiveError())
 
 		return right({
 			user,

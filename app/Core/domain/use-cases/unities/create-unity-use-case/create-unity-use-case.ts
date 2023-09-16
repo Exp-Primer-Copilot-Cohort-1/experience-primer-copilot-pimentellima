@@ -9,17 +9,14 @@ export class CreateUnityUseCase implements UseCase<IUnity, IUnity> {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(private readonly manager: UnitiesManagerInterface) { }
 
-	public async execute(
-		unity: IUnity,
-		session = undefined,
-	): PromiseEither<AbstractError, IUnity> {
+	public async execute(unity: IUnity): PromiseEither<AbstractError, IUnity> {
 		const unityEntityOrErr = await UnityEntity.build(unity)
 
 		if (unityEntityOrErr.isLeft()) return unityEntityOrErr
 
-		const doc = unityEntityOrErr.extract().params() as IUnity
+		const doc = unityEntityOrErr.extract()
 
-		const unityOrErr = await this.manager.create(doc, session)
+		const unityOrErr = await this.manager.create(doc)
 
 		return unityOrErr
 	}

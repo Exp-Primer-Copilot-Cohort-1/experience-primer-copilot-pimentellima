@@ -455,4 +455,4 @@ Route.group(() => {
 		Route.delete('/:id', 'UnityController.destroy').as('unities.destroy')
 		Route.post('', 'UnityController.store').as('unities.store')
 	}).prefix('unities')
-}).middleware(['auth', 'role'])
+}).middleware(['auth', 'role', 'log'])

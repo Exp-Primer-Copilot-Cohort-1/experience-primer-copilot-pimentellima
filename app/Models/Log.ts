@@ -4,7 +4,7 @@ const LogSchema = new Schema(
 	{
 		collection_name: {
 			type: String,
-			required: true,
+			required: false,
 		},
 		date: {
 			type: String,
@@ -19,26 +19,16 @@ const LogSchema = new Schema(
 			required: true,
 			enum: ['post', 'put', 'delete'],
 		},
-		before: {
+		original: {
 			type: Object,
 			required: true,
 		},
-		after: {
+		modified: {
 			type: Object,
 			required: true,
 		},
 		user: {
-			type: {
-				value: {
-					type: Schema.Types.ObjectId,
-					required: true,
-				},
-				label: {
-					type: String,
-					required: true,
-				},
-				_id: false,
-			},
+			type: Schema.Types.ObjectId,
 			required: true,
 		},
 		unity_id: {
@@ -65,6 +55,7 @@ LogSchema.pre(['updateOne', 'findOneAndUpdate'], function (next) {
 })
 
 LogSchema.index({ collection_id: 1, date: 1 })
+LogSchema.index({ user: 1, date: 1 })
 
 const generateCollectionLog = async (unity_id: string) => {
 	return Mongoose.model(`logs_${unity_id}`, LogSchema)

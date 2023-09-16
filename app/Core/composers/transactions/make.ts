@@ -12,17 +12,23 @@ import {
 	CreateWithProceduresTransactionUseCase,
 	UpdateActivityPaymentUseCase,
 } from 'App/Core/domain/use-cases'
+import { SessionTransaction } from 'App/Core/helpers/session-transaction'
 
 export const makeCreateTransactionComposer = (): ControllerGeneric => {
+	const session = new SessionTransaction()
+
 	return new Controller(
 		new CreateTransactionUseCase(
-			new CreateOnlyOneTransactionUseCase(new TransactionsMongooseRepository()),
+			new CreateOnlyOneTransactionUseCase(
+				new TransactionsMongooseRepository(session),
+			),
 			new CreateWithProceduresTransactionUseCase(
-				new TransactionsMongooseRepository(),
+				new TransactionsMongooseRepository(session),
 				new ProceduresMongooseRepository(),
 				new PaymentProfMongoRepository(),
 			),
 			new UpdateActivityPaymentUseCase(new ActivityAttendanceMongoRepository()),
+			session,
 		),
 	)
 }
