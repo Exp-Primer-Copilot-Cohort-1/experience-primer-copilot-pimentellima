@@ -58,9 +58,7 @@ export class UnitiesMongooseRepository implements UnitiesManagerInterface {
 		_id, // eslint-disable-line
 		...unity
 	}: IUnity): PromiseEither<AbstractError, IUnity> {
-		const unityCreated = await Unity.create([unity], {
-			session: this.session.manager,
-		})
+		const unityCreated = await Unity.create([unity], { ...this.session.options })
 
 		if (unityCreated?.length === 0) return left(new UnitCreatedError())
 

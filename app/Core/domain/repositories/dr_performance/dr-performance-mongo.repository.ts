@@ -18,7 +18,7 @@ export class DrPerformanceMongoose implements DrPerformanceManager {
 		await BusinessFranchises.updateOne(
 			{ name: FRANCHISE_NAME },
 			{ $push: { unities: unity._id.toString() } },
-			{ session: this.session.manager },
+			{ ...this.session.options },
 		).orFail()
 
 		return right(unity)
@@ -28,7 +28,7 @@ export class DrPerformanceMongoose implements DrPerformanceManager {
 		await BusinessFranchises.updateOne(
 			{ name: FRANCHISE_NAME },
 			{ $push: { admins: admin._id.toString() } },
-			{ session: this.session.manager },
+			{ ...this.session.options },
 		).orFail()
 
 		return right(admin)

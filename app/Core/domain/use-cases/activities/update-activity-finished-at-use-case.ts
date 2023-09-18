@@ -1,14 +1,13 @@
 import LogDecorator, { ACTION } from 'App/Core/decorators/log-decorator'
-import { ActivitiesManagerAttendanceInterface, ActivitiesManagerInterface } from 'App/Core/domain/repositories/interface'
+import {
+	ActivitiesManagerAttendanceInterface,
+	ActivitiesManagerInterface,
+} from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import Activity, { COLLECTION_NAME } from 'App/Models/Activity'
-import Procedure from 'App/Models/Procedure'
-import Stock from 'App/Models/Stock'
+import { COLLECTION_NAME } from 'App/Models/Activity'
 import { IActivity } from 'App/Types/IActivity'
-import { IStock } from 'App/Types/IStock'
-import { ActivityNotFoundError } from '../../errors/activity-not-found'
 
 type Props = {
 	id: string
@@ -18,8 +17,8 @@ type Props = {
 export class UpdateActivityFinishedAtUseCase implements UseCase<Props, IActivity> {
 	constructor(
 		private readonly activityAttendanceManager: ActivitiesManagerAttendanceInterface,
-		private readonly activityManager: ActivitiesManagerInterface
-	) {} // eslint-disable-line
+		private readonly activityManager: ActivitiesManagerInterface,
+	) { } // eslint-disable-line
 
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	public async execute(params: Props): PromiseEither<AbstractError, IActivity> {

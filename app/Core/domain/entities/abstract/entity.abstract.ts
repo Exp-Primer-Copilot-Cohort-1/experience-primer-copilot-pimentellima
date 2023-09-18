@@ -16,6 +16,17 @@ export abstract class Entity implements IEntity {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor() { }
 
+	public updateId(id: string): this {
+		if (!id) {
+			return this
+		}
+
+		if (id !== this._id) {
+			throw new Error('Id is not the same')
+		}
+
+		return this
+	}
 
 	public defineId(id = ''): this {
 		if (!id) {

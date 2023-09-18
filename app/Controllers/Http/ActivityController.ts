@@ -15,7 +15,7 @@ import {
 	makeUpdateActivityFinishedAtComposer,
 	makeUpdateActivityStartedAtComposer,
 	makeUpdateActivityStatusComposer,
-} from 'App/Core/composers/activities/activity-composer'
+} from 'App/Core/composers/activities/make'
 import { ROLES } from 'App/Roles/types'
 
 class ActivityController {

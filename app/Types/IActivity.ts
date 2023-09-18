@@ -3,8 +3,7 @@ import { AppointmentStatus, PaymentStatus } from '../Helpers'
 import { Generic } from './ITransaction'
 
 export type HealthInsurance = {
-	info: { value: string; label: string }
-	price: string
+	_id: Generic | string | ObjectId
 }
 
 export enum STATUS_ACTIVITY {
@@ -14,14 +13,11 @@ export enum STATUS_ACTIVITY {
 }
 
 export type Procedure = {
-	info: {
-		value: string
-		label: string
-	}
+	_id: Generic | string | ObjectId
 	minutes: number
 	color: string
-	val: number
-	health_insurance: HealthInsurance
+	price: number
+	health_insurance: Generic | string | ObjectId
 }
 
 export type Client = {

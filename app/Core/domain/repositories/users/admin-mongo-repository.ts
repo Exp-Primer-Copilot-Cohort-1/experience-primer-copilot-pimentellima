@@ -15,7 +15,7 @@ export class AdminMongooseRepository implements AdminManagerInterface {
 		_id, // eslint-disable-line
 		...admin
 	}: IAdminUser): PromiseEither<AbstractError, IAdminUser> {
-		const user = await User.create([admin], { session: this.session.manager })
+		const user = await User.create([admin], { ...this.session.options })
 
 		if (!user) {
 			return left(new AbstractError('Não foi possível criar o usuário', 401))

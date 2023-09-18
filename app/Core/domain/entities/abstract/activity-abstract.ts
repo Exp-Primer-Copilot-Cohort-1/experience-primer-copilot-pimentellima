@@ -4,9 +4,17 @@ import { IAbstractActivity, Procedure } from 'App/Types/IActivity'
 import { Generic } from 'App/Types/ITransaction'
 import { Entity } from './entity.abstract'
 
+export interface IProcedureOut {
+	_id: string
+	minutes: number
+	color: string
+	price: number
+	health_insurance: string
+}
+
 export abstract class AbstractActivity extends Entity implements IAbstractActivity {
 	status: PaymentStatus
-	procedures: Procedure[]
+	procedures: IProcedureOut[]
 	client: string
 	obs?: string
 	prof: string
@@ -19,7 +27,25 @@ export abstract class AbstractActivity extends Entity implements IAbstractActivi
 	}
 
 	public defineProcedures(procedures: Procedure[]): this {
-		this.procedures = procedures
+		this.procedures = procedures?.map((procedure) => {
+			let h = ''
+
+			if (typeof procedure.health_insurance === 'object') {
+				const value = procedure.health_insurance['value']
+
+				h = value ? value : procedure.health_insurance.toString()
+			}
+
+			h = procedure.health_insurance.toString()
+
+			return {
+				_id: procedure._id.toString(),
+				minutes: procedure.minutes,
+				color: procedure.color,
+				price: procedure.price,
+				health_insurance: h,
+			}
+		})
 		return this
 	}
 
@@ -32,7 +58,7 @@ export abstract class AbstractActivity extends Entity implements IAbstractActivi
 		return this
 	}
 
-	public defineObs(obs?: string): this {
+	public defineObs(obs = ''): this {
 		this.obs = obs
 		return this
 	}

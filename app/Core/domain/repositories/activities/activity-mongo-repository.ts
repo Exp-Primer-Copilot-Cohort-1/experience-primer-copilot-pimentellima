@@ -1,7 +1,9 @@
+import { Document } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
+import { ISessionTransaction } from 'App/Core/helpers/session-transaction'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import Activity, { COLLECTIONS_REFS } from 'App/Models/Activity'
-import { ActivityValues, STATUS_ACTIVITY, type IActivity } from 'App/Types/IActivity'
+import { STATUS_ACTIVITY, type IActivity } from 'App/Types/IActivity'
 import ActivityEntity from '../../entities/activities/activity'
 import { ClientNotFoundError, UserNotFoundError } from '../../errors'
 import { ActivityNotFoundError } from '../../errors/activity-not-found'
@@ -11,7 +13,7 @@ import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
 import { ActivitiesManagerInterface } from '../interface/activity-manager.interface'
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
-	constructor() { } // eslint-disable-line
+	constructor(private readonly session?: ISessionTransaction) { } // eslint-disable-line
 
 	async findAllActivities(unity_id: string): PromiseEither<AbstractError, IActivity[]> {
 		if (!unity_id) return left(new UnitNotFoundError())
@@ -122,20 +124,25 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 	async updateActivityById(
 		id: string,
-		values: ActivityValues,
+		values: IActivity,
 	): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new ActivityNotFoundError())
 
-		const updatedActivity = await Activity.findByIdAndUpdate(id, values, {
-			new: true,
-		})
-			.populate(COLLECTIONS_REFS.CLIENTS, PROJECTION_CLIENT)
-			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
-			.populate(COLLECTIONS_REFS.PROCEDURES, PROJECTION_DEFAULT)
-			.populate(COLLECTIONS_REFS.HEALTH_INSURANCES, PROJECTION_DEFAULT)
-			.sort({ date: -1 })
-			.orFail(new ActivityNotFoundError())
+		const activity = await Activity.findById(id, null, { ...this.session?.options })
 
-		return right(updatedActivity.toObject())
+		if (!activity) return left(new ActivityNotFoundError())
+
+		const entityOrErr = await ActivityEntity.build(activity)
+
+		if (entityOrErr.isLeft()) return left(entityOrErr.extract())
+
+		const entity = entityOrErr.extract().update(values)
+
+		const updated = (await Activity.findByIdAndUpdate(id, entity, {
+			...this.session?.options,
+			new: true,
+		})) as unknown as Document
+
+		return right(updated.toObject())
 	}
 }

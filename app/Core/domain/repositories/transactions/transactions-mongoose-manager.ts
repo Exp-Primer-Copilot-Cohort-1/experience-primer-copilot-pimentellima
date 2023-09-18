@@ -21,9 +21,7 @@ export class TransactionsMongooseRepository implements TransactionsManagerInterf
 				financial_category: transaction.financial_category,
 				account: transaction.account,
 			},
-			{
-				session: this.session.manager,
-			},
+			{ ...this.session.options },
 		)
 
 		return right(created[0].toObject())
