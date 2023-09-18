@@ -24,6 +24,7 @@ const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 				_id: {
 					type: Schema.Types.ObjectId,
 					required: true,
+					ref: 'procedures',
 				},
 				minutes: {
 					type: Number,
@@ -50,6 +51,7 @@ const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 		client: {
 			type: Schema.Types.ObjectId,
 			required: true,
+			ref: 'clients',
 		},
 		obs: {
 			type: String,
@@ -59,6 +61,7 @@ const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 		prof: {
 			type: Schema.Types.ObjectId,
 			required: true,
+			ref: 'users',
 		},
 		active: {
 			type: Boolean,
@@ -68,6 +71,7 @@ const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 		unity_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
+			ref: 'unities',
 		},
 		type: {
 			type: String,

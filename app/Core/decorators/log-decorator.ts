@@ -110,19 +110,13 @@ export default function LogDecorator(collectionName: string, action: ACTION) {
 			// busca o item no banco de dados para comparar com o item que está sendo criado/editado
 			const props = (await db.model(collectionName).findById(id)) || {}
 
-			let user = args[1] // O segundo argumento é o usuário que está criando/editando o item
+			const user = args[1] // O segundo argumento é o usuário que está criando/editando o item
 
 			const unity_id = user?.unity_id || item.unity_id || props.unity_id
 
 			const Log = await generateLog(unity_id.toString()) // Gera o model de log da unidade
 
 			// Converte o usuário para o formato que o Log espera
-			if (user) {
-				user = {
-					label: user.name,
-					value: user._id,
-				}
-			}
 
 			const date = new Date().toLocaleString() // Pega a data atual
 			const result: Either<AbstractError, any> = await originalMethod.apply(
@@ -139,7 +133,7 @@ export default function LogDecorator(collectionName: string, action: ACTION) {
 
 			// Compara o item que está sendo criado/editado com o item do banco de dados
 			// não há necessidade de comparar um item criado.
-			const [before, after] =
+			const [original, modified] =
 				action === ACTION.POST ? ['criado', 'criado'] : deepCompare(props, value)
 
 			// Busca o id do item que está sendo criado/editado
@@ -148,16 +142,20 @@ export default function LogDecorator(collectionName: string, action: ACTION) {
 				value?._id?.toString() ||
 				id?.toString()
 
-			await Log.create({
-				action,
-				collection_name: collectionName,
-				date,
-				before,
-				after,
-				user,
-				collection_id,
-				unity_id: unity_id.toString(),
-			})
+			try {
+				await Log.create({
+					action,
+					collection_name: collectionName,
+					date,
+					modified,
+					original,
+					user,
+					collection_id,
+					unity_id: unity_id.toString(),
+				})
+			} catch (error) {
+				console.log(error)
+			}
 
 			return result
 		}

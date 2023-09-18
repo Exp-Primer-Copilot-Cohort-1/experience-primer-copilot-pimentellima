@@ -225,9 +225,6 @@ Route.group(() => {
 		Route.put(':id', 'ActivityController.updateActivityById').as('activity.update')
 		Route.get('', 'ActivityController.findAllActivities').as('activity.index')
 
-		Route.get('pending', 'ActivityController.findAllActivitiesPending').as(
-			'activity.indexPending',
-		)
 		Route.get('prof/:prof_id', 'ActivityController.findActivitiesByProfId').as(
 			'activity.byProfId',
 		)
@@ -259,6 +256,12 @@ Route.group(() => {
 		Route.post('', 'ActivityController.createActivity').as('activities.store')
 		Route.post('recurrent', 'ActivityController.createRecurrentActivity').as(
 			'activities.storeRecurrent',
+		)
+
+		Route.put(':id', 'ActivityController.updateActivityById').as('activities.update')
+
+		Route.get('pending', 'ActivityController.findAllActivitiesPending').as(
+			'activities.indexPending',
 		)
 	}).prefix('activities')
 
