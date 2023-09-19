@@ -11,7 +11,18 @@ const FormSchema = new Schema<IForm>(
 			type: Mongoose.Schema.Types.ObjectId,
 			required: true,
 		},
-		prof: [
+		prof: {
+			value: {
+				type: String,
+				required: true,
+			},
+			label: {
+				type: String,
+				required: true,
+			},
+			_id: false,
+		},
+		profs_with_access: [
 			{
 				value: {
 					type: String,
@@ -21,7 +32,7 @@ const FormSchema = new Schema<IForm>(
 					type: String,
 					required: true,
 				},
-				_id: false
+				_id: false,
 			},
 		],
 		fields: [{}],

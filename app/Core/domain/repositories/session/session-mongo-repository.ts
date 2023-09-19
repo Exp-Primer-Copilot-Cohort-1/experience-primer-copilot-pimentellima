@@ -9,7 +9,7 @@ import { ISession, SessionManagerInterface } from '../interface/session-manager.
 
 const production = process.env.NODE_ENV === 'production'
 export class SessionRepository implements SessionManagerInterface {
-	constructor(private readonly auth: ISessionAuth) { } // eslint-disable-line
+	constructor(private readonly auth: ISessionAuth) {} // eslint-disable-line
 
 	public async signIn(
 		email: string,
@@ -34,10 +34,13 @@ export class SessionRepository implements SessionManagerInterface {
 			token: userAuth.token,
 		}
 
-		const user = sessionOrErr.extract().params() as unknown as SessionUser
-
+		const user = {
+			...(sessionOrErr.extract().params() as unknown as SessionUser),
+			_id: userAuth.user._id as string,
+		}
+		// @ts-ignore
 		if (!user.active && production) return left(new UserNotActiveError())
-
+		// @ts-ignore
 		return right({
 			user,
 			token,

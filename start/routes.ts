@@ -178,16 +178,6 @@ Route.group(() => {
 		Route.put('status/:id', 'FormController.updateFormStatus')
 	}).prefix('forms')
 
-	Route.get('answer-log-by-form/:form_id', 'AdonnisLegadoController.bridge').as(
-		'logAnswer.byFormId',
-	)
-	Route.get('answer', 'AdonnisLegadoController.bridge')
-	Route.get('answer/:id', 'AdonnisLegadoController.bridge')
-	Route.get('answer-by-form/:form_id', 'AdonnisLegadoController.bridge')
-	Route.put('answer/:id', 'AdonnisLegadoController.bridge')
-	Route.delete('answer/:id', 'AdonnisLegadoController.bridge')
-	Route.post('answer', 'AdonnisLegadoController.bridge')
-
 	Route.group(() => {
 		Route.post('', 'AnswerController.createAnswer').as('answer.store')
 		Route.get('', 'AnswerController.findAllAnswers').as('answer.index')
@@ -210,7 +200,6 @@ Route.group(() => {
 }).middleware(['auth', 'role'])
 
 Route.group(() => {
-	Route.get('activity-stock', 'AdonnisLegadoController.bridge').as('activity.stock')
 
 	Route.group(() => {
 		Route.put('status/:id', 'ActivityController.updateActivityStatusById').as(

@@ -1,13 +1,30 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { AbstractError } from 'App/Core/errors/error.interface'
+import { left } from 'App/Core/shared'
 ;('use strict')
 
 import Form from 'App/Models/Form'
+import { userInfo } from 'os'
 
 class FormController {
 	async findAllForms(ctx: HttpContextContract) {
-		const user = ctx.auth.user
-		const forms = await Form.find({ unity_id: user?.unity_id, active: true })
-		return forms
+		try {
+			const user = ctx.auth.user
+			if (!user) throw new Error()
+			const forms = await Form.find({
+				$or: [
+					{ 'prof.value': user?._id, active: true },
+					{
+						unity_id: user?.unity_id,
+						active: true,
+						'profs_with_access.value': user._id,
+					},
+				],
+			})
+			return forms
+		} catch (err) {
+			return left(new AbstractError('Internal error', 500))
+		}
 	}
 
 	async findFormById(ctx: HttpContextContract) {
@@ -16,23 +33,48 @@ class FormController {
 	}
 
 	async findAllInactiveForms(ctx: HttpContextContract) {
-		const user = ctx.auth.user
-		const forms = await Form.find({ unity_id: user?.unity_id, active: false })
-		return forms
+		try {
+			const user = ctx.auth.user
+			if (!user) throw new Error()
+			const forms = await Form.find({
+				$or: [
+					{ 'prof.value': user?._id, active: false },
+					{
+						unity_id: user?.unity_id,
+						active: false,
+						'profs_with_access.value': user._id,
+					},
+				],
+			})
+			return forms
+		} catch (err) {
+			return left(new AbstractError('Internal error', 500))
+		}
 	}
 
 	async createNewForm(ctx: HttpContextContract) {
-		const user = ctx.auth.user
-		const data = ctx.request.all()
-		const newForm = await Form.create({...data, unity_id: user?.unity_id})
-		return newForm
+		try {
+			const user = ctx.auth.user
+			if (!user) throw new Error()
+			const data = ctx.request.all()
+
+			const newForm = await Form.create({ ...data, unity_id: user?.unity_id })
+			return newForm
+		} catch (err) {
+			console.log(err)
+			return left(new AbstractError('Internal error', 500))
+		}
 	}
 
 	async updateForm(ctx: HttpContextContract) {
+		const user = ctx.auth.user
+		if (!user) throw new Error()
 		const id = ctx.params.id
 		const data = ctx.request.all()
 
 		const form = await Form.findByIdAndUpdate(id, data)
+		if (form?.prof.value !== user._id)
+			return left(new AbstractError('Unauthorized', 401))
 		return form
 	}
 
