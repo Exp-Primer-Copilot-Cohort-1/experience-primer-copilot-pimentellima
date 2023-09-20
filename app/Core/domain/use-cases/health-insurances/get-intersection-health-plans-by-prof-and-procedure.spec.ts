@@ -6,9 +6,7 @@ const ObjectId = mongoose.Types.ObjectId
 
 describe('Get Intersections Health Plans Use Case (Integration)', () => {
 	beforeAll(async () => {
-		await mongoose.connect(
-			process.env.DB_CONNECTION_STRING as string,
-		)
+		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})
 
 	afterAll(async () => {
@@ -56,7 +54,5 @@ describe('Get Intersections Health Plans Use Case (Integration)', () => {
 		]
 
 		const result = await Procedure.aggregate(pipeline).exec()
-
-		console.log(result)
 	})
 })

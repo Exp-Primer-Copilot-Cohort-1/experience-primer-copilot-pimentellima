@@ -19,7 +19,7 @@ describe('Census Mongoose Repository (Integration)', () => {
 	it('should be count activities by day in the week', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findActivitiesByDaysOfWeek(
-			'6359660fc109b232759921d4',
+			process.env.TEST_INTEGRATION_UNITY_ID as string,
 			'2022-12-01',
 			'2024-07-31',
 		)
@@ -30,7 +30,7 @@ describe('Census Mongoose Repository (Integration)', () => {
 	it('should be count activities by day in the month', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findActivitiesByDaysOfMonth(
-			'6359660fc109b232759921d4',
+			process.env.TEST_INTEGRATION_UNITY_ID as string,
 			'2022-12-01',
 			'2024-07-31',
 		)
@@ -41,7 +41,7 @@ describe('Census Mongoose Repository (Integration)', () => {
 	it('should be count hours worked by prof', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findHoursWorked(
-			'6359660fc109b232759921d4',
+			process.env.TEST_INTEGRATION_UNITY_ID as string,
 			'2022-12-01',
 			'2024-07-31',
 		)

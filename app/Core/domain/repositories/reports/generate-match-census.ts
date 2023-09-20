@@ -11,7 +11,7 @@ export default function generateMatch({ date_start, date_end, unity_id, prof_id 
 		unity_id: new ObjectId(unity_id),
 	}
 
-	if (prof_id) match['prof_id'] = new ObjectId(prof_id)
+	if (prof_id) match['prof'] = new ObjectId(prof_id)
 
 	return match
 }

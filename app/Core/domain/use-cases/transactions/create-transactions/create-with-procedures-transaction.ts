@@ -7,7 +7,7 @@ import { PaymentProfManagerInterface } from 'App/Core/domain/repositories/interf
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
-import { Generic, IProcedureTransaction, ITransaction } from 'App/Types/ITransaction'
+import { IProcedureTransaction, ITransaction } from 'App/Types/ITransaction'
 import { TransactionsManagerInterface } from '../../../repositories/interface/transactions-manager-interface'
 import { TransactionWithProcedure } from '../helpers'
 
@@ -39,8 +39,8 @@ export class CreateWithProceduresTransactionUseCase
 				const paymentParticipationsOrErr =
 					await this.paymentParticipationsManager.findCurrentPaymentParticipation(
 						transaction.unity_id.toString(),
-						transaction.prof,
-						(procedure.health_insurance as Generic)?.value as string,
+						transaction.prof as string,
+						procedure.health_insurance as string,
 						procedure._id?.toString() as string,
 					)
 
@@ -65,9 +65,7 @@ export class CreateWithProceduresTransactionUseCase
 						400,
 					)
 
-				const procedureTransaction = procedureTransactionOrErr.extract()
-
-				return procedureTransaction
+				return procedureTransactionOrErr.extract()
 			}),
 		)
 
@@ -79,7 +77,7 @@ export class CreateWithProceduresTransactionUseCase
 
 		const docOrErr = await this.manager.create(
 			transactionDoc,
-			transaction.unity_id.toString(),
+			transactionDoc.unity_id.toString(),
 		)
 
 		if (docOrErr.isLeft()) throw docOrErr.extract()

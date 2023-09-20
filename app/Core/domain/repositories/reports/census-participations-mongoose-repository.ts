@@ -6,7 +6,7 @@ import { CensusPaymentParticipationsManagerInterface } from '../interface/census
 import generateMatch from './generate-match-census'
 
 export class CensusPaymentParticipationsMongooseRepository
-	implements CensusPaymentParticipationsManagerInterface {
+	implements CensusPaymentParticipationsManagerInterface { // eslint-disable-line
 	async findPaymentsParticipation(
 		unity_id: string,
 		date_start: string,

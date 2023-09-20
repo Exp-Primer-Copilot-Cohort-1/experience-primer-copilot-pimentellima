@@ -55,24 +55,53 @@ export class CensusCostMongooseRepository implements CensusCostManagerInterface 
 			{
 				$group: {
 					_id: {
-						procedure: '$procedures.value',
-						health_insurance: '$procedures.health_insurance.value',
-						prof: '$prof.value',
+						procedure: '$procedures._id',
+						health_insurance: '$procedures.health_insurance',
+						prof: '$prof',
 					},
-					label: { $first: '$procedures.label' },
-					health_insurance: { $first: '$procedures.health_insurance.label' },
-					prof: { $first: '$prof.label' },
+					health_insurance: { $first: '$procedures.health_insurance' },
+					prof: { $first: '$prof' },
 					cost: { $sum: '$cost' },
 					participation: { $sum: '$calculatedPayment' },
 				},
 			},
 			{
+				$lookup: {
+					from: 'health_insurances', // substitua com o nome da sua coleção de seguros de saúde
+					localField: 'health_insurance',
+					foreignField: '_id',
+					as: 'health_insurance_info',
+				},
+			},
+			{
+				$lookup: {
+					from: 'users', // substitua com o nome da sua coleção de profissionais
+					localField: 'prof',
+					foreignField: '_id',
+					as: 'prof_info',
+				},
+			},
+			{
+				$lookup: {
+					from: 'procedures', // substitua com o nome da sua coleção de procedimentos
+					localField: '_id.procedure',
+					foreignField: '_id',
+					as: 'procedure_info',
+				},
+			},
+			{
 				$project: {
-					_id: 0,
 					value: '$_id.procedure',
-					health_insurance: 1,
-					prof: 1,
-					procedure: '$label',
+					_id: 0,
+					procedure: {
+						$arrayElemAt: ['$procedure_info.name', 0],
+					},
+					health_insurance: {
+						$arrayElemAt: ['$health_insurance_info.name', 0],
+					},
+					prof: {
+						$arrayElemAt: ['$prof_info.name', 0],
+					},
 					total: {
 						$round: [
 							{

@@ -1,4 +1,5 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
+import { ISessionTransaction } from 'App/Core/helpers/session-transaction'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
 import Activity, { COLLECTIONS_REFS } from 'App/Models/Activity'
@@ -7,14 +8,13 @@ import { ITransaction } from 'App/Types/ITransaction'
 import { ActivityPaymentEntity } from '../../entities/activity-payment/ActivityPaymentEntity'
 import { ActivityNotFoundError } from '../../errors'
 import { PaymentAlreadyError } from '../../errors/payment-already-error'
-import { ActivitiesManagerAttendanceInterface } from '../interface/activity-manager-attendance.interface'
 import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
+import { ActivitiesManagerAttendanceInterface } from '../interface/activity-manager-attendance.interface'
 
 export class ActivityAttendanceMongoRepository
-	implements ActivitiesManagerAttendanceInterface
-{
+	implements ActivitiesManagerAttendanceInterface { // eslint-disable-line
 	// eslint-disable-line
-	constructor() {} // eslint-disable-line
+	constructor(private readonly session?: ISessionTransaction) { } // eslint-disable-line
 
 	async updateActivityStartedAt(
 		id: string,
@@ -109,9 +109,10 @@ export class ActivityAttendanceMongoRepository
 			},
 			{
 				new: true,
+				...this.session?.options,
 			},
 		).orFail(new PaymentAlreadyError())
 
-		return right(updatedActivity.toObject())
+		return right(updatedActivity as unknown as IActivity)
 	}
 }

@@ -19,7 +19,7 @@ describe('Census Mongoose Repository (Integration)', () => {
 	it('should be find census gender client by unity', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findCensusGenderClientByUnityOrProf(
-			'6359660fc109b232759921d4',
+			process.env.TEST_INTEGRATION_UNITY_ID as string,
 			'2023-01-01',
 			'2024-01-31',
 		)
@@ -30,10 +30,10 @@ describe('Census Mongoose Repository (Integration)', () => {
 	it('should be find census gender client by unity and prof', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findCensusGenderClientByUnityOrProf(
-			'6359660fc109b232759921d4', // unity id
+			process.env.TEST_INTEGRATION_UNITY_ID as string, // unity id
 			'2023-01-01', // date start
 			'2024-01-31', // date end
-			'6359660fc109b232759921d6', // prof id
+			process.env.TEST_INTEGRATION_USER_ID, // prof id
 		)
 
 		expect(resultOrErr.isRight()).toBeTruthy()
@@ -42,7 +42,7 @@ describe('Census Mongoose Repository (Integration)', () => {
 	it('should be count partners by unity', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findCensusPartnersByUnityOrProf(
-			'6359660fc109b232759921d4',
+			process.env.TEST_INTEGRATION_UNITY_ID as string,
 			'2023-06-01',
 			'2024-07-31',
 		)
@@ -53,10 +53,10 @@ describe('Census Mongoose Repository (Integration)', () => {
 	it('should be count partners by unity and prof', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findCensusPartnersByUnityOrProf(
-			'6359660fc109b232759921d4', // unity id
+			process.env.TEST_INTEGRATION_UNITY_ID as string, // unity id
 			'2023-01-01', // date start
 			'2024-01-31', // date end
-			'6359660fc109b232759921d6', // prof id
+			process.env.TEST_INTEGRATION_USER_ID, // prof id
 		)
 
 		expect(resultOrErr.isRight()).toBeTruthy()
@@ -65,10 +65,10 @@ describe('Census Mongoose Repository (Integration)', () => {
 	it('should be new and old clients by unity and prof in month', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findNewAndOldClientsByUnityOrProf(
-			'6359660fc109b232759921d4',
+			process.env.TEST_INTEGRATION_UNITY_ID as string,
 			'2023-06-01',
 			'2024-07-31',
-			'6359660fc109b232759921d6', // prof id
+			process.env.TEST_INTEGRATION_USER_ID, // prof id
 		)
 
 		expect(resultOrErr.isRight()).toBeTruthy()
@@ -76,7 +76,7 @@ describe('Census Mongoose Repository (Integration)', () => {
 	it('should be new and old clients by unity in month', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findNewAndOldClientsByUnityOrProf(
-			'6359660fc109b232759921d4',
+			process.env.TEST_INTEGRATION_UNITY_ID as string,
 			'2022-12-01',
 			'2024-07-31',
 		)

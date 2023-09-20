@@ -18,7 +18,9 @@ describe('Billing Mongoose Repository (Integration)', () => {
 
 	it('should be find incomes by month', async () => {
 		const { sut } = makeSut()
-		const resultOrErr = await sut.findRevenuesByMonth('6359660fc109b232759921d4')
+		const resultOrErr = await sut.findRevenuesByMonth(
+			process.env.TEST_INTEGRATION_UNITY_ID as string,
+		)
 
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})

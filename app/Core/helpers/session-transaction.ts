@@ -25,10 +25,12 @@ export class SessionTransaction {
 
 	async commitTransaction() {
 		await this.manager?.commitTransaction()
+		await this.endSession()
 	}
 
 	async abortTransaction() {
 		await this.manager?.abortTransaction()
+		await this.endSession()
 	}
 
 	async endSession() {

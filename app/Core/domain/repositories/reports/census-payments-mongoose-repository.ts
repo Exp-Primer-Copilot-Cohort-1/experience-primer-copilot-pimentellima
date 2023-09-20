@@ -6,7 +6,7 @@ import {
 	ICensusPaymentByProf,
 	ICensusPaymentForm,
 } from 'App/Types/ICensus'
-import { CensusPaymentsManagerInterface } from '../interface/census-manager.interface'
+import { CensusPaymentsManagerInterface } from '../interface/census-payments.interface'
 import generateMatch from './generate-match-census'
 
 export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerInterface {
@@ -34,24 +34,22 @@ export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerIn
 				$unwind: '$procedures',
 			},
 			{
-				$addFields: {
-					'procedures.valNumber': {
-						$toDouble: {
-							$replaceAll: {
-								input: '$procedures.val',
-								find: ',',
-								replacement: '.',
-							},
-						},
-					},
+				$lookup: {
+					from: 'health_insurances',
+					localField: 'procedures.health_insurance',
+					foreignField: '_id',
+					as: 'procedures.health_insurance',
 				},
 			},
 			{
+				$unwind: '$procedures.health_insurance',
+			},
+			{
 				$group: {
-					_id: '$procedures.health_insurance.value',
-					total: { $sum: '$procedures.valNumber' },
+					_id: '$procedures.health_insurance._id',
+					total: { $sum: '$procedures.price' },
 					count: { $sum: 1 },
-					label: { $first: '$procedures.health_insurance.label' },
+					label: { $first: '$procedures.health_insurance.name' },
 				},
 			},
 			{
@@ -68,6 +66,7 @@ export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerIn
 		const activities: ICensusActivitiesByHealthInsurance[] = await Activity.aggregate(
 			pipeline,
 		)
+
 		return right(activities)
 	}
 
@@ -227,28 +226,45 @@ export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerIn
 				$unwind: '$procedures',
 			},
 			{
-				$addFields: {
-					price: {
-						$toDouble: {
-							$replaceAll: {
-								input: '$procedures.val',
-								find: ',',
-								replacement: '.',
+				$lookup: {
+					from: 'procedures',
+					localField: 'procedures._id',
+					foreignField: '_id',
+					as: 'procedures._id',
+					pipeline: [
+						{
+							$project: {
+								_id: 1,
+								name: 1,
 							},
 						},
-					},
+					],
 				},
+			},
+			{
+				$unwind: '$procedures._id',
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'prof',
+					foreignField: '_id',
+					as: 'prof',
+				},
+			},
+			{
+				$unwind: '$prof',
 			},
 			{
 				$group: {
 					_id: {
-						prof: '$prof.value',
-						procedure: '$procedures.value',
+						prof: '$prof._id',
+						procedure: '$procedures._id._id',
 					},
-					procedureLabel: { $first: '$procedures.label' },
-					label: { $first: '$prof.label' },
+					procedureLabel: { $first: '$procedures._id.name' },
+					label: { $first: '$prof.name' },
 					count: { $sum: 1 }, // Contando o número de procedimentos por parceiro
-					total: { $sum: '$price' }, // Somando o valor dos procedimentos por parceiro
+					total: { $sum: '$procedures.price' }, // Somando o valor dos procedimentos por parceiro
 				},
 			},
 			{

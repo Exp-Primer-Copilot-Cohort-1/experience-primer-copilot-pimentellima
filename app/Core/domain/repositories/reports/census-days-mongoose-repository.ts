@@ -135,21 +135,33 @@ export class CensusDaysMongooseRepository implements CensusDaysManagerInterface 
 			},
 			{
 				$group: {
-					_id: '$prof.value',
-					label: { $first: '$prof.label' },
+					_id: '$prof',
 					count: { $sum: '$procedures.minutes' },
 				},
 			},
 			{
+				$lookup: {
+					from: 'users',
+					localField: '_id',
+					foreignField: '_id',
+					as: 'prof',
+				},
+			},
+			{
+				$unwind: '$prof',
+			},
+			{
 				$project: {
+					_id: 0,
 					value: '$_id',
 					count: 1,
-					label: 1,
+					label: '$prof.name',
 				},
 			},
 		]
 
 		const activities: ICensusWorkedHoursByProf[] = await Activity.aggregate(pipeline)
+
 		const profs = await Prof.find({
 			unity_id,
 			$or: [{ type: ROLES.ADMIN_PROF }, { type: ROLES.PROF }],

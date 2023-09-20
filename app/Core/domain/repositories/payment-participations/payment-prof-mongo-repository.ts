@@ -10,6 +10,7 @@ import {
 } from '../../errors'
 import { PaymentProfManagerInterface } from '../interface/payment-prof-manager-interface'
 
+import { ISessionTransaction } from 'App/Core/helpers/session-transaction'
 import PaymentParticipations from 'App/Models/PaymentParticipations'
 
 const ObjectId = Types.ObjectId
@@ -82,7 +83,9 @@ const createFilter = (participation: IPaymentProf) => ({
 })
 export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
-	constructor(private readonly opts: OptsQuery = OptsQuery.build()) { }
+	constructor(
+		private readonly session: ISessionTransaction,
+		private readonly opts: OptsQuery = OptsQuery.build()) { } // eslint-disable-line
 
 	async createOrUpdatePaymentProf(
 		participation: IPaymentProf,
@@ -131,17 +134,17 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 	}
 
 	async deletePaymentProfById(id: string): PromiseEither<AbstractError, IPaymentProf> {
-		if (!id) return left(new PaymentParticipationsNotFoundError())
+		if (!id) return left(new ParticipationPaymentsNotFoundError())
 
 		const item = await PaymentParticipations.findByIdAndDelete(id).orFail(
-			new PaymentParticipationsNotFoundError(),
+			new ParticipationPaymentsNotFoundError(),
 		)
 
 		return right(item.toObject())
 	}
 
 	async findPaymentProfById(id: string): PromiseEither<AbstractError, IPaymentProf[]> {
-		if (!id) return left(new PaymentParticipationsNotFoundError())
+		if (!id) return left(new ParticipationPaymentsNotFoundError())
 
 		const pipeline = generatePipeline(
 			{ prof: new ObjectId(id.toString()) },

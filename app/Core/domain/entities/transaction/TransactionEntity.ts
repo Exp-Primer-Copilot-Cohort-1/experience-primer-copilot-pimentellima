@@ -34,7 +34,7 @@ export class TransactionEntity extends Entity implements ITransaction {
 	unity_id: string
 	prof?: string
 	client?: string
-	procedures?: IProcedureTransaction[]
+	procedures?: IProcedureTransaction[] | null
 	account: string
 	cost_center: string
 	financial_category: string
@@ -70,7 +70,8 @@ export class TransactionEntity extends Entity implements ITransaction {
 		return this
 	}
 
-	defineProcedures(procedures: IProcedureTransaction[] = []) {
+	defineProcedures(procedures: IProcedureTransaction[] | null = null) {
+		if (procedures?.length === 0) procedures = null
 		this.procedures = procedures
 		return this
 	}

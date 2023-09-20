@@ -15,7 +15,7 @@ export class CreateOnlyOneTransactionUseCase
 		procedures = [],
 		...transaction
 	}: TransactionWithoutProcedure): PromiseEither<AbstractError, ITransaction> {
-		if (procedures?.length > 0)
+		if (procedures && procedures?.length > 0)
 			return left(new AbstractError('Existem procedimentos na transação', 400))
 		if (!transaction.unity_id) return left(new UnitNotFoundError())
 
