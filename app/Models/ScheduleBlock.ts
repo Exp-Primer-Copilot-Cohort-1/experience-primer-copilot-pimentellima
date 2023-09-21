@@ -1,6 +1,8 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IScheduleBlock } from 'App/Types/IScheduleBlock'
 
+export const COLLECTION_NAME = 'schedule_block'
+
 const ScheduleBlockSchema = new Schema<IScheduleBlock>(
 	{
 		date: {
@@ -47,4 +49,4 @@ const ScheduleBlockSchema = new Schema<IScheduleBlock>(
 	},
 )
 
-export default Mongoose.model<IScheduleBlock>('schedule_block', ScheduleBlockSchema)
+export default Mongoose.model<IScheduleBlock>(COLLECTION_NAME, ScheduleBlockSchema)

@@ -1,4 +1,3 @@
-import LogDecorator from 'App/Core/decorators/log-decorator'
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { DefaultConfigsManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
@@ -9,9 +8,8 @@ import { IDefaultConfig } from 'App/Types/IDefaultConfig'
 export class UpdateDefaultConfigsByIdUseCase
 	implements UseCase<Partial<IDefaultConfig>, IDefaultConfig>
 {
-	constructor(private readonly configsManager: DefaultConfigsManagerInterface) { }
+	constructor(private readonly configsManager: DefaultConfigsManagerInterface) { } // eslint-disable-line
 
-	@LogDecorator('default_configs', 'put')
 	public async execute(
 		configsOrErr: Partial<IDefaultConfig>,
 	): PromiseEither<AbstractError, IDefaultConfig> {

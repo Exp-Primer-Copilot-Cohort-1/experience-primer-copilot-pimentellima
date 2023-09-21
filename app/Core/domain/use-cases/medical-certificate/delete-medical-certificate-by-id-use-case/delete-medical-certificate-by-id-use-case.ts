@@ -1,4 +1,3 @@
-import LogDecorator from 'App/Core/decorators/log-decorator'
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { MedicalCertificateManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
@@ -15,9 +14,8 @@ export class DeleteMedicalCertificateByIdUseCase
 {
 	constructor(
 		private readonly medicalCertificateManager: MedicalCertificateManagerInterface,
-	) { }
+	) { } // eslint-disable-line
 
-	@LogDecorator('medical-certificates', 'delete')
 	public async execute(
 		input: Input,
 	): PromiseEither<AbstractError, IMedicalCertificate> {

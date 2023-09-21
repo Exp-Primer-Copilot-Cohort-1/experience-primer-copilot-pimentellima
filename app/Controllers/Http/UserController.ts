@@ -1,9 +1,10 @@
 import { adaptRoute } from 'App/Core/adapters'
 import { makeCreateAdminComposer, makeCreateUserComposer } from 'App/Core/composers'
-import User from 'App/Models/User'
+import User, { COLLECTION_NAME } from 'App/Models/User'
 // const Mail = use('Mail');
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ROLES } from 'App/Roles/types'
+import LogDecorator, { ACTION } from '../Decorators/Log'
 
 class UserController {
 	public async index({ auth }: HttpContextContract) {
@@ -22,6 +23,7 @@ class UserController {
 		}
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	public async store(ctx: HttpContextContract) {
 		return adaptRoute(makeCreateUserComposer(), ctx)
 	}
@@ -30,6 +32,7 @@ class UserController {
 		return adaptRoute(makeCreateAdminComposer(), ctx)
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	public async update({ params, request, auth }: HttpContextContract) {
 		const userLogged = auth.user
 		const data = request.all()

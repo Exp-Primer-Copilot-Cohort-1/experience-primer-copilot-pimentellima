@@ -7,7 +7,8 @@ import {
 	makeHealthInsuranceUpdateComposer,
 } from 'App/Core/composers'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
-import HealthInsurance from 'App/Models/HealthInsurance'
+import HealthInsurance, { COLLECTION_NAME } from 'App/Models/HealthInsurance'
+import LogDecorator, { ACTION } from '../Decorators/Log'
 
 class HealthInsuranceController {
 	async index(ctx: HttpContextContract) {
@@ -23,6 +24,7 @@ class HealthInsuranceController {
 		return adaptRoute(makeHealthInsuranceFindByIdComposer(), ctx)
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async store(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id?.toString()
 		return adaptRoute(makeHealthInsuranceCreateComposer(), ctx, {
@@ -30,13 +32,14 @@ class HealthInsuranceController {
 		})
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async update(ctx: HttpContextContract) {
 		return adaptRoute(makeHealthInsuranceUpdateComposer(), ctx)
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.DELETE)
 	async destroy({ params }: HttpContextContract) {
 		const healthInsurances = await HealthInsurance.findByIdAndDelete(params.id)
-
 		return healthInsurances
 	}
 }

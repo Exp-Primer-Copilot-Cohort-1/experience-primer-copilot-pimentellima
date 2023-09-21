@@ -1,4 +1,3 @@
-import LogDecorator from 'App/Core/decorators/log-decorator'
 import { ActivitiesManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
@@ -10,9 +9,8 @@ type ActivityProps = {
 }
 
 export class DeleteActivityByIdUseCase implements UseCase<ActivityProps, IActivity> {
-	constructor(private readonly activitiesManager: ActivitiesManagerInterface) { }
+	constructor(private readonly activitiesManager: ActivitiesManagerInterface) { } // eslint-disable-line
 
-	@LogDecorator('activities', 'delete')
 	public async execute(params: ActivityProps): PromiseEither<AbstractError, IActivity> {
 		const activityOrErr = await this.activitiesManager.deleteActivityById(params?.id)
 

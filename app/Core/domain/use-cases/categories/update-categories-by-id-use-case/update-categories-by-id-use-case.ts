@@ -1,4 +1,3 @@
-import LogDecorator from 'App/Core/decorators/log-decorator'
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { CategoriesManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
@@ -9,9 +8,8 @@ import { ICategory } from 'App/Types/ICategory'
 export class UpdateCategoriesByIdUseCase
 	implements UseCase<Partial<ICategory>, ICategory>
 {
-	constructor(private readonly categoriesManager: CategoriesManagerInterface) { }
+	constructor(private readonly categoriesManager: CategoriesManagerInterface) { } // eslint-disable-line
 
-	@LogDecorator('categories', 'put')
 	public async execute(
 		category: Partial<ICategory>,
 	): PromiseEither<AbstractError, ICategory> {

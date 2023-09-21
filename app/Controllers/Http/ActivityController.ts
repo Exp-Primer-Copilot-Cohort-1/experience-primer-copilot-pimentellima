@@ -16,7 +16,9 @@ import {
 	makeUpdateActivityStartedAtComposer,
 	makeUpdateActivityStatusComposer,
 } from 'App/Core/composers/activities/make'
+import { COLLECTION_NAME } from 'App/Models/Activity'
 import { ROLES } from 'App/Roles/types'
+import LogDecorator, { ACTION } from '../Decorators/Log'
 
 class ActivityController {
 	async findAllActivities(ctx: HttpContextContract) {
@@ -64,18 +66,21 @@ class ActivityController {
 		}
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async updateActivityStatusById(ctx: HttpContextContract) {
 		return adaptRoute(makeUpdateActivityStatusComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async updateActivityStartedAt(ctx: HttpContextContract) {
 		return adaptRoute(makeUpdateActivityStartedAtComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async updateActivityFinishedAt(ctx: HttpContextContract) {
 		return adaptRoute(makeUpdateActivityFinishedAtComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
@@ -97,30 +102,35 @@ class ActivityController {
 		return adaptRoute(makeFindActivityByIdComposer(), ctx)
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async createActivity(ctx: HttpContextContract) {
 		return adaptRoute(makeCreateActivityComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async createActivityAwait(ctx: HttpContextContract) {
 		return adaptRoute(makeCreateActivityAwaitComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async createRecurrentActivity(ctx: HttpContextContract) {
 		return adaptRoute(makeCreateRecurrentActivityComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async updateActivityById(ctx: HttpContextContract) {
 		return adaptRoute(makeUpdateActivityByIdComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.DELETE)
 	async deleteActivityById(ctx: HttpContextContract) {
 		return adaptRoute(makeDeleteActivityByIdComposer(), ctx)
 	}

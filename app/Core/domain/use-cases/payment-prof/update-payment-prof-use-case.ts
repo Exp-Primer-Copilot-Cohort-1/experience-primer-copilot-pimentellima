@@ -1,4 +1,3 @@
-import LogDecorator from 'App/Core/decorators/log-decorator'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -12,14 +11,11 @@ type TypeParams = {
 }
 
 export class UpdatePaymentProfUseCase implements UseCase<TypeParams, IPaymentProf> {
-	constructor(private readonly paymentProfManager: PaymentProfManagerInterface) { }
+	constructor(private readonly paymentProfManager: PaymentProfManagerInterface) { } // eslint-disable-line
 
-	@LogDecorator('payment_participations', 'put')
 	public async execute(params: TypeParams): PromiseEither<AbstractError, IPaymentProf> {
-		const paymentProfOrErr = await this.paymentProfManager.updatePaymentProfById(
+		const paymentProfOrErr = await this.paymentProfManager.createOrUpdatePaymentProf(
 			params.paymentProf,
-			params.id,
-			params.prof_id,
 		)
 
 		if (paymentProfOrErr.isLeft()) return left(paymentProfOrErr.extract())

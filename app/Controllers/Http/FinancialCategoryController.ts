@@ -1,5 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import FinancialCategory from 'App/Models/FinancialCategory'
+import FinancialCategory, { COLLECTION_NAME } from 'App/Models/FinancialCategory'
+import LogDecorator, { ACTION } from '../Decorators/Log'
 
 class FinancialCategoryController {
 	async index({ auth }: HttpContextContract) {
@@ -24,6 +25,7 @@ class FinancialCategoryController {
 		return categories
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async store({ request, response, auth }: HttpContextContract) {
 		const userLogged = auth.user
 		const data = request.only(['name', 'type', 'sub_categories'])
@@ -43,6 +45,7 @@ class FinancialCategoryController {
 		return category
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async update({ params, request }: HttpContextContract) {
 		const data = request.only(['name', 'type', 'sub_categories', 'active'])
 
@@ -60,6 +63,7 @@ class FinancialCategoryController {
 		return category
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.DELETE)
 	async destroy({ params }: HttpContextContract) {
 		const category = await FinancialCategory.findByIdAndDelete(params.id).orFail()
 		await category

@@ -1,9 +1,11 @@
 // const Mail = use('Mail');
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import ScheduledConfig from 'App/Models/ScheduledConfig'
+import ScheduledConfig, { COLLECTION_NAME } from 'App/Models/ScheduledConfig'
 import { ROLES } from 'App/Roles/types'
+import LogDecorator, { ACTION } from '../Decorators/Log'
 
 class ScheduledConfigController {
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	public async update({ params, request, auth }: HttpContextContract) {
 		const userLogged = auth.user
 		const data = request.all()

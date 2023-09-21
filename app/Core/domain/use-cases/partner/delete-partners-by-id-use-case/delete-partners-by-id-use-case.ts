@@ -1,4 +1,3 @@
-import LogDecorator from 'App/Core/decorators/log-decorator'
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { PartnerManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
@@ -11,9 +10,8 @@ type Input = {
 }
 
 export class DeletePartnerByIdUseCase implements UseCase<Input, IPartner> {
-	constructor(private readonly partnerManager: PartnerManagerInterface) { }
+	constructor(private readonly partnerManager: PartnerManagerInterface) { } // eslint-disable-line
 
-	@LogDecorator('partners', 'delete')
 	public async execute(input: Input): PromiseEither<AbstractError, IPartner> {
 		if (!input?.id) {
 			return left(new MissingParamsError('id'))

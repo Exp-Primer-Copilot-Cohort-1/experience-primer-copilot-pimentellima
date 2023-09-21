@@ -7,7 +7,8 @@ import {
 	makeMedicalCertificateShowByIdComposer,
 	makeMedicalCertificateUpdateByIdComposer,
 } from 'App/Core/composers'
-import MedicalCertificate from 'App/Models/MedicalCertificate'
+import MedicalCertificate, { COLLECTION_NAME } from 'App/Models/MedicalCertificate'
+import LogDecorator, { ACTION } from '../Decorators/Log'
 
 class MedicalCertificateController {
 	async index(ctx: HttpContextContract) {
@@ -25,15 +26,18 @@ class MedicalCertificateController {
 		return medicalCertificate
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async store(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id
 		return adaptRoute(makeMedicalCertificateCreateComposer(), ctx, { unity_id })
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async update(ctx: HttpContextContract) {
 		return adaptRoute(makeMedicalCertificateUpdateByIdComposer(), ctx)
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async updateStatus({ params, request }) {
 		const data = request.only(['status'])
 
@@ -52,6 +56,7 @@ class MedicalCertificateController {
 		return adaptRoute(makeMedicalCertificateShowByIdComposer(), ctx)
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.DELETE)
 	async destroy(ctx: HttpContextContract) {
 		return adaptRoute(makeMedicalCertificateDeleteByIdComposer(), ctx)
 	}

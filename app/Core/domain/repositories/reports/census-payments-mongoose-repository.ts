@@ -91,23 +91,10 @@ export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerIn
 				},
 			},
 			{
-				$addFields: {
-					price: {
-						$toDouble: {
-							$replaceAll: {
-								input: '$payment.value',
-								find: ',',
-								replacement: '.',
-							},
-						},
-					},
-				},
-			},
-			{
 				$group: {
 					_id: '$payment.paymentForm',
 					count: { $sum: 1 },
-					total: { $sum: '$price' },
+					total: { $sum: '$payment.amount' },
 				},
 			},
 			{
@@ -121,6 +108,7 @@ export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerIn
 		]
 
 		const activities = await Activity.aggregate(pipeline)
+
 		return right(activities)
 	}
 
@@ -145,46 +133,62 @@ export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerIn
 				},
 			},
 			{
-				$addFields: {
-					client_id: { $toObjectId: '$client.value' },
-					price: {
-						$toDouble: {
-							$replaceAll: {
-								input: '$payment.value',
-								find: ',',
-								replacement: '.',
-							},
-						},
-					},
-				},
-			},
-			{
 				$lookup: {
-					from: 'clients', // substitua com o nome da sua coleção de clientes
-					localField: 'client_id', // substitua com o nome do campo que referencia o cliente no seu modelo de Atividade
+					from: 'clients',
+					localField: 'client',
 					foreignField: '_id',
 					as: 'client',
+					pipeline: [
+						{
+							$project: {
+								_id: 1,
+								partner: 1,
+							},
+						},
+					],
 				},
 			},
 			{
 				$unwind: '$client',
 			},
 			{
+				$lookup: {
+					from: 'partners',
+					localField: 'client.partner',
+					foreignField: '_id',
+					as: 'client.partner',
+					pipeline: [
+						{
+							$project: {
+								_id: 1,
+								name: 1,
+							},
+						},
+					],
+				},
+			},
+			{
+				$unwind: {
+					path: '$client.partner',
+					preserveNullAndEmptyArrays: true,
+				},
+			},
+			{
 				$group: {
 					_id: {
 						$cond: {
-							if: { $eq: ['$client.partner.label', ''] }, // Condição
+							if: { $eq: ['$client.partner._id', ''] }, // Condição
 							then: 'SEM PARCEIROS', // Valor se a condição for verdadeira
 							else: {
 								$ifNull: [
-									'$client.partner.label', // Expressão a ser avaliada
+									'$client.partner.name', // Expressão a ser avaliada
 									'SEM PARCEIROS', // Valor a ser usado se a expressão for nula ou inexistente
 								],
 							}, // Valor se a condição for falsa
 						},
 					},
 					count: { $sum: 1 }, // Contando o número de procedimentos por parceiro
-					total: { $sum: '$price' }, // Somando o valor dos procedimentos por parceiro
+					total: { $sum: '$payment.amount' }, // Somando o valor dos procedimentos por parceiro
 				},
 			},
 			{
