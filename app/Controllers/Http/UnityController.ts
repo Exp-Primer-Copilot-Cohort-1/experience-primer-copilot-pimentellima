@@ -1,10 +1,10 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import { makeUnityUpdateByIdComposer } from 'App/Core/composers/unities/make-unities-update-by-id-composer'
-import { makeUnityDeleteByIdComposer } from 'App/Core/composers/unities/make-unity-delete-by-id-composer'
 import { makeUnityFindAllByNameComposer } from 'App/Core/composers/unities/make-unity-find-by-name-composer'
 import { makeUnityShowByIdComposer } from 'App/Core/composers/unities/make-unity-show-by-id-composer'
-import Unity from 'App/Models/Unity'
+import Unity, { COLLECTION_NAME } from 'App/Models/Unity'
+import LogDecorator, { ACTION } from '../Decorators/Log'
 class UnityController {
 	public async index(ctx: HttpContextContract) {
 		return adaptRoute(makeUnityFindAllByNameComposer(), ctx)
@@ -32,16 +32,13 @@ class UnityController {
 		return unity
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	public async update(ctx: HttpContextContract) {
 		return adaptRoute(makeUnityUpdateByIdComposer(), ctx)
 	}
 
 	public async show(ctx: HttpContextContract) {
 		return adaptRoute(makeUnityShowByIdComposer(), ctx)
-	}
-
-	public async destroy(ctx: HttpContextContract) {
-		return adaptRoute(makeUnityDeleteByIdComposer(), ctx)
 	}
 }
 

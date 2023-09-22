@@ -25,7 +25,7 @@ export class AccountMongoRepository implements AccountManagerInterface {
 
 		if (entityOrErr.isLeft()) return entityOrErr
 
-		const newAccount = entityOrErr.extract().params()
+		const newAccount = entityOrErr.extract()
 
 		const created = await Account.create(newAccount)
 

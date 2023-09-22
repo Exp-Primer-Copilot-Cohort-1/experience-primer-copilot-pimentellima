@@ -24,8 +24,8 @@ export const makeCreateTransactionComposer = (): ControllerGeneric => {
 			),
 			new CreateWithProceduresTransactionUseCase(
 				new TransactionsMongooseRepository(session),
-				new ProceduresMongooseRepository(),
-				new PaymentProfMongoRepository(),
+				new ProceduresMongooseRepository(session),
+				new PaymentProfMongoRepository(session),
 			),
 			new UpdateActivityPaymentUseCase(new ActivityAttendanceMongoRepository()),
 			session,

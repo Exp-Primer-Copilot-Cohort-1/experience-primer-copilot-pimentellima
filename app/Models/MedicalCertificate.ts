@@ -5,6 +5,8 @@ interface IMedicalCertificateModel extends Omit<IMedicalCertificate, 'prof'> {
 	prof: Schema.Types.ObjectId
 }
 
+export const COLLECTION_NAME = 'medical_certificates'
+
 const MedicalCertificateSchema = new Schema<IMedicalCertificateModel>(
 	{
 		name: { type: String, required: true },
@@ -28,6 +30,6 @@ const MedicalCertificateSchema = new Schema<IMedicalCertificateModel>(
 MedicalCertificateSchema.index({ unity_id: 1, prof: 1 }, { unique: false })
 
 export default Mongoose.model<IMedicalCertificateModel>(
-	'medical_certificates',
+	COLLECTION_NAME,
 	MedicalCertificateSchema,
 )

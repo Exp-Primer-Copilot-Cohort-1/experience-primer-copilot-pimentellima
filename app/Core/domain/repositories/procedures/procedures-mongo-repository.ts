@@ -1,4 +1,5 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
+import { ISessionTransaction } from 'App/Core/helpers/session-transaction'
 import { PromiseEither, right } from 'App/Core/shared/either'
 import Procedure, { COLLECTIONS_REFS } from 'App/Models/Procedure'
 import { IProcedure } from 'App/Types/IProcedure'
@@ -8,7 +9,9 @@ import { ProceduresManagerInterface } from '../interface/procedures-manager.inte
 
 export class ProceduresMongooseRepository implements ProceduresManagerInterface {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
-	constructor() { }
+	constructor(
+		private readonly session: ISessionTransaction
+	) { }
 
 	async findByUnityId(unity_id: string): PromiseEither<AbstractError, IProcedure[]> {
 		const procedures = await Procedure.find({

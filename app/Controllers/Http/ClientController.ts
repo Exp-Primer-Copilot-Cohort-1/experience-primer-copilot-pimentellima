@@ -1,6 +1,6 @@
 'use strict'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Client from 'App/Models/Client'
+import Client, { COLLECTION_NAME } from 'App/Models/Client'
 
 import { adaptRoute } from 'App/Core/adapters'
 import {
@@ -11,6 +11,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { left } from 'App/Core/shared'
 import { IUserClient } from 'App/Types/IClient'
 import { IFormAnswer } from 'Types/IFormAnswer'
+import LogDecorator, { ACTION } from '../Decorators/Log'
 import SELECTS from '../user-select'
 
 class ClientController {
@@ -81,6 +82,7 @@ class ClientController {
 		return users
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async create(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id
 		return adaptRoute(makeClientCreateComposer(), ctx, {
@@ -88,7 +90,7 @@ class ClientController {
 		})
 	}
 
-	public async findAllUsersClientsInative({ auth }) {
+	async findAllUsersClientsInative({ auth }) {
 		const userLogged = auth.user
 
 		const clients = await Client.find({
@@ -103,7 +105,7 @@ class ClientController {
 		return clients
 	}
 
-	public async findAllUsersClients({ auth }) {
+	async findAllUsersClients({ auth }) {
 		const userLogged = auth.user
 
 		const clients = await Client.find({
@@ -118,7 +120,7 @@ class ClientController {
 		return clients
 	}
 
-	public async findUserClientByID({ params }) {
+	async findUserClientByID({ params }) {
 		const user = await Client.findById(params.id).populate('partner', {
 			_id: 0,
 			label: '$name',
@@ -128,7 +130,8 @@ class ClientController {
 		return user
 	}
 
-	public async update(ctx: HttpContextContract) {
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
+	async update(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id
 		return adaptRoute(makeClientUpdateComposer(), ctx, {
 			unity_id,

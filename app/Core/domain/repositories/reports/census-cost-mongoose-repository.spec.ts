@@ -20,7 +20,7 @@ describe('Census Cost Mongoose Repository (Integration)', () => {
 		const { sut } = makeSut()
 
 		const resultOrErr = await sut.findCost(
-			'6359660fc109b232759921d4',
+			process.env.TEST_INTEGRATION_UNITY_ID as string,
 			'2023-01-02',
 			'2024-01-31',
 		)

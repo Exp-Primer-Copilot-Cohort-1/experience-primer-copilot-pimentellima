@@ -1,6 +1,8 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import type { IUser } from 'App/Types/IUser'
 
+export const COLLECTION_NAME = 'scheduled_config'
+
 /**
  * @swagger
  * components:
@@ -136,4 +138,4 @@ const ScheduledConfigSchema = new Schema<IUser>(
 	},
 )
 
-export default Mongoose.model<IUser>('scheduled_config', ScheduledConfigSchema, 'users')
+export default Mongoose.model<IUser>(COLLECTION_NAME, ScheduledConfigSchema, 'users')

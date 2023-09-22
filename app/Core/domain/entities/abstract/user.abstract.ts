@@ -1,67 +1,32 @@
 /* eslint-disable no-unreachable */
+import { ROLES } from 'App/Roles/types'
 import Document from '../validations/document'
 import Email from '../validations/email'
 import { Entity } from './entity.abstract'
 
 export abstract class AbstractUser extends Entity {
-	private _unity_id: string
-	private _name: string
-	private _celphone: string
-	protected _type: 'admin' | 'admin_prof' | 'prof' | 'client' | 'sec'
-	private _avatar: string
-	private _email: Email
-	private _document: Document
-	private _blacklist: string[]
-	private _permissions: string[]
-
-	public get blacklist(): string[] {
-		return this._blacklist
-	}
-
-	public get permissions(): string[] {
-		return this._permissions
-	}
-
-	public get email(): string {
-		return this._email?.value
-	}
-
-	public get document(): string {
-		return this._document?.value
-	}
-
-	public get unity_id(): string {
-		return this._unity_id
-	}
-
-	public get name(): string {
-		return this._name
-	}
-
-	public get celphone(): string {
-		return this._celphone
-	}
-
-	public get type(): 'admin' | 'admin_prof' | 'prof' | 'client' | 'sec' {
-		return this._type
-	}
-
-	public get avatar(): string {
-		return this._avatar
-	}
+	unity_id: string
+	name: string
+	celphone: string
+	type: ROLES
+	avatar: string
+	email: Email
+	document: Document
+	blacklist: string[]
+	permissions: string[]
 
 	public defineName(name: string): this {
-		this._name = name
+		this.name = name
 		return this
 	}
 
 	public defineEmail(email: string | Email): this {
 		if (email instanceof Email) {
-			this._email = email
+			this.email = email
 			return this
 		}
 
-		this._email = Email.build(email)
+		this.email = Email.build(email)
 		return this
 	}
 
@@ -70,42 +35,42 @@ export abstract class AbstractUser extends Entity {
 			throw new Error('Unity id is required')
 		}
 
-		this._unity_id = unity_id
+		this.unity_id = unity_id
 		return this
 	}
 
-	public defineType(type: 'admin' | 'admin_prof' | 'prof' | 'client' | 'sec'): this {
-		this._type = type
+	public defineType(type: ROLES): this {
+		this.type = type
 		return this
 	}
 
 	public defineDocument(document: string | Document): this {
 		if (document instanceof Document) {
-			this._document = document
+			this.document = document
 			return this
 		}
 
-		this._document = Document.build(document)
+		this.document = Document.build(document)
 		return this
 	}
 
 	public defineCelphone(celphone: string): this {
-		this._celphone = celphone
+		this.celphone = celphone
 		return this
 	}
 
 	public defineAvatar(avatar: string): this {
-		this._avatar = avatar
+		this.avatar = avatar
 		return this
 	}
 
 	public defineBlacklist(blackListPermissions: string[] = []): this {
-		this._blacklist = blackListPermissions
+		this.blacklist = blackListPermissions
 		return this
 	}
 
 	public definePermissions(permissions: string[] = []): this {
-		this._permissions = permissions
+		this.permissions = permissions
 		return this
 	}
 }

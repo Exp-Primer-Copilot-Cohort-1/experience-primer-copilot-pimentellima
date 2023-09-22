@@ -28,28 +28,9 @@ export class CensusRevenuesMongooseRepository implements CensusRevenuesManagerIn
 				},
 			},
 			{
-				$addFields: {
-					price: {
-						$toDouble: {
-							$replaceAll: {
-								input: {
-									$replaceAll: {
-										input: '$payment.value',
-										find: '.',
-										replacement: '',
-									},
-								},
-								find: ',',
-								replacement: '.',
-							},
-						},
-					},
-				},
-			},
-			{
 				$group: {
 					_id: { $month: '$date' },
-					price: { $sum: '$price' },
+					price: { $sum: '$payment.amount' },
 				},
 			},
 			{
@@ -104,7 +85,7 @@ export class CensusRevenuesMongooseRepository implements CensusRevenuesManagerIn
 			{
 				$group: {
 					_id: { $month: '$date' },
-					price: { $sum: '$value' },
+					price: { $sum: '$amount' },
 				},
 			},
 			{

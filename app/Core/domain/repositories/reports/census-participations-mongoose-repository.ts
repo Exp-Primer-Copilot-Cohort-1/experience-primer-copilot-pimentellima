@@ -6,7 +6,7 @@ import { CensusPaymentParticipationsManagerInterface } from '../interface/census
 import generateMatch from './generate-match-census'
 
 export class CensusPaymentParticipationsMongooseRepository
-	implements CensusPaymentParticipationsManagerInterface {
+	implements CensusPaymentParticipationsManagerInterface { // eslint-disable-line
 	async findPaymentsParticipation(
 		unity_id: string,
 		date_start: string,
@@ -31,6 +31,66 @@ export class CensusPaymentParticipationsMongooseRepository
 			},
 			{
 				$unwind: '$procedures',
+			},
+			{
+				$lookup: {
+					from: 'procedures',
+					localField: 'procedures._id',
+					foreignField: '_id',
+					as: 'procedures._id',
+					pipeline: [
+						{
+							$project: {
+								_id: 0,
+								value: '$_id',
+								label: '$name',
+							},
+						},
+					],
+				},
+			},
+			{
+				$unwind: '$procedures._id',
+			},
+			{
+				$lookup: {
+					from: 'health_insurances',
+					localField: 'procedures.health_insurance',
+					foreignField: '_id',
+					as: 'procedures.health_insurance',
+					pipeline: [
+						{
+							$project: {
+								_id: 0,
+								value: '$_id',
+								label: '$name',
+							},
+						},
+					],
+				},
+			},
+			{
+				$unwind: '$procedures.health_insurance',
+			},
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'prof',
+					foreignField: '_id',
+					as: 'prof',
+					pipeline: [
+						{
+							$project: {
+								_id: 0,
+								value: '$_id',
+								label: '$name',
+							},
+						},
+					],
+				},
+			},
+			{
+				$unwind: '$prof',
 			},
 			{
 				$addFields: {
@@ -70,11 +130,11 @@ export class CensusPaymentParticipationsMongooseRepository
 			{
 				$group: {
 					_id: {
-						procedure: '$procedures.value',
+						procedure: '$procedures._id.value',
 						health_insurance: '$procedures.health_insurance.value',
 						prof: '$prof.value',
 					},
-					label: { $first: '$procedures.label' },
+					label: { $first: '$procedures._id.label' },
 					prof: { $first: '$prof.label' },
 					health_insurance: { $first: '$procedures.health_insurance.label' },
 					cost: { $sum: '$cost' },
@@ -84,7 +144,7 @@ export class CensusPaymentParticipationsMongooseRepository
 			},
 			{
 				$project: {
-					_id: 0,
+					_id: 1,
 					procedure: {
 						value: '$_id.procedure',
 						label: '$label',
@@ -120,8 +180,8 @@ export class CensusPaymentParticipationsMongooseRepository
 			},
 		]
 
-		const activities = await Transactions.aggregate(pipeline)
+		const items = await Transactions.aggregate(pipeline)
 
-		return right(activities)
+		return right(items)
 	}
 }

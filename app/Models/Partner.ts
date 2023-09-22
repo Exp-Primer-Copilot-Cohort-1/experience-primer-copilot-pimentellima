@@ -1,6 +1,8 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IPartner } from 'App/Types/IPartner'
 
+export const COLLECTION_NAME = 'partners'
+
 const PartnerSchema = new Schema<IPartner>(
 	{
 		name: { type: String, required: true },
@@ -17,4 +19,4 @@ const PartnerSchema = new Schema<IPartner>(
 
 PartnerSchema.index({ unity_id: 1, name: 1 }, { unique: true })
 
-export default Mongoose.model<IPartner>('partners', PartnerSchema)
+export default Mongoose.model<IPartner>(COLLECTION_NAME, PartnerSchema)

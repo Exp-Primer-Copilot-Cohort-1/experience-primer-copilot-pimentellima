@@ -12,17 +12,9 @@ export class TransactionsMongooseRepository implements TransactionsManagerInterf
 		_id, // eslint-disable-line @typescript-eslint/no-unused-vars
 		...transaction
 	}: Partial<ITransaction>): PromiseEither<AbstractError, ITransaction> {
-		const created = await Transactions.create(
-			{
-				...transaction,
-				prof: transaction.prof,
-				client: transaction.client,
-				cost_center: transaction.cost_center,
-				financial_category: transaction.financial_category,
-				account: transaction.account,
-			},
-			{ ...this.session.options },
-		)
+		const created = await Transactions.create([transaction], {
+			...this.session.options,
+		})
 
 		return right(created[0].toObject())
 	}

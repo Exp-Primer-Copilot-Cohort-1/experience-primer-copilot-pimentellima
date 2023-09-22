@@ -1,4 +1,3 @@
-import LogDecorator from 'App/Core/decorators/log-decorator'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -12,9 +11,8 @@ type TypeParams = {
 }
 
 export class UpdateFormByIdUseCase implements UseCase<TypeParams, FormEntity> {
-	constructor(private readonly formManager: FormManagerInterface) { }
+	constructor(private readonly formManager: FormManagerInterface) { } // eslint-disable-line
 
-	@LogDecorator('forms', 'put')
 	public async execute(params: TypeParams): PromiseEither<AbstractError, FormEntity> {
 		const formOrErr = await this.formManager.updateFormById(params.form, params.id)
 

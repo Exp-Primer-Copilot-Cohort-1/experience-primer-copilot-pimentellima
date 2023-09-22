@@ -1,87 +1,55 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { ObjectId } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IAccount } from 'App/Types/IAccount'
+import { Generic } from 'App/Types/ITransaction'
 import { InvalidParamsError } from '../../errors/invalid-params-error'
 import { Entity } from '../abstract/entity.abstract'
 
 export class AccountEntity extends Entity implements IAccount {
-	private _name: string
-	private _cash: number
-	private _date: Date
-	private _bank: string
-	private _active: boolean
-	private _unity_id: ObjectId | string
-	private _description?: string
-	private _user_id?: ObjectId | string
+	name: string
+	cash: number
+	date: Date
+	bank: string
+	active: boolean
+	unity_id: string
+	description?: string
+	user_id?: string
 
 	private constructor() {
 		super()
 	}
 
-	public get name(): string {
-		return this._name
-	}
-
-	public get cash(): number {
-		return this._cash
-	}
-
-	public get date(): Date {
-		return this._date
-	}
-
-	public get bank(): string {
-		return this._bank
-	}
-
-	public get active(): boolean {
-		return this._active
-	}
-
-	public get unity_id(): ObjectId | string {
-		return this._unity_id
-	}
-
-	public get description(): string | undefined {
-		return this._description
-	}
-
-	public get user_id(): ObjectId | string | undefined {
-		return this._user_id
-	}
-
 	defineName(name: string): AccountEntity {
-		this._name = name
+		this.name = name
 		return this
 	}
 	defineCash(value: number): AccountEntity {
-		this._cash = value
+		this.cash = value
 		return this
 	}
 	defineDate(date: Date): AccountEntity {
-		this._date = date
+		this.date = date
 		return this
 	}
-	defineBank(bank: string): AccountEntity {
-		this._bank = bank
+	defineBank(bank: string | Generic): AccountEntity {
+		this.bank = typeof bank === 'string' ? bank : bank.value
 		return this
 	}
 	defineActive(active: boolean): AccountEntity {
-		this._active = active
+		this.active = active
 		return this
 	}
-	defineUnityId(unity_id: string | ObjectId): AccountEntity {
-		this._unity_id = unity_id
+	defineUnityId(unity_id: string): AccountEntity {
+		this.unity_id = unity_id
 		return this
 	}
 	defineDescription(description?: string): AccountEntity {
-		this._description = description
+		this.description = description
 		return this
 	}
-	defineUserId(user_id?: string | ObjectId): AccountEntity {
-		this._user_id = user_id
+	defineUserId(user_id?: string): AccountEntity {
+		this.user_id = user_id
 		return this
 	}
 
@@ -97,9 +65,9 @@ export class AccountEntity extends Entity implements IAccount {
 					.defineDate(params.date)
 					.defineBank(params.bank)
 					.defineActive(params.active)
-					.defineUnityId(params.unity_id)
+					.defineUnityId(params.unity_id as string)
 					.defineDescription(params.description)
-					.defineUserId(params.user_id),
+					.defineUserId(params.user_id as string),
 			)
 		} catch (err) {
 			return left(new InvalidParamsError(err))

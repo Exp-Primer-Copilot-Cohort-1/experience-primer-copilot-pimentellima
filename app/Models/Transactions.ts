@@ -46,6 +46,7 @@ const TransactionsSchema = new Schema<ITransactionModel>(
 		group_by: {
 			type: Schema.Types.ObjectId,
 			required: true,
+			ref: 'activities',
 		},
 		prof: {
 			type: Schema.Types.ObjectId,
@@ -75,8 +76,14 @@ const TransactionsSchema = new Schema<ITransactionModel>(
 					payment_participation: {
 						type: {
 							value: schemaDefault(COLLECTION_PAYMENT_PARTICIPATIONS_NAME),
-							price: Number,
-							percent: Number,
+							price: {
+								type: Number,
+								required: true,
+							},
+							percent: {
+								type: Number,
+								required: true,
+							},
 						},
 						required: true,
 						_id: false,
@@ -85,9 +92,19 @@ const TransactionsSchema = new Schema<ITransactionModel>(
 						type: [
 							{
 								_id: schemaDefault(COLLECTION_STOCKS_NAME),
-								quantity: Number,
-								price_cost: Number,
-								price_final: Number,
+								quantity: {
+									type: Number,
+									required: true,
+								},
+
+								price_cost: {
+									type: Number,
+									required: true,
+								},
+								price_final: {
+									type: Number,
+									required: true,
+								},
 							},
 						],
 						required: false,

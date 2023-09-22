@@ -46,7 +46,6 @@ export class ActivityPendingEntity extends AbstractActivity implements IActivity
 	public static async build(
 		params: ActivityPendingValues & { group_id: string },
 	): PromiseEither<AbstractError, ActivityPendingEntity> {
-		console.log(params)
 		try {
 			const activityPending = new ActivityPendingEntity()
 				.defineProcedures(params.procedures)

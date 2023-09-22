@@ -12,23 +12,26 @@ import { Types } from 'mongoose'
 import { UnitNotFoundError } from '../../../errors/unit-not-found'
 import { TransactionWithProcedure, TransactionWithoutProcedure } from '../helpers'
 
+/**
+ * Use case responsible for creating a transaction.
+ * @implements {UseCase<ITransaction, ITransaction>}
+ */
 export class CreateTransactionUseCase implements UseCase<ITransaction, ITransaction> {
 	constructor(
-		private readonly createWithoutProcedure: UseCase<
+		private readonly withoutProcedure: UseCase<
 			TransactionWithoutProcedure,
 			ITransaction
 		>,
-		private readonly createWithProcedure: UseCase<
-			TransactionWithProcedure,
-			ITransaction
-		>,
-		private readonly createWithActivity: UseCase<
-			TransactionWithoutProcedure,
-			IActivity
-		>,
+		private readonly withProcedures: UseCase<TransactionWithProcedure, ITransaction>,
+		private readonly withActivity: UseCase<TransactionWithoutProcedure, IActivity>,
 		private readonly session: ISessionTransaction,
 	) { } // eslint-disable-line
 
+	/**
+	 * Creates a transaction with the given parameters.
+	 * @param {ITransaction} transaction - The transaction object containing the transaction details.
+	 * @returns {PromiseEither<AbstractError, ITransaction>} - A promise that resolves to either the created transaction or an error.
+	 */
 	public async execute({
 		unity_id,
 		installments = 1,
@@ -37,12 +40,44 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 		...transaction
 	}: ITransaction): PromiseEither<AbstractError, ITransaction> {
 		if (!unity_id) return left(new UnitNotFoundError())
-		this.session.startSession()
+		await this.session.startSession()
 		try {
 			const total = divideCurrencyByInteger(transaction.amount, installments)
 			const group_by = activity_id || transaction.group_by || new Types.ObjectId()
 
-			const createdWithActivity = await this.createWithActivity.execute({
+			const transactions: ITransaction[] = []
+			for (let index = 0; index < installments; index++) {
+				const date = addMonths(new Date(transaction.date), index)
+
+				const transactionOrErr = await TransactionEntity.build({
+					...transaction,
+					group_by: group_by.toString(),
+					unity_id: unity_id.toString(),
+					amount: total,
+					installments,
+					procedures,
+					installmentCurrent: index + 1,
+					date,
+				})
+
+				if (transactionOrErr.isLeft()) throw transactionOrErr.extract()
+
+				const entity = transactionOrErr.extract()
+
+				const withProcedures = await this.withProcedures.execute(entity as any)
+
+				if (withProcedures.isRight()) {
+					transactions.push(withProcedures.extract())
+				} else {
+					const transactionOneOrErr = await this.withoutProcedure.execute(
+						entity,
+					)
+					if (transactionOneOrErr.isLeft()) throw transactionOneOrErr.extract()
+					transactions.push(transactionOneOrErr.extract())
+				}
+			}
+
+			const createdWithActivity = await this.withActivity.execute({
 				...transaction,
 				activity_id,
 				installments,
@@ -54,47 +89,11 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 				throw createdWithActivity.extract()
 			}
 
-			const transactions: ITransaction[] = await Promise.all(
-				Array.from({ length: installments }).map(async (_, index) => {
-					const date = addMonths(new Date(transaction.date), index)
-
-					const transactionOrErr = await TransactionEntity.build({
-						...transaction,
-						group_by: group_by.toString(),
-						unity_id: unity_id.toString(),
-						amount: total,
-						installments,
-						installmentCurrent: index + 1,
-						date,
-					})
-					if (transactionOrErr.isLeft()) throw transactionOrErr.extract()
-
-					const t = transactionOrErr.extract()
-
-					// Este caso de uso trata de criar uma transação com procedimentos
-					// caso não haja procedimentos, então ele retorna left e continua
-					const withProcedures = await this.createWithProcedure.execute({
-						...t,
-						procedures,
-					})
-
-					if (withProcedures.isRight()) return withProcedures.extract()
-
-					// Caso não haja procedimentos, então ele retorna left e continua
-					// a criação da transação sem procedimentos
-					const transactionOnlyOneOrErr =
-						await this.createWithoutProcedure.execute({ ...t, procedures })
-
-					if (transactionOnlyOneOrErr.isLeft())
-						throw transactionOnlyOneOrErr.extract()
-
-					return transactionOnlyOneOrErr.extract()
-				}),
-			)
+			await this.session.commitTransaction()
 
 			return right(transactions[0])
 		} catch (error) {
-			this.session.abortTransaction()
+			await this.session.abortTransaction()
 			return left(error)
 		}
 	}

@@ -31,7 +31,7 @@ export interface ITransaction {
 	activity_id?: string
 	prof?: string | ObjectId | Generic
 	client?: Generic | string | ObjectId
-	procedures?: IProcedureTransaction[]
+	procedures?: IProcedureTransaction[] | null
 	account: Generic | string | ObjectId
 	cost_center: Generic | string | ObjectId
 	financial_category: Generic | string | ObjectId

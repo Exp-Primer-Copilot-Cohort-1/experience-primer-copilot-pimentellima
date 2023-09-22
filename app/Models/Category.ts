@@ -5,6 +5,8 @@ interface ICategoryModel extends Omit<ICategory, 'prof'> {
 	prof: Schema.Types.ObjectId
 }
 
+export const COLLECTION_NAME = 'categories'
+
 const CategorySchema = new Schema<ICategoryModel>(
 	{
 		name: {
@@ -37,4 +39,4 @@ const CategorySchema = new Schema<ICategoryModel>(
 CategorySchema.index({ unity_id: 1 }, { unique: true })
 CategorySchema.index({ prof: 1 }, { unique: false })
 
-export default Mongoose.model<ICategoryModel>('categories', CategorySchema)
+export default Mongoose.model<ICategoryModel>(COLLECTION_NAME, CategorySchema)

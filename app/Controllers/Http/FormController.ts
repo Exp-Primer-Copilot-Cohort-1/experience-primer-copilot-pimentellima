@@ -1,7 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { left } from 'App/Core/shared'
-;('use strict')
 
 import Form from 'App/Models/Form'
 

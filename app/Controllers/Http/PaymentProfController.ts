@@ -6,6 +6,8 @@ import { makeFindAllPaymentProfsComposer } from 'App/Core/composers/payment-prof
 import { makeFindPaymentProfByIdComposer } from 'App/Core/composers/payment-prof/make-find-payment-prof-by-id-composer'
 import { makeUpdatePaymentProfByIdComposer } from 'App/Core/composers/payment-prof/make-update-payment-prof-by-id-composer'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import { COLLECTION_NAME } from 'App/Models/PaymentParticipations'
+import LogDecorator, { ACTION } from '../Decorators/Log'
 
 class PaymentProfController {
 	async findAllPaymentProfs(ctx: HttpContextContract) {
@@ -22,18 +24,21 @@ class PaymentProfController {
 		})
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.DELETE)
 	async deletePaymentProfById(ctx: HttpContextContract) {
 		return adaptRoute(makeDeletePaymentProfByIdComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async createOrUpdatePaymentProf(ctx: HttpContextContract) {
 		return adaptRoute(makeCreatePaymentProfComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async updatePaymentProfById(ctx: HttpContextContract) {
 		return adaptRoute(makeUpdatePaymentProfByIdComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,

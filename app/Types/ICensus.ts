@@ -1,6 +1,7 @@
 import { AppointmentStatus } from 'App/Helpers'
 
 type GenericCount = {
+	value: string
 	label: string
 	count: number
 }

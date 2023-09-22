@@ -2,8 +2,9 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import { makeCreateTransactionComposer } from 'App/Core/composers'
 import { TransactionEntity } from 'App/Core/domain/entities/transaction/TransactionEntity'
-import Transaction from 'App/Models/Transactions'
+import Transaction, { COLLECTION_NAME } from 'App/Models/Transactions'
 import { ITransaction } from 'App/Types/ITransaction'
+import LogDecorator, { ACTION } from '../Decorators/Log'
 
 class TransactionsController {
 	async index({ auth, request }: HttpContextContract) {
@@ -37,11 +38,13 @@ class TransactionsController {
 		return transactions
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async store(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id
 		return adaptRoute(makeCreateTransactionComposer(), ctx, { unity_id })
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async update({ params, request, auth }: HttpContextContract) {
 		const userLogged = auth.user
 		if (!userLogged) throw Error()
@@ -73,6 +76,7 @@ class TransactionsController {
 		return transaction
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.DELETE)
 	async destroy({ params }: HttpContextContract) {
 		const transaction = await Transaction.findByIdAndDelete(params.id).orFail()
 		return transaction

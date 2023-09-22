@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import CostCenter from 'App/Models/CostCenter'
+import CostCenter, { COLLECTION_NAME } from 'App/Models/CostCenter'
+import LogDecorator, { ACTION } from '../Decorators/Log'
 
 class CostCenterController {
 	async index({ auth }: HttpContextContract) {
@@ -24,6 +25,7 @@ class CostCenterController {
 		return costCenters
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async store({ request, auth }: HttpContextContract) {
 		const userLogged = auth.user
 		const data = request.only(['name'])
@@ -35,6 +37,7 @@ class CostCenterController {
 		return costCenters
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async update({ params, request }: HttpContextContract) {
 		const data = request.only(['name', 'active'])
 		const costCenters = await CostCenter.findByIdAndUpdate(params.id, data).orFail()
@@ -48,6 +51,7 @@ class CostCenterController {
 		return costCenters
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.DELETE)
 	async destroy({ params }: HttpContextContract) {
 		const costCenters = await CostCenter.findByIdAndDelete(params.id).orFail()
 		return costCenters

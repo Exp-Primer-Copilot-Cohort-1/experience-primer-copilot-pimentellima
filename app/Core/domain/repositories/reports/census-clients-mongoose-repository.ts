@@ -93,17 +93,26 @@ export class CensusClientsMongooseRepository implements CensusClientsManagerInte
 				$unwind: '$client',
 			},
 			{
+				$lookup: {
+					from: 'partners', // substitua com o nome da sua coleção de parceiros
+					localField: 'client.partner', // substitua com o nome do campo que referencia o parceiro no seu modelo de Atividade
+					foreignField: '_id',
+					as: 'partner',
+				},
+			},
+			{
+				$unwind: {
+					path: '$partner',
+					preserveNullAndEmptyArrays: true, // Mantém documentos sem correspondência na coleção de parceiros
+				},
+			},
+			{
 				$group: {
 					_id: {
 						$cond: {
-							if: { $eq: ['$client.partner', ''] }, // Condição
+							if: { $eq: ['$partner', ''] }, // Condição
 							then: 'SEM PARCEIROS', // Valor se a condição for verdadeira
-							else: {
-								$ifNull: [
-									'$client.partner', // Expressão a ser avaliada
-									'SEM PARCEIROS', // Valor a ser usado se a expressão for nula ou inexistente
-								],
-							}, // Valor se a condição for falsa
+							else: '$partner.name', // Valor se a condição for falsa
 						},
 					},
 					count: { $sum: 1 }, // Contando o número de procedimentos por parceiro
@@ -112,7 +121,7 @@ export class CensusClientsMongooseRepository implements CensusClientsManagerInte
 			{
 				$project: {
 					_id: 0, // Não inclui o campo _id no resultado
-					label: '$_id', // Renomeia _id para label
+					label: { $ifNull: ['$_id', 'SEM PARCEIROS'] }, // Usa 'SEM PARCEIROS' se não houver parceiro correspondente
 					count: 1, // Inclui o campo count no resultado
 				},
 			},

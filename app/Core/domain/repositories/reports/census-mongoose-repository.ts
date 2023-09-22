@@ -79,18 +79,28 @@ export class CensusMongooseRepository implements CensusUnitiesManagerInterface {
 				$match: match,
 			},
 			{
+				$lookup: {
+					from: 'procedures',
+					localField: 'procedures._id',
+					foreignField: '_id',
+					as: 'procedures',
+				},
+			},
+			{
 				$unwind: '$procedures', // Desempacotando o array de procedimentos
 			},
 			{
 				$group: {
-					_id: '$procedures.label',
+					_id: '$procedures._id',
+					label: { $first: '$procedures.name' },
 					count: { $sum: 1 },
 				},
 			},
 			{
 				$project: {
 					_id: 0, // Não inclui o campo _id no resultado
-					label: '$_id', // Renomeia _id para label
+					label: 1, // Inclui o campo label no resultado
+					value: '$_id', // Renomeia _id para value
 					count: 1, // Inclui o campo count no resultado
 				},
 			},
@@ -122,15 +132,31 @@ export class CensusMongooseRepository implements CensusUnitiesManagerInterface {
 				$unwind: '$procedures', // Desempacotando o array de procedimentos
 			},
 			{
+				$lookup: {
+					from: 'health_insurances',
+					localField: 'procedures.health_insurance',
+					foreignField: '_id',
+					as: 'procedures.health_insurance',
+				},
+			},
+			{
+				$unwind: {
+					path: '$procedures.health_insurance',
+					preserveNullAndEmptyArrays: true,
+				}, // Desempacotando o array de planos de saúde
+			},
+			{
 				$group: {
-					_id: '$procedures.health_insurance.label', // Agrupando por plano de saúde
+					_id: '$procedures.health_insurance._id', // Agrupando por plano de saúde
+					label: { $first: '$procedures.health_insurance.name' }, // Pegando o nome do plano de saúde
 					count: { $sum: 1 }, // Contando o número de procedimentos por plano de saúde
 				},
 			},
 			{
 				$project: {
 					_id: 0, // Não inclui o campo _id no resultado
-					label: '$_id', // Renomeia _id para label
+					value: '$_id', // Renomeia _id para value
+					label: 1, // Inclui o campo label no resultado
 					count: 1, // Inclui o campo count no resultado
 				},
 			},
@@ -206,9 +232,20 @@ export class CensusMongooseRepository implements CensusUnitiesManagerInterface {
 				$match: match,
 			},
 			{
+				$lookup: {
+					from: 'users',
+					localField: 'prof',
+					foreignField: '_id',
+					as: 'prof',
+				},
+			},
+			{
+				$unwind: '$prof',
+			},
+			{
 				$group: {
-					_id: '$prof.value',
-					label: { $first: '$prof.label' },
+					_id: '$prof._id',
+					label: { $first: '$prof.name' },
 					count: { $sum: 1 },
 				},
 			},

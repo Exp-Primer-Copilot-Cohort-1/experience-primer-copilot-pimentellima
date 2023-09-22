@@ -19,7 +19,7 @@ describe('Census Payments Mongoose Repository (Integration)', () => {
 	it('should be revenues accrual regime activities by year (by unity and prof)', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findRevenuesAccrualRegimeActivities(
-			'6359660fc109b232759921d4', // unity id
+			process.env.TEST_INTEGRATION_UNITY_ID as string, // unity id
 			'2023-01-01', // date start
 			'2024-01-01',
 		)
@@ -30,7 +30,7 @@ describe('Census Payments Mongoose Repository (Integration)', () => {
 	it('should be revenues cash regime activities by year (by unity and prof)', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findRevenuesCashRegimeActivities(
-			'6359660fc109b232759921d4', // unity id
+			process.env.TEST_INTEGRATION_UNITY_ID as string, // unity id
 			'2023-01-01', // date start
 			'2024-01-01',
 		)
