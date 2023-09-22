@@ -1,12 +1,8 @@
-import { IProcedureTransaction, ITransaction } from 'App/Types/ITransaction'
+import { ITransaction } from 'App/Types/ITransaction'
 
 export type TransactionWithoutProcedure = ITransaction
 
-export type TransactionWithProcedure = Omit<
-	ITransaction,
-	'procedures' | 'prof' | 'client'
-> & {
-	procedures: IProcedureTransaction[]
+export type TransactionWithProcedure = Omit<ITransaction, 'prof' | 'client'> & {
 	prof?: string
 	client?: string
 }

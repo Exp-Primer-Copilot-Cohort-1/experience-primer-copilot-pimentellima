@@ -13,10 +13,16 @@ import { UnitNotFoundError } from '../../../errors/unit-not-found'
 import { TransactionWithProcedure, TransactionWithoutProcedure } from '../helpers'
 
 /**
- * Use case responsible for creating a transaction.
- * @implements {UseCase<ITransaction, ITransaction>}
+ * Classe responsável por criar transações.
  */
 export class CreateTransactionUseCase implements UseCase<ITransaction, ITransaction> {
+	/**
+	 * Construtor da classe.
+	 * @param withoutProcedure UseCase para criar transação sem procedimentos.
+	 * @param withProcedures UseCase para criar transação com procedimentos.
+	 * @param withActivity UseCase para criar atividade.
+	 * @param session Sessão de transação.
+	 */
 	constructor(
 		private readonly withoutProcedure: UseCase<
 			TransactionWithoutProcedure,
@@ -28,14 +34,65 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 	) { } // eslint-disable-line
 
 	/**
-	 * Creates a transaction with the given parameters.
-	 * @param {ITransaction} transaction - The transaction object containing the transaction details.
-	 * @returns {PromiseEither<AbstractError, ITransaction>} - A promise that resolves to either the created transaction or an error.
+	 * Cria transações.
+	 * @param transaction Transação.
+	 * @param installments Parcelas.
+	 * @param group_by Agrupamento.
+	 * @param amount Valor.
+	 * @param unity_id Identificador da unidade.
+	 * @returns Lista de transações.
+	 */
+	private async createTransactions(
+		transaction: ITransaction,
+		installments: number,
+		group_by: string,
+		amount: number,
+		unity_id: string,
+	): Promise<ITransaction[]> {
+		const transactions: ITransaction[] = []
+
+		for (let index = 0; index < installments; index++) {
+			const date = addMonths(new Date(transaction.date as Date), index)
+
+			const transactionOrErr = await TransactionEntity.build({
+				...transaction,
+				group_by,
+				unity_id,
+				amount,
+				installments,
+				installmentCurrent: index + 1,
+				date,
+			})
+
+			if (transactionOrErr.isLeft()) throw transactionOrErr.extract()
+
+			const entity = transactionOrErr.extract()
+
+			const withProceduresResult = await this.withProcedures.execute(entity)
+
+			if (withProceduresResult.isRight()) {
+				transactions.push(withProceduresResult.extract())
+			} else {
+				const transactionOneOrErr = await this.withoutProcedure.execute(entity)
+				if (transactionOneOrErr.isLeft()) throw transactionOneOrErr.extract()
+				transactions.push(transactionOneOrErr.extract())
+			}
+		}
+
+		return transactions
+	}
+
+	/**
+	 * Executa a criação de transações.
+	 * @param unity_id Identificador da unidade.
+	 * @param installments Parcelas.
+	 * @param activity_id Identificador da atividade.
+	 * @param transaction Transação.
+	 * @returns Transação criada.
 	 */
 	public async execute({
 		unity_id,
 		installments = 1,
-		procedures = [],
 		activity_id,
 		...transaction
 	}: ITransaction): PromiseEither<AbstractError, ITransaction> {
@@ -45,37 +102,13 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 			const total = divideCurrencyByInteger(transaction.amount, installments)
 			const group_by = activity_id || transaction.group_by || new Types.ObjectId()
 
-			const transactions: ITransaction[] = []
-			for (let index = 0; index < installments; index++) {
-				const date = addMonths(new Date(transaction.date), index)
-
-				const transactionOrErr = await TransactionEntity.build({
-					...transaction,
-					group_by: group_by.toString(),
-					unity_id: unity_id.toString(),
-					amount: total,
-					installments,
-					procedures,
-					installmentCurrent: index + 1,
-					date,
-				})
-
-				if (transactionOrErr.isLeft()) throw transactionOrErr.extract()
-
-				const entity = transactionOrErr.extract()
-
-				const withProcedures = await this.withProcedures.execute(entity as any)
-
-				if (withProcedures.isRight()) {
-					transactions.push(withProcedures.extract())
-				} else {
-					const transactionOneOrErr = await this.withoutProcedure.execute(
-						entity,
-					)
-					if (transactionOneOrErr.isLeft()) throw transactionOneOrErr.extract()
-					transactions.push(transactionOneOrErr.extract())
-				}
-			}
+			const transactions = await this.createTransactions(
+				transaction as ITransaction,
+				installments,
+				group_by.toString(),
+				total,
+				unity_id.toString(),
+			)
 
 			const createdWithActivity = await this.withActivity.execute({
 				...transaction,
