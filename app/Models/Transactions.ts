@@ -46,7 +46,7 @@ export enum COLLECTION_REFS {
  * @swagger
  * components:
  *   schemas:
- *     Transactions:
+ *     Transaction:
  *       type: object
  *       properties:
  *         group_by:

@@ -1,14 +1,14 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeCreateAdminUserComposer } from 'App/Core/composers'
+import { makeCreateAdminComposer } from 'App/Core/composers'
 import { UserNotFoundException } from 'App/Exceptions'
 import User from 'App/Models/User'
 import { CREATE_USER_RULES } from '../../Rules'
 
 class SignUpAdminController {
-	constructor(private readonly userModel = User) {}
+	constructor(private readonly userModel = User) { } // eslint-disable-line
 
-	public async store(ctx: HttpContextContract) {
+	async store(ctx: HttpContextContract) {
 		ctx.request.validate({
 			schema: CREATE_USER_RULES,
 			messages: {
@@ -24,7 +24,7 @@ class SignUpAdminController {
 			},
 		})
 
-		return adaptRoute(makeCreateAdminUserComposer(), ctx)
+		return adaptRoute(makeCreateAdminComposer(), ctx)
 	}
 
 	async activeUser({ params }) {

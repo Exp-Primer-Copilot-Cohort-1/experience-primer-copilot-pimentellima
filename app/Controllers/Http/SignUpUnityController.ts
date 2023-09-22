@@ -1,10 +1,10 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { UnityAlreadyExistException } from 'App/Exceptions'
 import Unity from 'App/Models/Unity'
 import { CREATE_UNITY_RULES } from '../../Rules'
-import { UnityAlreadyExistException } from 'App/Exceptions'
 
 class SignUpUnityController {
-	constructor(private readonly unityModel = Unity) { }
+	constructor(private readonly unityModel = Unity) { } // eslint-disable-line
 
 	public async store({ request }: HttpContextContract) {
 		await request.validate({

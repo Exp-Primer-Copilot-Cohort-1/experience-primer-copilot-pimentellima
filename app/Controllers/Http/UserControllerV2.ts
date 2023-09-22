@@ -1,10 +1,7 @@
-'use strict'
-
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
 
 import { ROLES } from 'App/Roles/types'
-import SELECTS from '../user-select'
 
 const fetchUserByType = async (type, unityId, active = true) =>
 	await User.where({
@@ -92,7 +89,7 @@ class UserControllerV2 {
 				$in: ['prof', 'admin_prof'],
 			},
 		})
-			.select(SELECTS)
+			.select('-payment_participations -password')
 			.populate('unities')
 			.populate('answer')
 			.populate('activity')

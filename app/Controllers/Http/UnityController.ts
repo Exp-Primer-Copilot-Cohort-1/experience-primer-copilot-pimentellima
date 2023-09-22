@@ -5,11 +5,68 @@ import { makeUnityFindAllByNameComposer } from 'App/Core/composers/unities/make-
 import { makeUnityShowByIdComposer } from 'App/Core/composers/unities/make-unity-show-by-id-composer'
 import Unity, { COLLECTION_NAME } from 'App/Models/Unity'
 import LogDecorator, { ACTION } from '../Decorators/Log'
+
+/**
+ * Controller responsável por gerenciar as rotas relacionadas a unidades.
+ * @swagger
+ * tags:
+ *  name: Unidades
+ *  description: Endpoints para gerenciamento de unidades.
+ */
 class UnityController {
+	/**
+	 * @swagger
+	 * /unity:
+	 *   get:
+	 *     summary: Retorna todas as unidades.
+	 *     tags: [Unidades]
+	 *     responses:
+	 *       200:
+	 *         description: Lista de todas as unidades.
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               type: array
+	 *               items:
+	 *                 $ref: '#/components/schemas/Unity'
+	 */
 	public async index(ctx: HttpContextContract) {
 		return adaptRoute(makeUnityFindAllByNameComposer(), ctx)
 	}
 
+	/**
+	 * @swagger
+	 * /unity/{email}:
+	 *   get:
+	 *     summary: Retorna uma unidade pelo email.
+	 *     tags: [Unidades]
+	 *     parameters:
+	 *       - in: path
+	 *         name: email
+	 *         required: true
+	 *         description: Email da unidade.
+	 *         schema:
+	 *           type: string
+	 *     responses:
+	 *       200:
+	 *         description: Unidade encontrada.
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/Unity'
+	 *       404:
+	 *         description: Unidade não encontrada.
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               type: object
+	 *               properties:
+	 *                 error:
+	 *                   type: object
+	 *                   properties:
+	 *                     message:
+	 *                       type: string
+	 */
 	public async findByName({ params, response }: HttpContextContract) {
 		const { email } = params
 
@@ -32,11 +89,72 @@ class UnityController {
 		return unity
 	}
 
+	/**
+	 * @swagger
+	 * /unity/{id}:
+	 *   put:
+	 *     summary: Atualiza uma unidade pelo ID.
+	 *     tags: [Unidades]
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         required: true
+	 *         description: ID da unidade.
+	 *         schema:
+	 *           type: string
+	 *     requestBody:
+	 *       description: Dados da unidade a ser atualizada.
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             $ref: '#/components/schemas/Unity'
+	 *     responses:
+	 *       200:
+	 *         description: Unidade atualizada com sucesso.
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/Unity'
+	 */
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	public async update(ctx: HttpContextContract) {
 		return adaptRoute(makeUnityUpdateByIdComposer(), ctx)
 	}
 
+	/**
+	 * @swagger
+	 * /unity/{id}:
+	 *   get:
+	 *     summary: Retorna uma unidade pelo ID.
+	 *     tags: [Unidades]
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         required: true
+	 *         description: ID da unidade.
+	 *         schema:
+	 *           type: string
+	 *     responses:
+	 *       200:
+	 *         description: Unidade encontrada.
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/Unity'
+	 *       404:
+	 *         description: Unidade não encontrada.
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               type: object
+	 *               properties:
+	 *                 error:
+	 *                   type: object
+	 *                   properties:
+	 *                     message:
+	 *                       type: string
+	 */
 	public async show(ctx: HttpContextContract) {
 		return adaptRoute(makeUnityShowByIdComposer(), ctx)
 	}
