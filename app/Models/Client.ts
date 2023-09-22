@@ -146,7 +146,28 @@ const ClientSchema = new Schema<IUserClient>(
 				form: {
 					id: { type: Mongoose.Types.ObjectId, required: true },
 					name: { type: String, required: true },
+					_id: false,
 				},
+				prof: {
+					value: { type: String, required: true },
+					label: { type: String, required: true },
+					_id: false,
+				},
+				profs_with_access: [
+					{
+						id: {
+							type: String,
+							required: true,
+						},
+						name: {
+							type: String,
+							required: true,
+						},
+						start: { type: Date },
+						end: { type: Date },
+						_id: false,
+					},
+				],
 				activity_id: { type: Mongoose.Types.ObjectId, required: true },
 				field_answers: [
 					{
