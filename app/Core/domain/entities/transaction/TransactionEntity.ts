@@ -101,11 +101,11 @@ export class TransactionEntity extends Entity implements ITransaction {
 	}
 
 	defineFinancialCategory(financial_category: string | Generic) {
-		if (typeof financial_category === 'string') {
-			this.financial_category = financial_category
-		} else {
-			this.financial_category = financial_category?.value as string
-		}
+		this.financial_category =
+			typeof financial_category === 'string'
+				? financial_category
+				: (financial_category?.value as string)
+
 		return this
 	}
 

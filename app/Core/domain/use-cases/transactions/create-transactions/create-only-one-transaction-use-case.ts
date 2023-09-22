@@ -1,3 +1,4 @@
+import { InappropriateUseCase } from 'App/Core/domain/errors/inappropriate-use-case'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -6,17 +7,29 @@ import { UnitNotFoundError } from '../../../errors/unit-not-found'
 import { TransactionsManagerInterface } from '../../../repositories/interface/transactions-manager-interface'
 import { TransactionWithoutProcedure } from '../helpers'
 
+/**
+ * Use case responsible for creating only one transaction without procedures.
+ * @implements {UseCase}
+ */
 export class CreateOnlyOneTransactionUseCase
 	implements UseCase<TransactionWithoutProcedure, ITransaction>
 {
+	/**
+	 * Creates an instance of CreateOnlyOneTransactionUseCase.
+	 * @param {TransactionsManagerInterface} manager - The manager for transactions.
+	 */
 	constructor(private readonly manager: TransactionsManagerInterface) { } // eslint-disable-line
 
+	/**
+	 * Executes the use case.
+	 * @param {TransactionWithoutProcedure} param - The transaction data.
+	 * @returns {PromiseEither<AbstractError, ITransaction>} Either an error or the created transaction.
+	 */
 	public async execute({
 		procedures = [],
 		...transaction
 	}: TransactionWithoutProcedure): PromiseEither<AbstractError, ITransaction> {
-		if (procedures && procedures?.length > 0)
-			return left(new AbstractError('Existem procedimentos na transação', 400))
+		if (procedures && procedures?.length > 0) return left(new InappropriateUseCase())
 		if (!transaction.unity_id) return left(new UnitNotFoundError())
 
 		const docOrErr = await this.manager.create(

@@ -18,6 +18,7 @@
 		"test:e2e": "node ace test --watch",
 		"test:unit": "cross-env NODE_ENV=test vitest --ui --watch --t Unit",
 		"test:integration": "cross-env NODE_ENV=test vitest --ui --watch --t Integration",
+		"test:only": "cross-env NODE_ENV=test vitest --ui --watch --t Only",
 		"test": "cross-env NODE_ENV=test vitest && node ace test",
 		"coverage": "vitest run --coverage",
 		"start": "node server.js",

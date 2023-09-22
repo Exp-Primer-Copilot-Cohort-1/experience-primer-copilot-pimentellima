@@ -83,7 +83,6 @@ export class ProcedureTransactionEntity implements IProcedureTransaction {
 
 			return right(p)
 		} catch (error) {
-			console.log(error)
 			return left(
 				new AbstractError('Erro ao criar entidade de procedimento', 400, error),
 			)

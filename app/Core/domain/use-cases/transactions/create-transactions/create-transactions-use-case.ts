@@ -12,6 +12,10 @@ import { Types } from 'mongoose'
 import { UnitNotFoundError } from '../../../errors/unit-not-found'
 import { TransactionWithProcedure, TransactionWithoutProcedure } from '../helpers'
 
+/**
+ * Use case responsible for creating a transaction.
+ * @implements {UseCase<ITransaction, ITransaction>}
+ */
 export class CreateTransactionUseCase implements UseCase<ITransaction, ITransaction> {
 	constructor(
 		private readonly withoutProcedure: UseCase<
@@ -23,6 +27,11 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 		private readonly session: ISessionTransaction,
 	) { } // eslint-disable-line
 
+	/**
+	 * Creates a transaction with the given parameters.
+	 * @param {ITransaction} transaction - The transaction object containing the transaction details.
+	 * @returns {PromiseEither<AbstractError, ITransaction>} - A promise that resolves to either the created transaction or an error.
+	 */
 	public async execute({
 		unity_id,
 		installments = 1,

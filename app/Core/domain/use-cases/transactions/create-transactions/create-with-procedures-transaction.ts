@@ -11,6 +11,13 @@ import { IProcedureTransaction, ITransaction } from 'App/Types/ITransaction'
 import { TransactionsManagerInterface } from '../../../repositories/interface/transactions-manager-interface'
 import { TransactionWithProcedure } from '../helpers'
 
+/**
+ * Creates a transaction with procedures.
+ * @param manager - The transaction manager.
+ * @param proceduresManager - The procedures manager.
+ * @param paymentParticipationsManager - The payment participation manager.
+ * @returns A promise that resolves to either the created transaction or an error.
+ */
 export class CreateWithProceduresTransactionUseCase
 	implements UseCase<TransactionWithProcedure, ITransaction>
 {
@@ -20,6 +27,17 @@ export class CreateWithProceduresTransactionUseCase
 		private readonly paymentParticipationsManager: PaymentProfManagerInterface,
 	) { } // eslint-disable-line
 
+	/**
+	 * Creates a transaction with procedures.
+	 * @param {TransactionWithProcedure} transaction - The transaction object with procedures.
+	 * @param {Procedure[]} transaction.procedures - The procedures to be added to the transaction.
+	 * @returns {PromiseEither<AbstractError, ITransaction>} - A promise that resolves to the created transaction or an error.
+	 * @throws {ProcedureNotFoundError} - If no procedures are provided.
+	 * @throws {ParticipationPaymentsNotFoundError} - If payment participations are not found.
+	 * @throws {AbstractError} - If there is an error building the procedure transaction entity.
+	 * @throws {AbstractError} - If there is an error building the transaction entity.
+	 * @throws {AbstractError} - If there is an error creating the transaction document.
+	 */
 	public async execute({
 		procedures,
 		...transaction
