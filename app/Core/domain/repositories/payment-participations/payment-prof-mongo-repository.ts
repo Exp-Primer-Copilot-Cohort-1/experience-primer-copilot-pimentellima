@@ -84,7 +84,7 @@ const createFilter = (participation: IPaymentProf) => ({
 export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
-		private readonly session: ISessionTransaction,
+		private readonly session?: ISessionTransaction,
 		private readonly opts: OptsQuery = OptsQuery.build()) { } // eslint-disable-line
 
 	async createOrUpdatePaymentProf(

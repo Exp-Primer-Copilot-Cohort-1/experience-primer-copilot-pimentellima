@@ -16,6 +16,65 @@ export enum COLLECTION_REFS {
 	PROCEDURES = 'procedures._id',
 }
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ActivityAwait:
+ *       type: object
+ *       properties:
+ *         procedures:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               _id:
+ *                 type: string
+ *                 format: uuid
+ *               minutes:
+ *                 type: number
+ *               color:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               health_insurance:
+ *                 type: string
+ *                 format: uuid
+ *           description: Lista de procedimentos da atividade
+ *         status:
+ *           type: string
+ *           enum: [PENDING, PAID, CANCELED]
+ *           description: Status do pagamento da atividade
+ *         client:
+ *           type: string
+ *           format: uuid
+ *           description: ID do cliente associado à atividade
+ *         obs:
+ *           type: string
+ *           description: Observações sobre a atividade
+ *         prof:
+ *           type: string
+ *           format: uuid
+ *           description: ID do profissional associado à atividade
+ *         active:
+ *           type: boolean
+ *           description: Indica se a atividade está ativa ou não
+ *         unity_id:
+ *           type: string
+ *           format: uuid
+ *           description: ID da unidade associada à atividade
+ *         type:
+ *           type: string
+ *           enum: [AWAIT, DONE]
+ *           description: Tipo da atividade
+ *       required:
+ *         - procedures
+ *         - status
+ *         - client
+ *         - prof
+ *         - active
+ *         - unity_id
+ */
 const ActivityAwaitSchema = new Schema<IActivityAwaitModel>(
 	{
 		procedures: [

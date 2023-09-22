@@ -7,6 +7,73 @@ interface IActivityPendingModel extends Omit<IActivityPending, 'prof' | 'client'
 	prof: Schema.Types.ObjectId
 	client: Schema.Types.ObjectId
 }
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ActivityPending:
+ *       type: object
+ *       properties:
+ *         group_id:
+ *           type: string
+ *           description: ID do grupo da atividade pendente.
+ *         status:
+ *           type: string
+ *           description: Status da atividade pendente.
+ *           enum: [PENDING, APPROVED, REJECTED]
+ *         procedures:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               _id:
+ *                 type: string
+ *                 description: ID do procedimento.
+ *               minutes:
+ *                 type: number
+ *                 description: Tempo em minutos do procedimento.
+ *               color:
+ *                 type: string
+ *                 description: Cor do procedimento.
+ *               price:
+ *                 type: string
+ *                 description: Preço do procedimento.
+ *               health_insurance:
+ *                 type: string
+ *                 description: ID do convênio de saúde.
+ *           description: Lista de procedimentos da atividade pendente.
+ *         payment:
+ *           type: object
+ *           description: Informações de pagamento da atividade pendente.
+ *         client:
+ *           type: string
+ *           description: ID do cliente da atividade pendente.
+ *         obs:
+ *           type: string
+ *           description: Observações da atividade pendente.
+ *         prof:
+ *           type: string
+ *           description: ID do profissional responsável pela atividade pendente.
+ *         active:
+ *           type: boolean
+ *           description: Indica se a atividade pendente está ativa.
+ *         unity_id:
+ *           type: string
+ *           description: ID da unidade da atividade pendente.
+ *         type:
+ *           type: string
+ *           description: Tipo da atividade pendente.
+ *           enum: [PENDING, APPROVED, REJECTED]
+ *       required:
+ *         - group_id
+ *         - status
+ *         - procedures
+ *         - client
+ *         - prof
+ *         - active
+ *         - unity_id
+ */
 const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 	{
 		group_id: {

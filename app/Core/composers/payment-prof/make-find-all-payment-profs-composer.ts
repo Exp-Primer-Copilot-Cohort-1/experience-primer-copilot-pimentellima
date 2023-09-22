@@ -6,6 +6,6 @@ import { FindAllPaymentProfsUseCase } from 'App/Core/domain/use-cases/payment-pr
 
 export const makeFindAllPaymentProfsComposer = (opts: OptsQuery): ControllerGeneric => {
 	return new Controller(
-		new FindAllPaymentProfsUseCase(new PaymentProfMongoRepository(opts)),
+		new FindAllPaymentProfsUseCase(new PaymentProfMongoRepository(undefined, opts)),
 	)
 }

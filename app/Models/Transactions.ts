@@ -41,6 +41,132 @@ export enum COLLECTION_REFS {
 	CLIENTS = 'client',
 }
 
+/**
+ * Esquema de transações.
+ * @swagger
+ * components:
+ *   schemas:
+ *     Transactions:
+ *       type: object
+ *       properties:
+ *         group_by:
+ *           type: string
+ *           description: ID da atividade relacionada à transação.
+ *         prof:
+ *           type: string
+ *           description: ID do profissional relacionado à transação.
+ *         client:
+ *           type: string
+ *           description: ID do cliente relacionado à transação.
+ *         procedures:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               _id:
+ *                 type: string
+ *                 description: ID do procedimento relacionado à transação.
+ *               minutes:
+ *                 type: number
+ *                 description: Duração do procedimento em minutos.
+ *               price:
+ *                 type: number
+ *                 description: Preço do procedimento.
+ *               health_insurance:
+ *                 type: string
+ *                 description: ID do convênio relacionado ao procedimento.
+ *               payment_participation:
+ *                 type: object
+ *                 properties:
+ *                   value:
+ *                     type: string
+ *                     description: ID da participação do pagamento relacionada ao procedimento.
+ *                   price:
+ *                     type: number
+ *                     description: Preço da participação do pagamento.
+ *                   percent:
+ *                     type: number
+ *                     description: Percentual da participação do pagamento.
+ *               stock:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       description: ID do estoque relacionado ao procedimento.
+ *                     quantity:
+ *                       type: number
+ *                       description: Quantidade do estoque.
+ *                     price_cost:
+ *                       type: number
+ *                       description: Preço de custo do estoque.
+ *                     price_final:
+ *                       type: number
+ *                       description: Preço final do estoque.
+ *         account:
+ *           type: string
+ *           description: ID da conta relacionada à transação.
+ *         cost_center:
+ *           type: string
+ *           description: ID do centro de custo relacionado à transação.
+ *         financial_category:
+ *           type: string
+ *           description: ID da categoria financeira relacionada à transação.
+ *         amount:
+ *           type: number
+ *           description: Valor da transação.
+ *         paymentForm:
+ *           type: string
+ *           description: Forma de pagamento da transação.
+ *         paid:
+ *           type: boolean
+ *           description: Indica se a transação foi paga.
+ *         date:
+ *           type: string
+ *           format: date-time
+ *           description: Data da transação.
+ *         description:
+ *           type: string
+ *           description: Descrição da transação.
+ *         type:
+ *           type: string
+ *           enum: [income, expense]
+ *           description: Tipo da transação.
+ *         occurrences:
+ *           type: string
+ *           enum: [once, daily, weekly, biweekly, monthly]
+ *           description: Frequência da transação.
+ *         installment:
+ *           type: boolean
+ *           description: Indica se a transação é parcelada.
+ *         installmentCurrent:
+ *           type: number
+ *           description: Número da parcela atual.
+ *         installments:
+ *           type: number
+ *           description: Número total de parcelas.
+ *         active:
+ *           type: boolean
+ *           description: Indica se a transação está ativa.
+ *         unity_id:
+ *           type: string
+ *           description: ID da unidade relacionada à transação.
+ *       required:
+ *         - group_by
+ *         - account
+ *         - cost_center
+ *         - financial_category
+ *         - amount
+ *         - paymentForm
+ *         - date
+ *         - type
+ *         - occurrences
+ *         - installment
+ *         - installmentCurrent
+ *         - installments
+ *         - active
+ */
 const TransactionsSchema = new Schema<ITransactionModel>(
 	{
 		group_by: {

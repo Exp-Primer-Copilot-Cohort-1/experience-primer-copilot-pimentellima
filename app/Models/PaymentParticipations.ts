@@ -10,6 +10,64 @@ interface IPaymentParticipationsModel
 
 export const COLLECTION_NAME = 'payment_participations'
 
+/**
+ * Representa as participações de pagamento de um profissional de saúde em um determinado procedimento.
+ * @swagger
+ * components:
+ *   schemas:
+ *     PaymentParticipations:
+ *       type: object
+ *       properties:
+ *         prices:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               abs:
+ *                 type: number
+ *                 description: Valor absoluto do preço.
+ *               percent:
+ *                 type: number
+ *                 description: Valor percentual do preço.
+ *               date_start:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Data de início da vigência do preço.
+ *               date_end:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Data de término da vigência do preço.
+ *               active:
+ *                 type: boolean
+ *                 description: Indica se o preço está ativo ou não.
+ *             required:
+ *               - abs
+ *               - percent
+ *             example:
+ *               - abs: 100
+ *                 percent: 0
+ *                 date_start: '2022-01-01T00:00:00.000Z'
+ *                 date_end: '2022-12-31T23:59:59.999Z'
+ *                 active: true
+ *         prof:
+ *           type: string
+ *           description: ID do profissional de saúde.
+ *         procedure:
+ *           type: string
+ *           description: ID do procedimento.
+ *         health_insurance:
+ *           type: string
+ *           description: ID do convênio médico.
+ *         unity_id:
+ *           type: string
+ *           description: ID da unidade de saúde.
+ *       required:
+ *         - prices
+ *         - prof
+ *         - procedure
+ *         - health_insurance
+ *         - unity_id
+ */
 const PaymentParticipations = new Schema<IPaymentParticipationsModel>(
 	{
 		prices: {

@@ -200,7 +200,6 @@ Route.group(() => {
 }).middleware(['auth', 'role'])
 
 Route.group(() => {
-
 	Route.group(() => {
 		Route.put('status/:id', 'ActivityController.updateActivityStatusById').as(
 			'activity.status',
@@ -224,9 +223,7 @@ Route.group(() => {
 		Route.post('recurrent', 'ActivityController.createRecurrentActivity').as(
 			'activity.storeRecurrent',
 		)
-		Route.put('payment/:id', 'ActivityController.updateActivityPayment').as(
-			'activity.payment',
-		)
+
 		Route.delete(':id', 'ActivityController.deleteActivityById').as(
 			'activity.destroy',
 		)
@@ -251,6 +248,14 @@ Route.group(() => {
 
 		Route.get('pending', 'ActivityController.findAllActivitiesPending').as(
 			'activities.indexPending',
+		)
+
+		Route.get('prof/:prof_id', 'ActivityController.findActivitiesByProfId').as(
+			'activities.byProfId',
+		)
+
+		Route.get('client/:client_id', 'ActivityController.findActivitiesByClientId').as(
+			'activities.byClientId',
 		)
 	}).prefix('activities')
 

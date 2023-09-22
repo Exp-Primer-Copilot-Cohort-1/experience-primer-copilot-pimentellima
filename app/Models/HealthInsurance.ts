@@ -7,6 +7,45 @@ interface IHealthInsuranceModel extends Omit<IHealthInsurance, 'profs'> {
 
 export const COLLECTION_NAME = 'health_insurances'
 
+/**
+ * Esquema do modelo de plano de saúde.
+ * @swagger
+ * components:
+ *   schemas:
+ *     HealthInsurance:
+ *       type: object
+ *       required:
+ *         - name
+ *         - unity_id
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: Nome do plano de saúde.
+ *         register_code:
+ *           type: string
+ *           description: Código de registro do plano de saúde.
+ *         carence:
+ *           type: number
+ *           description: Carência do plano de saúde.
+ *         profs:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: Lista de profissionais associados ao plano de saúde.
+ *         active:
+ *           type: boolean
+ *           description: Indica se o plano de saúde está ativo ou não.
+ *         unity_id:
+ *           type: string
+ *           description: ID da unidade associada ao plano de saúde.
+ *       example:
+ *         name: Plano de Saúde A
+ *         register_code: ABC123
+ *         carence: 30
+ *         profs: [ "60a9f9d1c9c3c20015c1d9b9", "60a9f9d1c9c3c20015c1d9ba" ]
+ *         active: true
+ *         unity_id: 60a9f9d1c9c3c20015c1d9b8
+ */
 const HealthInsuranceSchema = new Schema<IHealthInsuranceModel>(
 	{
 		name: { type: String, required: true },

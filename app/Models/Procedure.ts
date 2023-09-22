@@ -15,6 +15,76 @@ interface IProcedureModel extends Omit<IProcedure, 'profs' | 'health_insurances'
 
 export const COLLECTION_NAME = 'procedures'
 
+/**
+ * Representa o modelo de dados de um procedimento.
+ * @swagger
+ * components:
+ *   schemas:
+ *     Procedure:
+ *       type: object
+ *       properties:
+ *         active:
+ *           type: boolean
+ *           description: Indica se o procedimento está ativo.
+ *         color:
+ *           type: string
+ *           description: Cor do procedimento.
+ *         name:
+ *           type: string
+ *           description: Nome do procedimento.
+ *         minutes:
+ *           type: number
+ *           description: Duração do procedimento em minutos.
+ *         profs:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/User'
+ *           description: Lista de profissionais que podem realizar o procedimento.
+ *         health_insurances:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               _id:
+ *                 type: string
+ *                 format: uuid
+ *                 description: ID do convênio de saúde.
+ *               price:
+ *                 type: number
+ *                 description: Preço do procedimento para o convênio de saúde.
+ *           description: Lista de convênios de saúde que cobrem o procedimento e seus respectivos preços.
+ *         products:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               _id:
+ *                 type: string
+ *                 format: uuid
+ *                 description: ID do produto.
+ *               quantity:
+ *                 type: number
+ *                 description: Quantidade de produtos necessários para realizar o procedimento.
+ *               price_cost:
+ *                 type: number
+ *                 description: Preço de custo do produto.
+ *               price_final:
+ *                 type: number
+ *                 description: Preço final do produto.
+ *           description: Lista de produtos necessários para realizar o procedimento e seus respectivos preços.
+ *         unity_id:
+ *           type: string
+ *           format: uuid
+ *           description: ID da unidade onde o procedimento pode ser realizado.
+ *       required:
+ *         - color
+ *         - name
+ *         - minutes
+ *         - profs
+ *         - health_insurances
+ *         - products
+ *         - unity_id
+ */
 const ProcedureSchema = new Schema<IProcedureModel>(
 	{
 		active: {

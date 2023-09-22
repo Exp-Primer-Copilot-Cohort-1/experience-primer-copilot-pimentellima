@@ -6,53 +6,56 @@ import { COLLECTION_NAME as COLLECTION_USER_NAME } from './User'
 export const COLLECTION_NAME = 'accounts'
 
 /**
+ * Esquema do Mongoose para a coleção de contas.
  * @swagger
  * components:
  *   schemas:
  *     Account:
  *       type: object
- *       properties:
- *         name:
- *           type: string
- *           description: The account name.
- *           required: true
- *         cash:
- *           type: number
- *           description: The account value.
- *           required: true
- *         date:
- *           type: string
- *           format: date
- *           description: The account creation date.
- *           required: true
- *         bank:
- *           type: string
- *           description: The associated bank.
- *           required: true
- *         active:
- *           type: boolean
- *           description: Account status.
- *           default: true
- *         unity_id:
- *           type: string
- *           format: uuid
- *           description: The associated unity id.
- *           required: true
- *         description:
- *           type: string
- *           description: The account description.
- *         user_id:
- *           type: string
- *           format: uuid
- *           description: The associated user id.
  *       required:
  *         - name
- *         - value
+ *         - cash
  *         - date
  *         - bank
  *         - unity_id
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: Identificador único gerado automaticamente pelo MongoDB.
+ *         name:
+ *           type: string
+ *           description: Nome da conta.
+ *         cash:
+ *           type: number
+ *           description: Saldo da conta.
+ *         date:
+ *           type: string
+ *           format: date-time
+ *           description: Data de criação da conta.
+ *         bank:
+ *           type: string
+ *           description: Nome do banco da conta.
+ *         active:
+ *           type: boolean
+ *           description: Indica se a conta está ativa ou não.
+ *         unity_id:
+ *           type: string
+ *           description: Identificador único da unidade associada à conta.
+ *         description:
+ *           type: string
+ *           description: Descrição opcional da conta.
+ *         user_id:
+ *           type: string
+ *           description: Identificador único do usuário associado à conta.
+ *       example:
+ *         name: Conta Corrente
+ *         cash: 1000.0
+ *         date: 2022-01-01T00:00:00.000Z
+ *         bank: Banco do Brasil
+ *         active: true
+ *         unity_id: 61d1f5c6a6e8f7b4c9e8f7d1
+ *         description: Conta principal da empresa.
  */
-
 const AccountSchema = new Schema<IAccount>(
 	{
 		name: {

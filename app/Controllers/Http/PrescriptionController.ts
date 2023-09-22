@@ -7,6 +7,130 @@ const prescriptionSchema = z.object({
 	prof: z.object({}),
 })
 
+/**
+ * @swagger
+ *  tags:
+ *    name: Receitas
+ *    description: Recursos para gerenciamento de receitas.
+ * /prescriptions:
+ *   get:
+ *     summary: Retorna todas as receitas ativas do usuário logado
+ *     tags:
+ *       - Receitas
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de receitas ativas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Prescription'
+ *   post:
+ *     summary: Cria uma nova prescrição
+ *     tags:
+ *       - Receitas
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Prescription'
+ *     responses:
+ *       200:
+ *         description: Prescrição criada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Prescription'
+ *   put:
+ *     summary: Atualiza uma prescrição existente
+ *     tags:
+ *       - Receitas
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID da prescrição a ser atualizada
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Prescription'
+ *     responses:
+ *       200:
+ *         description: Prescrição atualizada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Prescription'
+ *   delete:
+ *     summary: Deleta uma prescrição existente
+ *     tags:
+ *       - Receitas
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID da prescrição a ser deletada
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Prescrição deletada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Prescription'
+ * /prescriptions/inactives:
+ *   get:
+ *     summary: Retorna todas as receitas inativas do usuário logado
+ *     tags:
+ *       - Receitas
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de receitas inativas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Prescription'
+ * /prescriptions/{id}:
+ *   get:
+ *     summary: Retorna uma prescrição pelo ID
+ *     tags:
+ *       - Receitas
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID da prescrição a ser retornada
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Prescrição encontrada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Prescription'
+ */
 class PrescriptionController {
 	async index({ auth }) {
 		const userLogged = auth.user

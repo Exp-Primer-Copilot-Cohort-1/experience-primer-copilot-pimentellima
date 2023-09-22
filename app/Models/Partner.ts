@@ -3,6 +3,27 @@ import { IPartner } from 'App/Types/IPartner'
 
 export const COLLECTION_NAME = 'partners'
 
+/**
+ * Esquema do Mongoose para um parceiro.
+ * @swagger
+ * components:
+ *   schemas:
+ *     Partner:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: Nome do parceiro.
+ *         active:
+ *           type: boolean
+ *           description: Indica se o parceiro está ativo ou não.
+ *         unity_id:
+ *           type: string
+ *           description: ID da unidade associada ao parceiro.
+ *       required:
+ *         - name
+ *         - unity_id
+ */
 const PartnerSchema = new Schema<IPartner>(
 	{
 		name: { type: String, required: true },

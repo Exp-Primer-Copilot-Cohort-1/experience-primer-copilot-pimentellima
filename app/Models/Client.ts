@@ -19,64 +19,120 @@ export enum COLLECTIONS {
  *     Client:
  *       type: object
  *       properties:
- *         _id:
- *           type: string
- *           readOnly: true
  *         name:
  *           type: string
- *           required: true
+ *           description: Nome do cliente.
+ *         form_answers:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               form:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: ID do formulário.
+ *                   name:
+ *                     type: string
+ *                     description: Nome do formulário.
+ *               activity_id:
+ *                 type: string
+ *                 description: ID da atividade.
+ *               field_answers:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     question:
+ *                       type: string
+ *                       description: Pergunta do formulário.
+ *                     answer:
+ *                       type: string
+ *                       description: Resposta do formulário.
+ *           description: Respostas do formulário.
  *         avatar:
  *           type: string
+ *           description: URL da imagem do avatar do cliente.
  *         birth_date:
  *           type: string
+ *           description: Data de nascimento do cliente.
  *         gender:
  *           type: string
+ *           description: Gênero do cliente.
  *         document:
  *           type: string
- *           required: false
+ *           description: Documento do cliente.
+ *         rg:
+ *           type: string
+ *           description: RG do cliente.
  *         celphone:
  *           type: string
- *           required: true
+ *           description: Número de celular do cliente.
  *         phone:
  *           type: string
+ *           description: Número de telefone do cliente.
  *         naturalness:
  *           type: string
+ *           description: Naturalidade do cliente.
  *         nationality:
  *           type: string
+ *           description: Nacionalidade do cliente.
  *         profession:
  *           type: string
+ *           description: Profissão do cliente.
  *         observation:
  *           type: string
+ *           description: Observação sobre o cliente.
  *         sms_checked:
  *           type: boolean
+ *           description: Indica se o cliente gostaria de ser notificado por sms.
  *         mail_checked:
  *           type: boolean
+ *           description: Indica se o cliente gostaria de ser notificado por email.
  *         email:
  *           type: string
- *           format: email
- *           required: true
+ *           description: E-mail do cliente.
  *         unity_id:
  *           type: string
- *           required: true
+ *           description: ID da unidade.
  *         active:
  *           type: boolean
- *           default: true
+ *           description: Indica se o cliente está ativo.
  *         partner:
  *           type: string
+ *           description: ID do parceiro.
  *         due_date:
  *           type: string
- *         created_at:
+ *           description: Data de vencimento.
+ *         cep:
  *           type: string
- *           format: date-time
- *           readOnly: true
- *         updated_at:
+ *           description: CEP do cliente.
+ *         street:
  *           type: string
- *           format: date-time
- *           readOnly: true
+ *           description: Rua do cliente.
+ *         address_number:
+ *           type: string
+ *           description: Número do endereço do cliente.
+ *         complement:
+ *           type: string
+ *           description: Complemento do endereço do cliente.
+ *         neighborhood:
+ *           type: string
+ *           description: Bairro do cliente.
+ *         city:
+ *           type: string
+ *           description: Cidade do cliente.
+ *         state:
+ *           type: string
+ *           description: Estado do cliente.
+ *         country:
+ *           type: string
+ *           description: País do cliente.
  *       required:
  *         - name
  *         - celphone
- *         - email
+ *         - birth_date
  *         - unity_id
  */
 const ClientSchema = new Schema<IUserClient>(
@@ -89,7 +145,7 @@ const ClientSchema = new Schema<IUserClient>(
 			{
 				form: {
 					id: { type: Mongoose.Types.ObjectId, required: true },
-					name: { type: String, required: true }
+					name: { type: String, required: true },
 				},
 				activity_id: { type: Mongoose.Types.ObjectId, required: true },
 				field_answers: [
