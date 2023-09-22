@@ -4,7 +4,6 @@ import { left } from 'App/Core/shared'
 ;('use strict')
 
 import Form from 'App/Models/Form'
-import { userInfo } from 'os'
 
 class FormController {
 	async findAllForms(ctx: HttpContextContract) {

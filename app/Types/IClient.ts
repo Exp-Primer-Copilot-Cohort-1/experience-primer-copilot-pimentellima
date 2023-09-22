@@ -5,11 +5,19 @@ import { ObjectId } from '@ioc:Mongoose'
 import { IAddress } from './IAddress'
 import { IFormAnswer } from './IFormAnswer'
 
+export type ProfWithAccess = {
+	prof_id: string
+	name: string
+	start?: Date
+	end?: Date
+}
+
 export interface IUserClient extends Partial<IAddress> {
 	_id?: string
 	name: string
 	avatar?: string
 	form_answers: IFormAnswer[]
+	profs_with_access: ProfWithAccess[]	
 	birth_date: string | Date
 	gender?: 'male' | 'female' | 'other' | 'not informed'
 	document: string

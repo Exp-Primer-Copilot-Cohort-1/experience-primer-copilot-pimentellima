@@ -7,10 +7,11 @@ import {
 	makeClientCreateComposer,
 	makeClientUpdateComposer,
 } from 'App/Core/composers/clients/make'
+import { AbstractError } from 'App/Core/errors/error.interface'
+import { left } from 'App/Core/shared'
 import { IUserClient } from 'App/Types/IClient'
-import SELECTS from '../user-select'
 import { IFormAnswer } from 'Types/IFormAnswer'
-import { IForm } from 'Types/IForm'
+import SELECTS from '../user-select'
 
 class ClientController {
 	async verifyExistenceClient({ request, auth, response }: HttpContextContract) {
@@ -135,35 +136,98 @@ class ClientController {
 	}
 
 	public async getAnswers(ctx: HttpContextContract) {
-		const clientId = ctx.params.id
-
-		const client = await Client.findById(clientId)
-		if (!client)
-			return ctx.response.status(404).json({ message: 'Cliente não encontrado' })
-		return client.form_answers
+		try {
+			const clientId = ctx.params.id
+			const user = ctx.auth.user
+			if (!user) throw new Error()
+			const client = await Client.findById(clientId)
+			if (!client)
+				return ctx.response.status(404).json({ message: 'Cliente não encontrado' })
+			const answers = client.form_answers.filter((ans) => {
+				if (ans.prof.value === user._id.toString()) {
+					return true
+				}
+				if (ans.profs_with_access?.map((p) => p.id)?.includes(user._id.toString())) {
+					return true
+				} else return false
+			})
+			return answers
+		}
+		catch(err) {
+			console.log(err)
+			return ctx.response.status(500)
+		}
 	}
 
 	public async putAnswer(ctx: HttpContextContract) {
-		const data = ctx.request.only(['field_answers', 'form', 'activity_id'])
-		const client_id = ctx.params.client_id
-		const form = data.form
-		const activity_id = data.activity_id
-		const field_answers: { question: string; answer: string }[] = data.field_answers
+		try {
+			const user = ctx.auth.user
+			if (!user) throw new Error()
+			const data = ctx.request.only([
+				'field_answers',
+				'form',
+				'activity_id',
+				'prof',
+			])
+			const client_id = ctx.params.client_id
+			const prof: { value: string; label: string } = data.prof
+			const form = data.form
+			const activity_id = data.activity_id
+			const field_answers: { question: string; answer: string }[] =
+				data.field_answers
 
-		const client = await Client.findById(client_id)
-		if (!client)
-			return ctx.response.status(404).json({ message: 'Cliente não encontrado' })
+			const form_answer: IFormAnswer = {
+				form,
+				field_answers,
+				activity_id,
+				prof,
+			}
 
-		const form_answers: IFormAnswer[] = [
-			...client.form_answers,
-			{ form, field_answers, activity_id },
-		]
+			const client = await Client.findByIdAndUpdate(client_id, {
+				$push: { form_answers: form_answer },
+			})
 
-		const updatedClient = await Client.findByIdAndUpdate(client_id, {
-			$set: { form_answers },
-		})
-		if(!updatedClient) return ctx.response.status(500)
-		return updatedClient
+			if (!client) return ctx.response.status(500)
+			return client
+		} catch (error) {
+			console.log(error)
+			return left(new AbstractError('', 500))
+		}
+	}
+
+	public async putProfAccess(ctx: HttpContextContract) {
+		try {
+			const user = ctx.auth.user
+			if (!user) throw new Error()
+			const data = ctx.request.only(['prof'])
+			const prof_with_access = {
+				id: data.prof.value,
+				name: data.prof.label,
+			}
+			const client_id: string = ctx.params.client_id
+			const client = await Client.findById(client_id)
+			if (!client) return ctx.response.status(500)
+			client.form_answers = client.form_answers.map((ans) => {
+				if (ans.prof.value !== user._id.toString()) return ans
+				return {
+					...ans,
+					profs_with_access: [
+						...(ans.profs_with_access || []),
+						prof_with_access,
+					],
+				}
+			})
+			client.save((error, client) => {
+				if (error) {
+					throw error
+				} else {
+					return client
+				}
+			})
+		} catch (error) {
+			console.log(error)
+			return left(new AbstractError('', 500))
+		}
 	}
 }
 
