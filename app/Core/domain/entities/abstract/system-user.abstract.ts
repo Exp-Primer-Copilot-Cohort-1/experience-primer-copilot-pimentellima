@@ -4,7 +4,6 @@ import { AbstractUser } from './user.abstract'
 
 export abstract class SystemUser extends AbstractUser {
 	date_expiration: string
-	password: string
 	active: boolean
 	dayOfTrade: DaysOfTrade
 
@@ -15,11 +14,6 @@ export abstract class SystemUser extends AbstractUser {
 		}
 
 		this.date_expiration = date_expiration
-		return this
-	}
-
-	public definePassword(password: string): this {
-		this.password = password
 		return this
 	}
 

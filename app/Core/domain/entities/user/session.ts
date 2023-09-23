@@ -44,7 +44,6 @@ export class SessionUser extends SystemUser {
 				.defineId(data._id)
 				.defineName(data.name)
 				.defineEmail(data.email)
-				.definePassword(data.password)
 				.defineActive(data.active)
 				.defineAvatar(data.avatar)
 				.defineCreatedAt(data.created_at)

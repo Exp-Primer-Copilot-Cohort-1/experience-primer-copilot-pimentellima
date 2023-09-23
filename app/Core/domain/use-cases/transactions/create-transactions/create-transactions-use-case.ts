@@ -72,11 +72,12 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 
 			if (withProceduresResult.isRight()) {
 				transactions.push(withProceduresResult.extract())
-			} else {
-				const transactionOneOrErr = await this.withoutProcedure.execute(entity)
-				if (transactionOneOrErr.isLeft()) throw transactionOneOrErr.extract()
-				transactions.push(transactionOneOrErr.extract())
+				continue
 			}
+
+			const transactionOneOrErr = await this.withoutProcedure.execute(entity)
+			if (transactionOneOrErr.isLeft()) throw transactionOneOrErr.extract()
+			transactions.push(transactionOneOrErr.extract())
 		}
 
 		return transactions
@@ -90,7 +91,7 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 	 * @param transaction Transação.
 	 * @returns Transação criada.
 	 */
-	public async execute({
+	async execute({
 		unity_id,
 		installments = 1,
 		activity_id,

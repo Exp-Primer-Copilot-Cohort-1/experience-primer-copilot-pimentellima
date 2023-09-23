@@ -30,7 +30,7 @@ describe('Mongoose Adapter (Unit)', () => {
 
 		const customParams = { foo: 'bar' }
 
-		const result = await adaptRoute(controller, context, customParams)
+		await adaptRoute(controller, context as any, customParams)
 
 		expect(controller.handle).toHaveBeenCalledWith(
 			expect.objectContaining({

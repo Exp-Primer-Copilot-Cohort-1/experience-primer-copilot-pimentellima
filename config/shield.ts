@@ -73,7 +73,6 @@ export const csrf: ShieldConfig['csrf'] = {
   |--------------------------------------------------------------------------
   */
 	enabled: true,
-
 	/*
   |--------------------------------------------------------------------------
   | Routes to Ignore
@@ -91,7 +90,7 @@ export const csrf: ShieldConfig['csrf'] = {
 	| ```
   |
   */
-	exceptRoutes: [],
+	exceptRoutes: ['/sessions'],
 
 	/*
   |--------------------------------------------------------------------------
@@ -107,7 +106,7 @@ export const csrf: ShieldConfig['csrf'] = {
   | AJAX requests.
   |
   */
-	enableXsrfCookie: true,
+	enableXsrfCookie: false,
 
 	/*
   |--------------------------------------------------------------------------

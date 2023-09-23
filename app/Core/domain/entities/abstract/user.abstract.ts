@@ -10,8 +10,8 @@ export abstract class AbstractUser extends Entity {
 	celphone: string
 	type: ROLES
 	avatar: string
-	email: Email
-	document: Document
+	email: string
+	document: string
 	blacklist: string[]
 	permissions: string[]
 
@@ -22,11 +22,11 @@ export abstract class AbstractUser extends Entity {
 
 	public defineEmail(email: string | Email): this {
 		if (email instanceof Email) {
-			this.email = email
+			this.email = email.value
 			return this
 		}
 
-		this.email = Email.build(email)
+		this.email = Email.build(email).value
 		return this
 	}
 
@@ -46,11 +46,11 @@ export abstract class AbstractUser extends Entity {
 
 	public defineDocument(document: string | Document): this {
 		if (document instanceof Document) {
-			this.document = document
+			this.document = document.value
 			return this
 		}
 
-		this.document = Document.build(document)
+		this.document = Document.build(document).value
 		return this
 	}
 

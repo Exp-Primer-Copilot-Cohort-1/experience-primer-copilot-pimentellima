@@ -19,15 +19,11 @@ export class SessionRepository implements SessionManagerInterface {
 			this.auth.signIn(email, password),
 		)
 
-		if (err) {
-			return left(new InvalidCredentialsError(err))
-		}
+		if (err) return left(new InvalidCredentialsError(err))
 
 		const sessionOrErr = await SessionUser.build(userAuth.user)
 
-		if (sessionOrErr.isLeft()) {
-			return left(sessionOrErr.extract())
-		}
+		if (sessionOrErr.isLeft()) return left(sessionOrErr.extract())
 
 		const token = {
 			type: userAuth.type,

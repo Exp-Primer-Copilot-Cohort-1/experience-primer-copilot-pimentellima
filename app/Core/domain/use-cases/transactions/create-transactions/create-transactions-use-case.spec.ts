@@ -34,6 +34,11 @@ const makeSut = () => {
 		sessionMock as any,
 	)
 
+	const spySut = vi.spyOn(
+		CreateTransactionUseCase.prototype as any,
+		'createTransactions',
+	)
+
 	return {
 		sut,
 		withoutProcedureMock,
@@ -41,6 +46,7 @@ const makeSut = () => {
 		withActivityMock,
 		sessionMock,
 		spyEntity,
+		spySut,
 	}
 }
 
@@ -170,15 +176,30 @@ describe('Create Transaction Use Case (Unit)', () => {
 	})
 
 	it('should call withProceduresMock multiple times if installments is greater than 1', async () => {
+		const installments = 12
 		const transaction: TransactionWithoutProcedure = mountTransaction({
 			procedures: [{ _id: 'procedure_id', price: 100 } as any],
 			activity_id: 'activity_id_valid',
-			installments: 3,
+			installments,
 		})
-		const { sut, withProceduresMock } = makeSut()
+		const { sut, withProceduresMock, spySut } = makeSut()
 
 		await sut.execute(transaction)
 
-		expect(withProceduresMock.execute).toHaveBeenCalledTimes(3)
+		expect(withProceduresMock.execute).toHaveBeenCalledTimes(installments)
+		expect(spySut).toHaveBeenCalledTimes(1)
+
+		expect(spySut).toHaveReturnedWith(
+			expect.arrayContaining(
+				Array(installments).map((_, index) =>
+					expect.objectContaining({ installmentCurrent: index + 1 }),
+				),
+			),
+		)
+		expect(spySut).not.toHaveReturnedWith(
+			expect.arrayContaining([
+				expect.objectContaining({ installmentCurrent: installments + 1 }),
+			]),
+		)
 	})
 })
