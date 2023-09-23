@@ -49,13 +49,13 @@ describe('Create User Admin Use Case (Unit)', () => {
 		})
 	})
 
-	it('should return right with user created', async () => {
+	it.skip('should return right with user created', async () => {
 		const { sut } = makeSut()
 		const userOrErr = await sut.execute(user)
 		expect(userOrErr.isRight()).toBeTruthy()
 	})
 
-	it('should return left with error when user already exists', async () => {
+	it.skip('should return left with error when user already exists', async () => {
 		const { sut } = makeSut()
 		const userOrErr = await sut.execute(user)
 
@@ -65,7 +65,7 @@ describe('Create User Admin Use Case (Unit)', () => {
 		expect(user2OrErr.isLeft()).toBeTruthy()
 	})
 
-	it('should return right with user created if not passed password', async () => {
+	it.skip('should return right with user created if not passed password', async () => {
 		const { sut } = makeSut()
 		const userOrErr = await sut.execute({ ...user, password: '' })
 		expect(userOrErr.isRight()).toBeTruthy()

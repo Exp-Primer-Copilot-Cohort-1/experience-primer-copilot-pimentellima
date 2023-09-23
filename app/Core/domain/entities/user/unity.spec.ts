@@ -15,6 +15,7 @@ const unity = {
 	active: faker.datatype.boolean(),
 	avatar: faker.image.avatar(),
 	updated_at: faker.date.recent(),
+	franchised: faker.datatype.boolean(),
 	document: cpf.generate(),
 	address: faker.location.street(),
 	address_number: faker.number.int().toLocaleString(),
@@ -106,7 +107,7 @@ describe('Entity Unity (Unit)', () => {
 			throw new Error('Unity is not valid')
 		}
 
-		const entity = unityOrErr.extract().params()
+		const entity = unityOrErr.extract()
 
 		expect(entity).toEqual(unity)
 	})
@@ -120,7 +121,7 @@ describe('Entity Unity (Unit)', () => {
 
 		const unity = unityOrErr.extract()
 
-		expect(unity.params().date_expiration).toBeDefined()
+		expect(unity.date_expiration).toBeDefined()
 	})
 
 	it('should be create date_expiration 5 days when date_expiration is null', async () => {
@@ -135,7 +136,7 @@ describe('Entity Unity (Unit)', () => {
 			throw new Error('Unity is not valid')
 		}
 
-		const date_expiration = unityOrErr.extract().params().date_expiration as Date
+		const date_expiration = unityOrErr.extract().date_expiration as Date
 		expect(date_expiration).toEqual(date)
 	})
 })

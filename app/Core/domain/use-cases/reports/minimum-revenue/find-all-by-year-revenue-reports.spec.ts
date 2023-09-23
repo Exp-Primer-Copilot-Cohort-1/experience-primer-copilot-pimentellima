@@ -14,9 +14,7 @@ const makeSut = () => {
 
 describe('Find all by year revenue reports (Integration)', () => {
 	beforeAll(async () => {
-		await mongoose.connect(
-			process.env.DB_CONNECTION_STRING as string,
-		)
+		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})
 
 	afterAll(async () => {

@@ -14,9 +14,6 @@ export default defineConfig({
 		},
 		reporters: ['html', 'default'],
 		testTimeout: 5000000,
-		deps: {
-			inline: true,
-		},
 		exclude: [
 			'**/node_modules/**',
 			'**/dist/**',

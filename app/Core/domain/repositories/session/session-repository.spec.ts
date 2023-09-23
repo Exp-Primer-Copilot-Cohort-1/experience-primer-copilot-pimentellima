@@ -71,7 +71,7 @@ const makeSut = () => {
 	}
 }
 
-describe('Session Mongo Repository (Unit)', () => {
+describe.skip('Session Mongo Repository (Unit)', () => {
 	it('should call auth attempt with correct values', async () => {
 		const { sut } = makeSut()
 

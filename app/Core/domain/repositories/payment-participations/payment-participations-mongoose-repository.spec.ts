@@ -37,9 +37,7 @@ const makeSut = () => {
 
 describe('Payment Participations Mongoose Repository (Integration)', () => {
 	beforeAll(async () => {
-		await mongoose.connect(
-			process.env.DB_CONNECTION_STRING as string,
-		)
+		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})
 
 	afterAll(async () => {

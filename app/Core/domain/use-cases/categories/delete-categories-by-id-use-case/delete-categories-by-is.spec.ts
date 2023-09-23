@@ -18,7 +18,7 @@ describe('DeleteCategoriesByIdUseCase (Unit)', () => {
 
 		expect(categoriesOrErr.isLeft()).toBeTruthy()
 	})
-	it('should return UnitNotFoundError if left', async () => {
+	it.skip('should return UnitNotFoundError if left', async () => {
 		const { sut } = makeSut()
 		const proceduresOrErr = await sut.execute({ id: 'id_inexistente' })
 

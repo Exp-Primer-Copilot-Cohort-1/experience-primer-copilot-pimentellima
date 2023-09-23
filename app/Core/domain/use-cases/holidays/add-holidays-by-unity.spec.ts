@@ -15,9 +15,7 @@ const makeSut = () => {
 
 describe('Add Holidays By Unity Use Case (Integration)', () => {
 	beforeAll(async () => {
-		await mongoose.connect(
-			process.env.DB_CONNECTION_STRING as string,
-		)
+		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})
 
 	afterAll(async () => {

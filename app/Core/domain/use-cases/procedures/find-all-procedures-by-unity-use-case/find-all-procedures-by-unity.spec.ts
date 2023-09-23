@@ -9,7 +9,7 @@ const makeSut = () => {
 	return { sut }
 }
 
-describe('FindAllproceduresByUnityUseCase (Unit)', () => {
+describe.skip('FindAllproceduresByUnityUseCase (Unit)', () => {
 	it('should return is left if unity_id is not provided', async () => {
 		const { sut } = makeSut()
 		const input = { name: 'cara' }

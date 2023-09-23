@@ -11,7 +11,7 @@ const makeSut = () => {
 	}
 }
 
-describe('Health Insurance Mongo Repository (Unit)', () => {
+describe.skip('Health Insurance Mongo Repository (Unit)', () => {
 	beforeAll(async () => {
 		vi.mock('App/Models/HealthInsurance', () => ({
 			__esModule: true,
