@@ -1,5 +1,4 @@
 import { SwaggerConfig } from '@ioc:Adonis/Addons/Swagger'
-
 /**
  * Configuration file for Swagger documentation.
  * This file defines the options and settings for Swagger UI and Swagger specification.
@@ -28,24 +27,39 @@ export default {
 				description:
 					'API do DpSystem, um sistema de gestão de clínicas. Com esta API, é possível gerenciar funcionários, folhas de pagamento, férias, benefícios, entre outras funcionalidades. A documentação da API contém informações detalhadas sobre cada endpoint, incluindo exemplos de requisições e respostas. Além disso, a API utiliza autenticação JWT (BearerAuth) para garantir a segurança das informações. As tecnologias utilizadas incluem Node.js, TypeScript, AdonisJS e JWT. Node.js versão 18, TypeScript versão 5 e AdonisJS versão 5',
 			},
-			// Adicione uma seção de segurança para autenticação JWT (BearerAuth)
-			security: [
+			servers: [
 				{
-					BearerAuth: [],
+					url: 'http://localhost:3333',
+					description: 'Local server',
 				},
 			],
-		},
-		// Especifique as definições de segurança para autenticação JWT (BearerAuth)
-		securityDefinitions: {
-			BearerAuth: {
-				type: 'apiKey',
-				name: 'Authorization',
-				in: 'header',
+			security: [
+				{
+					bearerAuth: [],
+				},
+			],
+			components: {
+				securitySchemes: {
+					bearerAuth: {
+						type: 'http',
+						scheme: 'bearer',
+						bearerFormat: 'JWT',
+					},
+				},
 			},
 		},
 
+		// Especifique as definições de segurança para autenticação JWT (BearerAuth)
+
+		servers: [
+			{
+				url: 'http://localhost:3333',
+				description: 'Local server',
+			},
+		],
 		// Lista de arquivos que descrevem suas rotas
 		apis: ['app/**/*.ts', 'docs/swagger/**/*.yml', 'start/routes.ts'],
+
 		basePath: '/',
 	},
 	mode: process.env.NODE_ENV === 'production' ? 'PRODUCTION' : 'RUNTIME',

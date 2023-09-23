@@ -35,10 +35,6 @@ class AccountController {
 	 *               type: array
 	 *               items:
 	 *                 $ref: '#/components/schemas/Account'
-	 *       401:
-	 *         $ref: '#/components/responses/Unauthorized'
-	 *       500:
-	 *         $ref: '#/components/responses/InternalServerError'
 	 */
 	async findAllAccounts(ctx: HttpContextContract) {
 		return adaptRoute(makeFindAllAccountsComposer(), ctx, {
@@ -72,10 +68,6 @@ class AccountController {
 	 *               $ref: '#/components/schemas/Account'
 	 *       404:
 	 *         description: Conta não encontrada.
-	 *         content:
-	 *           application/json:
-	 *             schema:
-	 *               $ref: '#/components/schemas/NotFound'
 	 */
 	async findAccountById(ctx: HttpContextContract) {
 		return adaptRoute(makeFindAccountComposer(), ctx)
@@ -152,22 +144,12 @@ class AccountController {
 	 *               $ref: '#/components/schemas/CreateAccountResponse'
 	 *       '400':
 	 *         description: Requisição inválida.
-	 *         content:
-	 *           application/json:
-	 *             schema:
-	 *               $ref: '#/components/schemas/BadRequestResponse'
+	 *
 	 *       '401':
 	 *         description: Não autorizado.
-	 *         content:
-	 *           application/json:
-	 *             schema:
-	 *               $ref: '#/components/schemas/UnauthorizedResponse'
+	 *
 	 *       '500':
 	 *         description: Erro interno do servidor.
-	 *         content:
-	 *           application/json:
-	 *             schema:
-	 *               $ref: '#/components/schemas/InternalServerErrorResponse'
 	 */
 	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async createAccount(ctx: HttpContextContract) {

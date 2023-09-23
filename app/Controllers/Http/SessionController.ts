@@ -2,9 +2,6 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import { makeSignInComposer } from 'App/Core/composers'
 
-/**
- * Controlador de sessão para autenticação de usuários.
- */
 class SessionController {
 	/**
 	 * @swagger
