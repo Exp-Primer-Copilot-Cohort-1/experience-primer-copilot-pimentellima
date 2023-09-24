@@ -12,7 +12,6 @@ import { left } from 'App/Core/shared'
 import { IUserClient } from 'App/Types/IClient'
 import { IFormAnswer } from 'Types/IFormAnswer'
 import LogDecorator, { ACTION } from '../Decorators/Log'
-import SELECTS from '../user-select'
 
 class ClientController {
 	async verifyExistenceClient({ request, auth, response }: HttpContextContract) {
@@ -28,7 +27,7 @@ class ClientController {
 			name,
 			birth_date,
 			unity_id,
-		}).select(SELECTS)
+		})
 
 		if (!user) {
 			return response.status(404).json({
