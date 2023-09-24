@@ -72,7 +72,7 @@ export const csrf: ShieldConfig['csrf'] = {
   | Enable/Disable CSRF
   |--------------------------------------------------------------------------
   */
-	enabled: true,
+	enabled: false,
 	/*
   |--------------------------------------------------------------------------
   | Routes to Ignore
