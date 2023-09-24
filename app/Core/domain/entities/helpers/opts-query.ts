@@ -1,41 +1,25 @@
 import { IOptsQuery } from 'App/Types/IOptsQuery'
 
 export class OptsQuery implements IOptsQuery {
-	private _sort: string
-	private _limit: number
-	private _skip: number
-	private _active: boolean
+	sort: string
+	limit: number
+	skip: number
+	active: boolean
 
-	private constructor() { }
-
-	public get sort(): string {
-		return this._sort
-	}
-
-	public get limit(): number {
-		return this._limit
-	}
-
-	public get skip(): number {
-		return this._skip
-	}
-
-	public get active(): boolean {
-		return this._active
-	}
+	private constructor() { } // eslint-disable-line @typescript-eslint/no-empty-function, prettier/prettier
 
 	defineSort(sort = '--name'): OptsQuery {
-		this._sort = sort
+		this.sort = sort
 		return this
 	}
 
 	defineSize(limit = 100): OptsQuery {
-		this._limit = Number(limit)
+		this.limit = Number(limit)
 		return this
 	}
 
 	defineSkip(skip = 0): OptsQuery {
-		this._skip = Number(skip)
+		this.skip = Number(skip)
 		return this
 	}
 
@@ -44,7 +28,7 @@ export class OptsQuery implements IOptsQuery {
 			active = active === 'true'
 		}
 
-		this._active = Boolean(active)
+		this.active = Boolean(active)
 		return this
 	}
 

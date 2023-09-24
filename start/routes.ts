@@ -69,9 +69,7 @@ Route.post('sessions/logout', 'SessionController.logout')
 Route.group(() => {
 	Route.group(() => {
 		Route.get('', 'ClientController.findAllUsersClients').as('clients.index')
-		Route.get('inatives', 'ClientController.findAllUsersClientsInative').as(
-			'clients.inatives',
-		)
+
 		Route.get(':id', 'ClientController.findUserClientByID').as('clients.show')
 		Route.get('verify/client', 'ClientController.verifyExistenceClient').as(
 			'clients.verify',
@@ -87,12 +85,6 @@ Route.group(() => {
 	Route.group(() => {
 		Route.get('prof', 'UserControllerV2.findAllUsersProfs').as('users.prof.index')
 		Route.get('secs', 'UserControllerV2.findAllUsersSecs').as('users.secs.index')
-		Route.get('prof/inatives', 'UserControllerV2.findAllUsersProfsInative').as(
-			'users.prof.inatives',
-		)
-		Route.get('secs/inatives', 'UserControllerV2.findAllUsersSecsInative').as(
-			'users.secs.inatives',
-		)
 		Route.get('prof/:id', 'UserController.show').as('users.prof.show')
 		Route.put(':id', 'UserController.update').as('users.update')
 	}).prefix('users')
@@ -294,9 +286,7 @@ Route.group(() => {
 
 	Route.group(() => {
 		Route.get('', 'PrescriptionController.index').as('prescriptions.index')
-		Route.get('/inactive', 'PrescriptionController.findAllInatives').as(
-			'prescriptions.indexInatives',
-		)
+
 		Route.get('/:id', 'PrescriptionController.show').as('prescriptions.show')
 		Route.put('/:id', 'PrescriptionController.update').as('prescriptions.update')
 		Route.put('/status/:id', 'PrescriptionController.updateStatus').as(
@@ -316,9 +306,7 @@ Route.group(() => {
 
 	Route.group(() => {
 		Route.get('', 'MedicalCertificateController.index').as('medicalCertificate.index')
-		Route.get('/inatives', 'MedicalCertificateController.findAllInatives').as(
-			'medicalCertificate.indexInatives',
-		)
+
 		Route.get('/:id', 'MedicalCertificateController.show').as(
 			'medicalCertificate.show',
 		)
@@ -358,9 +346,7 @@ Route.group(() => {
 		Route.get('', 'FinancialCategoryController.index').as(
 			'financial-categories.index',
 		)
-		Route.get('/inatives', 'FinancialCategoryController.inatives').as(
-			'financial-categories.inatives',
-		)
+
 		Route.get('/:id', 'FinancialCategoryController.show').as(
 			'financial-categories.show',
 		)
@@ -377,9 +363,6 @@ Route.group(() => {
 
 	Route.group(() => {
 		Route.get('', 'CostCenterController.index').as('cost-centers.index')
-		Route.get('/inatives', 'CostCenterController.inatives').as(
-			'cost-centers.inatives',
-		)
 		Route.get('/:id', 'CostCenterController.show').as('cost-centers.show')
 		Route.put('/:id', 'CostCenterController.update').as('cost-centers.update')
 		Route.delete('/:id', 'CostCenterController.destroy').as('cost-centers.destroy')

@@ -1,12 +1,14 @@
 'use strict'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Client, { COLLECTION_NAME } from 'App/Models/Client'
+import Client, { COLLECTIONS_REFS, COLLECTION_NAME } from 'App/Models/Client'
 
 import { adaptRoute } from 'App/Core/adapters'
 import {
 	makeClientCreateComposer,
 	makeClientUpdateComposer,
 } from 'App/Core/composers/clients/make'
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import { PROJECTION_DEFAULT } from 'App/Core/domain/repositories/helpers/projections'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { left } from 'App/Core/shared'
 import { IUserClient } from 'App/Types/IClient'
@@ -89,42 +91,23 @@ class ClientController {
 		})
 	}
 
-	async findAllUsersClientsInative({ auth }) {
+	async findAllUsersClients({ auth, request }) {
 		const userLogged = auth.user
-
-		const clients = await Client.find({
-			unity_id: userLogged?.unity_id,
-			active: false,
-		}).populate('partner', {
-			_id: 0,
-			label: '$name',
-			value: '$_id',
-		})
-
-		return clients
-	}
-
-	async findAllUsersClients({ auth }) {
-		const userLogged = auth.user
+		const opts = OptsQuery.build(request.qs())
 
 		const clients = await Client.find({
 			unity_id: userLogged?.unity_id.toString(),
-			active: true,
-		}).populate('partner', {
-			_id: 0,
-			label: '$name',
-			value: '$_id',
-		})
+			active: opts.active,
+		}).populate(COLLECTIONS_REFS.PARTNERS, PROJECTION_DEFAULT)
 
 		return clients
 	}
 
 	async findUserClientByID({ params }) {
-		const user = await Client.findById(params.id).populate('partner', {
-			_id: 0,
-			label: '$name',
-			value: '$_id',
-		})
+		const user = await Client.findById(params.id).populate(
+			COLLECTIONS_REFS.PARTNERS,
+			PROJECTION_DEFAULT,
+		)
 
 		return user
 	}
@@ -144,18 +127,21 @@ class ClientController {
 			if (!user) throw new Error()
 			const client = await Client.findById(clientId)
 			if (!client)
-				return ctx.response.status(404).json({ message: 'Cliente não encontrado' })
+				return ctx.response
+					.status(404)
+					.json({ message: 'Cliente não encontrado' })
 			const answers = client.form_answers.filter((ans) => {
 				if (ans.prof.value === user._id.toString()) {
 					return true
 				}
-				if (ans.profs_with_access?.map((p) => p.id)?.includes(user._id.toString())) {
+				if (
+					ans.profs_with_access?.map((p) => p.id)?.includes(user._id.toString())
+				) {
 					return true
 				} else return false
 			})
 			return answers
-		}
-		catch(err) {
+		} catch (err) {
 			console.log(err)
 			return ctx.response.status(500)
 		}

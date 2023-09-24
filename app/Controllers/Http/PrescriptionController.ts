@@ -1,3 +1,4 @@
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import Prescription from 'App/Models/Prescription'
 import { z } from 'zod'
 
@@ -132,22 +133,13 @@ const prescriptionSchema = z.object({
  *               $ref: '#/components/schemas/Prescription'
  */
 class PrescriptionController {
-	async index({ auth }) {
+	async index({ auth, request }) {
 		const userLogged = auth.user
+		const opts = OptsQuery.build(request.qs())
 		const prescriptions = await Prescription.where({
 			unity_id: userLogged.unity_id,
-			active: true,
+			active: opts.active,
 		}).populate('prof', { label: '$name', value: '$_id', _id: 0 })
-		return prescriptions
-	}
-
-	async findAllInatives({ auth }) {
-		const userLogged = auth.user
-		const prescriptions = await Prescription.where({
-			unity_id: userLogged.unity_id,
-			active: false,
-		}).populate('prof', { label: '$name', value: '$_id', _id: 0 })
-
 		return prescriptions
 	}
 

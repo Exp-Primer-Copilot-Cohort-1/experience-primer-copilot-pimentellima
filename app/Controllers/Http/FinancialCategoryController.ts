@@ -113,27 +113,18 @@
  *         $ref: '#/components/responses/Unauthorized'
  */
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import FinancialCategory, { COLLECTION_NAME } from 'App/Models/FinancialCategory'
 import LogDecorator, { ACTION } from '../Decorators/Log'
 
 class FinancialCategoryController {
-	async index({ auth }: HttpContextContract) {
+	async index({ auth, request }: HttpContextContract) {
 		const userLogged = auth.user
+		const opts = OptsQuery.build(request.qs())
 
 		const categories = FinancialCategory.find({
 			unity_id: userLogged?.unity_id,
-			active: true,
-		})
-
-		return categories
-	}
-
-	async inatives({ auth }: HttpContextContract) {
-		const userLogged = auth.user
-
-		const categories = FinancialCategory.find({
-			unity_id: userLogged?.unity_id,
-			active: false,
+			active: opts.active,
 		})
 
 		return categories

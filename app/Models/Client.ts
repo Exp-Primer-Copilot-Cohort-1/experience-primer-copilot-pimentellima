@@ -7,7 +7,7 @@ interface IUserClientModel extends Omit<IUserClient, 'prof'> {
 
 export const COLLECTION_NAME = 'clients'
 
-export enum COLLECTIONS {
+export enum COLLECTIONS_REFS {
 	PARTNERS = 'partner',
 	UNITIES = 'unity_id',
 }
