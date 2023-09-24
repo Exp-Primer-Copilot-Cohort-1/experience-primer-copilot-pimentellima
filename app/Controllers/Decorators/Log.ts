@@ -9,7 +9,7 @@ export enum ACTION {
 	POST = 'post',
 }
 
-function actionCompare(action: ACTION, original, modified) {
+function actionCompare(action: ACTION, original = {}, modified = {}) {
 	switch (action) {
 		case ACTION.POST:
 			return ['Criado', '']
@@ -27,7 +27,7 @@ async function getOriginalDoc(
 ) {
 	const collection = collections[collectionName]
 	if (action === ACTION.PUT) {
-		return (await collection.findById(_id))?.toObject()
+		return (await collection.findById?.(_id))?.toObject()
 	}
 
 	return {}
@@ -61,10 +61,9 @@ export default function LogDecorator(collectionName: COLLECTIONS_NAMES, action: 
 
 			const body = response.getBody()
 
-			const [original, modified] = actionCompare(action, docOriginal, body)
-			const collection_id = getCollectionId(body, _id)
-
 			try {
+				const [original, modified] = actionCompare(action, docOriginal, body)
+				const collection_id = getCollectionId(body, _id)
 				await Log.create({
 					action,
 					collection_name: collectionName,

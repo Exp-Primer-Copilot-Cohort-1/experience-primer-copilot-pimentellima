@@ -1,6 +1,6 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import type { IUser } from 'App/Types/IUser'
-
+import { IDaysOffice } from 'App/Types/IDaysOffice'
+import { COLLECTION_NAME as COLLECTION_NAME_UNITIES } from './Unity'
 export const COLLECTION_NAME = 'scheduled_config'
 
 /**
@@ -84,7 +84,7 @@ export const COLLECTION_NAME = 'scheduled_config'
  *         hour_start_lunch: 12:00
  *         lunch_time_active: true
  */
-const ScheduledConfigSchema = new Schema<IUser>(
+const ScheduledConfigSchema = new Schema<IDaysOffice>(
 	{
 		name: {
 			type: String,
@@ -92,7 +92,7 @@ const ScheduledConfigSchema = new Schema<IUser>(
 		},
 		unity_id: {
 			type: Mongoose.Schema.Types.ObjectId,
-			ref: 'unities',
+			ref: COLLECTION_NAME_UNITIES,
 			required: true,
 		},
 		schedule_obs: {
@@ -155,6 +155,10 @@ const ScheduledConfigSchema = new Schema<IUser>(
 			type: Boolean,
 			required: false,
 		},
+		receive_email_in_the_new_appointment: {
+			type: Boolean,
+			required: false,
+		},
 	},
 	{
 		timestamps: {
@@ -164,4 +168,8 @@ const ScheduledConfigSchema = new Schema<IUser>(
 	},
 )
 
-export default Mongoose.model<IUser>(COLLECTION_NAME, ScheduledConfigSchema, 'users')
+export default Mongoose.model<IDaysOffice>(
+	COLLECTION_NAME,
+	ScheduledConfigSchema,
+	'users',
+)

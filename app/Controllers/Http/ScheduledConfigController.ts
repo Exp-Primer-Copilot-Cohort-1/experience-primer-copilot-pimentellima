@@ -1,10 +1,9 @@
 // const Mail = use('Mail');
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ScheduledConfig from 'App/Models/ScheduledConfig'
-import { ROLES } from 'App/Roles/types'
 import LogDecorator, { ACTION } from '../Decorators/Log'
 
-import { COLLECTION_NAME } from 'App/Models/ScheduledConfig'
+import { COLLECTION_NAME } from 'App/Models/User'
 
 /**
  * Controller responsável por atualizar as configurações agendadas.
@@ -53,32 +52,15 @@ class ScheduledConfigController {
 	 *         $ref: '#/components/responses/UnprocessableEntityError'
 	 */
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	public async update({ params, request, auth }: HttpContextContract) {
-		const userLogged = auth.user
+	async update({ params, request, bouncer }: HttpContextContract) {
 		const data = request.all()
-		const user = await ScheduledConfig.findById(params.id).orFail()
-		const isEquals = params.id === userLogged?._id.toString()
 
-		switch (userLogged?.type) {
-			case ROLES.PROF:
-				if (isEquals) {
-					await user.merge(data)
-					await user.save()
-				}
-				break
-			case ROLES.SEC:
-				if (isEquals) {
-					await user.merge(data)
-					await user.save()
-				}
-				break
-			default:
-				await user.merge(data)
-				await user.save()
-				break
-		}
+		const scheduled = await ScheduledConfig.findById(params.id).orFail()
+		await bouncer.with('ViewScheduledPolicy').authorize('update', scheduled)
 
-		return user
+		await ScheduledConfig.findByIdAndUpdate(params.id, data).orFail()
+
+		return scheduled
 	}
 }
 
