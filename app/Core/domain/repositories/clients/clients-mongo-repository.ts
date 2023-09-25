@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
-import Client, { COLLECTIONS } from 'App/Models/Client'
+import Client, { COLLECTIONS_REFS } from 'App/Models/Client'
 import { IClient, IUserClient } from 'App/Types/IClient'
 import { ClientNotFoundError } from '../../errors/clients-not-found'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
@@ -20,7 +20,7 @@ export class ClientsMongooseRepository implements ClientManagerInterface {
 			partner: data.partner?.value,
 			unity_id,
 		})
-		const doc = await created.populate(COLLECTIONS.PARTNERS, PROJECTION_DEFAULT)
+		const doc = await created.populate(COLLECTIONS_REFS.PARTNERS, PROJECTION_DEFAULT)
 
 		return right(doc.toObject())
 	}
@@ -30,7 +30,7 @@ export class ClientsMongooseRepository implements ClientManagerInterface {
 		id: string,
 	): PromiseEither<AbstractError, IUserClient> {
 		const doc = await Client.findByIdAndUpdate(id, data, { new: true }).populate(
-			COLLECTIONS.PARTNERS,
+			COLLECTIONS_REFS.PARTNERS,
 			PROJECTION_DEFAULT,
 		)
 
@@ -43,7 +43,7 @@ export class ClientsMongooseRepository implements ClientManagerInterface {
 
 	async findById(id: string): PromiseEither<AbstractError, IUserClient> {
 		const client = await Client.findById(id).populate(
-			COLLECTIONS.PARTNERS,
+			COLLECTIONS_REFS.PARTNERS,
 			PROJECTION_DEFAULT,
 		)
 
@@ -56,7 +56,7 @@ export class ClientsMongooseRepository implements ClientManagerInterface {
 
 	async findAll(unity_id: string): PromiseEither<AbstractError, IUserClient[]> {
 		const clients = await Client.find({ unity_id }).populate(
-			COLLECTIONS.PARTNERS,
+			COLLECTIONS_REFS.PARTNERS,
 			PROJECTION_DEFAULT,
 		)
 
