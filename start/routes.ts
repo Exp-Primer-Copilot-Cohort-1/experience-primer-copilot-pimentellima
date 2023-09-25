@@ -220,36 +220,6 @@ Route.group(() => {
 		Route.delete(':id', 'ActivityController.deleteActivityById').as(
 			'activity.destroy',
 		)
-	}).prefix('activity')
-
-	Route.group(() => {
-		Route.post('await', 'ActivityController.createActivityAwait').as(
-			'activities.storeAwait',
-		)
-		Route.get('', 'ActivityController.findAllActivities').as('activities.index')
-
-		Route.get('await', 'ActivityController.findAllActivitiesAwait').as(
-			'activities.indexAwait',
-		)
-
-		Route.post('', 'ActivityController.createActivity').as('activities.store')
-		Route.post('recurrent', 'ActivityController.createRecurrentActivity').as(
-			'activities.storeRecurrent',
-		)
-
-		Route.put(':id', 'ActivityController.updateActivityById').as('activities.update')
-
-		Route.get('pending', 'ActivityController.findAllActivitiesPending').as(
-			'activities.indexPending',
-		)
-
-		Route.get('prof/:prof_id', 'ActivityController.findActivitiesByProfId').as(
-			'activities.byProfId',
-		)
-
-		Route.get('client/:client_id', 'ActivityController.findActivitiesByClientId').as(
-			'activities.byClientId',
-		)
 	}).prefix('activities')
 
 	Route.group(() => {
