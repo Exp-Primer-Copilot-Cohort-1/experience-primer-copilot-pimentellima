@@ -97,15 +97,13 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 		const hOrErr = await HealthInsuranceEntity.build(params)
 		if (hOrErr.isLeft()) return hOrErr
 
-		const healthInsurance = hOrErr.extract().params() as IHealthInsurance
+		const h = hOrErr.extract()
 
-		const created = await HealthInsurance.create({
-			...healthInsurance,
+		const doc = await HealthInsurance.create({
+			...h,
 			unity_id,
 		})
 
-		const doc = await created.populate(COLLECTIONS.PROFS, PROJECTION_DEFAULT)
-
-		return right(doc)
+		return right(doc.toObject())
 	}
 }
