@@ -205,6 +205,10 @@ Route.group(() => {
 		)
 		Route.put(':id', 'ActivityController.updateActivityById').as('activity.update')
 		Route.get('', 'ActivityController.findAllActivities').as('activity.index')
+		Route.get('pending', 'ActivityController.findAllActivitiesPending').as(
+			'activity.indexPending',
+		)
+
 		Route.get('await', 'ActivityController.findAllActivitiesAwait').as(
 			'activity.indexAwait',
 		)
