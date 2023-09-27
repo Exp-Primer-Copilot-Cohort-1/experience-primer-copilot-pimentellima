@@ -38,7 +38,7 @@ const FormSchema = new Schema<IForm>(
 		fields: [{}],
 		active: {
 			type: Boolean,
-			required: false,
+
 			default: true,
 		},
 	},

@@ -19,7 +19,7 @@ const ScheduleBlockSchema = new Schema<IScheduleBlock>(
 		},
 		obs: {
 			type: String,
-			required: false,
+
 			default: '',
 		},
 		all_day: {

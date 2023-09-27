@@ -122,87 +122,87 @@ const ProfSchema = new Schema<IUser>(
 		},
 		avatar: {
 			type: String,
-			required: false,
+
 		},
 		due_date: {
 			type: String,
-			required: false,
+
 		},
 		schedule_obs: {
 			type: String,
-			required: false,
+
 		},
 		show_lack: {
 			type: Boolean,
-			required: false,
+
 		},
 		exib_minutes: {
 			type: Number,
-			required: false,
+
 		},
 		is_friday: {
 			type: Boolean,
-			required: false,
+
 		},
 		is_saturday: {
 			type: Boolean,
-			required: false,
+
 		},
 		is_sunday: {
 			type: Boolean,
-			required: false,
+
 		},
 		gender: {
 			type: String,
-			required: false,
+
 		},
 		is_monday: {
 			type: Boolean,
-			required: false,
+
 		},
 		is_tuesday: {
 			type: Boolean,
-			required: false,
+
 		},
 		is_wednesday: {
 			type: Boolean,
-			required: false,
+
 		},
 		is_thursday: {
 			type: Boolean,
-			required: false,
+
 		},
 		hour_end: {
 			type: String,
-			required: false,
+
 		},
 		hour_start: {
 			type: String,
-			required: false,
+
 		},
 		hour_end_lunch: {
 			type: String,
-			required: false,
+
 		},
 		hour_start_lunch: {
 			type: String,
-			required: false,
+
 		},
 		lunch_time_active: {
 			type: Boolean,
-			required: false,
+
 		},
 		rememberMeToken: {
 			type: String,
-			required: false,
+
 		},
 		permissions: {
 			type: Array,
-			required: false,
+
 		},
 		blacklist: {
 			type: Array,
-			required: false,
+
 		},
 	},
 	{

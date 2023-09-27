@@ -86,7 +86,7 @@ const PrescriptionSchema = new Schema<IPrescriptionModel>(
 		 */
 		active: {
 			type: Boolean,
-			required: false,
+
 			default: true,
 		},
 		/**

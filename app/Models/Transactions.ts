@@ -15,7 +15,7 @@ import { COLLECTION_NAME as COLLECTION_USERS_NAME } from './User'
 const schemaDefault = (collection: string) => ({
 	type: Schema.Types.ObjectId,
 	ref: collection,
-	required: false,
+
 })
 
 interface ITransactionModel
@@ -177,22 +177,22 @@ const TransactionsSchema = new Schema<ITransactionModel>(
 		prof: {
 			type: Schema.Types.ObjectId,
 			ref: COLLECTION_USERS_NAME,
-			required: false,
+
 		},
 		client: {
 			type: Schema.Types.ObjectId,
 			ref: COLLECTION_CLIENTS_NAME,
-			required: false,
+
 		},
 
 		procedures: {
-			required: false,
+
 			type: [
 				{
 					_id: schemaDefault(COLLECTION_PROCEDURES_NAME),
 					minutes: {
 						type: Number,
-						required: false,
+
 					},
 					price: {
 						type: Number,
@@ -233,7 +233,7 @@ const TransactionsSchema = new Schema<ITransactionModel>(
 								},
 							},
 						],
-						required: false,
+
 						default: [],
 					},
 				},
@@ -264,7 +264,7 @@ const TransactionsSchema = new Schema<ITransactionModel>(
 		},
 		paid: {
 			type: Boolean,
-			required: false,
+
 			default: true,
 		},
 		date: {
@@ -273,7 +273,7 @@ const TransactionsSchema = new Schema<ITransactionModel>(
 		},
 		description: {
 			type: String,
-			required: false,
+
 		},
 		type: {
 			type: String,
@@ -283,28 +283,28 @@ const TransactionsSchema = new Schema<ITransactionModel>(
 		},
 		occurrences: {
 			type: String,
-			required: false,
+
 			enum: ['once', 'daily', 'weekly', 'biweekly', 'monthly'],
 			default: 'once',
 		},
 		installment: {
 			type: Boolean,
-			required: false,
+
 			default: false,
 		},
 		installmentCurrent: {
 			type: Number,
-			required: false,
+
 			default: 1,
 		},
 		installments: {
 			type: Number,
-			required: false,
+
 			default: 1,
 		},
 		active: {
 			type: Boolean,
-			required: false,
+
 			default: true,
 		},
 		unity_id: {

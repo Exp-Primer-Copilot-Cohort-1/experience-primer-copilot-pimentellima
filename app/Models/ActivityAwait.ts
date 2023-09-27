@@ -116,7 +116,7 @@ const ActivityAwaitSchema = new Schema<IActivityAwaitModel>(
 		},
 		obs: {
 			type: String,
-			required: false,
+
 			default: null,
 		},
 		prof: {
@@ -136,7 +136,7 @@ const ActivityAwaitSchema = new Schema<IActivityAwaitModel>(
 		},
 		type: {
 			type: String,
-			required: false,
+
 			default: STATUS_ACTIVITY.AWAIT,
 		},
 	},
