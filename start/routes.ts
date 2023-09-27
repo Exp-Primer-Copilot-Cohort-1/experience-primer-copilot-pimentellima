@@ -94,16 +94,16 @@ Route.group(() => {
 	}).prefix('scheduled')
 
 	Route.group(() => {
-		Route.get('', 'HealthInsuranceController.index').as('health-insurance.index')
-		Route.get(':id', 'HealthInsuranceController.show').as('health-insurance.show')
+		Route.get('', 'HealthInsuranceController.index').as('health-insurances.index')
+		Route.get(':id', 'HealthInsuranceController.show').as('health-insurances.show')
 		Route.put(':_id', 'HealthInsuranceController.update').as(
-			'health-insurance.update',
+			'health-insurances.update',
 		)
 		Route.delete(':id', 'HealthInsuranceController.destroy').as(
-			'health-insurance.destroy',
+			'health-insurances.destroy',
 		)
-		Route.post('', 'HealthInsuranceController.store').as('health-insurance.store')
-	}).prefix('health-insurance')
+		Route.post('', 'HealthInsuranceController.store').as('health-insurances.store')
+	}).prefix('health-insurances')
 
 	Route.group(() => {
 		Route.get('', 'ScheduleBlockController.findAllScheduleBlocks').as(

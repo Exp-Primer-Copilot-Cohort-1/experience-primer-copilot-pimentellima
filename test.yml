@@ -1,281 +1,280 @@
 config:
-  environments:
-    local:
-      target: "http://localhost:8081/db/admin"
-      phases:
-        - name: "Load Test Periodico"
-          arrivalRate: 2
-          duration: 20
+    environments:
+        local:
+            target: "http://localhost:3333"
+            phases:
+                - name: "Load Test Periodico"
+                  arrivalRate: 2
+                  duration: 20
 scenarios:
-  - name: "UnityController.index"
-    flow:
-    - get:
-        url: "/unities"
-  - name: "UnityController.findByName"
-    flow:
-    - get:
-        url: "/unities?name=myUnity"
+    - name: "UnityController.index"
+      flow:
+          - get:
+                url: "/unities"
+    - name: "UnityController.findByName"
+      flow:
+          - get:
+                url: "/unities?name=myUnity"
 
-#  - name: "ActivityController.findActivityById"
-#    flow:
-#    - get:
-#        url: "/admin/unity/1"
+    #  - name: "ActivityController.findActivityById"
+    #    flow:
+    #    - get:
+    #        url: "/admin/unity/1"
 
-#  - name: "AdminController.findAllInatives"
-#    flow:
-#    - get:
-#        url: "/admin/inatives"
+    #  - name: "AdminController.findAllInatives"
+    #    flow:
+    #    - get:
+    #        url: "/admin/inatives"
 
-#  - name: "AdminController.findAllUnities"
-#    flow:
-#    - get:
-#        url: "/admin/unities"
+    #  - name: "AdminController.findAllUnities"
+    #    flow:
+    #    - get:
+    #        url: "/admin/unities"
 
-  - name: "ClientController.findAllUsersClients"
-    flow:
-    - get:
-        url: "/clients"
+    - name: "ClientController.findAllUsersClients"
+      flow:
+          - get:
+                url: "/clients"
 
-#  - name: "ClientController.findAllUsersClientsInative"
-#    flow:
-#    - get:
-#        url: "/clients/inatives"
+    #  - name: "ClientController.findAllUsersClientsInative"
+    #    flow:
+    #    - get:
+    #        url: "/clients/inatives"
 
-#  - name: "ClientController.findUserClientByID"
-#    flow:
-#    - get:
-#        url: "/clients/6477f11041ecfe7d7b53cc0c"
+    #  - name: "ClientController.findUserClientByID"
+    #    flow:
+    #    - get:
+    #        url: "/clients/6477f11041ecfe7d7b53cc0c"
 
-#  - name: "ClientController.verifyExistenceClient"
-#    flow:
-#    - get:
-#        url: "/clients/verify/client"
+    #  - name: "ClientController.verifyExistenceClient"
+    #    flow:
+    #    - get:
+    #        url: "/clients/verify/client"
 
-#  - name: "SessionController.getUser"
-#    flow:
-#    - get:
-#        url: "/sessions/user"
+    #  - name: "SessionController.getUser"
+    #    flow:
+    #    - get:
+    #        url: "/sessions/user"
 
-#  - name: "ClientController.getAnswers"
-#    flow:
-#    - get:
-#        url: "/clients/answer/6477f11041ecfe7d7b53cc0c"
+    #  - name: "ClientController.getAnswers"
+    #    flow:
+    #    - get:
+    #        url: "/clients/answer/6477f11041ecfe7d7b53cc0c"
 
-#  - name: "UserControllerV2.findAllUsersProfs"
-#    flow:
-#    - get:
-#        url: "/users/prof"
+    #  - name: "UserControllerV2.findAllUsersProfs"
+    #    flow:
+    #    - get:
+    #        url: "/users/prof"
 
-#  - name: "UserControllerV2.findAllUsersSecs"
-#    flow:
-#    - get:
-#        url: "/users/secs"
+    #  - name: "UserControllerV2.findAllUsersSecs"
+    #    flow:
+    #    - get:
+    #        url: "/users/secs"
 
-#  - name: "UserControllerV2.findAllUsersProfsInative"
-#    flow:
-#    - get:
-#        url: "/users/prof/inatives"
+    #  - name: "UserControllerV2.findAllUsersProfsInative"
+    #    flow:
+    #    - get:
+    #        url: "/users/prof/inatives"
 
-#  - name: "UserControllerV2.findAllUsersSecsInative"
-#    flow:
-#    - get:
-#        url: "/users/secs/inatives"
+    #  - name: "UserControllerV2.findAllUsersSecsInative"
+    #    flow:
+    #    - get:
+    #        url: "/users/secs/inatives"
 
-#  - name: "UserController.show"
-#    flow:
-#    - get:
-#        url: "/users/prof/1"
+    #  - name: "UserController.show"
+    #    flow:
+    #    - get:
+    #        url: "/users/prof/1"
 
-#  - name: "HealthInsuranceController.index"
-#    flow:
-#    - get:
-#        url: "/health-insurance"
+    #  - name: "HealthInsuranceController.index"
+    #    flow:
+    #    - get:
+    #        url: "/health-insurance"
 
-#  - name: "HealthInsuranceController.show"
-#    flow:
-#    - get:
-#        url: "/health-insurance/1"
+    #  - name: "HealthInsuranceController.show"
+    #    flow:
+    #    - get:
+    #        url: "/health-insurance/1"
 
-#  - name: "ScheduleBlockController.findAllScheduleBlocks"
-#    flow:
-#    - get:
-#        url: "/schedule-block"
+    #  - name: "ScheduleBlockController.findAllScheduleBlocks"
+    #    flow:
+    #    - get:
+    #        url: "/schedule-block"
 
-#  - name: "ScheduleBlockController.findScheduleBlocksByProfId"
-#    flow:
-#    - get:
-#        url: "/schedule-block/prof/1"
+    #  - name: "ScheduleBlockController.findScheduleBlocksByProfId"
+    #    flow:
+    #    - get:
+    #        url: "/schedule-block/prof/1"
 
-  - name: "StocksController.index"
-    flow:
-    - get:
-        url: "/stocks"
+    - name: "StocksController.index"
+      flow:
+          - get:
+                url: "/stocks"
 
-#  - name: "StocksController.show"
-#    flow:
-#    - get:
-#        url: "/stocks/1"
+    #  - name: "StocksController.show"
+    #    flow:
+    #    - get:
+    #        url: "/stocks/1"
 
-  - name: "ProcedureController.index"
-    flow:
-    - get:
-        url: "/procedures"
+    - name: "ProcedureController.index"
+      flow:
+          - get:
+                url: "/procedures"
 
-#  - name: "ProcedureController.show"
-#    flow:
-#    - get:
-#        url: "/procedures/1"
+    #  - name: "ProcedureController.show"
+    #    flow:
+    #    - get:
+    #        url: "/procedures/1"
 
-  - name: "CategoryController.index"
-    flow:
-    - get:
-        url: "/categories"
+    - name: "CategoryController.index"
+      flow:
+          - get:
+                url: "/categories"
 
-#  - name: "CategoryController.show"
-#    flow:
-#    - get:
-#        url: "/categories/1"
+    #  - name: "CategoryController.show"
+    #    flow:
+    #    - get:
+    #        url: "/categories/1"
 
-  - name: "PartnerController.index"
-    flow:
-    - get:
-        url: "/partners"
+    - name: "PartnerController.index"
+      flow:
+          - get:
+                url: "/partners"
 
-#  - name: "PartnerController.show"
-#    flow:
-#    - get:
-#        url: "/partners/1"
+    #  - name: "PartnerController.show"
+    #    flow:
+    #    - get:
+    #        url: "/partners/1"
 
-  - name: "FormController.findAllForms"
-    flow:
-    - get:
-        url: "/forms"
+    - name: "FormController.findAllForms"
+      flow:
+          - get:
+                url: "/forms"
 
-#  - name: "FormController.findFormById"
-#    flow:
-#    - get:
-#        url: "/forms/single/1"
-      
-#  - name: "FormController.findAllInactiveForms"
-#    flow:
-#    - get:
-#        url: "/forms/inactives"
+    #  - name: "FormController.findFormById"
+    #    flow:
+    #    - get:
+    #        url: "/forms/single/1"
 
-  - name: "AnswerController.findAllAnswers"
-    flow:
-    - get:
-        url: "/answers"
+    #  - name: "FormController.findAllInactiveForms"
+    #    flow:
+    #    - get:
+    #        url: "/forms/inactives"
 
-#  - name: "AnswerController.findAnswerById"
-#    flow:
-#    - get:
-#        url: "/answers/1"
+    - name: "AnswerController.findAllAnswers"
+      flow:
+          - get:
+                url: "/answers"
 
-#  - name: "AnswerController.findAnswersByFormId"
-#    flow:
-#    - get:
-#        url: "/answers/form/1"
+    #  - name: "AnswerController.findAnswerById"
+    #    flow:
+    #    - get:
+    #        url: "/answers/1"
 
-#  - name: "ActivityController.findActivitiesByProfId"
-#    flow:
-#    - get:
-#        url: "/activiy/prof/1"
+    #  - name: "AnswerController.findAnswersByFormId"
+    #    flow:
+    #    - get:
+    #        url: "/answers/form/1"
 
-#  - name: "ActivityController.findActivitiesByClientId"
-#    flow:
-#    - get:
-#        url: "/activiy/client/1"
+    #  - name: "ActivityController.findActivitiesByProfId"
+    #    flow:
+    #    - get:
+    #        url: "/activiy/prof/1"
 
-  - name: "ActivityController.findAllActivities"
-    flow:
-    - get:
-        url: "/activities"
+    #  - name: "ActivityController.findActivitiesByClientId"
+    #    flow:
+    #    - get:
+    #        url: "/activiy/client/1"
 
-  - name: "ActivityController.findAllActivitiesAwait"
-    flow:
-    - get:
-        url: "/activity_awaits"
-      
-#  - name: "ActivityController.findAllActivitiesPending"
-#    flow:
-#    - get:
-#        url: "/activities/pending"
+    - name: "ActivityController.findAllActivities"
+      flow:
+          - get:
+                url: "/activities"
 
-#  - name: "ScheduleController.getWorkHours"
-#    flow:
-#    - get:
-#        url: "/shedule/work-hours/1"
+    - name: "ActivityController.findAllActivitiesAwait"
+      flow:
+          - get:
+                url: "/activity_awaits"
 
-#  - name: "MedicalCertificateIssuanceController.findByClient"
-#    flow:
-#    - get:
-#        url: "/medical-certificate-issuance/1"
+    #  - name: "ActivityController.findAllActivitiesPending"
+    #    flow:
+    #    - get:
+    #        url: "/activities/pending"
 
-#  - name: "PrescriptionIssuanceController.findByClient"
-#    flow:
-#    - get:
-#        url: "/prescription-issuance/1"
+    #  - name: "ScheduleController.getWorkHours"
+    #    flow:
+    #    - get:
+    #        url: "/shedule/work-hours/1"
 
-#  - name: "PrescriptionController.index"
-#    flow:
-#    - get:
-#        url: "/prescriptions"
-  
-#  - name: "PrescriptionController.findAllInatives"
-#    flow:
-#    - get:
-#        url: "/prescriptions/inactive"
+    #  - name: "MedicalCertificateIssuanceController.findByClient"
+    #    flow:
+    #    - get:
+    #        url: "/medical-certificate-issuance/1"
 
-#  - name: "PrescriptionController.show"
-#    flow:
-#    - get:
-#        url: "/prescriptions/1"
+    #  - name: "PrescriptionIssuanceController.findByClient"
+    #    flow:
+    #    - get:
+    #        url: "/prescription-issuance/1"
 
-#  - name: "MedicalCertificateController.index"
-#    flow:
-#    - get:
-#        url: "/medical-certificate"
+    #  - name: "PrescriptionController.index"
+    #    flow:
+    #    - get:
+    #        url: "/prescriptions"
 
-#  - name: "MedicalCertificateController.show"
-#    flow:
-#    - get:
-#        url: "/medical-certificate/1"
+    #  - name: "PrescriptionController.findAllInatives"
+    #    flow:
+    #    - get:
+    #        url: "/prescriptions/inactive"
 
-#  - name: "MedicalCertificateController.findAllInatives"
-#    flow:
-#    - get:
-#        url: "/medical-certificate/inatives"
+    #  - name: "PrescriptionController.show"
+    #    flow:
+    #    - get:
+    #        url: "/prescriptions/1"
 
-#  - name: "PaymentProfController.findAllPaymentProfs"
-#    flow:
-#    - get:
-#        url: "/payment-participations"
+    #  - name: "MedicalCertificateController.index"
+    #    flow:
+    #    - get:
+    #        url: "/medical-certificate"
 
-#  - name: "PaymentProfController.findPaymentProfById"
-#    flow:
-#    - get:
-#        url: "/payment-participations/1"
+    #  - name: "MedicalCertificateController.show"
+    #    flow:
+    #    - get:
+    #        url: "/medical-certificate/1"
 
-#  - name: "CostCenterController.index"
-#    flow:
-#    - get:
-#        url: "/cost-centers"
+    #  - name: "MedicalCertificateController.findAllInatives"
+    #    flow:
+    #    - get:
+    #        url: "/medical-certificate/inatives"
 
-#  - name: "CostCenterController.inatives"
-#    flow:
-#    - get:
-#        url: "/cost-centers/inatives"
+    #  - name: "PaymentProfController.findAllPaymentProfs"
+    #    flow:
+    #    - get:
+    #        url: "/payment-participations"
 
-#  - name: "CostCenterController.show"
-#    flow:
-#    - get:
-#        url: "/cost-centers/1"
+    #  - name: "PaymentProfController.findPaymentProfById"
+    #    flow:
+    #    - get:
+    #        url: "/payment-participations/1"
 
-  - name: "AccountController.findAllAccounts"
-    flow:
-    - get:
-        url: "/accounts"
+    #  - name: "CostCenterController.index"
+    #    flow:
+    #    - get:
+    #        url: "/cost-centers"
 
+    #  - name: "CostCenterController.inatives"
+    #    flow:
+    #    - get:
+    #        url: "/cost-centers/inatives"
+
+    #  - name: "CostCenterController.show"
+    #    flow:
+    #    - get:
+    #        url: "/cost-centers/1"
+
+    - name: "AccountController.findAllAccounts"
+      flow:
+          - get:
+                url: "/accounts"
 #  - name: "AccountController.findAccountById"
 #    flow:
 #    - get:

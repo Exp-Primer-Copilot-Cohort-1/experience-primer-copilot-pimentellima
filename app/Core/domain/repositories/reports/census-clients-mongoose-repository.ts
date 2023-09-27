@@ -56,11 +56,25 @@ export class CensusClientsMongooseRepository implements CensusClientsManagerInte
 
 		const activities = await Activity.aggregate(pipeline)
 		return right(
-			activities?.reduce((acc, curr) => ({ ...acc, [curr.label]: curr.count }), {
-				not_informed: 0,
-				male: 0,
-				female: 0,
-			}) as ICensusGenderClient,
+			activities?.reduce(
+				(acc, curr) => {
+					// o bd devolve M e F, transforme para male ou female
+					if (curr.label === 'M') {
+						curr.label = 'male'
+					}
+
+					if (curr.label === 'F') {
+						curr.label = 'female'
+					}
+
+					return { ...acc, [curr.label]: curr.count }
+				},
+				{
+					not_informed: 0,
+					male: 0,
+					female: 0,
+				},
+			) as ICensusGenderClient,
 		)
 	}
 
