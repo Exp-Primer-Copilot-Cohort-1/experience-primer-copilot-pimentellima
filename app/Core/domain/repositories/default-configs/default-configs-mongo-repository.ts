@@ -41,7 +41,7 @@ export class DefaultConfigsMongooseRepository implements DefaultConfigsManagerIn
 		if (!configs) {
 			return left(new UnitNotFoundError())
 		}
-		await configs.remove()
+		await configs.deleteOne()
 		return right(configs)
 	}
 	public async updateDefaultConfigsById(

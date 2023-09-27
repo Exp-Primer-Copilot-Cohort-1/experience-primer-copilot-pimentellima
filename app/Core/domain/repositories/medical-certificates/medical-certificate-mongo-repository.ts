@@ -106,7 +106,7 @@ export class MedicalCertificateMongooseRepository
 		if (!medicalCertificate) {
 			return left(new UnitNotFoundError())
 		}
-		await medicalCertificate.remove()
+		await medicalCertificate.deleteOne()
 		return right(medicalCertificate as unknown as IMedicalCertificate)
 	}
 }
