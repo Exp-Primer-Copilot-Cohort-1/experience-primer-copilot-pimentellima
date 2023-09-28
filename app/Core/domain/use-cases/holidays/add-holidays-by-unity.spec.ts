@@ -25,7 +25,7 @@ describe('Add Holidays By Unity Use Case (Integration)', () => {
 	it('should add holidays by unity', async () => {
 		const { sut } = makeSut()
 		const holidayOrErr = await sut.execute({
-			unity_id: '6359660fc109b232759921d4',
+			unity_id: process.env.TEST_INTEGRATION_UNITY_ID as string,
 			date: new Date().toISOString(),
 			name: 'Teste',
 			type: 'municipal',

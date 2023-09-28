@@ -27,7 +27,7 @@ describe('Add Holidays By Unity Use Case (Integration)', () => {
 	it('should remove holidays by unity', async () => {
 		const { sut } = makeSut()
 		const _id = new mongoose.Types.ObjectId()
-		const unity_id = '6359660fc109b232759921d4'
+		const unity_id = process.env.TEST_INTEGRATION_UNITY_ID as string
 
 		await Unity.updateOne(
 			{

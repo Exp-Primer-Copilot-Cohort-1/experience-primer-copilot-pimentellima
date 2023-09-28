@@ -42,7 +42,7 @@ describe('Find Idleness By Prof Use Case (Integration)', () => {
 	it('should be count hours idleness by interval dates', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.execute({
-			unity_id: '6359660fc109b232759921d4',
+			unity_id: process.env.TEST_INTEGRATION_UNITY_ID as string,
 			date_start: '2022-12-01',
 			date_end: '2024-07-31',
 		})

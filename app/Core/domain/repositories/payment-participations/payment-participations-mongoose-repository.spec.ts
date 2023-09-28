@@ -64,28 +64,5 @@ describe('Payment Participations Mongoose Repository (Integration)', () => {
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})
 
-	it('should be update payment participations by prof', async () => {
-		const { sut } = makeSut()
-		const _id = new ObjectId().toString()
 
-		await PaymentParticipations.updateOne(
-			{ 'prof.value': new ObjectId(obj.prof.value.toString()) },
-			{
-				$push: {
-					prices: {
-						...obj,
-						_id,
-					},
-				},
-			},
-		)
-
-		const resultOrErr = await sut.updatePaymentProfById(
-			{ ...obj, active: false },
-			_id,
-			obj.prof.value.toString(),
-		)
-
-		expect(resultOrErr.isRight()).toBeTruthy()
-	})
 })

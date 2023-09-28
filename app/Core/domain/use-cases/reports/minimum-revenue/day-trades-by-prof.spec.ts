@@ -39,10 +39,10 @@ describe('Day Trade By Prof Use Case (Integration)', () => {
 	it('should be day trades by prof', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.execute({
-			unity_id: '63528c11c109b232759921d1',
+			unity_id: process.env.TEST_INTEGRATION_UNITY_ID as string,
 			month: 1,
 			year: 2021,
-			_id: '63528c12c109b232759921d3',
+			_id: process.env.TEST_INTEGRATION_USER_ID as string,
 			day: 1,
 		})
 
