@@ -148,11 +148,14 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new ActivityNotFoundError())
 		const activity = await Activity.findById(id, null, { ...this.session?.options })
+
 		if (!activity) return left(new ActivityNotFoundError())
-		const entityOrErr = await ActivityEntity.build(values)
+
+		const entityOrErr = await ActivityEntity.build(activity)
 
 		if (entityOrErr.isLeft()) return left(entityOrErr.extract())
-		const entity = entityOrErr.extract().params()
+
+		const entity = entityOrErr.extract().update(values)
 
 		const updated = (await Activity.findByIdAndUpdate(id, entity, {
 			...this.session?.options,

@@ -42,18 +42,18 @@ class UserController {
 		switch (userLogged?.type) {
 			case ROLES.PROF:
 				if (isEquals) {
-					await user.update(data)
+					await user.updateOne(data)
 					await user.save()
 				}
 				break
 			case ROLES.SEC:
 				if (isEquals) {
-					await user.update(data)
+					await user.updateOne(data)
 					await user.save()
 				}
 				break
 			default:
-				await user.update(data)
+				await user.updateOne(data)
 				await user.save()
 				break
 		}

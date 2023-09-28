@@ -50,7 +50,7 @@ export class PartnerMongooseRepository implements PartnerManagerInterface {
 		if (!partner) {
 			return left(new UnitNotFoundError())
 		}
-		await partner.remove()
+		await partner.deleteOne()
 		return right(partner)
 	}
 	public async updatePartnerById(

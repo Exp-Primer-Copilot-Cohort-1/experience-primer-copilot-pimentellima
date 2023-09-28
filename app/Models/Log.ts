@@ -50,7 +50,7 @@ const LogSchema = new Schema(
 		 */
 		collection_name: {
 			type: String,
-			required: false,
+
 		},
 		/**
 		 * A data em que a ação foi realizada.

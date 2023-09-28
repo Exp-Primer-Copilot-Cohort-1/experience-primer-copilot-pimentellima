@@ -4,9 +4,8 @@ import { PromiseEither, left } from 'App/Core/shared'
 
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { IBilling } from 'App/Types/IBilling'
-import { IProcedure } from 'App/Types/IProcedure'
 import { UnityReportsRevenues, UpdateAttrReportsRevenues } from '../../helpers/reports'
-import { AverageProcedureProps } from '../../procedures/average-price-procedures-group-by-prof'
+import { AverageProcedureProps, AverageProf } from '../../procedures/average-price-procedures-group-by-prof'
 import { DaysTradeParams } from './day-trades-by-prof'
 
 type Range = {
@@ -18,8 +17,8 @@ type Range = {
 
 export class MinimumDesirableUseCase implements UseCase<Range, IBilling> {
 	constructor(
-		private readonly average: UseCase<AverageProcedureProps, Partial<IProcedure>[]>,
-		private readonly daysTrade: UseCase<DaysTradeParams, number>,
+		private readonly average: UseCase<AverageProcedureProps, Partial<AverageProf>[]>,
+		private readonly hoursMonthTrade: UseCase<DaysTradeParams, number>,
 		private readonly updateAttr: UseCase<UpdateAttrReportsRevenues, IBilling>,
 		private readonly updateCurrent: UseCase<UnityReportsRevenues, IBilling>,
 	) { }
@@ -40,19 +39,22 @@ export class MinimumDesirableUseCase implements UseCase<Range, IBilling> {
 
 		const minimum_desirable_by_profs = await Promise.all(
 			profs.map(async (prof) => {
-				if (!prof._id) return 0
 
-				const daysOrErr = await this.daysTrade.execute({
-					_id: prof._id,
+				if (!prof.value) return 0
+
+				const hoursOrErr = await this.hoursMonthTrade.execute({
+					_id: prof.value,
 					unity_id,
 					day,
 					month,
 					year,
 				})
 
-				if (daysOrErr.isLeft()) return 0
+				console.log('hoursOrErr', hoursOrErr)
 
-				const hours = daysOrErr.extract()
+				if (hoursOrErr.isLeft()) return 0
+
+				const hours = hoursOrErr.extract()
 
 				if (!prof.avgPrice) return 0
 

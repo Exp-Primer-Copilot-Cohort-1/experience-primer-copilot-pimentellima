@@ -158,35 +158,35 @@ export const UnitySchema = new Schema<IUnity>(
 		},
 		address: {
 			type: String,
-			required: false,
+
 		},
 		address_number: {
 			type: String,
-			required: false,
+
 		},
 		avatar: {
 			type: String,
-			required: false,
+
 		},
 		city: {
 			type: String,
-			required: false,
+
 		},
 		cep: {
 			type: String,
-			required: false,
+
 		},
 		cnaes: {
 			type: Array,
-			required: false,
+
 		},
 		complement: {
 			type: String,
-			required: false,
+
 		},
 		country: {
 			type: String,
-			required: false,
+
 		},
 		date_expiration: {
 			type: Date,
@@ -203,32 +203,35 @@ export const UnitySchema = new Schema<IUnity>(
 		},
 		name_company: {
 			type: String,
-			required: false,
+
 		},
 		neighborhood: {
 			type: String,
-			required: false,
+
 		},
 		obs: {
 			type: String,
-			required: false,
+
 		},
 		phones: new Mongoose.SchemaTypeOptions<IPhone[]>(),
 		site: {
 			type: String,
-			required: false,
+
 		},
 		state: {
 			type: String,
-			required: false,
+
 		},
 		revenue_reports: {
-			type: Object,
-			required: false,
+			type: Map<string, {
+				desirable: number[],
+				expected: number[],
+				current: number[],
+			}>,
 		},
 		holidays: {
 			type: [HolidaySchemaHelper],
-			required: false,
+
 		},
 	},
 	{

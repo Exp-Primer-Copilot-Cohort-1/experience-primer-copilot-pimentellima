@@ -97,67 +97,67 @@ const ScheduledConfigSchema = new Schema<IDaysOffice>(
 		},
 		schedule_obs: {
 			type: String,
-			required: false,
+
 		},
 		show_lack: {
 			type: Boolean,
-			required: false,
+
 		},
 		exib_minutes: {
 			type: Number,
-			required: false,
+
 		},
 		is_friday: {
 			type: Boolean,
-			required: false,
+
 		},
 		is_saturday: {
 			type: Boolean,
-			required: false,
+
 		},
 		is_sunday: {
 			type: Boolean,
-			required: false,
+
 		},
 		is_monday: {
 			type: Boolean,
-			required: false,
+
 		},
 		is_tuesday: {
 			type: Boolean,
-			required: false,
+
 		},
 		is_wednesday: {
 			type: Boolean,
-			required: false,
+
 		},
 		is_thursday: {
 			type: Boolean,
-			required: false,
+
 		},
 		hour_end: {
 			type: String,
-			required: false,
+
 		},
 		hour_start: {
 			type: String,
-			required: false,
+
 		},
 		hour_end_lunch: {
 			type: String,
-			required: false,
+
 		},
 		hour_start_lunch: {
 			type: String,
-			required: false,
+
 		},
 		lunch_time_active: {
 			type: Boolean,
-			required: false,
+
 		},
 		receive_email_in_the_new_appointment: {
 			type: Boolean,
-			required: false,
+
 		},
 	},
 	{

@@ -11,3 +11,10 @@ export const PROJECTION_CLIENT = {
 	celphone: 1,
 	email: 1,
 }
+
+export const PROJECTION_HEALTH_INSURANCE = {
+	_id: 0,
+	label: '$name',
+	value: '$_id',
+	price: 1,
+}

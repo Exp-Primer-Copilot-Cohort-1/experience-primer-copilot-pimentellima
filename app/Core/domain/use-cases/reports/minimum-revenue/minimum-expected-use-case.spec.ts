@@ -78,7 +78,7 @@ describe('Minimum Expected Report Use Case (Integration)', () => {
 	})
 	it('should return a report', async () => {
 		const { sut } = makeSut()
-		const resultOrErr = await sut.execute({ unity_id: '6359660fc109b232759921d4' })
+		const resultOrErr = await sut.execute({ unity_id: process.env.TEST_INTEGRATION_UNITY_ID as string })
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})
 })

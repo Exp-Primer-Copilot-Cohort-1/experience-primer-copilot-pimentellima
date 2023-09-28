@@ -107,12 +107,12 @@ const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 				},
 				health_insurance: {
 					type: Schema.Types.ObjectId,
-					required: false,
+
 				},
 			},
 		],
 		payment: {
-			required: false,
+
 			default: {},
 		},
 		client: {
@@ -122,7 +122,7 @@ const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 		},
 		obs: {
 			type: String,
-			required: false,
+
 			default: null,
 		},
 		prof: {
@@ -142,7 +142,7 @@ const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 		},
 		type: {
 			type: String,
-			required: false,
+
 			default: STATUS_ACTIVITY.PENDING,
 		},
 	},

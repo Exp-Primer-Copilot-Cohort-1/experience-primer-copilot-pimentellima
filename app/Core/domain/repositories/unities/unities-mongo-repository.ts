@@ -41,7 +41,7 @@ export class UnitiesMongooseRepository implements UnitiesManagerInterface {
 		const unity = await Unity.findById(id)
 		if (!unity) return left(new UnitNotFoundError())
 
-		await unity.remove()
+		await unity.deleteOne()
 		return right(unity)
 	}
 	async updateUnitiesById(

@@ -35,7 +35,7 @@ describe('Population Census Use Case (Integration)', () => {
 	it('should be find census payments activities by unity', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.execute({
-			unity_id: '6359660fc109b232759921d4', // unity id
+			unity_id: process.env.TEST_INTEGRATION_UNITY_ID as string, // unity id
 			date_start: '2023-01-01', // date start
 			date_end: '2024-01-31', // date end
 		})

@@ -183,25 +183,20 @@ const ActivitySchema = new Schema<IActivityModel>(
 				},
 				health_insurance: {
 					type: Schema.Types.ObjectId,
-					required: false,
 					ref: COLLECTION_HEALTH_INSURANCE_NAME,
 				},
 			},
 		],
 		payment: {
-			required: false,
 			type: {
 				amount: {
 					type: Number,
-					required: false,
 				},
 				date: {
 					type: Date,
-					required: false,
 				},
 				paymentForm: {
 					type: String,
-					required: false,
 				},
 			},
 			default: {},
@@ -213,7 +208,6 @@ const ActivitySchema = new Schema<IActivityModel>(
 		},
 		obs: {
 			type: String,
-			required: false,
 			default: null,
 		},
 		prof: {
@@ -239,15 +233,12 @@ const ActivitySchema = new Schema<IActivityModel>(
 		},
 		started_at: {
 			type: Date,
-			required: false,
 		},
 		finished_at: {
 			type: Date,
-			required: false,
 		},
 		type: {
 			type: String,
-			required: false,
 			enum: Object.values(STATUS_ACTIVITY),
 			default: STATUS_ACTIVITY.MARKED,
 		},

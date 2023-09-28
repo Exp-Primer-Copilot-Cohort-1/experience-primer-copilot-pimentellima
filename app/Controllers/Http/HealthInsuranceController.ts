@@ -206,6 +206,7 @@ class HealthInsuranceController {
 		const healthInsurances = await HealthInsurance.findByIdAndDelete(params.id)
 		return healthInsurances
 	}
+
 }
 
 export default HealthInsuranceController

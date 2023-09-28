@@ -3,3 +3,5 @@ export interface IBilling {
 	desirable: number[]
 	expected: number[]
 }
+
+export type MapBilling = Map<string, IBilling>

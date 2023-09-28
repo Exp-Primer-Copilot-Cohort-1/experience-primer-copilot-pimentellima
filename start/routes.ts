@@ -32,7 +32,6 @@ Route.post('sessions', 'SessionController.store')
 Route.get('script', 'AdminController.script')
 
 Route.post('admin', 'UserController.storeAdmin')
-Route.post('users', 'UserController.store')
 
 Route.get('unities/:email', 'UnityController.findByName')
 
@@ -67,6 +66,8 @@ Route.group(() => {
 Route.post('sessions/logout', 'SessionController.logout')
 
 Route.group(() => {
+	Route.post('users', 'UserController.store')
+
 	Route.group(() => {
 		Route.get('', 'ClientController.findAllUsersClients').as('clients.index')
 
@@ -94,16 +95,16 @@ Route.group(() => {
 	}).prefix('scheduled')
 
 	Route.group(() => {
-		Route.get('', 'HealthInsuranceController.index').as('health-insurance.index')
-		Route.get(':id', 'HealthInsuranceController.show').as('health-insurance.show')
+		Route.get('', 'HealthInsuranceController.index').as('health-insurances.index')
+		Route.get(':id', 'HealthInsuranceController.show').as('health-insurances.show')
 		Route.put(':_id', 'HealthInsuranceController.update').as(
-			'health-insurance.update',
+			'health-insurances.update',
 		)
 		Route.delete(':id', 'HealthInsuranceController.destroy').as(
-			'health-insurance.destroy',
+			'health-insurances.destroy',
 		)
-		Route.post('', 'HealthInsuranceController.store').as('health-insurance.store')
-	}).prefix('health-insurance')
+		Route.post('', 'HealthInsuranceController.store').as('health-insurances.store')
+	}).prefix('health-insurances')
 
 	Route.group(() => {
 		Route.get('', 'ScheduleBlockController.findAllScheduleBlocks').as(
@@ -143,6 +144,9 @@ Route.group(() => {
 		)
 		Route.delete(':id/products', 'ProcedureController.removeProduct').as(
 			'procedures.removeProduct',
+		)
+		Route.get(':id/:health_insurance_id', 'ProcedureController.showByHealthInsurance').as(
+			'procedures.showByHealthInsurance',
 		)
 	}).prefix('procedures')
 
@@ -205,6 +209,10 @@ Route.group(() => {
 		)
 		Route.put(':id', 'ActivityController.updateActivityById').as('activity.update')
 		Route.get('', 'ActivityController.findAllActivities').as('activity.index')
+		Route.get('pending', 'ActivityController.findAllActivitiesPending').as(
+			'activity.indexPending',
+		)
+
 		Route.get('await', 'ActivityController.findAllActivitiesAwait').as(
 			'activity.indexAwait',
 		)

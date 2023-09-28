@@ -24,9 +24,10 @@ export class CreateUserUseCase implements UseCase<IAdminUser, IAdminUser> {
 
 		const adminOrErr = await AdminUser.build(data)
 
-		if (adminOrErr.isLeft()) return adminOrErr
+		if (adminOrErr.isLeft()) return left(adminOrErr.extract())
 
 		const admin = adminOrErr.extract()
+
 
 		const passwordOrErr = await this.createPasswordUseCase.execute({
 			password: admin.password,
@@ -38,7 +39,7 @@ export class CreateUserUseCase implements UseCase<IAdminUser, IAdminUser> {
 
 		admin.definePassword(passwordOrErr.extract())
 
-		const userOrErr = await this.adminManager.create(admin.params())
+		const userOrErr = await this.adminManager.create(admin)
 
 		return userOrErr
 	}

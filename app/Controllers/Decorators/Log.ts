@@ -61,6 +61,10 @@ export default function LogDecorator(collectionName: COLLECTIONS_NAMES, action: 
 
 			const body = response.getBody()
 
+			const status = response.getStatus()
+
+			if (status >= 400) return r
+
 			try {
 				const [original, modified] = actionCompare(action, docOriginal, body)
 				const collection_id = getCollectionId(body, _id)

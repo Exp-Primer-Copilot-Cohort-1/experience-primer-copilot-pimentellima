@@ -31,7 +31,7 @@ describe('Find All Holidays By Unity Use Case (Integration)', () => {
 	it('should find all holidays by unity', async () => {
 		const { sut } = makeSut()
 		const response = await sut.execute({
-			unity_id: '6359660fc109b232759921d4',
+			unity_id: process.env.TEST_INTEGRATION_UNITY_ID as string,
 		})
 
 		expect(response.isRight()).toBeTruthy()

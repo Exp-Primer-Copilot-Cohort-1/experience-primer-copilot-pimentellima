@@ -2,7 +2,6 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, right } from 'App/Core/shared'
 import Procedure from 'App/Models/Procedure'
-import { IProcedure } from 'App/Types/IProcedure'
 import mongoose from 'mongoose'
 
 const ObjectId = mongoose.Types.ObjectId
@@ -11,14 +10,20 @@ export type AverageProcedureProps = {
 	unity_id: string
 }
 
+export type AverageProf = {
+	label: string
+	value: string
+	avgPrice: number
+}
+
 export class AveragePriceProceduresUseCase
-	implements UseCase<AverageProcedureProps, Partial<IProcedure>[]>
+	implements UseCase<AverageProcedureProps, Partial<AverageProf>[]>
 {
 	constructor() { }
 
 	public async execute({
 		unity_id,
-	}: AverageProcedureProps): PromiseEither<AbstractError, Partial<IProcedure>[]> {
+	}: AverageProcedureProps): PromiseEither<AbstractError, Partial<AverageProf>[]> {
 		const pipeline = [
 			{
 				$match: {
@@ -26,59 +31,45 @@ export class AveragePriceProceduresUseCase
 				},
 			},
 			{
-				$unwind: '$health_insurance',
+				$unwind: '$health_insurances',
 			},
 			{
-				$unwind: '$prof',
+				$lookup: {
+					from: "users",
+					localField: "profs",
+					foreignField: "_id",
+					as: "profs",
+					pipeline: [
+						{
+							$project: {
+								_id: 0,
+								value: '$_id',
+								label: '$name',
+							}
+						}
+					]
+				}
 			},
 			{
-				$addFields: {
-					'health_insurance.priceNumber': {
-						$convert: {
-							input: {
-								$replaceOne: {
-									input: '$health_insurance.price',
-									find: ',',
-									replacement: '.',
-								},
-							},
-							to: 'double',
-						},
-					},
-				},
+				$unwind: '$profs',
 			},
-			// {
-			// 	$group: {
-			// 		_id: '$_id',
-			// 		name: { $first: '$name' },
-			// 		profs: { $first: '$prof' },
-			// 		avgPrice: { $avg: '$health_insurance.priceNumber' },
-			// 		unity_id: { $first: '$unity_id' },
-			// 	},
-			// },
-			// {
-			// 	$group: {
-			// 		_id: {
-			// 			id: '$_id',
-			// 			prof: '$prof.value',
-			// 		},
-			// 		name: { $first: '$name' },
-			// 		prof: { $first: '$prof' },
-			// 		avgPrice: { $avg: '$health_insurance.priceNumber' },
-			// 		unity_id: { $first: '$unity_id' },
-			// 	},
-			// },
 			{
 				$group: {
-					_id: '$prof.value',
-					prof: { $first: '$prof.label' },
-					avgPrice: { $avg: '$health_insurance.priceNumber' },
-					unity_id: { $first: '$unity_id' },
+					_id: '$profs',
+					avgPrice: { $avg: '$health_insurances.price' },
+				},
+			},
+			{
+				$project: {
+					_id: 0,
+					label: '$_id.label',
+					value: '$_id.value',
+					avgPrice: 1,
 				},
 			},
 		]
 
-		const result = await Procedure.aggregate(pipeline)
+		const result: AverageProf[] = await Procedure.aggregate(pipeline)
 
 		return right(result)
 	}

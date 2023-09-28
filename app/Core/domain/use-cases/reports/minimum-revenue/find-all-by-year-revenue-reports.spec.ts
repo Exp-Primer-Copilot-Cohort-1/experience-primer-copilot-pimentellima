@@ -24,7 +24,7 @@ describe('Find all by year revenue reports (Integration)', () => {
 	it('should be able to find all billing reports by year', async () => {
 		const { sut } = makeSut()
 		const revenueOrErr = await sut.execute({
-			unity_id: '6359660fc109b232759921d4',
+			unity_id: process.env.TEST_INTEGRATION_UNITY_ID as string,
 			year: 2021,
 		})
 
