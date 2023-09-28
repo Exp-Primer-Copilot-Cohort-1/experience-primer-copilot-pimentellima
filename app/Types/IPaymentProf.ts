@@ -2,7 +2,7 @@ import { ObjectId } from 'mongoose'
 
 export interface IPaymentProf {
 	_id?: string | ObjectId
-	value: number
+	abs: number
 	percent: number
 	participation_id?: string | ObjectId
 	procedure: {

@@ -1,10 +1,10 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeCreatePaymentProfComposer } from 'App/Core/composers/payment-prof/make-create-payment-prof-composer'
-import { makeDeletePaymentProfByIdComposer } from 'App/Core/composers/payment-prof/make-delete-payment-prof-by-id-composer'
-import { makeFindAllPaymentProfsComposer } from 'App/Core/composers/payment-prof/make-find-all-payment-profs-composer'
-import { makeFindPaymentProfByIdComposer } from 'App/Core/composers/payment-prof/make-find-payment-prof-by-id-composer'
-import { makeUpdatePaymentProfByIdComposer } from 'App/Core/composers/payment-prof/make-update-payment-prof-by-id-composer'
+import {
+	makeCreatePaymentParticipationsComposer,
+	makeFindAllPaymentParticipationsComposer,
+	makeUpdatePaymentParticipationsComposer,
+} from 'App/Core/composers'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { COLLECTION_NAME } from 'App/Models/PaymentParticipations'
 import LogDecorator, { ACTION } from '../Decorators/Log'
@@ -50,71 +50,7 @@ class PaymentProfController {
 	 */
 	async findAllPaymentProfs(ctx: HttpContextContract) {
 		const opts = OptsQuery.build(ctx.request.qs())
-		return adaptRoute(makeFindAllPaymentProfsComposer(opts), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
-	}
-
-	/**
-	 * Retorna uma participação do profissional de um procedimento e plano de saúde de profissional pelo ID.
-	 * @param ctx O contexto da requisição HTTP.
-	 * @returns Um pagamento de profissional.
-	 * @swagger
-	 * /payment-participations/{id}:
-	 *   get:
-	 *     summary: Retorna uma participação do profissional de um procedimento e plano de saúde de profissional pelo ID.
-	 *     tags:
-	 *       - Participação de Pagamentos de Profissional
-	 *     parameters:
-	 *       - in: path
-	 *         name: id
-	 *         schema:
-	 *           type: integer
-	 *         required: true
-	 *         description: ID do pagamento de profissional a ser retornado.
-	 *     responses:
-	 *       200:
-	 *         description: Pagamento de proficional.
-	 *         content:
-	 *           application/json:
-	 *             schema:
-	 *               $ref: '#/components/schemas/PaymentProf'
-	 */
-	async findPaymentProfById(ctx: HttpContextContract) {
-		const opts = OptsQuery.build(ctx.request.qs())
-		return adaptRoute(makeFindPaymentProfByIdComposer(opts), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
-	}
-
-	/**
-	 * Deleta uma participação do profissional de um procedimento e plano de saúde de profissional pelo ID.
-	 * @param ctx O contexto da requisição HTTP.
-	 * @returns O pagamento de profissional deletado.
-	 * @swagger
-	 * /payment-participations/{id}:
-	 *   delete:
-	 *     summary: Deleta uma participação do profissional de um procedimento e plano de saúde  pelo ID.
-	 *     tags:
-	 *       - Participação de Pagamentos de Profissional
-	 *     parameters:
-	 *       - in: path
-	 *         name: id
-	 *         schema:
-	 *           type: integer
-	 *         required: true
-	 *         description: ID do pagamento de profissional a ser deletado.
-	 *     responses:
-	 *       200:
-	 *         description: Pagamento de profissional deletado.
-	 *         content:
-	 *           application/json:
-	 *             schema:
-	 *               $ref: '#/components/schemas/PaymentProf'
-	 */
-	@LogDecorator(COLLECTION_NAME, ACTION.DELETE)
-	async deletePaymentProfById(ctx: HttpContextContract) {
-		return adaptRoute(makeDeletePaymentProfByIdComposer(), ctx, {
+		return adaptRoute(makeFindAllPaymentParticipationsComposer(opts), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
@@ -145,7 +81,7 @@ class PaymentProfController {
 	 */
 	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async createOrUpdatePaymentProf(ctx: HttpContextContract) {
-		return adaptRoute(makeCreatePaymentProfComposer(), ctx, {
+		return adaptRoute(makeCreatePaymentParticipationsComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
@@ -183,7 +119,7 @@ class PaymentProfController {
 	 */
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async updatePaymentProfById(ctx: HttpContextContract) {
-		return adaptRoute(makeUpdatePaymentProfByIdComposer(), ctx, {
+		return adaptRoute(makeUpdatePaymentParticipationsComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}

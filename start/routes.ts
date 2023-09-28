@@ -144,6 +144,9 @@ Route.group(() => {
 		Route.delete(':id/products', 'ProcedureController.removeProduct').as(
 			'procedures.removeProduct',
 		)
+		Route.get(':id/:health_insurance_id', 'ProcedureController.showByHealthInsurance').as(
+			'procedures.showByHealthInsurance',
+		)
 	}).prefix('procedures')
 
 	Route.group(() => {

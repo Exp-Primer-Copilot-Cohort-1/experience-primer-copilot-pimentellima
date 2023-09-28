@@ -4,7 +4,8 @@ import { makeProceduresCreateComposer } from 'App/Core/composers'
 import { makeProceduresUpdateByIdComposer } from 'App/Core/composers/procedures'
 import { makeProceduresDeleteByIdComposer } from 'App/Core/composers/procedures/make-procedures-delete-by-id-composer'
 import { makeProceduresFindAllComposer } from 'App/Core/composers/procedures/make-procedures-find-all-composer'
-import Procedure, { COLLECTION_NAME } from 'App/Models/Procedure'
+import { PROJECTION_HEALTH_INSURANCE } from 'App/Core/domain/repositories/helpers/projections'
+import Procedure, { COLLECTIONS_REFS, COLLECTION_NAME } from 'App/Models/Procedure'
 import LogDecorator, { ACTION } from '../Decorators/Log'
 
 /**
@@ -232,6 +233,69 @@ class ProcedureController {
 			},
 		})
 		return ctx.response.ok({ message: 'Produto removido com sucesso' })
+	}
+
+
+	/**
+	 * Retorna as informações de um procedimento específico de um determinado convênio.
+	 * @swagger
+	 * /procedures/{id}/{health_insurance_id}:
+	 *   get:
+	 *     summary: Retorna as informações de um procedimento específico de um determinado convênio.
+	 *     description: Retorna as informações de um procedimento específico de um determinado convênio.
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         required: true
+	 *         description: ID do procedimento.
+	 *         schema:
+	 *           type: string
+	 *       - in: path
+	 *         name: health_insurance_id
+	 *         required: true
+	 *         description: ID do convênio.
+	 *         schema:
+	 *           type: string
+	 *     responses:
+	 *       200:
+	 *         description: Retorna as informações do convênio e o valor do procedimento.
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               type: object
+	 *               properties:
+	 *                 _id:
+	 *                   type: string
+	 *                   description: ID do convênio.
+	 *                 name:
+	 *                   type: string
+	 *                   description: Nome do convênio.
+	 *                 amount:
+	 *                   type: number
+	 *                   description: Valor do procedimento para o convênio.
+	 */
+	async showByHealthInsurance({ params, auth }: HttpContextContract) {
+		const unity_id = auth.user?.unity_id
+		const { id, health_insurance_id } = params
+
+		const procedure = await Procedure.findOne({
+			_id: id,
+			'health_insurances._id': health_insurance_id,
+			unity_id
+		})
+			.populate(COLLECTIONS_REFS.HEALTH_INSURANCES, PROJECTION_HEALTH_INSURANCE)
+			.orFail()
+			.exec()
+
+		const doc = procedure.toObject()
+
+		const healthInsurance = {
+			...doc.health_insurances[0]._id,
+			amount: doc.health_insurances[0].price,
+		}
+
+		return healthInsurance
+
 	}
 }
 

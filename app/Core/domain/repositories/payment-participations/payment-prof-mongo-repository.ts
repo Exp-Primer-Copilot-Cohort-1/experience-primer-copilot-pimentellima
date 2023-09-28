@@ -120,7 +120,7 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 		doc.prices.push({
 			active: true,
 			date_start: new Date(),
-			abs: participation.value,
+			abs: participation.abs,
 			percent: participation.percent,
 		})
 
