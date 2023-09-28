@@ -11,16 +11,15 @@ export class ClientsMongooseRepository implements ClientManagerInterface {
 	constructor() { }
 
 	public async create(
-		data: Partial<IUserClient>,
+		{ _id, ...data }: Partial<IUserClient>,
 		unity_id: string,
 	): PromiseEither<AbstractError, IUserClient> {
-		const created = await Client.create({
+		const doc = await Client.create({
 			...data,
 			email: data.email?.trim().toLowerCase(),
 			partner: data.partner?.value,
 			unity_id,
 		})
-		const doc = await created.populate(COLLECTIONS_REFS.PARTNERS, PROJECTION_DEFAULT)
 
 		return right(doc.toObject())
 	}
