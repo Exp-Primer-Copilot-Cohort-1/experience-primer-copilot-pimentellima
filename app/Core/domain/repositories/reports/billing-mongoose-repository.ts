@@ -22,7 +22,7 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 			return left(new UnitNotFoundError())
 		}
 
-		const revenueReports = unity.revenue_reports?.[year]
+		const revenueReports = unity.revenue_reports?.get(year.toString())
 
 		if (!revenueReports) {
 			return left(new AbstractError('Revenue report not found', 404))
@@ -41,7 +41,7 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 		const unity = await Unity.findByIdAndUpdate(
 			unity_id,
 			{
-				[`revenue_reports.${year}.${attr}.${month}`]: value,
+				[`revenue_reports.${year}.${attr}.${month}`]: parseFloat(value as any),
 			},
 			{ new: true, useFindAndModify: false },
 		).select('revenue_reports')
@@ -50,7 +50,13 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 			return left(new UnitNotFoundError())
 		}
 
-		return right(unity.revenue_reports?.[year] as any)
+		const revenueReports = unity.revenue_reports?.get(year.toString())
+
+		if (!revenueReports) {
+			return left(new AbstractError('Revenue report not found', 404))
+		}
+
+		return right(revenueReports)
 	}
 
 	async addDefaultBilling(
@@ -104,6 +110,12 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 					},
 				},
 			},
+			{
+				$project: {
+					_id: 0,
+					total: 1,
+				},
+			}
 		]
 
 		const revenue = await Transactions.aggregate(pipeline)

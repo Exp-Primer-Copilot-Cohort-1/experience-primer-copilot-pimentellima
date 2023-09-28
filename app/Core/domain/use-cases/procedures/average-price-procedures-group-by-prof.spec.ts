@@ -20,7 +20,7 @@ describe('Average Price Procedures Group By Prof ID (Integration)', () => {
 
 	it('should return the average price of procedures', async () => {
 		const { sut } = makeSut()
-		const unity_id = '63528c11c109b232759921d1'
+		const unity_id = process.env.TEST_INTEGRATION_UNITY_ID as string
 
 		const proceduresOrErr = await sut.execute({ unity_id })
 

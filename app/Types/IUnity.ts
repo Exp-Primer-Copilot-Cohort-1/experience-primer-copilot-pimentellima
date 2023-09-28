@@ -28,9 +28,7 @@ export type IUnity = {
 	phones?: IPhone[]
 	site?: string
 	state?: string
-	revenue_reports?: {
-		[key: number]: IBilling
-	}
+	revenue_reports?: Map<string, IBilling>
 	holidays?: Array<IHoliday>
 }
 

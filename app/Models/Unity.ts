@@ -223,8 +223,11 @@ export const UnitySchema = new Schema<IUnity>(
 
 		},
 		revenue_reports: {
-			type: Object,
-
+			type: Map<string, {
+				desirable: number[],
+				expected: number[],
+				current: number[],
+			}>,
 		},
 		holidays: {
 			type: [HolidaySchemaHelper],

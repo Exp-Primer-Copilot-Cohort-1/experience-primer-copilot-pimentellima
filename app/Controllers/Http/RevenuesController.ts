@@ -33,12 +33,6 @@ import {
  *     tags: [Faturamentos]
  *     security:
  *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Revenue'
  *     responses:
  *       200:
  *         description: Faturamento atualizado com sucesso
