@@ -32,7 +32,6 @@ Route.post('sessions', 'SessionController.store')
 Route.get('script', 'AdminController.script')
 
 Route.post('admin', 'UserController.storeAdmin')
-Route.post('users', 'UserController.store')
 
 Route.get('unities/:email', 'UnityController.findByName')
 
@@ -67,6 +66,8 @@ Route.group(() => {
 Route.post('sessions/logout', 'SessionController.logout')
 
 Route.group(() => {
+	Route.post('users', 'UserController.store')
+
 	Route.group(() => {
 		Route.get('', 'ClientController.findAllUsersClients').as('clients.index')
 

@@ -6,18 +6,20 @@ import { SystemUser } from '../abstract/system-user.abstract'
 import DaysOfTrade from '../helpers/days-of-trade'
 
 class AdminUser extends SystemUser implements IAdminUser {
-	protected _type: ROLES.ADMIN | ROLES.ADMIN_PROF
+	type: ROLES.ADMIN | ROLES.ADMIN_PROF
+	password: string
 
 	private constructor() {
 		super()
 	}
 
-	public get type(): ROLES.ADMIN | ROLES.ADMIN_PROF {
-		return this._type
-	}
-
 	public defineType(type: ROLES.ADMIN | ROLES.ADMIN_PROF): this {
 		super.defineType(type)
+		return this
+	}
+
+	public definePassword(password: string): this {
+		this.password = password
 		return this
 	}
 
