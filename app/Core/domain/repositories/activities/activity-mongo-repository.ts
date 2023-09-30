@@ -13,7 +13,7 @@ import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
 import { ActivitiesManagerInterface } from '../interface/activity-manager.interface'
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
-	constructor(private readonly session?: ISessionTransaction) { } // eslint-disable-line
+	constructor(private readonly session?: ISessionTransaction) {} // eslint-disable-line
 
 	async findAllActivities(unity_id: string): PromiseEither<AbstractError, IActivity[]> {
 		if (!unity_id) return left(new UnitNotFoundError())
@@ -127,7 +127,26 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		values: IActivity,
 	): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new ActivityNotFoundError())
+		const activity = await Activity.findById(id, null)
+		if (!activity) return left(new ActivityNotFoundError())
+		const entityOrErr = await ActivityEntity.build(values)
 
+		if (entityOrErr.isLeft()) return left(entityOrErr.extract())
+		const entity = entityOrErr.extract()
+
+		const updated = (await Activity.findByIdAndUpdate(id, entity, {
+			new: true,
+		})) as unknown as Document
+
+
+		return right(updated.toObject())
+	}
+
+	async updateActivyStatus(
+		id: string,
+		values: IActivity,
+	): PromiseEither<AbstractError, IActivity> {
+		if (!id) return left(new ActivityNotFoundError())
 		const activity = await Activity.findById(id, null, { ...this.session?.options })
 
 		if (!activity) return left(new ActivityNotFoundError())
