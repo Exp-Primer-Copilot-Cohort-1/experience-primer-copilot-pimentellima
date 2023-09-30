@@ -6,8 +6,8 @@ import {
 	makeUpdatePaymentParticipationsComposer,
 } from 'App/Core/composers'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/PaymentParticipations'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 /**
  * Controlador para gerenciamento de pagamentos de Profissionais.

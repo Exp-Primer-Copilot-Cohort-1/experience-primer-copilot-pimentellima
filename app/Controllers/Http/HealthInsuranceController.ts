@@ -7,8 +7,8 @@ import {
 	makeHealthInsuranceUpdateComposer,
 } from 'App/Core/composers'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import HealthInsurance, { COLLECTION_NAME } from 'App/Models/HealthInsurance'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 /**
  * Controlador para as rotas relacionadas a planos de saúde.

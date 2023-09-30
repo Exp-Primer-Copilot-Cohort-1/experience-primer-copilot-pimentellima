@@ -3,8 +3,8 @@ import { makeCreateAdminComposer, makeCreateUserComposer } from 'App/Core/compos
 import User, { COLLECTION_NAME } from 'App/Models/User'
 // const Mail = use('Mail');
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { ROLES } from 'App/Roles/types'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 class UserController {
 	public async index({ auth }: HttpContextContract) {

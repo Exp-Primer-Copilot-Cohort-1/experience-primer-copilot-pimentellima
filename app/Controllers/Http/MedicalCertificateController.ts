@@ -7,8 +7,8 @@ import {
 	makeMedicalCertificateShowByIdComposer,
 	makeMedicalCertificateUpdateByIdComposer,
 } from 'App/Core/composers'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import MedicalCertificate, { COLLECTION_NAME } from 'App/Models/MedicalCertificate'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 /**
  * Controlador responsável por lidar com as requisições relacionadas a atestados médicos.

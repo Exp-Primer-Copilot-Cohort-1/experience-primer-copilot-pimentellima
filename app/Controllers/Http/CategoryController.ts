@@ -7,8 +7,8 @@ import {
 	makeCategoriesUpdateByIdComposer,
 } from 'App/Core/composers'
 import { makeCategoriesCreateComposer } from 'App/Core/composers/categories/make-categories-create-composer'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/Category'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 /**
  * Controlador para gerenciamento de categorias.

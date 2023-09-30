@@ -1,9 +1,9 @@
 import { ROLES } from 'App/Roles/types'
 
-export type Password = string
+export type Password = { password: string }
 
 export type CreatePasswordProps = {
-	password?: Password
+	password?: string
 	email: string
 	type: ROLES
 }

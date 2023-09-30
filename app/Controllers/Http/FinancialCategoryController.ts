@@ -114,8 +114,8 @@
  */
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import FinancialCategory, { COLLECTION_NAME } from 'App/Models/FinancialCategory'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 class FinancialCategoryController {
 	async index({ auth, request }: HttpContextContract) {

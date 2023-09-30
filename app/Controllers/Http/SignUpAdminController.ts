@@ -1,10 +1,10 @@
+import { base64 } from '@ioc:Adonis/Core/Helpers'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import { makeCreateAdminComposer } from 'App/Core/composers'
 import { UserNotFoundException } from 'App/Exceptions'
 import User from 'App/Models/User'
 import { CREATE_USER_RULES } from '../../Rules'
-
 class SignUpAdminController {
 	constructor(private readonly userModel = User) { } // eslint-disable-line
 
@@ -28,7 +28,9 @@ class SignUpAdminController {
 	}
 
 	async activeUser({ params }) {
-		const user = await this.userModel.findById(params.id)
+		const id = base64.decode(params.id)
+
+		const user = await this.userModel.findById(id)
 		if (!user) {
 			throw new UserNotFoundException()
 		}

@@ -1,6 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import CostCenter, { COLLECTION_NAME } from 'App/Models/CostCenter'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 /**
  * @swagger

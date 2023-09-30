@@ -2,9 +2,9 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import { makeCreateTransactionComposer } from 'App/Core/composers'
 import { TransactionEntity } from 'App/Core/domain/entities/transaction/TransactionEntity'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import Transaction, { COLLECTION_NAME } from 'App/Models/Transactions'
 import { ITransaction } from 'App/Types/ITransaction'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 /**
  * Controller responsável por gerenciar as transações.

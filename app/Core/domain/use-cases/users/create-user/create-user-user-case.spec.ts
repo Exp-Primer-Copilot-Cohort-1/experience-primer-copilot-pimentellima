@@ -5,6 +5,7 @@ import { AdminInMemoryRepository } from 'App/Core/domain/repositories'
 import { CreatePasswordUseCase } from '../create-password/create-password-use-case'
 
 import { faker } from '@faker-js/faker'
+import { ROLES } from 'App/Roles/types'
 import { IAdminUser } from 'App/Types/IAdminUser'
 import { cpf } from 'cpf-cnpj-validator'
 
@@ -15,8 +16,8 @@ const user: IAdminUser = {
 	password: faker.internet.password(),
 	email: faker.internet.email(),
 	document: cpf.generate(),
-	celphone: faker.phone.number('(99) 99999-9999'),
-	type: 'admin_prof',
+	celphone: faker.phone.number(),
+	type: ROLES.ADMIN_PROF,
 	_id: '',
 	active: false,
 	avatar: '',

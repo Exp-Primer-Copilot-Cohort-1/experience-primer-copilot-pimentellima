@@ -3,8 +3,8 @@ import { adaptRoute } from 'App/Core/adapters'
 import { makeUnityUpdateByIdComposer } from 'App/Core/composers/unities/make-unities-update-by-id-composer'
 import { makeUnityFindAllByNameComposer } from 'App/Core/composers/unities/make-unity-find-by-name-composer'
 import { makeUnityShowByIdComposer } from 'App/Core/composers/unities/make-unity-show-by-id-composer'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import Unity, { COLLECTION_NAME } from 'App/Models/Unity'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 /**
  * Controller responsável por gerenciar as rotas relacionadas a unidades.

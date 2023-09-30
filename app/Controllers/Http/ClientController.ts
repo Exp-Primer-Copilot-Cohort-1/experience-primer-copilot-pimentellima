@@ -1,4 +1,3 @@
-'use strict'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Client, { COLLECTIONS_REFS, COLLECTION_NAME } from 'App/Models/Client'
 
@@ -11,9 +10,9 @@ import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { PROJECTION_DEFAULT } from 'App/Core/domain/repositories/helpers/projections'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { left } from 'App/Core/shared'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { IUserClient } from 'App/Types/IClient'
 import { IFormAnswer } from 'Types/IFormAnswer'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 class ClientController {
 	async verifyExistenceClient({ request, auth, response }: HttpContextContract) {

@@ -6,7 +6,7 @@ import { PromiseEither, left } from 'App/Core/shared'
 import type { IAdminUser } from 'App/Types/IAdminUser'
 
 import { UnitNotFoundError } from 'App/Core/domain/errors/unit-not-found'
-import SendSignUpConfirmEmail from 'App/Mail/emails/send-sign-up-confirm-email'
+import EmitEventDecorator from 'App/Decorators/EmitEvent'
 import { ROLES } from 'App/Roles/types'
 import { CreatePasswordProps, Password } from '../type'
 
@@ -18,7 +18,7 @@ export class CreateUserUseCase implements UseCase<IAdminUser, IAdminUser> {
 		private readonly createPasswordUseCase: CreatePasswordUseCase,
 	) { } // eslint-disable-line
 
-	@SendSignUpConfirmEmail
+	@EmitEventDecorator('new:user')
 	public async execute(data: IAdminUser): PromiseEither<AbstractError, IAdminUser> {
 		if (!data.unity_id) return left(new UnitNotFoundError())
 
@@ -37,7 +37,7 @@ export class CreateUserUseCase implements UseCase<IAdminUser, IAdminUser> {
 
 		if (passwordOrErr.isLeft()) return left(passwordOrErr.extract())
 
-		admin.definePassword(passwordOrErr.extract())
+		admin.definePassword(passwordOrErr.extract().password)
 
 		const userOrErr = await this.adminManager.create(admin)
 

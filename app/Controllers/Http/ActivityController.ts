@@ -16,9 +16,9 @@ import {
 	makeUpdateActivityStartedAtComposer,
 	makeUpdateActivityStatusComposer,
 } from 'App/Core/composers/activities/make'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/Activity'
 import { ROLES } from 'App/Roles/types'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 /**
  * @swagger

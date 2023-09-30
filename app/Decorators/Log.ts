@@ -1,7 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import deepCompare from 'App/Core/helpers/deep-compare'
 import collections, { COLLECTIONS_NAMES } from 'App/Models'
 import generateCollectionLog from 'App/Models/Log'
-import deepCompare from '../../Core/helpers/deep-compare'
 
 export enum ACTION {
 	PUT = 'put',

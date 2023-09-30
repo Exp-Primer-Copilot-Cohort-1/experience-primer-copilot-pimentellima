@@ -5,8 +5,8 @@ import { makeProceduresUpdateByIdComposer } from 'App/Core/composers/procedures'
 import { makeProceduresDeleteByIdComposer } from 'App/Core/composers/procedures/make-procedures-delete-by-id-composer'
 import { makeProceduresFindAllComposer } from 'App/Core/composers/procedures/make-procedures-find-all-composer'
 import { PROJECTION_HEALTH_INSURANCE } from 'App/Core/domain/repositories/helpers/projections'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import Procedure, { COLLECTIONS_REFS, COLLECTION_NAME } from 'App/Models/Procedure'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 /**
  * Controlador responsável por gerenciar as rotas relacionadas a procedimentos.

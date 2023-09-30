@@ -6,8 +6,8 @@ import {
 	makeFindAllScheduleBlocksComposer,
 	makeFindScheduleBlocksByProfIdComposer,
 } from 'App/Core/composers/schedule_block/schedule_block-composer'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/ScheduleBlock'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 /**
  * @swagger

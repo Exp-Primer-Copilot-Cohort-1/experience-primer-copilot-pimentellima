@@ -7,8 +7,8 @@ import {
 	makePartnerUpdateComposer,
 } from 'App/Core/composers'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/Partner'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 /**
  * Controller responsible for handling Partner-related HTTP requests.

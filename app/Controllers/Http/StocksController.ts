@@ -1,7 +1,7 @@
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import Stock, { COLLECTION_NAME } from 'App/Models/Stock'
 import { isBefore, isSameDay } from 'date-fns'
 import { z } from 'zod'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 function sortBatchesByDate(a: string | undefined, b: string | undefined): number {
 	if (typeof a === 'undefined') return 1

@@ -1,7 +1,7 @@
 // const Mail = use('Mail');
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import ScheduledConfig from 'App/Models/ScheduledConfig'
-import LogDecorator, { ACTION } from '../Decorators/Log'
 
 import { COLLECTION_NAME } from 'App/Models/User'
 

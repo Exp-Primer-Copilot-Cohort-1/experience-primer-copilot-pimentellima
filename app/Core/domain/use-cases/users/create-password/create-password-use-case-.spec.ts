@@ -33,6 +33,6 @@ describe('CreatePasswordUseCase (Unit)', () => {
 			throw new Error('Should not be left')
 		}
 
-		expect(passwordOrErr.extract().length).toBe(6)
+		expect(passwordOrErr.extract().password.length).toBe(6)
 	})
 })
