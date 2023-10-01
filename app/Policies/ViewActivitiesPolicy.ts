@@ -7,7 +7,7 @@ const general = [
 	ROLES.ADMIN,
 	ROLES.SUPERADMIN,
 	ROLES.ADMIN_PROF,
-	ROLES.DR_PERFORMANCE,
+	ROLES.FRANCHISEE_ADMIN,
 	ROLES.SEC,
 ]
 export default class ViewActivitiesPolicy extends BasePolicy {

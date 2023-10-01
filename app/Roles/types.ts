@@ -5,7 +5,7 @@ export enum ROLES {
 	SEC = 'sec',
 	CLIENT = 'client',
 	SUPERADMIN = 'superadmin',
-	DR_PERFORMANCE = 'dr_performance',
+	FRANCHISEE_ADMIN = 'franchisee_admin',
 }
 
 export enum TYPE_PERMISSIONS {

@@ -58,6 +58,10 @@ export class ClientEntity extends Entity implements IUserClient {
 		super();
 	}
 
+	get age(): number {
+		return calcAge(this.birth_date);
+	}
+
 	/**
 	 * Define o nome do cliente.
 	 * @param name Nome do cliente.
@@ -157,8 +161,7 @@ export class ClientEntity extends Entity implements IUserClient {
 	 */
 	defineUnderaged(sponsor?: ISponsor): this {
 		// calculate age
-		const age = calcAge(this.birth_date);
-		this.underaged = age <= 18;
+		this.underaged = this.age <= 18;
 		return this.defineSponsor(sponsor || this.sponsor);
 	}
 

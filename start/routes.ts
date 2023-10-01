@@ -290,22 +290,22 @@ Route.group(() => {
 	}).prefix('ingredients')
 
 	Route.group(() => {
-		Route.get('', 'MedicalCertificateController.index').as('medicalCertificate.index')
+		Route.get('', 'MedicalCertificateController.index').as('medical-certificates.index')
 
 		Route.get('/:id', 'MedicalCertificateController.show').as(
-			'medicalCertificate.show',
+			'medical-certificates.show',
 		)
 		Route.put('/:id', 'MedicalCertificateController.update').as(
-			'medicalCertificate.update',
+			'medical-certificates.update',
 		)
 		Route.put('/status/:id', 'MedicalCertificateController.updateStatus').as(
-			'medicalCertificate.updateStatus',
+			'medical-certificates.updateStatus',
 		)
 		Route.delete('/:id', 'MedicalCertificateController.destroy').as(
-			'medicalCertificate.destroy',
+			'medical-certificates.destroy',
 		)
 		Route.post('', 'MedicalCertificateController.store').as(
-			'medicalCertificate.store',
+			'medical-certificates.store',
 		)
 	}).prefix('medical-certificate')
 

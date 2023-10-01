@@ -50,8 +50,6 @@ export class MinimumDesirableUseCase implements UseCase<Range, IBilling> {
 					year,
 				})
 
-				console.log('hoursOrErr', hoursOrErr)
-
 				if (hoursOrErr.isLeft()) return 0
 
 				const hours = hoursOrErr.extract()
