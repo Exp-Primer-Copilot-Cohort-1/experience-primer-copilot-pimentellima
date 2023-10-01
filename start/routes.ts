@@ -201,6 +201,7 @@ Route.group(() => {
 		Route.put('status/:id', 'ActivityController.updateActivityStatusById').as(
 			'activity.status',
 		)
+		Route.get('/day/:prof_id', 'ActivityController.findDayActivities').as('activity.day')
 		Route.put('started_at/:id', 'ActivityController.updateActivityStartedAt').as(
 			'activity.startedAt',
 		)

@@ -11,6 +11,7 @@ import {
 	makeFindAllActivitiesAwaitComposer,
 	makeFindAllActivitiesComposer,
 	makeFindAllActivitiesPendingComposer,
+	makeFindDayActivitiesComposer,
 	makeUpdateActivityByIdComposer,
 	makeUpdateActivityFinishedAtComposer,
 	makeUpdateActivityStartedAtComposer,
@@ -79,6 +80,21 @@ class ActivityController {
 
 			default:
 				return adaptRoute(makeFindAllActivitiesComposer(), ctx, {
+					unity_id: ctx.auth.user?.unity_id,
+				})
+		}
+	}
+
+	async findDayActivities(ctx: HttpContextContract) {
+		switch (ctx.auth.user?.type) {
+			case ROLES.PROF:
+				return adaptRoute(makeFindDayActivitiesComposer(), ctx, {
+					unity_id: ctx.auth.user?.unity_id,
+					prof_id: ctx.auth.user?._id,
+				})
+
+			default:
+				return adaptRoute(makeFindDayActivitiesComposer(), ctx, {
 					unity_id: ctx.auth.user?.unity_id,
 				})
 		}
