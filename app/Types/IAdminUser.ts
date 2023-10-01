@@ -16,7 +16,7 @@ export type IAdminUser = {
 	celphone: string
 	dayOfTrade?: IDaysOffice
 	franchised?: boolean
-	type: ROLES.ADMIN | ROLES.ADMIN_PROF
+	type: ROLES.ADMIN | ROLES.ADMIN_PROF | ROLES.FRANCHISEE_ADMIN
 	avatar: string
 	created_at: Date
 	updated_at: Date

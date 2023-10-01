@@ -1,3 +1,4 @@
+import { UnitNotFoundError } from 'App/Core/domain/errors'
 import { DrPerformanceManager } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
@@ -24,7 +25,7 @@ export class CreateFranchiseDrPerformanceUseCase implements NewDrPerformanceUseC
 		franchised = false,
 	}: NewDrPerformance): PromiseEither<AbstractError, Message> {
 		if (!admin._id) return left(new AbstractError('Admin not found', 401))
-		if (!unity._id) return left(new AbstractError('Unity not found', 401))
+		if (!unity._id) return left(new UnitNotFoundError())
 
 		if (!franchised) return right({ message: 'not franchised' })
 

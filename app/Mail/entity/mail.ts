@@ -15,7 +15,7 @@ class MailEntity {
 
 	async send({ edge, props, email, title }: MailParams) {
 		try {
-			if (process.env.NODE_ENV === 'testing') {
+			if (process.env.NODE_ENV !== 'production') {
 				return
 			}
 

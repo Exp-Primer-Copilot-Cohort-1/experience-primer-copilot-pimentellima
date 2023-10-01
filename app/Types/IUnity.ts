@@ -30,6 +30,8 @@ export type IUnity = {
 	state?: string
 	revenue_reports?: Map<string, IBilling>
 	holidays?: Array<IHoliday>
+	created_by?: string | ObjectId
+	franchise?: string | ObjectId
 }
 
 export type IPhone = Nullable<{

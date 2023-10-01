@@ -3,6 +3,8 @@ import { decrypt, encrypt } from 'App/Helpers/encrypt'
 import { IPhone, IUnity } from 'App/Types/IUnity'
 import { HolidaySchemaHelper } from './helpers/Holiday'
 
+import { COLLECTION_NAME as COLLECTION_NAME_FRANCHISES } from './BusinessFranchises'
+
 export const COLLECTION_NAME = 'unities'
 
 /**
@@ -231,8 +233,19 @@ export const UnitySchema = new Schema<IUnity>(
 		},
 		holidays: {
 			type: [HolidaySchemaHelper],
-
 		},
+		created_by: {
+			type: Mongoose.Schema.Types.ObjectId,
+			ref: COLLECTION_NAME,
+		},
+		franchised: {
+			type: Boolean,
+			default: false,
+		},
+		franchise: {
+			type: Mongoose.Schema.Types.ObjectId,
+			ref: COLLECTION_NAME_FRANCHISES
+		}
 	},
 	{
 		timestamps: {

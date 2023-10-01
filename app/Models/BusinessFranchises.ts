@@ -1,7 +1,7 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IBusinessFranchises } from 'App/Types/IBusinessFranchises'
 
-const COLLECTION_NAME = 'business_franchises'
+export const COLLECTION_NAME = 'business_franchises'
 
 const BusinessFranchisesSchema = new Schema<IBusinessFranchises>(
 	{

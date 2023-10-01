@@ -1,3 +1,4 @@
+import Event from '@ioc:Adonis/Core/Event'
 import AdminUser from 'App/Core/domain/entities/user/admin'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { ISessionTransaction } from 'App/Core/helpers/session-transaction'
@@ -6,7 +7,6 @@ import { PromiseEither, left } from 'App/Core/shared'
 import type { IAdminUser } from 'App/Types/IAdminUser'
 import type { IUnity } from 'App/Types/IUnity'
 import { NewDrPerformanceUseCase } from '../create-user-dr-performance/create-user-dr-performance-use-case'
-
 export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {
 	constructor(
 		private readonly createUser: UseCase<IAdminUser, IAdminUser>,
@@ -36,24 +36,28 @@ export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {
 
 			if (adminEntityOrErr.isLeft()) throw adminEntityOrErr.extract() // error
 
-			const admin = adminEntityOrErr.extract().params() as IAdminUser
+			const admin = adminEntityOrErr.extract()
 
-			const adminOrErr = await this.createUser.execute(
-				admin as IAdminUser,
+			const userOrErr = await this.createUser.execute(
+				admin,
 				this.session,
 			)
 
-			if (adminOrErr.isLeft()) throw adminOrErr.extract() // error
+			if (userOrErr.isLeft()) throw userOrErr.extract() // error
+
+			const user = userOrErr.extract()
+
+			await Event.emit('new:unity', { unity, user, session: this.session })
 
 			await this.createDrPerformance.execute({
-				admin: adminOrErr.extract(),
+				admin: user,
 				unity,
 				franchised: data.franchised,
 			})
 
 			await this.session.commitTransaction()
 
-			return adminOrErr
+			return userOrErr
 		} catch (error) {
 			await this.session.abortTransaction()
 

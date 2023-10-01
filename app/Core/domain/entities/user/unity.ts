@@ -36,7 +36,6 @@ const validateSchema = z.object({
 	phones: z.array(z.object({ value: z.string(), id: z.number() })).optional(),
 	site: z.string().optional(),
 	state: z.string().optional(),
-	revenue_reports: z.object({}).optional(),
 	holidays: z.array(z.object({})).optional(),
 	created_at: z.date().nullable().optional(),
 	updated_at: z.date().nullable().optional(),
@@ -63,9 +62,12 @@ export class UnityEntity extends Entity implements IUnity {
 	phones: Nullable<{ value: string; id: number }>[]
 	site: string
 	state: string
-	revenue_reports: { [key: number]: IBilling }
+	revenue_reports: Map<string, IBilling>
 	holidays: IHoliday[]
 	franchised: boolean
+	created_by?: string
+	franchise?: string
+
 
 	private constructor() {
 		super()
@@ -177,13 +179,27 @@ export class UnityEntity extends Entity implements IUnity {
 		return this
 	}
 
-	defineRevenueReports(revenue_reports: { [key: number]: IBilling } = {}): this {
+	defineRevenueReports(revenue_reports: Map<string, IBilling> = new Map()): this {
 		this.revenue_reports = revenue_reports
 		return this
 	}
 
 	defineHolidays(holidays: IHoliday[] = []): this {
 		this.holidays = holidays
+		return this
+	}
+
+	defineFranchise(franchise = ''): this {
+		if (!franchise) return this
+
+		this.franchise = franchise
+		return this
+	}
+
+	defineCreatedBy(created_by = ''): this {
+		if (!created_by) return this
+
+		this.created_by = created_by
 		return this
 	}
 
@@ -216,6 +232,8 @@ export class UnityEntity extends Entity implements IUnity {
 				.defineFranchised(params.franchised)
 				.defineCreatedAt(params.created_at)
 				.defineUpdatedAt(params.updated_at)
+				.defineFranchise(params.franchise?.toString())
+				.defineCreatedBy(params.created_by?.toString())
 
 			await validateSchema.parseAsync(unity)
 

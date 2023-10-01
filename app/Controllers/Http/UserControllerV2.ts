@@ -59,10 +59,6 @@ class UserControllerV2 {
 			},
 		})
 			.select('-payment_participations -password')
-			.populate('unities')
-			.populate('answer')
-			.populate('activity')
-			.populate('userLog')
 			.orFail()
 
 		return user

@@ -6,7 +6,7 @@ import { SystemUser } from '../abstract/system-user.abstract'
 import DaysOfTrade from '../helpers/days-of-trade'
 
 class AdminUser extends SystemUser implements IAdminUser {
-	type: ROLES.ADMIN | ROLES.ADMIN_PROF
+	type: ROLES.ADMIN | ROLES.ADMIN_PROF | ROLES.FRANCHISEE_ADMIN
 	password: string
 
 	private constructor() {

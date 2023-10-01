@@ -2,6 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { ISessionTransaction } from 'App/Core/helpers/session-transaction'
 import { PromiseEither, right } from 'App/Core/shared'
 import BusinessFranchises from 'App/Models/BusinessFranchises'
+import Unity from 'App/Models/Unity'
 import { IAdminUser } from 'App/Types/IAdminUser'
 import { IUnity } from 'App/Types/IUnity'
 import { DrPerformanceManager } from '../interface/dr-performance-manager.interface'
@@ -15,9 +16,16 @@ export class DrPerformanceMongoose implements DrPerformanceManager {
 	) { }
 
 	async addUnity(unity: IUnity): PromiseEither<AbstractError, IUnity> {
-		await BusinessFranchises.updateOne(
+
+		const business = await BusinessFranchises.findOneAndUpdate(
 			{ name: FRANCHISE_NAME },
 			{ $push: { unities: unity._id.toString() } },
+			{ ...this.session.options },
+		).orFail()
+
+		await Unity.updateOne(
+			{ _id: unity._id },
+			{ $set: { franchise: business._id } },
 			{ ...this.session.options },
 		).orFail()
 
