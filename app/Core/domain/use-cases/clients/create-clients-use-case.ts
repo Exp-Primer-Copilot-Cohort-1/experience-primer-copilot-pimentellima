@@ -9,11 +9,8 @@ import { ClientManagerInterface } from '../../repositories/interface'
 export class CreateClientsUseCase implements UseCase<IUserClient, IUserClient> {
 	constructor(private readonly manager: ClientManagerInterface) { } // eslint-disable-line
 
-	public async execute({
-		unity_id,
-		...data
-	}: IUserClient): PromiseEither<AbstractError, IUserClient> {
-		if (!unity_id) return left(new UnitNotFoundError())
+	public async execute(data: IUserClient): PromiseEither<AbstractError, IUserClient> {
+		if (!data.unity_id) return left(new UnitNotFoundError())
 
 		const clientEntity = await ClientEntity.build(data)
 
@@ -21,7 +18,7 @@ export class CreateClientsUseCase implements UseCase<IUserClient, IUserClient> {
 
 		const client = clientEntity.extract()
 
-		const clientOrErr = await this.manager.create(client, unity_id.toString())
+		const clientOrErr = await this.manager.create(client, data.unity_id.toString())
 
 		return clientOrErr
 	}

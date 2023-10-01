@@ -257,6 +257,7 @@ const ClientSchema = new Schema<IUserClient>(
 			type: Schema.Types.ObjectId,
 			required: false,
 			default: null,
+			ref: 'partners',
 		},
 		due_date: {
 			type: Date,
@@ -354,9 +355,36 @@ ClientSchema.post('findOne', async function (doc) {
 	}
 })
 
-ClientSchema.index({ unity_id: 1, name: 1, celphone: 1, birth_date: 1 }, { unique: true })
-ClientSchema.index({ unity_id: 1, name: 1, email: 1, birth_date: 1 }, { unique: true })
-ClientSchema.index({ unity_id: 1, rg: 1, document: 1, active: 1 }, { unique: false })
+ClientSchema.index(
+	{ unity_id: 1, name: 1, celphone: 1, email: 1, birth_date: 1 },
+	{
+		unique: true,
+		partialFilterExpression: {
+			$or: [
+				{ celphone: { $exists: true } },
+				{ email: { $exists: true } },
+			],
+		},
+	}
+)
+
+ClientSchema.index(
+	{
+		rg: 1,
+		unity_id: 1,
+		document: 1,
+	},
+	{
+		unique: true,
+		partialFilterExpression: {
+			$or: [
+				{ rg: { $exists: true } },
+				{ document: { $exists: true } },
+			],
+		},
+	}
+);
+
 
 // enum de como as coleções referências são chamadas na collection de clientes
 

@@ -48,7 +48,7 @@ export interface IUserClient extends Partial<IAddress> {
 	email?: string
 	unity_id?: ObjectId | string
 	active?: boolean
-	partner?: Generic | string
+	partner?: Generic | string | null
 	due_date?: Date
 	created_at?: Date
 	updated_at?: Date

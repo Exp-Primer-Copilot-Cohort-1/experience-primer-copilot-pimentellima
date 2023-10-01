@@ -39,7 +39,7 @@ export class ClientEntity extends Entity implements IUserClient {
 	email: string;
 	unity_id: string;
 	active?: boolean;
-	partner?: string;
+	partner?: string | null;
 	due_date?: Date;
 	cep?: string;
 	street?: string;
@@ -289,8 +289,12 @@ export class ClientEntity extends Entity implements IUserClient {
 	 * @param partner Parceiro do cliente.
 	 * @returns Instância da classe Client.
 	 */
-	definePartner(partner?: Generic | string): this {
-		this.partner = typeof partner === "string" ? partner : partner?.value?.toString();
+	definePartner(partner: Generic | string | null = null): this {
+		if (typeof partner === "object") {
+			partner = partner?.value?.toString() || null;
+		}
+
+		this.partner = partner;
 		return this;
 	}
 
@@ -412,7 +416,7 @@ export class ClientEntity extends Entity implements IUserClient {
 				.defineNaturalness(data.naturalness)
 				.defineNeighborhood(data.neighborhood)
 				.defineObservation(data.observation)
-				.definePartner(data.partner)
+				.definePartner(data.partner || null)
 				.definePhone(data.phone)
 				.defineProfession(data.profession)
 				.defineProfsWithAccess(data.profs_with_access)

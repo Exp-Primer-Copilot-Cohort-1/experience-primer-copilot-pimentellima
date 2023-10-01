@@ -18,7 +18,6 @@ export class ClientsMongooseRepository implements ClientManagerInterface {
 		const doc = await Client.create({
 			...data,
 			email: data.email?.trim().toLowerCase(),
-			partner: data.partner?.value,
 			unity_id,
 		})
 
@@ -29,10 +28,7 @@ export class ClientsMongooseRepository implements ClientManagerInterface {
 		data: ClientEntity,
 		id: string,
 	): PromiseEither<AbstractError, IUserClient> {
-		const doc = await Client.findByIdAndUpdate(id, data, { new: true }).populate(
-			COLLECTIONS_REFS.PARTNERS,
-			PROJECTION_DEFAULT,
-		)
+		const doc = await Client.findByIdAndUpdate(id, data, { new: true })
 
 		if (!doc) {
 			return left(new ClientNotFoundError())
