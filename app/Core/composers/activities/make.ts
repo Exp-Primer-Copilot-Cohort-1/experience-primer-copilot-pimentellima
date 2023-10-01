@@ -16,6 +16,7 @@ import { FindActivitiesByProfIdUseCase } from 'App/Core/domain/use-cases/activit
 import { FindActivityByIdUseCase } from 'App/Core/domain/use-cases/activities/find-activity-by-id-use-case'
 import { FindAllActivitiesAwaitUseCase } from 'App/Core/domain/use-cases/activities/find-all-activities-await-use-case'
 import { FindAllActivitiesPendingUseCase } from 'App/Core/domain/use-cases/activities/find-all-activities-pending-use-case'
+import { FindDayActivitiesUseCase } from 'App/Core/domain/use-cases/activities/find-day-activities-use-case'
 import { UpdateActivityFinishedAtUseCase } from 'App/Core/domain/use-cases/activities/update-activity-finished-at-use-case'
 import { UpdateActivityPaymentUseCase } from 'App/Core/domain/use-cases/activities/update-activity-payment-use-case'
 import { UpdateActivityStartedAtUseCase } from 'App/Core/domain/use-cases/activities/update-activity-started-at-use-case'
@@ -66,6 +67,15 @@ export const makeFindActivityByIdComposer = (): ControllerGeneric => {
 		),
 	)
 }
+
+export const makeFindDayActivitiesComposer = (): ControllerGeneric => {
+	return new Controller(
+		new FindDayActivitiesUseCase(
+			new ActivityMongoRepository(new SessionTransaction()),
+		),
+	)
+}
+
 export const makeFindActivitiesByProfIdComposer = (): ControllerGeneric => {
 	return new Controller(
 		new FindActivitiesByProfIdUseCase(
