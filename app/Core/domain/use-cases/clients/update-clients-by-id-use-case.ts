@@ -2,6 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, right } from 'App/Core/shared'
 import { IUserClient } from 'App/Types/IClient'
+import { ClientEntity } from '../../entities/clients/client'
 import { ClientManagerInterface } from '../../repositories/interface'
 
 type TypeParams = {
@@ -13,13 +14,17 @@ export class UpdateClientsByIdUseCase implements UseCase<TypeParams, IUserClient
 
 	public async execute({
 		id,
-		...client
+		...data
 	}: TypeParams): PromiseEither<AbstractError, IUserClient> {
+		const clientEntity = await ClientEntity.build(data)
+
+		if (clientEntity.isLeft()) return clientEntity
+
+		const client = clientEntity.extract()
+
 		const clientOrErr = await this.manager.updateById(client, id)
 
-		if (clientOrErr.isLeft()) {
-			return clientOrErr
-		}
+		if (clientOrErr.isLeft()) return clientOrErr
 
 		const doc = clientOrErr.extract()
 

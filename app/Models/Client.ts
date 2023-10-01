@@ -105,6 +105,19 @@ export enum COLLECTIONS_REFS {
  *         due_date:
  *           type: string
  *           description: Data de vencimento.
+ *         underaged:
+ *           type: boolean
+ *           description: Indica se o cliente é menor de idade.
+ *           default: false
+ *         sponsor:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string
+ *               description: Nome do responsável.
+ *             phone:
+ *               type: string
+ *               description: Telefone do responsável.
  *         cep:
  *           type: string
  *           description: CEP do cliente.
@@ -187,7 +200,8 @@ const ClientSchema = new Schema<IUserClient>(
 			type: String,
 		},
 		birth_date: {
-			type: String,
+			type: Date,
+			required: true,
 		},
 		gender: {
 			type: String,
@@ -271,6 +285,26 @@ const ClientSchema = new Schema<IUserClient>(
 		country: {
 			type: String,
 		},
+		underaged: {
+			type: Boolean,
+			default: false,
+		},
+		sponsor: {
+			name: {
+				type: String,
+				required: function () {
+					// Make 'sponsor.name' required if 'underaged' is true
+					return this.underaged;
+				},
+			},
+			phone: {
+				type: String,
+				required: function () {
+					// Make 'sponsor.phone' required if 'underaged' is true
+					return this.underaged;
+				},
+			},
+		}
 	},
 	{
 		timestamps: {

@@ -79,7 +79,7 @@ describe('Create User Admin Use Case (Unit)', () => {
 
 	it('should return left with error when unit not exists', async () => {
 		const { sut } = makeSut()
-		const userOrErr = await sut.execute({ ...user, unity_id: 'invalid_unity' })
+		const userOrErr = await sut.execute({ ...user, unity_id: '' })
 		expect(userOrErr.isLeft()).toBeTruthy()
 	})
 })

@@ -1,6 +1,5 @@
-import { defineConfig } from 'vitest/config'
-
 import { config } from 'dotenv'
+import { defineConfig } from 'vitest/config'
 config()
 
 export default defineConfig({
@@ -28,6 +27,7 @@ export default defineConfig({
 			App: '/app',
 			'@ioc:Mongoose': 'mongoose',
 			'@ioc:Adonis/Core/Hash': '@adonisjs/hash/build/standalone',
+			'@ioc:Adonis/Core/Event': '@adonisjs/events/build/standalone',
 		},
 	},
 })

@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { faker } from '@faker-js/faker'
 import { AppointmentStatus } from 'App/Helpers'
@@ -33,6 +33,18 @@ const mountActivity = ({
 }
 
 describe('Activity Entity (Unit)', () => {
+
+	vi.mock('./validations-activity', () => ({
+		__esModule: true,
+		default: vi.fn().mockImplementation(() => {
+			return {
+				parse: () => {
+					return true
+				},
+			}
+		}),
+	}));
+
 	beforeAll(async () => {
 		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})

@@ -7,61 +7,12 @@ import User from 'App/Models/User'
 import { ActivityPayment, IActivity, STATUS_ACTIVITY } from 'App/Types/IActivity'
 import { IScheduleBlock } from 'App/Types/IScheduleBlock'
 import { IUser } from 'App/Types/IUser'
-import areRangesIntersecting from 'App/utils/are-ranges-intersecting'
-import { getDay, isAfter, isSameDay, startOfYesterday } from 'date-fns'
-import { z } from 'zod'
+import { isSameDay } from 'date-fns'
 import { UserNotFoundError } from '../../errors'
 import { AbstractActivity } from '../abstract/activity-abstract'
+import validationActivity from './validations-activity'
 
-const validationActivity = (profData, scheduleBlocks) =>
-	z
-		.object({
-			prof: z.string(),
-			client: z.string(),
-			date: z
-				.date()
-				.refine((val) => isAfter(val, startOfYesterday()))
-				.refine((val) => {
-					const weekDay = getDay(val)
-					if (
-						(weekDay === 0 && !profData.is_sunday) ||
-						(weekDay === 1 && !profData.is_monday) ||
-						(weekDay === 2 && !profData.is_tuesday) ||
-						(weekDay === 3 && !profData.is_thursday) ||
-						(weekDay === 4 && !profData.is_wednesday) ||
-						(weekDay === 5 && !profData.is_friday) ||
-						(weekDay === 6 && !profData.is_saturday)
-					) {
-						return false
-					}
-					return true
-				}),
-			hour_start: z.string(),
-			hour_end: z.string(),
-			procedures: z.array(
-				z.object({
-					_id: z.string(),
-					minutes: z.number(),
-					price: z.number(),
-					health_insurance: z.string(),
-				}),
-			),
-		})
-		.refine(({ hour_start, hour_end }) => {
-			for (const sb of scheduleBlocks) {
-				if (
-					areRangesIntersecting({
-						range1Start: new Date(hour_start),
-						range1End: new Date(hour_end),
-						range2Start: new Date(sb.hour_start),
-						range2End: new Date(sb.hour_end),
-					})
-				) {
-					return false
-				}
-			}
-			return true
-		})
+
 export class ActivityEntity extends AbstractActivity implements IActivity {
 	date: Date
 	hour_start: string
@@ -133,7 +84,8 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 	}
 
 	update(params: Partial<IActivity>): ActivityEntity {
-		return this.defineScheduled(params.scheduled || this.scheduled)
+		return this
+			.defineScheduled(params.scheduled || this.scheduled)
 			.updateDate(params.date || this.date)
 			.updateHourStart(params.hour_start || this.hour_start)
 			.updateHourEnd(params.hour_end || this.hour_end)
@@ -179,7 +131,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 
 			return right(activity)
 		} catch (err) {
-			console.log('erro no zod')
+			console.log(JSON.stringify(err, null, 2))
 			return left(err)
 		}
 	}

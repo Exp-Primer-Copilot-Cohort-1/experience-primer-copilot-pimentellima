@@ -18,8 +18,12 @@ describe('CreatePasswordUseCase (Unit)', () => {
 			type: ROLES.ADMIN,
 		})
 
+		if (passwordOrErr.isLeft()) {
+			throw new Error('Should not be left')
+		}
+
 		expect(passwordOrErr.isRight()).toBe(true)
-		expect(passwordOrErr.extract()).toBe('123456')
+		expect(passwordOrErr.extract().password).toBe('123456')
 	})
 
 	it('should return password if password is not passed', async () => {

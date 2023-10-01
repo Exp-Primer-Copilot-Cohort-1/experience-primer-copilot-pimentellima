@@ -4,6 +4,7 @@ import { ObjectId } from '@ioc:Mongoose'
 
 import { IAddress } from './IAddress'
 import { IFormAnswer } from './IFormAnswer'
+import { Generic } from './ITransaction'
 
 export type ProfWithAccess = {
 	prof_id: string
@@ -12,17 +13,31 @@ export type ProfWithAccess = {
 	end?: Date
 }
 
+export type ISponsor = {
+	name: string
+	phone: string
+}
+
+
+export enum Genders {
+	male = 'M',
+	female = 'F',
+	other = 'NB',
+	not_informed = 'O',
+}
 export interface IUserClient extends Partial<IAddress> {
 	_id?: string
 	name: string
 	avatar?: string
-	form_answers: IFormAnswer[]
-	profs_with_access: ProfWithAccess[]	
+	form_answers?: IFormAnswer[]
+	profs_with_access?: ProfWithAccess[]
 	birth_date: string | Date
-	gender?: 'male' | 'female' | 'other' | 'not informed'
+	gender?: Genders
 	document: string
 	rg?: string
 	celphone: string
+	underaged?: boolean
+	sponsor?: ISponsor
 	phone?: string
 	naturalness?: string
 	nationality?: string
@@ -30,13 +45,10 @@ export interface IUserClient extends Partial<IAddress> {
 	observation?: string
 	sms_checked?: boolean
 	mail_checked?: boolean
-	email: string
-	unity_id: ObjectId | string
+	email?: string
+	unity_id?: ObjectId | string
 	active?: boolean
-	partner?: {
-		value: string
-		label: string
-	}
+	partner?: Generic | string
 	due_date?: Date
 	created_at?: Date
 	updated_at?: Date
@@ -47,8 +59,5 @@ export interface IClient {
 	label: string
 	celphone?: string
 	email?: string
-	partner?: {
-		value: string
-		label: string
-	}
+	partner?: Generic
 }

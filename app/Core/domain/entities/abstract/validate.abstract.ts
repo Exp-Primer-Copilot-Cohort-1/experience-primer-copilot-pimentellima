@@ -1,12 +1,9 @@
-export abstract class Validate {
-	readonly value: any
+export abstract class Validate<T> {
+	readonly value: T
 	public abstract validate(value, ...args: any): this
 
-	constructor(value) {
+	constructor(value: T) {
 		this.value = value
 	}
 
-	toString(): string {
-		return this.value
-	}
 }

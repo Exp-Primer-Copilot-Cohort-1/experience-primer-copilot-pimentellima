@@ -1,7 +1,8 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Client, { COLLECTIONS_REFS } from 'App/Models/Client'
-import { IClient, IUserClient } from 'App/Types/IClient'
+import { IUserClient } from 'App/Types/IClient'
+import { ClientEntity } from '../../entities/clients/client'
 import { ClientNotFoundError } from '../../errors/clients-not-found'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
 import { ClientManagerInterface } from '../interface'
@@ -10,8 +11,8 @@ export class ClientsMongooseRepository implements ClientManagerInterface {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor() { }
 
-	public async create(
-		{ _id, ...data }: Partial<IUserClient>,
+	async create(
+		{ _id, ...data }: ClientEntity,
 		unity_id: string,
 	): PromiseEither<AbstractError, IUserClient> {
 		const doc = await Client.create({
@@ -25,7 +26,7 @@ export class ClientsMongooseRepository implements ClientManagerInterface {
 	}
 
 	async updateById(
-		data: Partial<IClient>,
+		data: ClientEntity,
 		id: string,
 	): PromiseEither<AbstractError, IUserClient> {
 		const doc = await Client.findByIdAndUpdate(id, data, { new: true }).populate(

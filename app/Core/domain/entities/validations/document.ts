@@ -1,7 +1,8 @@
 import { cnpj, cpf } from 'cpf-cnpj-validator'
 import { Validate } from '../abstract/validate.abstract'
+import { DocumentInvalidError } from '../errors/document-invalid'
 
-class Document extends Validate {
+class Document extends Validate<string> {
 	private constructor(document: string, force: boolean) {
 		super(document)
 		this.validate(document, force)
@@ -13,7 +14,7 @@ class Document extends Validate {
 		}
 
 		if (!cpf.isValid(document) && !cnpj.isValid(document)) {
-			throw new Error('Invalid document')
+			throw new DocumentInvalidError()
 		}
 
 		return this
