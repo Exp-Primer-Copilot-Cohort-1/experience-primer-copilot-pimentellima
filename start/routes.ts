@@ -84,9 +84,13 @@ Route.group(() => {
 	}).prefix('clients')
 
 	Route.group(() => {
-		Route.get('prof', 'UserControllerV2.findAllUsersProfs').as('users.prof.index')
+		Route.get(
+			'profs/medical',
+			'UserControllerV2.findAllUsersPerformsMedicalAppointments'
+		).as('users.profs.performs_medical_appointments.index')
+		Route.get('profs', 'UserControllerV2.findAllUsersProfs').as('users.prof.index')
 		Route.get('secs', 'UserControllerV2.findAllUsersSecs').as('users.secs.index')
-		Route.get('prof/:id', 'UserController.show').as('users.prof.show')
+		Route.get('profs/:id', 'UserController.show').as('users.prof.show')
 		Route.put(':id', 'UserController.update').as('users.update')
 	}).prefix('users')
 
@@ -435,5 +439,11 @@ Route.group(() => {
 		)
 	}).prefix('business-franchises')
 
+	Route.group(() => {
+		Route.get('', 'ProfileController.show').as('profile.show')
+		Route.put('', 'ProfileController.update').as('profile.update')
+		Route.get('unity', 'UnityController.showProfile').as('profile.unity.showProfile')
+		Route.put('unity', 'UnityController.updateProfile').as('profile.unity.update')
+	}).prefix('profile')
 
 }).middleware(['auth', 'role', 'log'])

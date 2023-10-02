@@ -44,7 +44,8 @@ export class UnitiesMongooseRepository implements UnitiesManagerInterface {
 		await unity.deleteOne()
 		return right(unity)
 	}
-	async updateUnitiesById(
+
+	async update(
 		id: string,
 		data: Partial<IUnity>,
 	): PromiseEither<AbstractError, IUnity> {

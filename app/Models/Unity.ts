@@ -149,6 +149,10 @@ export const COLLECTION_NAME = 'unities'
  */
 export const UnitySchema = new Schema<IUnity>(
 	{
+		name: {
+			type: String,
+			required: false,
+		},
 		email: {
 			type: String,
 			required: true,
@@ -158,7 +162,7 @@ export const UnitySchema = new Schema<IUnity>(
 			type: Boolean,
 			required: true,
 		},
-		address: {
+		street: {
 			type: String,
 
 		},
@@ -179,8 +183,7 @@ export const UnitySchema = new Schema<IUnity>(
 
 		},
 		cnaes: {
-			type: Array,
-
+			type: String,
 		},
 		complement: {
 			type: String,
@@ -202,10 +205,6 @@ export const UnitySchema = new Schema<IUnity>(
 		is_company: {
 			type: Boolean,
 			required: true,
-		},
-		name_company: {
-			type: String,
-
 		},
 		neighborhood: {
 			type: String,
@@ -306,5 +305,6 @@ UnitySchema.post('findOne', async function (doc) {
 		console.log('erro na descriptação')
 	}
 })
+
 
 export default Mongoose.model<IUnity>(COLLECTION_NAME, UnitySchema)

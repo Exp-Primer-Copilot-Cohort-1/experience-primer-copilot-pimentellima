@@ -9,7 +9,7 @@ export interface UnitiesManagerInterface {
 	findByName: (name: string) => PromiseEither<AbstractError, IUnity[]>
 	deleteById: (id: string) => PromiseEither<AbstractError, IUnity>
 	findOne: (id: string) => PromiseEither<AbstractError, IUnity>
-	updateUnitiesById: (
+	update: (
 		id: string,
 		data: Partial<IUnity>,
 	) => PromiseEither<AbstractError, IUnity>

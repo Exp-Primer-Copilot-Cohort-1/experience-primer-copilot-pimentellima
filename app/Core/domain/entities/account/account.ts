@@ -41,7 +41,7 @@ export class AccountEntity extends Entity implements IAccount {
 	/**
 	 * ID do usuário da conta.
 	 */
-	user_id?: string
+	user?: string
 
 	private constructor() {
 		super()
@@ -123,7 +123,7 @@ export class AccountEntity extends Entity implements IAccount {
 	 * @returns A instância da entidade de conta.
 	 */
 	defineUserId(user_id?: string): AccountEntity {
-		this.user_id = user_id
+		this.user = user_id
 		return this
 	}
 
@@ -146,7 +146,7 @@ export class AccountEntity extends Entity implements IAccount {
 					.defineActive(params.active)
 					.defineUnityId(params.unity_id as string)
 					.defineDescription(params.description)
-					.defineUserId(params.user_id as string),
+					.defineUserId(params.user as string),
 			)
 		} catch (err) {
 			return left(new InvalidParamsError(err))

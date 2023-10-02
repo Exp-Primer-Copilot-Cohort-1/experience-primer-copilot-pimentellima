@@ -9,7 +9,7 @@ export interface IAccount {
 	active: boolean
 	unity_id: string | ObjectId
 	description?: string
-	user_id?: string | ObjectId
+	user?: string | ObjectId
 	created_at: Date
 	updated_at: Date
 }

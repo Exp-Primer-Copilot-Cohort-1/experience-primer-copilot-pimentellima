@@ -261,8 +261,11 @@ const UserSchema = new Schema<IUser>(
 		},
 		blacklist: {
 			type: Array,
-
 		},
+		performs_medical_appointments: {
+			type: Boolean,
+			default: false,
+		}
 	},
 	{
 		timestamps: {

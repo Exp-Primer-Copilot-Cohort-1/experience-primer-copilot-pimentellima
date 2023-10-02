@@ -1,54 +1,20 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { IBilling } from 'App/Types/IBilling'
-import { IHoliday } from 'App/Types/IHoliday'
-import { IUnity } from 'App/Types/IUnity'
+import { IProfileUnity, IUnity } from 'App/Types/IUnity'
 import { addDays } from 'date-fns'
-import * as z from 'zod'
 import { Entity } from '../abstract/entity.abstract'
 
-import { cnpj, cpf } from 'cpf-cnpj-validator'
-import Document from '../validations/document'
 import Email from '../validations/email'
+import { validateUnity } from './validations'
 
-const validateSchema = z.object({
-	_id: z.string().nullable().optional(),
-	name: z.string(),
-	is_company: z.boolean().optional(),
-	document: z.string().refine((val) => {
-		const numbers = val.replace(/\D/g, '')
-		return cpf.isValid(numbers) || cnpj.isValid(numbers)
-	}),
-	date_expiration: z.date().optional(),
-	active: z.boolean(),
-	email: z.string().email(),
-	address: z.string().optional(),
-	address_number: z.string().optional(),
-	avatar: z.string().optional(),
-	cep: z.string().optional(),
-	city: z.string().optional(),
-	cnaes: z.string().optional(),
-	complement: z.string().optional(),
-	country: z.string().optional(),
-	name_company: z.string(),
-	neighborhood: z.string().optional(),
-	obs: z.string().optional(),
-	phones: z.array(z.object({ value: z.string(), id: z.number() })).optional(),
-	site: z.string().optional(),
-	state: z.string().optional(),
-	holidays: z.array(z.object({})).optional(),
-	created_at: z.date().nullable().optional(),
-	updated_at: z.date().nullable().optional(),
-})
 
-export class UnityEntity extends Entity implements IUnity {
+export class ProfileUnityEntity extends Entity implements IProfileUnity {
 	name: string
 	is_company: boolean
-	document: string
 	date_expiration: Date
 	active: boolean
 	email: string
-	address: string
+	street: string
 	address_number: string
 	avatar: string
 	cep: string
@@ -61,11 +27,6 @@ export class UnityEntity extends Entity implements IUnity {
 	phones: Nullable<{ value: string; id: number }>[]
 	site: string
 	state: string
-	revenue_reports: Map<string, IBilling>
-	holidays: IHoliday[]
-	franchised: boolean
-	created_by?: string
-	franchise?: string
 
 
 	private constructor() {
@@ -77,19 +38,8 @@ export class UnityEntity extends Entity implements IUnity {
 		return this
 	}
 
-	defineFranchised(franchised = false): this {
-		this.franchised = franchised
-		return this
-	}
-
 	defineIsCompany(is_company = true): this {
 		this.is_company = is_company
-		return this
-	}
-
-	defineDocument(document = '', force = false): this {
-		const numbers = document.replace(/\D/g, '')
-		this.document = Document.build(numbers, force).value
 		return this
 	}
 
@@ -108,8 +58,8 @@ export class UnityEntity extends Entity implements IUnity {
 		return this
 	}
 
-	defineAddress(address = ''): this {
-		this.address = address
+	defineStreet(street = ''): this {
+		this.street = street
 		return this
 	}
 
@@ -173,36 +123,12 @@ export class UnityEntity extends Entity implements IUnity {
 		return this
 	}
 
-	defineRevenueReports(revenue_reports: Map<string, IBilling> = new Map()): this {
-		this.revenue_reports = revenue_reports
-		return this
-	}
-
-	defineHolidays(holidays: IHoliday[] = []): this {
-		this.holidays = holidays
-		return this
-	}
-
-	defineFranchise(franchise = ''): this {
-		if (!franchise) return this
-
-		this.franchise = franchise
-		return this
-	}
-
-	defineCreatedBy(created_by = ''): this {
-		if (!created_by) return this
-
-		this.created_by = created_by
-		return this
-	}
-
-	static async build(params: IUnity): PromiseEither<AbstractError, UnityEntity> {
+	static async build(params: IUnity): PromiseEither<AbstractError, ProfileUnityEntity> {
 		try {
-			const unity = new UnityEntity()
+			const unity = new ProfileUnityEntity()
 				.defineId(params._id?.toString() || '')
 				.defineActive(params.active)
-				.defineAddress(params.address)
+				.defineStreet(params.street)
 				.defineAddressNumber(params.address_number)
 				.defineAvatar(params.avatar)
 				.defineCep(params.cep)
@@ -211,24 +137,18 @@ export class UnityEntity extends Entity implements IUnity {
 				.defineComplement(params.complement)
 				.defineCountry(params.country)
 				.defineDateExpiration(params.date_expiration)
-				.defineDocument(params.document, true)
 				.defineEmail(params.email)
-				.defineHolidays(params.holidays)
 				.defineIsCompany(params.is_company)
 				.defineName(params.name)
 				.defineNeighborhood(params.neighborhood)
 				.defineObs(params.obs)
 				.definePhones(params.phones)
-				.defineRevenueReports(params.revenue_reports)
 				.defineSite(params.site)
 				.defineState(params.state)
-				.defineFranchised(params.franchised)
 				.defineCreatedAt(params.created_at)
 				.defineUpdatedAt(params.updated_at)
-				.defineFranchise(params.franchise?.toString())
-				.defineCreatedBy(params.created_by?.toString())
 
-			await validateSchema.parseAsync(unity)
+			await validateUnity().parseAsync(unity)
 
 			return right(unity)
 		} catch (error) {

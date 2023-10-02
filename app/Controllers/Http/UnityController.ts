@@ -119,6 +119,7 @@ class UnityController {
 	 */
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	public async update(ctx: HttpContextContract) {
+		ctx.bouncer.with('UnitiesPolicy').authorize('update')
 		return adaptRoute(makeUnityUpdateByIdComposer(), ctx)
 	}
 
@@ -156,7 +157,23 @@ class UnityController {
 	 *                       type: string
 	 */
 	public async show(ctx: HttpContextContract) {
+		ctx.bouncer.with('UnitiesPolicy').authorize('view')
 		return adaptRoute(makeUnityShowByIdComposer(), ctx)
+	}
+
+	public async showProfile(ctx: HttpContextContract) {
+		ctx.bouncer.with('UnitiesPolicy').authorize('view')
+		return adaptRoute(makeUnityShowByIdComposer(), ctx, {
+			id: ctx.auth.user?.unity_id,
+		})
+	}
+
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
+	public async updateProfile(ctx: HttpContextContract) {
+		ctx.bouncer.with('UnitiesPolicy').authorize('update')
+		return adaptRoute(makeUnityUpdateByIdComposer(), ctx, {
+			_id: ctx.auth.user?.unity_id,
+		})
 	}
 }
 

@@ -65,6 +65,7 @@ const AccountSchema = new Schema<IAccount>(
 		cash: {
 			type: Number,
 			required: true,
+			default: 0,
 		},
 		date: {
 			type: Date,
@@ -84,7 +85,7 @@ const AccountSchema = new Schema<IAccount>(
 			ref: COLLECTION_UNITY_NAME,
 		},
 		description: String,
-		user_id: {
+		user: {
 			type: Schema.Types.ObjectId,
 			ref: COLLECTION_USER_NAME,
 		},
