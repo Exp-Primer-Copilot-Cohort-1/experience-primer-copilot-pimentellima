@@ -6,7 +6,7 @@ export enum FinancialCategoryType {
 }
 
 export interface IFinancialCategory {
-	_id: string | ObjectId
+	_id?: string | ObjectId
 	name: string
 	type: FinancialCategoryType
 	sub_categories?: Array<any>

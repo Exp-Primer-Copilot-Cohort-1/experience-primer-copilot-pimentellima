@@ -113,16 +113,18 @@
  *         $ref: '#/components/responses/Unauthorized'
  */
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import FinancialCategoryEntity from 'App/Core/domain/entities/financial-category/financial-category'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import FinancialCategory, { COLLECTION_NAME } from 'App/Models/FinancialCategory'
+import { IFinancialCategory } from 'App/Types/IFinancialCategory'
 
 class FinancialCategoryController {
 	async index({ auth, request }: HttpContextContract) {
 		const userLogged = auth.user
 		const opts = OptsQuery.build(request.qs())
 
-		const categories = FinancialCategory.find({
+		const categories = await FinancialCategory.find({
 			unity_id: userLogged?.unity_id,
 			active: opts.active,
 		})
@@ -133,33 +135,39 @@ class FinancialCategoryController {
 	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async store({ request, response, auth }: HttpContextContract) {
 		const userLogged = auth.user
-		const data = request.only(['name', 'type', 'sub_categories'])
-		const categoryData = await FinancialCategory.findOne({ name: data.name })
-		if (categoryData && categoryData.active) {
-			return response.status(400).send({
-				error: {
-					message: 'Esta categoria já está cadastrada.',
-				},
-			})
-		}
-		const category = await FinancialCategory.create({
+		const data = request.all() as IFinancialCategory
+
+		const financialCategoryOrErr = await FinancialCategoryEntity.build({
 			...data,
 			active: true,
-			unity_id: userLogged?.unity_id,
+			unity_id: userLogged?.unity_id.toString() as string,
 		})
-		return category
+
+		if (financialCategoryOrErr.isLeft()) {
+			return response.badRequest(financialCategoryOrErr.extract())
+		}
+
+		const financialCategory = financialCategoryOrErr.extract()
+
+		return await FinancialCategory.create(financialCategory)
 	}
 
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	async update({ params, request }: HttpContextContract) {
-		const data = request.only(['name', 'type', 'sub_categories', 'active'])
+	async update({ params, request, response }: HttpContextContract) {
+		const data = request.all() as IFinancialCategory
 
-		const category = await FinancialCategory.findByIdAndUpdate(
+		const financialCategoryOrErr = await FinancialCategoryEntity.build(data)
+
+		if (financialCategoryOrErr.isLeft()) {
+			return response.badRequest(financialCategoryOrErr.extract())
+		}
+
+		const financialCategory = financialCategoryOrErr.extract()
+
+		return await FinancialCategory.findByIdAndUpdate(
 			params.id,
-			data,
+			financialCategory,
 		).orFail()
-
-		return { ...category.toObject(), ...data }
 	}
 
 	async show({ params }: HttpContextContract) {

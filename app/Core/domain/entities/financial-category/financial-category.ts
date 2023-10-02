@@ -8,7 +8,7 @@ import { Entity } from '../abstract/entity.abstract'
 
 import validationsSchema from './validations'
 
-export class CategoryFinancial extends Entity implements IFinancialCategory {
+export class FinancialCategoryEntity extends Entity implements IFinancialCategory {
 
 	name: string
 	active: boolean
@@ -41,9 +41,9 @@ export class CategoryFinancial extends Entity implements IFinancialCategory {
 
 	public static async build(
 		params: IFinancialCategory,
-	): PromiseEither<AbstractError, CategoryFinancial> {
+	): PromiseEither<AbstractError, FinancialCategoryEntity> {
 		try {
-			const category = new CategoryFinancial()
+			const category = new FinancialCategoryEntity()
 				.defineId(params._id?.toString())
 				.defineType(params.type)
 				.defineName(params.name)
@@ -61,4 +61,4 @@ export class CategoryFinancial extends Entity implements IFinancialCategory {
 	}
 }
 
-export default CategoryFinancial
+export default FinancialCategoryEntity
