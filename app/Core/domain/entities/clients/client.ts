@@ -180,7 +180,7 @@ export class ClientEntity extends Entity implements IUserClient {
 			return this;
 		}
 
-		this.sponsor = Sponsor.build(sponsor).value;
+		this.sponsor = Sponsor.build(sponsor, this.underaged as boolean).value;
 		return this;
 	}
 

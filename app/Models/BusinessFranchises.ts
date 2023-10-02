@@ -1,14 +1,21 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IBusinessFranchises } from 'App/Types/IBusinessFranchises'
+import { COLLECTION_NAME as COLLECTION_NAME_UNITIES } from './Unity'
+import { COLLECTION_NAME as COLLECTION_NAME_USER } from './User'
 
 export const COLLECTION_NAME = 'business_franchises'
 
+export enum COLLECTION_REFS {
+	ADMINS = 'admins',
+	UNITIES = 'unities',
+	SUPER_ADMINS = 'superAdmins',
+}
 const BusinessFranchisesSchema = new Schema<IBusinessFranchises>(
 	{
 		name: { type: String, required: true },
-		unities: [{ type: Schema.Types.ObjectId, required: true }],
-		admins: [{ type: Schema.Types.ObjectId, required: true }],
-		superAdmins: [{ type: Schema.Types.ObjectId, required: true }],
+		unities: [{ type: Schema.Types.ObjectId, required: true, ref: COLLECTION_NAME_UNITIES }],
+		admins: [{ type: Schema.Types.ObjectId, required: true, ref: COLLECTION_NAME_USER }],
+		superAdmins: [{ type: Schema.Types.ObjectId, required: true, ref: COLLECTION_NAME_USER }],
 	},
 	{
 		timestamps: {

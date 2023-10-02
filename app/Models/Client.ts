@@ -293,17 +293,11 @@ const ClientSchema = new Schema<IUserClient>(
 		sponsor: {
 			name: {
 				type: String,
-				required: function () {
-					// Make 'sponsor.name' required if 'underaged' is true
-					return this.underaged;
-				},
+
 			},
 			phone: {
 				type: String,
-				required: function () {
-					// Make 'sponsor.phone' required if 'underaged' is true
-					return this.underaged;
-				},
+
 			},
 		}
 	},

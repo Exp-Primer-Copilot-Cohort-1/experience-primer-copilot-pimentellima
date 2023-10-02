@@ -68,4 +68,5 @@ export const { actions } = Bouncer.define('viewList', (user) => {
 export const { policies } = Bouncer.registerPolicies({
 	ViewActivitiesPolicy: () => import('App/Policies/ViewActivitiesPolicy'),
 	ViewScheduledPolicy: () => import('App/Policies/ScheduledPolicy'),
+	BusinessFranchisesPolicy: () => import('App/Policies/BusinessFranchisesPolicy'),
 })
