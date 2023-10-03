@@ -81,6 +81,7 @@
 		"phc-bcrypt": "^1.0.8",
 		"proxy-addr": "^2.0.7",
 		"reflect-metadata": "^0.1.13",
+		"socket.io": "^4.7.2",
 		"source-map-support": "^0.5.21",
 		"winston": "^3.10.0",
 		"zod": "^3.22.2"
