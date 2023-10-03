@@ -23,7 +23,7 @@ export default class PermissionStatusMiddleware {
 
 		const body = request.body()
 
-		const { status, ...rest } = body
+		const { active, ...rest } = body
 
 		request.updateBody(rest)
 
