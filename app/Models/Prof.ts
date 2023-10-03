@@ -93,6 +93,7 @@ const ProfSchema = new Schema<IUser>(
 		email: {
 			type: String,
 			required: true,
+			immutable: true,
 		},
 		password: {
 			type: String,
@@ -106,7 +107,6 @@ const ProfSchema = new Schema<IUser>(
 			type: String,
 			required: true,
 		},
-
 		unity_id: {
 			type: Mongoose.Schema.Types.ObjectId,
 			ref: 'unities',
@@ -202,7 +202,6 @@ const ProfSchema = new Schema<IUser>(
 		},
 		blacklist: {
 			type: Array,
-
 		},
 	},
 	{
