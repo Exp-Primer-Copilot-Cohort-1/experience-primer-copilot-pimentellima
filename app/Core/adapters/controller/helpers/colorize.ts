@@ -1,8 +1,8 @@
 import cli from 'cli-color';
 
-type Method = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
+export type METHOD = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
 
-export const colorize = (statusCode: number, url: string, method: Method) => {
+export const colorize = (statusCode: number, url: string, method: METHOD) => {
 	if (!statusCode) {
 		return `${cli.cyan(`[${method}]`)} ${url} - ${cli.white(
 			'No status code',

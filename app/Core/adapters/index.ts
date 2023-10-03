@@ -1,1 +1,1 @@
-export * from './mongoose-adapter';
+export * from './adapter-route';

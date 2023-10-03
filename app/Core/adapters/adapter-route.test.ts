@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
+import { adaptRoute } from './adapter-route'
 import { ControllerGeneric } from './controller/helpers'
-import { adaptRoute } from './mongoose-adapter'
 
-describe('Mongoose Adapter (Unit)', () => {
+describe('Adapter Route (Unit)', () => {
 	it('should return a function that handles HTTP requests', async () => {
 		const controller: ControllerGeneric = {
 			handle: vi.fn().mockResolvedValue({
