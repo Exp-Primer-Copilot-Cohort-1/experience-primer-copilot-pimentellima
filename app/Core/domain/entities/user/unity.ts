@@ -48,7 +48,7 @@ export class UnityEntity extends Entity implements IUnity {
 	date_expiration: Date
 	active: boolean
 	email: string
-	address: string
+	street: string
 	address_number: string
 	avatar: string
 	cep: string
@@ -108,8 +108,8 @@ export class UnityEntity extends Entity implements IUnity {
 		return this
 	}
 
-	defineAddress(address = ''): this {
-		this.address = address
+	defineStreet(street = ''): this {
+		this.street = street
 		return this
 	}
 
@@ -202,7 +202,7 @@ export class UnityEntity extends Entity implements IUnity {
 			const unity = new UnityEntity()
 				.defineId(params._id?.toString() || '')
 				.defineActive(params.active)
-				.defineAddress(params.address)
+				.defineStreet(params.street)
 				.defineAddressNumber(params.address_number)
 				.defineAvatar(params.avatar)
 				.defineCep(params.cep)

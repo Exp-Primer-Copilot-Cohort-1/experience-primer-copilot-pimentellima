@@ -12,7 +12,6 @@ export const validateUnity = () => z.object({
 	_id: z.string().nullable().optional(),
 	name: z.string().optional(),
 	is_company: z.boolean().optional(),
-	email: z.string().email(),
 	street: z.string().optional(),
 	address_number: z.string().optional(),
 	avatar: z.string().optional(),

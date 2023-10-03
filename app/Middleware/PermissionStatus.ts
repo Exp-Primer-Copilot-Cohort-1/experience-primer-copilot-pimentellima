@@ -15,7 +15,7 @@ export default class PermissionStatusMiddleware {
 			return await next()
 		}
 
-		const user = await auth.user
+		const user = auth.user
 		// usuário tem permissão para alterar o status
 		if (user && !hasNotPermission.includes(user.type)) {
 			return next()
