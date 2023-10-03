@@ -47,5 +47,6 @@ Server.middleware.registerNamed({
 	auth: 'App/Middleware/Auth',
 	apiKey: 'App/Middleware/AuthAdminApiKey',
 	role: 'App/Middleware/Role',
+	statusPermission: 'App/Middleware/PermissionStatusMiddleware',
 	log: 'App/Middleware/AfterLogMiddleware',
 })
