@@ -157,6 +157,7 @@ export const UnitySchema = new Schema<IUnity>(
 			type: String,
 			required: true,
 			unique: true,
+			immutable: true,
 		},
 		active: {
 			type: Boolean,
@@ -191,7 +192,6 @@ export const UnitySchema = new Schema<IUnity>(
 		},
 		country: {
 			type: String,
-
 		},
 		date_expiration: {
 			type: Date,
@@ -201,6 +201,7 @@ export const UnitySchema = new Schema<IUnity>(
 			type: String,
 			required: true,
 			unique: true,
+			immutable: true,
 		},
 		is_company: {
 			type: Boolean,

@@ -83,6 +83,7 @@ const AccountSchema = new Schema<IAccount>(
 			type: Schema.Types.ObjectId,
 			required: true,
 			ref: COLLECTION_UNITY_NAME,
+			immutable: true,
 		},
 		description: String,
 		user: {

@@ -1,6 +1,6 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IStock } from 'App/Types/IStock'
-
+import { COLLECTION_NAME as COLLECTION_NAME_UNITY } from './Unity'
 export const COLLECTION_NAME = 'stocks'
 
 /**
@@ -73,7 +73,12 @@ const StockSchema = new Schema<IStock>(
 		single_lot: { type: Boolean, required: true },
 		stock_automatic: { type: Boolean, required: true },
 		active: { type: Boolean, required: true },
-		unity_id: { type: Schema.Types.ObjectId, required: true },
+		unity_id: {
+			type: Schema.Types.ObjectId,
+			required: true,
+			ref: COLLECTION_NAME_UNITY,
+			immutable: true
+		},
 	},
 	{ timestamps: true },
 )

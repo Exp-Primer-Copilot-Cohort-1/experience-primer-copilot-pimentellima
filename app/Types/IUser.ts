@@ -34,10 +34,10 @@ export interface IProfile {
 	name: string
 	active: boolean
 	avatar: string
-	email: string
+	email?: string
 	phone: string
 	celphone: string
-	document: string
+	document?: string
 	unity_id: ObjectId | string
 	performs_medical_appointments?: boolean
 	gender?: Genders | Generic

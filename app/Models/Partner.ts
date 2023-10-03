@@ -1,6 +1,6 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IPartner } from 'App/Types/IPartner'
-
+import { COLLECTION_NAME as COLLECTION_UNITY_NAME } from './Unity'
 export const COLLECTION_NAME = 'partners'
 
 /**
@@ -26,9 +26,20 @@ export const COLLECTION_NAME = 'partners'
  */
 const PartnerSchema = new Schema<IPartner>(
 	{
-		name: { type: String, required: true },
-		active: { type: Boolean, default: true },
-		unity_id: { type: Schema.Types.ObjectId, required: true },
+		name: {
+			type: String,
+			required: true
+		},
+		active: {
+			type: Boolean,
+			default: true
+		},
+		unity_id: {
+			type: Schema.Types.ObjectId,
+			required: true,
+			immutable: true,
+			ref: COLLECTION_UNITY_NAME
+		},
 	},
 	{
 		timestamps: {

@@ -14,6 +14,7 @@ const ProfileSchema = new Schema<IProfile>(
 		email: {
 			type: String,
 			required: true,
+			immutable: true,
 		},
 		celphone: {
 			type: String,
@@ -22,11 +23,13 @@ const ProfileSchema = new Schema<IProfile>(
 		document: {
 			type: String,
 			required: true,
+			immutable: true,
 		},
 		unity_id: {
 			type: Mongoose.Schema.Types.ObjectId,
 			ref: COLLECTION_UNITY_NAME,
 			required: true,
+			immutable: true,
 		},
 		active: {
 			type: Boolean,

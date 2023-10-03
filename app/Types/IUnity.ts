@@ -38,7 +38,7 @@ export type IProfileUnity = {
 	name: string
 	is_company?: boolean
 	document?: string
-	email: string
+	email?: string
 	street?: string
 	address_number?: string
 	avatar?: string

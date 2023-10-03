@@ -28,6 +28,7 @@ export enum Genders {
 export interface IUserClient extends Partial<IAddress> {
 	_id?: string
 	name: string
+	social_name?: string
 	avatar?: string
 	form_answers?: IFormAnswer[]
 	profs_with_access?: ProfWithAccess[]

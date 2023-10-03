@@ -4,16 +4,13 @@ import { IProfileUnity, IUnity } from 'App/Types/IUnity'
 import { addDays } from 'date-fns'
 import { Entity } from '../abstract/entity.abstract'
 
-import Email from '../validations/email'
 import { validateUnity } from './validations'
-
 
 export class ProfileUnityEntity extends Entity implements IProfileUnity {
 	name: string
 	is_company: boolean
 	date_expiration: Date
 	active: boolean
-	email: string
 	street: string
 	address_number: string
 	avatar: string
@@ -50,11 +47,6 @@ export class ProfileUnityEntity extends Entity implements IProfileUnity {
 
 	defineActive(active = false): this {
 		this.active = active
-		return this
-	}
-
-	defineEmail(email = ''): this {
-		this.email = Email.build(email).value
 		return this
 	}
 
@@ -137,7 +129,6 @@ export class ProfileUnityEntity extends Entity implements IProfileUnity {
 				.defineComplement(params.complement)
 				.defineCountry(params.country)
 				.defineDateExpiration(params.date_expiration)
-				.defineEmail(params.email)
 				.defineIsCompany(params.is_company)
 				.defineName(params.name)
 				.defineNeighborhood(params.neighborhood)

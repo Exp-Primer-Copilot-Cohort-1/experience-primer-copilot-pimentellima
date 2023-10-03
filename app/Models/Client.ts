@@ -154,6 +154,10 @@ const ClientSchema = new Schema<IUserClient>(
 			type: String,
 			required: true,
 		},
+		social_name: {
+			type: String,
+			required: false,
+		},
 		form_answers: [
 			{
 				form: {
@@ -293,11 +297,15 @@ const ClientSchema = new Schema<IUserClient>(
 		sponsor: {
 			name: {
 				type: String,
-
+				required: function () {
+					return this.underaged === true;
+				},
 			},
 			phone: {
 				type: String,
-
+				required: function () {
+					return this.underaged === true;
+				},
 			},
 		}
 	},

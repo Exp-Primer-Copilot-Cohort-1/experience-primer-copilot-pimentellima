@@ -13,13 +13,11 @@ export class ProfileEntity extends Entity implements IProfile {
 	name: string
 	active: boolean
 	avatar: string
-	email: string
 	phone: string
 	celphone: string
-	document: string
 	unity_id: string
 	performs_medical_appointments?: boolean
-	gender?: Genders
+	gender: Genders
 	record: string
 	profession: string
 	occupation_code: string
@@ -44,11 +42,6 @@ export class ProfileEntity extends Entity implements IProfile {
 		return this
 	}
 
-	defineEmail(email: string): this {
-		this.email = email
-		return this
-	}
-
 	definePhone(phone: string): this {
 		this.phone = phone
 		return this
@@ -56,11 +49,6 @@ export class ProfileEntity extends Entity implements IProfile {
 
 	defineCelphone(celphone: string): this {
 		this.celphone = celphone
-		return this
-	}
-
-	defineDocument(document: string): this {
-		this.document = document
 		return this
 	}
 
@@ -120,10 +108,8 @@ export class ProfileEntity extends Entity implements IProfile {
 				.defineName(params.name)
 				.defineActive(params.active)
 				.defineAvatar(params.avatar)
-				.defineEmail(params.email)
 				.definePhone(params.phone)
 				.defineCelphone(params.celphone)
-				.defineDocument(params.document)
 				.defineUnityId(params.unity_id.toString())
 				.definePerformsMedicalAppointments(params.performs_medical_appointments, params.type)
 				.defineGender(params.gender)

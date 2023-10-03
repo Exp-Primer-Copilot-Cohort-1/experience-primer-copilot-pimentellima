@@ -1,6 +1,7 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
-
+import { COLLECTION_NAME as COLLECTION_NAME_UNITY } from './Unity'
+import { COLLECTION_NAME as COLLECTION_NAME_USER } from './User'
 interface IMedicalCertificateModel extends Omit<IMedicalCertificate, 'prof'> {
 	prof: Schema.Types.ObjectId
 }
@@ -13,11 +14,19 @@ const MedicalCertificateSchema = new Schema<IMedicalCertificateModel>(
 		description: { type: String, required: true },
 		prof: {
 			type: Schema.Types.ObjectId,
-			ref: 'users',
+			ref: COLLECTION_NAME_USER,
 			required: true,
 		},
-		active: { type: Boolean, required: true },
-		unity_id: { type: Schema.Types.ObjectId, required: true },
+		active: {
+			type: Boolean,
+			required: true
+		},
+		unity_id: {
+			type: Schema.Types.ObjectId,
+			required: true,
+			ref: COLLECTION_NAME_UNITY,
+			immutable: true,
+		},
 	},
 	{
 		timestamps: {
