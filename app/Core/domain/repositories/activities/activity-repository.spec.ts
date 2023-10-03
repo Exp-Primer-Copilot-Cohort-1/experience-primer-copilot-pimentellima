@@ -3,7 +3,7 @@ import { beforeAll, describe, expect, it, vi } from 'vitest'
 import { ActivityMongoRepository } from './activity-mongo-repository'
 
 import { faker } from '@faker-js/faker'
-import { SessionTransaction } from 'App/Core/helpers/session-transaction'
+import { SessionTransaction } from 'App/Core/infra/session-transaction'
 import { AppointmentStatus } from 'App/Helpers'
 import Activity from 'App/Models/Activity'
 import { IActivity } from 'App/Types/IActivity'

@@ -11,7 +11,7 @@ export const colorize = (statusCode: number, url: string, method: Method) => {
 
 	// Green
 	if (statusCode >= 200 && statusCode < 300) {
-		return `${cli.cyan(`[${method}]`)} ${url} - ${cli.green(statusCode)}`;
+		return `${cli.cyan(`[${method}]`)} ${cli.white(url)} - ${cli.green(statusCode)}`;
 	}
 	// Yellow
 	if (statusCode >= 300 && statusCode < 400) {

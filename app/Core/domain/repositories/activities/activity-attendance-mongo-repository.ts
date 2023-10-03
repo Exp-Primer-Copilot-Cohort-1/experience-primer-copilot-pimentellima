@@ -1,5 +1,5 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction } from 'App/Core/helpers/session-transaction'
+import { ISessionTransaction } from 'App/Core/infra/session-transaction'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
 import Activity from 'App/Models/Activity'

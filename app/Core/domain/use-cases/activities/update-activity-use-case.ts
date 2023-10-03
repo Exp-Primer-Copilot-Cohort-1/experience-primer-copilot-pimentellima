@@ -1,6 +1,6 @@
 import { ActivitiesManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction } from 'App/Core/helpers/session-transaction'
+import { ISessionTransaction } from 'App/Core/infra/session-transaction'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import { ActivityValues, IActivity } from 'App/Types/IActivity'

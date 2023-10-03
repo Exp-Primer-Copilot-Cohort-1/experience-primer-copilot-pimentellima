@@ -1,6 +1,6 @@
 import promiseErrorHandler from 'App/Core/adapters/controller/helpers/promise-err-handler'
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionAuth } from 'App/Core/helpers/session-auth'
+import { ISessionAuth } from 'App/Core/infra/session-auth'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import { SessionUser } from '../../entities/user/session'
 import { InvalidCredentialsError } from '../../errors/invalid-credentials'

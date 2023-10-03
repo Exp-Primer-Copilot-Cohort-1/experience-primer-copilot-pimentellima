@@ -10,7 +10,7 @@ import {
 } from '../../errors'
 import { PaymentProfManagerInterface } from '../interface/payment-prof-manager-interface'
 
-import { ISessionTransaction } from 'App/Core/helpers/session-transaction'
+import { ISessionTransaction } from 'App/Core/infra/session-transaction'
 import PaymentParticipations from 'App/Models/PaymentParticipations'
 
 const ObjectId = Types.ObjectId

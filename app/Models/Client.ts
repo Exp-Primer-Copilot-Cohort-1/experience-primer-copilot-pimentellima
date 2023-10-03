@@ -338,7 +338,7 @@ ClientSchema.post('find', async function (docs) {
 				doc.rg = await decrypt(doc.rg)
 			}
 		} catch (error) {
-			console.log('erro na descriptação')
+
 		}
 	}
 })
@@ -353,7 +353,7 @@ ClientSchema.post('findOne', async function (doc) {
 			doc.rg = await decrypt(doc.rg)
 		}
 	} catch (error) {
-		console.log('erro na descriptação')
+
 	}
 })
 

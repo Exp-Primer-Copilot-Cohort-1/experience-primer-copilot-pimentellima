@@ -1,7 +1,7 @@
 import Event from '@ioc:Adonis/Core/Event'
 import AdminUser from 'App/Core/domain/entities/user/admin'
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction } from 'App/Core/helpers/session-transaction'
+import { ISessionTransaction } from 'App/Core/infra/session-transaction'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import type { IAdminUser } from 'App/Types/IAdminUser'

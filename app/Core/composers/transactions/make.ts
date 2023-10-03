@@ -12,7 +12,7 @@ import {
 	CreateWithProceduresTransactionUseCase,
 	UpdateActivityPaymentUseCase,
 } from 'App/Core/domain/use-cases'
-import { SessionTransaction } from 'App/Core/helpers/session-transaction'
+import { SessionTransaction } from 'App/Core/infra/session-transaction'
 
 export const makeCreateTransactionComposer = (): ControllerGeneric => {
 	const session = new SessionTransaction()

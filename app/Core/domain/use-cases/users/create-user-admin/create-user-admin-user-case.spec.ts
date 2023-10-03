@@ -8,7 +8,7 @@ import {
 import { CreatePasswordUseCase } from '../create-password/create-password-use-case'
 
 import { faker } from '@faker-js/faker'
-import { SessionTransaction } from 'App/Core/helpers/session-transaction'
+import { SessionTransaction } from 'App/Core/infra/session-transaction'
 import { ROLES } from 'App/Roles/types'
 import { IAdminUser } from 'App/Types/IAdminUser'
 import { cpf } from 'cpf-cnpj-validator'

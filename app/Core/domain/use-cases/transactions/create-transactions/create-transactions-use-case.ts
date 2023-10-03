@@ -5,7 +5,7 @@ import { PromiseEither, left, right } from 'App/Core/shared'
 import { IActivity } from 'App/Types/IActivity'
 import { addMonths } from 'date-fns'
 
-import { ISessionTransaction } from 'App/Core/helpers/session-transaction'
+import { ISessionTransaction } from 'App/Core/infra/session-transaction'
 import type { ITransaction } from 'App/Types/ITransaction'
 import divideCurrencyByInteger from 'App/utils/divide-currency'
 import { Types } from 'mongoose'

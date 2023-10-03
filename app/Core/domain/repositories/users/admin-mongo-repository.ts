@@ -3,7 +3,7 @@ import { PromiseEither, left, right } from 'App/Core/shared/either'
 import { AdminManagerInterface } from '../interface/admin-manager.interface'
 
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction } from 'App/Core/helpers/session-transaction'
+import { ISessionTransaction } from 'App/Core/infra/session-transaction'
 import User from 'App/Models/User'
 import { IAdminUser } from 'App/Types/IAdminUser'
 import { UserNotFoundError } from '../../errors/user-not-found'

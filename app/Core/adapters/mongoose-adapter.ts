@@ -1,8 +1,10 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-
+import logger from '../infra/logger'
 import { ControllerGeneric } from './controller/helpers'
 import { colorize } from './controller/helpers/colorize'
 import { HttpRequest } from './controller/ports/http'
+
+const prod = process.env.NODE_ENV === 'production'
 
 /**
  * Adaptador para rota HTTP que recebe um controller genérico e retorna uma função que pode ser usada como rota HTTP.
@@ -28,12 +30,14 @@ export const adaptRoute = async (
 
 		const { body, statusCode } = await controller.handle(httpRequest, auth?.user)
 
-		if (process.env.NODE_ENV === 'development') {
-			console.log(colorize(statusCode, request.url(), request.method() as any))
+		if (!prod) {
+			const message = colorize(statusCode, request.url(), request.method() as any)
+			logger.log(message, statusCode)
 		}
 
 		return response.status(statusCode).json(body)
 	} catch (error) {
-		console.log(colorize(501, request.url(), request.method() as any))
+		const message = colorize(501, request.url(), request.method() as any)
+		logger.log(message, 501)
 	}
 }

@@ -13,7 +13,7 @@ import {
 } from 'App/Core/domain/use-cases'
 
 import { CreatePasswordUseCase } from 'App/Core/domain/use-cases'
-import { SessionTransaction } from 'App/Core/helpers/session-transaction'
+import { SessionTransaction } from 'App/Core/infra/session-transaction'
 
 export const makeCreateUserComposer = (): ControllerGeneric => {
 	const session = new SessionTransaction()

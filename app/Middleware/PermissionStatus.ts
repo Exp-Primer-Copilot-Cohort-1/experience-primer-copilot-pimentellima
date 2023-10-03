@@ -9,7 +9,7 @@ const hasNotPermission = [
 ]
 
 export default class PermissionStatusMiddleware {
-	public async handle({ request, response, auth }: HttpContextContract, next) {
+	public async handle({ request, auth }: HttpContextContract, next) {
 
 		if (request.method() !== 'PUT' || ENV.get('NODE_ENV') === 'test') {
 			return await next()

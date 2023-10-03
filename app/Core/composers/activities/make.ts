@@ -22,7 +22,7 @@ import { UpdateActivityPaymentUseCase } from 'App/Core/domain/use-cases/activiti
 import { UpdateActivityStartedAtUseCase } from 'App/Core/domain/use-cases/activities/update-activity-started-at-use-case'
 import { UpdateActivityStatusByIdUseCase } from 'App/Core/domain/use-cases/activities/update-activity-status-by-use-case'
 import { UpdateActivityByIdUseCase } from 'App/Core/domain/use-cases/activities/update-activity-use-case'
-import { SessionTransaction } from 'App/Core/helpers/session-transaction'
+import { SessionTransaction } from 'App/Core/infra/session-transaction'
 
 export const makeCreateActivityComposer = (): ControllerGeneric => {
 	return new Controller(

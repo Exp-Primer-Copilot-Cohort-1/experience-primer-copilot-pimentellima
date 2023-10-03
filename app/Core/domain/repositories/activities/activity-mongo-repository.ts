@@ -1,6 +1,6 @@
 import { Document } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction } from 'App/Core/helpers/session-transaction'
+import { ISessionTransaction } from 'App/Core/infra/session-transaction'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import Activity, { COLLECTIONS_REFS } from 'App/Models/Activity'
 import { STATUS_ACTIVITY, type IActivity } from 'App/Types/IActivity'
@@ -13,7 +13,7 @@ import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
 import { ActivitiesManagerInterface } from '../interface/activity-manager.interface'
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
-	constructor(private readonly session?: ISessionTransaction) {} // eslint-disable-line
+	constructor(private readonly session?: ISessionTransaction) { } // eslint-disable-line
 
 	async findAllActivities(unity_id: string): PromiseEither<AbstractError, IActivity[]> {
 		if (!unity_id) return left(new UnitNotFoundError())

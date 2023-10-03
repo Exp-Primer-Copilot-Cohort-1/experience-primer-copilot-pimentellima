@@ -42,17 +42,6 @@ Route.get('permissions-default', 'PermissionController.defaultPermissions')
 Route.post('recover', 'RecoverController.store')
 
 Route.group(() => {
-	Route.put('active/:_id', 'AdminController.activeUser')
-	Route.get('prof/:type', 'AdminController.findAllByProfs')
-	Route.get('unity/:unity_id', 'AdminController.findAllByUnity')
-	Route.get('inatives', 'AdminController.findAllInatives')
-	Route.get('unities', 'AdminController.findAllUnities')
-	Route.put('unity/:unity_id/:days', 'AdminController.addDateExpiration')
-})
-	.prefix('admin')
-	.middleware('apiKey')
-
-Route.group(() => {
 	Route.post('user', 'SignUpAdminController.store')
 	Route.put('users-confirm/:id', 'SignUpAdminController.activeUser')
 })
@@ -446,4 +435,4 @@ Route.group(() => {
 		Route.put('unity', 'UnityController.updateProfile').as('profile.unity.update')
 	}).prefix('profile')
 
-}).middleware(['auth', 'role', 'statusPermission', 'log'])
+}).middleware(['auth', 'role', 'statusPermission'])

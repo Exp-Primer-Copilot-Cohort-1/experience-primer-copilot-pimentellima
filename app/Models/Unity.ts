@@ -288,7 +288,7 @@ UnitySchema.post('find', async function (docs) {
 				doc.cnaes = await decrypt(doc.cnaes)
 			}
 		} catch (error) {
-			console.log('erro na descriptação')
+
 		}
 	}
 })
@@ -303,7 +303,7 @@ UnitySchema.post('findOne', async function (doc) {
 			doc.cnaes = await decrypt(doc.cnaes)
 		}
 	} catch (error) {
-		console.log('erro na descriptação')
+
 	}
 })
 

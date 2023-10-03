@@ -5,7 +5,7 @@
  * file.
  */
 
-import { ISessionTransaction } from "App/Core/helpers/session-transaction";
+import { ISessionTransaction } from "App/Core/infra/session-transaction";
 import { IAdminUser } from "App/Types/IAdminUser";
 import { IUnity } from "App/Types/IUnity";
 
