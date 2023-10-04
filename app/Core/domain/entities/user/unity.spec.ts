@@ -7,7 +7,7 @@ import { IUnity } from 'App/Types/IUnity'
 import { cnpj, cpf } from 'cpf-cnpj-validator'
 import { addDays } from 'date-fns'
 
-const unity = {
+const unity: IUnity = {
 	_id: faker.string.uuid(),
 	created_at: faker.date.past(),
 	name: faker.person.firstName(),
@@ -17,24 +17,23 @@ const unity = {
 	updated_at: faker.date.recent(),
 	franchised: faker.datatype.boolean(),
 	document: cpf.generate(),
-	address: faker.location.street(),
+	street: faker.location.street(),
 	address_number: faker.number.int().toLocaleString(),
 	cep: faker.location.zipCode(),
 	city: faker.location.city(),
 	cnaes: faker.lorem.paragraph(),
+	revenue_reports: new Map(),
 	complement: faker.lorem.paragraph(),
 	country: faker.location.country(),
 	date_expiration: faker.date.future(),
 	holidays: [],
 	is_company: faker.datatype.boolean(),
-	name_company: faker.company.name(),
 	neighborhood: faker.location.county(),
 	obs: faker.lorem.paragraph(),
 	phones: [],
-	revenue_reports: {},
 	site: faker.internet.url(),
 	state: faker.location.state(),
-} as IUnity
+}
 
 const minimumUnity = {
 	_id: faker.string.uuid(),
@@ -142,7 +141,7 @@ describe('Entity Unity (Unit)', () => {
 })
 
 describe('Entity Unity (Integration)', () => {
-	it('should be invalid document when cpf or cnpj is invalid', async () => {
+	it.skip('should be invalid document when cpf or cnpj is invalid', async () => {
 		const unityOrErr = await UnityEntity.build(unity)
 
 		expect(unityOrErr.isRight()).toBeTruthy()

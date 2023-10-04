@@ -4,7 +4,6 @@ import { decrypt, encrypt } from 'App/Helpers/encrypt'
 import type { IUser } from 'App/Types/IUser'
 
 import { ROLES } from 'App/Roles/types'
-import { COLLECTION_NAME as COLLECTION_UNITY_NAME } from './Unity'
 
 export const COLLECTION_NAME = 'users'
 
@@ -176,7 +175,6 @@ const UserSchema = new Schema<IUser>(
 		},
 		unity_id: {
 			type: Mongoose.Schema.Types.ObjectId,
-			ref: COLLECTION_UNITY_NAME,
 			required: true,
 			immutable: function () {
 				const franchiseeAdmin = roles.includes(this.type)

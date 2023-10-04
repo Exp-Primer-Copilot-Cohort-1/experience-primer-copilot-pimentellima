@@ -5,9 +5,9 @@ import type { IAccount } from 'App/Types/IAccount'
 import { AccountManagerInterface } from '../../repositories/interface/account-manager-interface'
 
 export class CreateAccountUseCase implements UseCase<IAccount, IAccount> {
-	constructor(private readonly accountManager: AccountManagerInterface) { } // eslint-disable-line
+	constructor(private readonly manager: AccountManagerInterface) { } // eslint-disable-line
 
 	public async execute(params: IAccount): PromiseEither<AbstractError, IAccount> {
-		return await this.accountManager.create(params)
+		return await this.manager.create(params)
 	}
 }

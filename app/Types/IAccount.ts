@@ -10,6 +10,6 @@ export interface IAccount {
 	unity_id: string | ObjectId
 	description?: string
 	user?: string | ObjectId
-	created_at: Date
-	updated_at: Date
+	created_at?: Date
+	updated_at?: Date
 }

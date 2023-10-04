@@ -28,6 +28,7 @@ export default defineConfig({
 			'@ioc:Mongoose': 'mongoose',
 			'@ioc:Adonis/Core/Hash': '@adonisjs/hash/build/standalone',
 			'@ioc:Adonis/Core/Event': '@adonisjs/events/build/standalone',
+			'@ioc:Adonis/Core/Env': '@adonisjs/env/build/src',
 		},
 	},
 })

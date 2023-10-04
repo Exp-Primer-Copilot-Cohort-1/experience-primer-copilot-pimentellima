@@ -47,6 +47,8 @@ describe('Day Trade By Prof Use Case (Integration)', () => {
 			name: 'Teste',
 		})
 
+		console.log(resultOrErr)
+
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})
 })

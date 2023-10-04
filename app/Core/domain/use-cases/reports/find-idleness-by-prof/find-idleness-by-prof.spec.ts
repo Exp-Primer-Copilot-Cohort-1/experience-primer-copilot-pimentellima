@@ -1,12 +1,11 @@
-import mongoose from 'mongoose'
-import { beforeAll, describe, expect, it } from 'vitest'
-
 import {
 	CensusDaysMongooseRepository,
 	HolidaysMongoRepository,
 	HolidaysNationalsMongoRepository,
 	ProfsMongooseRepository,
 } from 'App/Core/domain/repositories'
+import mongoose from 'mongoose'
+import { beforeAll, describe, expect, it } from 'vitest'
 
 import { FindIdlenessByProfUseCase } from './find-idleness-by-prof.use-case'
 
@@ -37,6 +36,7 @@ const makeSut = () => {
 describe('Find Idleness By Prof Use Case (Integration)', () => {
 	beforeAll(async () => {
 		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
+
 	})
 
 	it('should be count hours idleness by interval dates', async () => {
