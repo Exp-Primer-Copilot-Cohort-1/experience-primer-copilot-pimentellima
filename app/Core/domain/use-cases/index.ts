@@ -1,6 +1,7 @@
 export * from './activities'
 export * from './clients'
 export * from './default-configs'
+export * from './financial-category'
 export * from './health-insurances'
 export * from './holidays'
 export * from './medical-certificate'
