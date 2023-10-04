@@ -113,23 +113,18 @@
  *         $ref: '#/components/responses/Unauthorized'
  */
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { adaptRoute } from 'App/Core/adapters'
+import { makeFinancialCategoryFindAllComposer } from 'App/Core/composers'
 import FinancialCategoryEntity from 'App/Core/domain/entities/financial-category/financial-category'
-import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import FinancialCategory, { COLLECTION_NAME } from 'App/Models/FinancialCategory'
 import { IFinancialCategory } from 'App/Types/IFinancialCategory'
 
 class FinancialCategoryController {
-	async index({ auth, request }: HttpContextContract) {
-		const userLogged = auth.user
-		const opts = OptsQuery.build(request.qs())
-
-		const categories = await FinancialCategory.find({
-			unity_id: userLogged?.unity_id,
-			active: opts.active,
+	async index(ctx: HttpContextContract) {
+		return adaptRoute(makeFinancialCategoryFindAllComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
 		})
-
-		return categories
 	}
 
 	@LogDecorator(COLLECTION_NAME, ACTION.POST)
