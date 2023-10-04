@@ -26,17 +26,18 @@ test.group('Account Controller', () => {
 	})
 
 	test('create account', async ({ client }) => {
+		await Account.deleteMany({ unity_id: '63528c11c109b232759921d1' })
+
 		const { token } = await loginAndGetToken(client)
 
-		try {
-			const response = await client
-				.post('accounts')
-				.json(newAccount)
-				.bearerToken(token.token)
-		} catch (error) {
-			console.log(error)
-		}
+		const response = await client
+			.post('accounts')
+			.json(newAccount)
+			.bearerToken(token.token)
+
 		assert.exists(newAccount.name)
+
+		response.assertStatus(204)
 
 		const { deletedCount } = await Account.deleteOne({ name: newAccount.name })
 		expect(deletedCount).to.greaterThan(0)
@@ -79,12 +80,14 @@ test.group('Account Controller', () => {
 	})
 
 	test('update account', async ({ client }) => {
+		await Account.deleteMany({ unity_id: '63528c11c109b232759921d1' })
+
 		const account = await Account.create(newAccount)
 		const { token } = await loginAndGetToken(client)
 		const id = account._id.toString()
 
 		const response = await client
-			.put('accounts/' + id)
+			.put('accounts/' + id + '?hasContent=true')
 			.json({ name: 'new name' })
 			.bearerToken(token.token)
 

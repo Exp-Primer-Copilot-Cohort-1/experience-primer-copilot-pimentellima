@@ -9,7 +9,7 @@ import { AccountManagerInterface } from '../interface/account-manager-interface'
 export class AccountMongoRepository implements AccountManagerInterface {
 	constructor() { } // eslint-disable-line
 
-	async findAllAccounts(unity_id: string): PromiseEither<AbstractError, IAccount[]> {
+	async findAll(unity_id: string): PromiseEither<AbstractError, IAccount[]> {
 		if (!unity_id) return left(new UnitNotFoundError())
 
 		const data = await Account.find({ unity_id })
@@ -17,7 +17,7 @@ export class AccountMongoRepository implements AccountManagerInterface {
 		return right(data)
 	}
 
-	async createAccount({
+	async create({
 		_id, // eslint-disable-line
 		...account
 	}: IAccount): PromiseEither<AbstractError, AccountEntity> {
@@ -32,7 +32,7 @@ export class AccountMongoRepository implements AccountManagerInterface {
 		return right(created.toObject())
 	}
 
-	async updateAccountById(
+	async update(
 		account: IAccount,
 		id: string,
 	): PromiseEither<AbstractError, IAccount> {
@@ -43,7 +43,7 @@ export class AccountMongoRepository implements AccountManagerInterface {
 		return right(doc?.toObject())
 	}
 
-	async findAccountById(id: string): PromiseEither<AbstractError, AccountEntity> {
+	async findByID(id: string): PromiseEither<AbstractError, AccountEntity> {
 		if (!id || !isValidObjectId(id)) return left(new AccountNotFoundError())
 
 		const item = await Account.findById(id).orFail(new AccountNotFoundError())
@@ -51,7 +51,7 @@ export class AccountMongoRepository implements AccountManagerInterface {
 		return right(item.toObject())
 	}
 
-	async deleteAccountById(id: string): PromiseEither<AbstractError, AccountEntity> {
+	async deleteByID(id: string): PromiseEither<AbstractError, AccountEntity> {
 		if (!id) return left(new AccountNotFoundError())
 
 		const doc = await Account.findByIdAndDelete(id).orFail(new AccountNotFoundError())

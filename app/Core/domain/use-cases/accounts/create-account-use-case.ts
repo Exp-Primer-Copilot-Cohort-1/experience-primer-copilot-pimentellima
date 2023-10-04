@@ -8,8 +8,6 @@ export class CreateAccountUseCase implements UseCase<IAccount, IAccount> {
 	constructor(private readonly accountManager: AccountManagerInterface) { } // eslint-disable-line
 
 	public async execute(params: IAccount): PromiseEither<AbstractError, IAccount> {
-		const newAccountOrErr = await this.accountManager.createAccount(params)
-
-		return newAccountOrErr
+		return await this.accountManager.create(params)
 	}
 }

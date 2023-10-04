@@ -1,15 +1,14 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
 import { IAccount } from 'App/Types/IAccount'
-import AccountEntity from '../../entities/account/account'
 
 export interface AccountManagerInterface {
-	findAllAccounts: (unity_id: string) => PromiseEither<AbstractError, IAccount[]>
-	createAccount: (account: IAccount) => PromiseEither<AbstractError, AccountEntity>
-	updateAccountById: (
+	findAll: (unity_id: string) => PromiseEither<AbstractError, IAccount[]>
+	create: (account: IAccount) => PromiseEither<AbstractError, IAccount>
+	update: (
 		account: IAccount,
 		id: string,
 	) => PromiseEither<AbstractError, IAccount>
-	findAccountById: (id: string) => PromiseEither<AbstractError, AccountEntity>
-	deleteAccountById: (id: string) => PromiseEither<AbstractError, AccountEntity>
+	findByID: (id: string) => PromiseEither<AbstractError, IAccount>
+	deleteByID: (id: string) => PromiseEither<AbstractError, IAccount>
 }

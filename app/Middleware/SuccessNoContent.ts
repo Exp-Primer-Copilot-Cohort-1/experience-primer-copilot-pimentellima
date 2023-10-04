@@ -10,7 +10,9 @@ export default class SuccessNoContent {
 
 		// Check if the `hasContent` flag is set in the response's JSON
 
-		if (request.params().hasContent) return // Return the normal response
+		const hasContent = request.qs().hasContent || request.params().hasContent
+
+		if (hasContent) return // Return the normal response
 
 		return response.status(204).send(null) // Return a 204 No Content response
 

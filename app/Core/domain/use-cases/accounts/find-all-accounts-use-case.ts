@@ -1,7 +1,7 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
-import { PromiseEither, left, right } from "App/Core/shared";
-import AccountEntity from "../../entities/account/account";
+import { PromiseEither } from "App/Core/shared";
+import { IAccount } from "App/Types/IAccount";
 import { AccountManagerInterface } from "../../repositories/interface/account-manager-interface";
 
 type TypeParams = {
@@ -9,21 +9,15 @@ type TypeParams = {
 }
 
 export class FindAllAccountUseCase
-	implements UseCase<TypeParams, AccountEntity[]>
+	implements UseCase<TypeParams, IAccount[]>
 {
 	constructor(
-		private readonly accountManager: AccountManagerInterface
-	) {}
+		private readonly manager: AccountManagerInterface
+	) { }
 
 	public async execute(
 		params: TypeParams
-	): PromiseEither<AbstractError, AccountEntity[]> {
-
-		const accountsOrErr =
-			await this.accountManager.findAllAccounts(params.unity_id);
-
-		if (accountsOrErr.isLeft()) return left(accountsOrErr.extract());
-		const accounts = accountsOrErr.extract();
-		return right(accounts);
+	): PromiseEither<AbstractError, IAccount[]> {
+		return await this.manager.findAll(params.unity_id)
 	}
 }

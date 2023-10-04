@@ -15,8 +15,7 @@ export class UpdateAccountByIdUseCase implements UseCase<TypeParams, IAccount> {
 		id,
 		...account
 	}: TypeParams): PromiseEither<AbstractError, IAccount> {
-		const accountOrErr = await this.accountManager.updateAccountById(account, id)
 
-		return accountOrErr
+		return await this.accountManager.update(account, id)
 	}
 }
