@@ -1,42 +1,44 @@
 config:
-  target: "http://localhost:3333"
-  phases:
-    - name: "Load Test Periodico"
-      arrivalRate: 1
-      duration: 5
+    target: "http://localhost:3333"
+    phases:
+        - name: "Load Test Periodico"
+          arrivalRate: 1
+          duration: 5
 before:
-  flow:
-    - post:
-        url: "/sessions"
-        json:
-          email: "nediaulog2@hotmail.com"
-          password: "123456"
-          capture:
-            - json: "$.token"
-              as: "token"
-          expect:
-            - statusCode: 200
+    flow:
+        - post:
+              url: "/sessions"
+              json:
+                  email: "murilomontinojr@hotmail.com"
+                  password: "@Kingdom2012"
+              capture:
+                  json: $.token.token
+                  as: token
+              expect:
+                  - statusCode: 200
+        - log: "Token capturado: {{ token }}"
 scenarios:
-  - name: "unity.index"
-    flow:
-      - get:
-          url: "/unities?name=myUnity"
-          headers:
-            Authorization: "Bearer {{ token }}"
+    # - name: "unity.index"
+    #   flow:
+    #       - get:
+    #             url: "/unities?name=myUnity"
+    #             headers:
+    #                 Authorization: "Bearer {{ token }}"
 
-  - name: "ProcedureController.index"
-    flow:
-      - get:
-          url: "/procedures"
-          headers:
-            Authorization: "Bearer {{ token }}"
+    - name: "Busca de todos os procedimentos da unidade"
+      flow:
+          - get:
+                url: "/procedures"
+                headers:
+                    Content-Type: "application/json"
+                    authorization: "Bearer {{ token }}"
 
-  - name: "AnswerController.findAllAnswers"
-    flow:
-      - get:
-          url: "/answers"
-          headers:
-            Authorization: "Bearer {{ token }}"
+    # - name: "AnswerController.findAllAnswers"
+    #   flow:
+    #       - get:
+    #             url: "/answers"
+    #             headers:
+    #                 Authorization: "Bearer {{ token }}"
     #  - name: "AdminController.findAllInatives"
     #    flow:
     #    - get:
