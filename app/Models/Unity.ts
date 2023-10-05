@@ -4,8 +4,15 @@ import { IPhone, IUnity } from 'App/Types/IUnity'
 import { HolidaySchemaHelper } from './helpers/Holiday'
 
 import { COLLECTION_NAME as COLLECTION_NAME_FRANCHISES } from './BusinessFranchises'
+import { COLLECTION_NAME as COLLECTION_NAME_USERS } from './User'
 
 export const COLLECTION_NAME = 'unities'
+
+export enum COLLECTIONS_REFS {
+	COORDINATOR = 'coordinator',
+	FRANCHISES = 'franchise',
+	CREATED_BY = 'created_by'
+}
 
 /**
  * Esquema do Mongoose para a entidade Unidade.
@@ -236,7 +243,8 @@ export const UnitySchema = new Schema<IUnity>(
 		},
 		created_by: {
 			type: Mongoose.Schema.Types.ObjectId,
-			ref: COLLECTION_NAME,
+			ref: COLLECTION_NAME_USERS,
+			immutable: true,
 		},
 		franchised: {
 			type: Boolean,
@@ -245,6 +253,10 @@ export const UnitySchema = new Schema<IUnity>(
 		franchise: {
 			type: Mongoose.Schema.Types.ObjectId,
 			ref: COLLECTION_NAME_FRANCHISES
+		},
+		coordinator: {
+			type: Mongoose.Schema.Types.ObjectId,
+			ref: COLLECTION_NAME_USERS,
 		}
 	},
 	{

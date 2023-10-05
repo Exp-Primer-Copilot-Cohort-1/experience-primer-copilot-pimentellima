@@ -3,11 +3,11 @@ import { PromiseEither } from 'App/Core/shared/either'
 import { ICategory } from 'App/Types/ICategory'
 
 export interface CategoriesManagerInterface {
-	findById: (id: string) => PromiseEither<AbstractError, ICategory>
-	findByUnityId: (unity_id: string) => PromiseEither<AbstractError, ICategory[]>
-	deleteCategoriesById: (id: string) => PromiseEither<AbstractError, ICategory>
-	createCategory: (data: Partial<ICategory>) => PromiseEither<AbstractError, ICategory>
-	updateCategoriesById: (
+	findByID: (id: string) => PromiseEither<AbstractError, ICategory>
+	findAll: (unity_id: string) => PromiseEither<AbstractError, ICategory[]>
+	delete: (id: string) => PromiseEither<AbstractError, ICategory>
+	create: (data: Partial<ICategory>) => PromiseEither<AbstractError, ICategory>
+	update: (
 		data: Partial<ICategory>,
 		id: string,
 	) => PromiseEither<AbstractError, ICategory>

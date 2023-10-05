@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { AccountManagerInterface } from 'App/Core/domain/repositories/interface/account-manager-interface'
+import { AbstractError } from 'App/Core/errors/error.interface'
 import { left, right } from 'App/Core/shared'
 import { IAccount } from 'App/Types/IAccount'
 import { describe, expect, it, vi } from 'vitest'
@@ -64,7 +65,7 @@ const makeSutUpdate = () => {
 	return { sut, }
 }
 
-describe('Use cases ref account (Only)', () => {
+describe('Use cases ref account (Unit)', () => {
 	it('should create account', async () => {
 		const { sut } = makeSutCreate()
 		const respOrErr = await sut.execute(account)
@@ -141,6 +142,15 @@ describe('Use cases ref account (Only)', () => {
 		})
 		const respOrErr = await sut.execute({ id: 'id-invalid', ...account })
 		expect(respOrErr.isLeft()).toBeTruthy()
+	})
+
+	it('should return error when find all categories with unity_id invalid', async () => {
+		const { sut } = makeSutFindAll()
+
+		const respOrErr = await sut.execute({ unity_id: null as any })
+
+		expect(respOrErr.isLeft()).toBeTruthy()
+		expect(respOrErr.extract()).toBeInstanceOf(AbstractError)
 	})
 
 	it('should return error when find by id account with id invalid', async () => {

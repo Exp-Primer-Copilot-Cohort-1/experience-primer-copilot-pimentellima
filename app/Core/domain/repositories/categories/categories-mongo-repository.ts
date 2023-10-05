@@ -8,7 +8,7 @@ export class CategoriesMongooseRepository implements CategoriesManagerInterface 
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor() { }
 
-	async findById(id: string): PromiseEither<AbstractError, ICategory> {
+	async findByID(id: string): PromiseEither<AbstractError, ICategory> {
 		const categories = await Category.findById(id).populate('prof', {
 			_id: 0,
 			label: '$name',
@@ -20,7 +20,7 @@ export class CategoriesMongooseRepository implements CategoriesManagerInterface 
 		}
 		return right(categories as unknown as ICategory)
 	}
-	async findByUnityId(unity_id: string): PromiseEither<AbstractError, ICategory[]> {
+	async findAll(unity_id: string): PromiseEither<AbstractError, ICategory[]> {
 		const categories = await Category.find({
 			unity_id: unity_id,
 			active: true,
@@ -32,7 +32,7 @@ export class CategoriesMongooseRepository implements CategoriesManagerInterface 
 
 		return right(categories as unknown as ICategory[])
 	}
-	async deleteCategoriesById(id: string): PromiseEither<AbstractError, ICategory> {
+	async delete(id: string): PromiseEither<AbstractError, ICategory> {
 		const category = await Category.findByIdAndDelete(id).orFail()
 
 		return right(category as unknown as ICategory)
@@ -40,7 +40,7 @@ export class CategoriesMongooseRepository implements CategoriesManagerInterface 
 	// o _id precisa ser removido para que o mongoose possa criar o id automaticamente e o
 	// prof precisa ser convertido para o formato que o mongoose espera
 	// o _id precisa ser extraído para que o mongoose retorne o id no formato que o decorators de logs espera
-	public async createCategory({
+	public async create({
 		_id, // eslint-disable-line @typescript-eslint/no-unused-vars
 		...data
 	}: Partial<ICategory>): PromiseEither<AbstractError, ICategory> {
@@ -57,7 +57,7 @@ export class CategoriesMongooseRepository implements CategoriesManagerInterface 
 
 		return right(category.toObject() as unknown as ICategory)
 	}
-	public async updateCategoriesById(
+	public async update(
 		data: Partial<ICategory>,
 		id: string,
 	): PromiseEither<AbstractError, ICategory> {

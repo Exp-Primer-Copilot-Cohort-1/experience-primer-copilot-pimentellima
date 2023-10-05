@@ -9,19 +9,14 @@ type Input = {
 }
 
 export class ShowCategoriesByIdUseCase implements UseCase<Input, any> {
-	constructor(private readonly categoryManager: CategoriesManagerInterface) { }
+	constructor(private readonly manager: CategoriesManagerInterface) { }
 
 	public async execute(input: Input): PromiseEither<AbstractError, any> {
 		if (!input?.id) {
 			return left(new MissingParamsError('id'))
 		}
 
-		const categoriesOrErr = await this.categoryManager.findById(input.id)
+		return await this.manager.findByID(input.id)
 
-		if (categoriesOrErr.isLeft()) {
-			return left(categoriesOrErr.extract())
-		}
-
-		return categoriesOrErr
 	}
 }

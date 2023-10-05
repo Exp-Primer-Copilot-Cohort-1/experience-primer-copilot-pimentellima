@@ -1,14 +1,12 @@
 import { ObjectId } from '@ioc:Mongoose'
+import { Generic } from './ITransaction'
 
 export interface ICategory {
-	_id: ObjectId | string
+	_id?: ObjectId | string
 	name: string
-	prof: {
-		value: ObjectId
-		label: string
-	}
-	active: boolean
-	unity_id: ObjectId
-	created_at: Date
-	updated_at: Date
+	prof: Generic
+	active?: boolean
+	unity_id?: ObjectId | string
+	created_at?: Date
+	updated_at?: Date
 }

@@ -10,17 +10,13 @@ type Input = {
 }
 
 export class DeleteCategoriesByIdUseCase implements UseCase<Input, ICategory> {
-	constructor(private readonly categoriesManager: CategoriesManagerInterface) { } // eslint-disable-line
+	constructor(private readonly manager: CategoriesManagerInterface) { } // eslint-disable-line
 
-	public async execute(input: Input): PromiseEither<AbstractError, ICategory> {
-		if (!input?._id) {
+	public async execute({ _id }: Input): PromiseEither<AbstractError, ICategory> {
+		if (!_id) {
 			return left(new MissingParamsError('id'))
 		}
 
-		const categoriesOrErr = await this.categoriesManager.deleteCategoriesById(
-			input._id,
-		)
-
-		return categoriesOrErr
+		return await this.manager.delete(_id)
 	}
 }

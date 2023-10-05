@@ -1,6 +1,7 @@
 import { ObjectId } from '@ioc:Mongoose'
 import { IBilling } from './IBilling'
 import { IHoliday } from './IHoliday'
+import { Generic } from './ITransaction'
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export type IUnity = {
@@ -10,6 +11,7 @@ export type IUnity = {
 	document: string
 	date_expiration?: Date
 	franchised: boolean
+	coordinator?: string | ObjectId | Generic
 	active: boolean
 	created_at?: Date
 	updated_at?: Date
@@ -38,6 +40,7 @@ export type IProfileUnity = {
 	name: string
 	is_company?: boolean
 	document?: string
+	coordinator?: string | ObjectId
 	email?: string
 	street?: string
 	address_number?: string

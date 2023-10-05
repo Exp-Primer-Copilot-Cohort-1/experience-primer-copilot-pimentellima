@@ -11,21 +11,12 @@ export class UpdateCategoriesByIdUseCase
 	constructor(private readonly categoriesManager: CategoriesManagerInterface) { } // eslint-disable-line
 
 	public async execute(
-		category: Partial<ICategory>,
+		{ _id, ...data }: Partial<ICategory>,
 	): PromiseEither<AbstractError, ICategory> {
-		if (!category?._id) {
+		if (!_id) {
 			return left(new MissingParamsError('_id is required'))
 		}
 
-		const categoriesOrErr = await this.categoriesManager.updateCategoriesById(
-			category,
-			category._id.toString(),
-		)
-
-		if (categoriesOrErr.isLeft()) {
-			return left(categoriesOrErr.extract())
-		}
-
-		return categoriesOrErr
+		return await this.categoriesManager.update(data, _id as string)
 	}
 }

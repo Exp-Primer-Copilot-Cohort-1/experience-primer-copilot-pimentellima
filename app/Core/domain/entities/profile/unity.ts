@@ -4,6 +4,7 @@ import { IProfileUnity, IUnity } from 'App/Types/IUnity'
 import { addDays } from 'date-fns'
 import { Entity } from '../abstract/entity.abstract'
 
+import { Generic } from 'App/Types/ITransaction'
 import { validateUnity } from './validations'
 
 export class ProfileUnityEntity extends Entity implements IProfileUnity {
@@ -22,6 +23,7 @@ export class ProfileUnityEntity extends Entity implements IProfileUnity {
 	neighborhood: string
 	obs: string
 	phones: Nullable<{ value: string; id: number }>[]
+	coordinator?: string
 	site: string
 	state: string
 
@@ -115,11 +117,19 @@ export class ProfileUnityEntity extends Entity implements IProfileUnity {
 		return this
 	}
 
+	defineCoordinator(coordinator?: string | Generic): this {
+		if (!coordinator) return this
+
+		this.coordinator = typeof coordinator === 'string' ? coordinator.toString() : coordinator.value
+		return this
+	}
+
 	static async build(params: IUnity): PromiseEither<AbstractError, ProfileUnityEntity> {
 		try {
 			const unity = new ProfileUnityEntity()
 				.defineId(params._id?.toString() || '')
 				.defineActive(params.active)
+				.defineCoordinator(params.coordinator as string)
 				.defineStreet(params.street)
 				.defineAddressNumber(params.address_number)
 				.defineAvatar(params.avatar)

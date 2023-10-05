@@ -1,16 +1,17 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { ISessionTransaction } from 'App/Core/infra/session-transaction'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
-import Unity from 'App/Models/Unity'
+import Unity, { COLLECTIONS_REFS } from 'App/Models/Unity'
 import { IUnity } from 'App/Types/IUnity'
 import { UnitCreatedError } from '../../errors/unit-not-created-error'
 import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { PROJECTION_DEFAULT } from '../helpers/projections'
 import { UnitiesManagerInterface } from '../interface/unities-manager.interface'
 
 export class UnitiesMongooseRepository implements UnitiesManagerInterface {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
-		private readonly session: ISessionTransaction,
+		private readonly session?: ISessionTransaction,
 	) { }
 	async findAll(): PromiseEither<AbstractError, IUnity[]> {
 		const unities = await Unity.find()
@@ -19,8 +20,8 @@ export class UnitiesMongooseRepository implements UnitiesManagerInterface {
 	}
 	async findById(id: string): PromiseEither<AbstractError, IUnity> {
 		const unities = await Unity.findById(id)
-
-		if (!unities) return left(new UnitNotFoundError())
+			.populate(COLLECTIONS_REFS.COORDINATOR, PROJECTION_DEFAULT)
+			.orFail(new UnitNotFoundError())
 
 		return right(unities)
 	}
@@ -59,7 +60,7 @@ export class UnitiesMongooseRepository implements UnitiesManagerInterface {
 		_id, // eslint-disable-line
 		...unity
 	}: IUnity): PromiseEither<AbstractError, IUnity> {
-		const unityCreated = await Unity.create([unity], { ...this.session.options })
+		const unityCreated = await Unity.create([unity], { ...this.session?.options })
 
 		if (unityCreated?.length === 0) return left(new UnitCreatedError())
 
