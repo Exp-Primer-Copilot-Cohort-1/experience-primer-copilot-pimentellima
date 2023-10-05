@@ -6,6 +6,7 @@ import { autoInjectable, inject } from 'tsyringe'
 import { AccountManagerInterface } from '../../repositories/interface/account-manager-interface'
 
 import { AccountMongoRepository } from '../../repositories'
+
 @autoInjectable()
 export class CreateAccountUseCase implements UseCase<IAccount, IAccount> {
 	constructor(

@@ -1,8 +1,8 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
-import { PromiseEither, left } from 'App/Core/shared'
+import { PromiseEither } from 'App/Core/shared'
 import { IPartner } from 'App/Types/IPartner'
-import { PartnerManagerInterface } from '../../../repositories/interface'
+import { PartnerManagerInterface } from '../../repositories/interface'
 
 type FindAllProps = {
 	name?: string
@@ -15,11 +15,6 @@ export class FindPartnersByUnityUseCase implements UseCase<FindAllProps, IPartne
 	public async execute({
 		unity_id,
 	}: FindAllProps): PromiseEither<AbstractError, any[]> {
-		const partnerOrErr = await this.manager.findAll(unity_id)
-		if (partnerOrErr.isLeft()) {
-			return left(partnerOrErr.extract())
-		}
-
-		return partnerOrErr
+		return await this.manager.findAll(unity_id)
 	}
 }

@@ -3,7 +3,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
 
 import { IPartner } from 'App/Types/IPartner'
-import { PartnerManagerInterface } from '../../../repositories/interface'
+import { PartnerManagerInterface } from '../../repositories/interface'
 
 export class CreatePartnersUseCase implements UseCase<Partial<IPartner>, IPartner> {
 	constructor(private readonly partnerManager: PartnerManagerInterface) { }
@@ -11,8 +11,7 @@ export class CreatePartnersUseCase implements UseCase<Partial<IPartner>, IPartne
 	public async execute(
 		partner: Partial<IPartner>,
 	): PromiseEither<AbstractError, IPartner> {
-		const partnerOrErr = await this.partnerManager.createPartner(partner)
 
-		return partnerOrErr
+		return await this.partnerManager.create(partner)
 	}
 }

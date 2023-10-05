@@ -12,13 +12,11 @@ type Input = {
 export class DeletePartnerByIdUseCase implements UseCase<Input, IPartner> {
 	constructor(private readonly partnerManager: PartnerManagerInterface) { } // eslint-disable-line
 
-	public async execute(input: Input): PromiseEither<AbstractError, IPartner> {
-		if (!input?.id) {
+	public async execute({ id }: Input): PromiseEither<AbstractError, IPartner> {
+		if (!id) {
 			return left(new MissingParamsError('id'))
 		}
 
-		const partnerOrErr = await this.partnerManager.deletePartnerById(input.id)
-
-		return partnerOrErr
+		return await this.partnerManager.deleteByID(id)
 	}
 }

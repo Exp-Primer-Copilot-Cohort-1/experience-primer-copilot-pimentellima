@@ -33,7 +33,7 @@ export class PartnerMongooseRepository implements PartnerManagerInterface {
 		}
 		return right(partner)
 	}
-	public async createPartner({
+	public async create({
 		_id,
 		...data
 	}: Partial<IPartner>): PromiseEither<AbstractError, IPartner> {
@@ -45,7 +45,7 @@ export class PartnerMongooseRepository implements PartnerManagerInterface {
 
 		return right(partner)
 	}
-	public async deletePartnerById(id: string): PromiseEither<AbstractError, IPartner> {
+	public async deleteByID(id: string): PromiseEither<AbstractError, IPartner> {
 		const partner = await Partner.findById(id)
 		if (!partner) {
 			return left(new UnitNotFoundError())
@@ -53,7 +53,7 @@ export class PartnerMongooseRepository implements PartnerManagerInterface {
 		await partner.deleteOne()
 		return right(partner)
 	}
-	public async updatePartnerById(
+	public async update(
 		id: string,
 		data: Partial<IPartner>,
 	): PromiseEither<AbstractError, IPartner> {

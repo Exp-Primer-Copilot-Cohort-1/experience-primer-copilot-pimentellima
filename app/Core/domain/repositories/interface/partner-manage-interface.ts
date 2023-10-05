@@ -8,9 +8,9 @@ export interface PartnerManagerInterface {
 		name: string,
 		unity_id: string,
 	) => PromiseEither<AbstractError, IPartner[]>
-	createPartner: (data: Partial<IPartner>) => PromiseEither<AbstractError, IPartner>
-	deletePartnerById: (id: string) => PromiseEither<AbstractError, IPartner>
-	updatePartnerById: (
+	create: (data: Partial<IPartner>) => PromiseEither<AbstractError, IPartner>
+	deleteByID: (id: string) => PromiseEither<AbstractError, IPartner>
+	update: (
 		id: string,
 		data: Partial<IPartner>,
 	) => PromiseEither<AbstractError, IPartner>

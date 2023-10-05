@@ -1,7 +1,9 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeCreateAccountComposer } from 'App/Core/composers/accounts/make-create-account-composer'
-import { makeDeleteAccountComposer } from 'App/Core/composers/accounts/make-delete-account-composer'
+import {
+	makeCreateAccountComposer,
+	makeDeleteAccountComposer
+} from 'App/Core/composers/accounts/make'
 import { makeFindAccountComposer } from 'App/Core/composers/accounts/make-find-account-by-id-composer'
 import { makeFindAllAccountsComposer } from 'App/Core/composers/accounts/make-find-all-accounts-composer'
 import { makeUpdateAccountByIdComposer } from 'App/Core/composers/accounts/make-update-account-by-id-composer'
