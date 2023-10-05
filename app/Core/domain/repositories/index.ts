@@ -1,3 +1,4 @@
+export * from './account'
 export * from './activities'
 export * from './activity-awaits'
 export * from './categories'

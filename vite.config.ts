@@ -1,10 +1,30 @@
-import { config } from 'dotenv'
-import { defineConfig } from 'vitest/config'
+import { config } from 'dotenv';
+import 'reflect-metadata';
+import swc from "rollup-plugin-swc";
+import { defineConfig } from 'vitest/config';
 config()
 
 export default defineConfig({
 	root: __dirname,
+	plugins: [
+		swc({
+			jsc: {
+				parser: {
+					syntax: "typescript",
+					// tsx: true, // If you use react
+					dynamicImport: true,
+					decorators: true,
+				},
+				target: "es2021",
+				transform: {
+					decoratorMetadata: true,
+				},
+			},
+		}),
+	],
+	esbuild: false,
 	test: {
+		setupFiles: ['./setupTests.ts'],
 		coverage: {
 			provider: 'istanbul',
 			all: true,
@@ -21,6 +41,7 @@ export default defineConfig({
 		],
 		include: ['app/Core/**/*.spec.ts'],
 		watch: false,
+
 	},
 	resolve: {
 		alias: {

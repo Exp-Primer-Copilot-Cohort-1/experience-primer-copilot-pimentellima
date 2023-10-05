@@ -6,7 +6,12 @@ export class OptsQuery implements IOptsQuery {
 	skip: number
 	active: boolean
 
-	private constructor() { } // eslint-disable-line @typescript-eslint/no-empty-function, prettier/prettier
+	constructor() {
+		this.defineSort()
+		this.defineSize()
+		this.defineSkip()
+		this.defineActive()
+	} // eslint-disable-line @typescript-eslint/no-empty-function, prettier/prettier
 
 	defineSort(sort = '--name'): OptsQuery {
 		this.sort = sort
