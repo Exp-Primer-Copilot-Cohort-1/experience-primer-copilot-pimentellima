@@ -1,7 +1,6 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
 import { STATUS_ACTIVITY, type IActivity } from 'App/Types/IActivity'
-
 import { COLLECTION_NAME as COLLECTION_CLIENT_NAME } from './Client'
 import { COLLECTION_NAME as COLLECTION_HEALTH_INSURANCE_NAME } from './HealthInsurance'
 import { COLLECTION_NAME as COLLECTION_PROCEDURE_NAME } from './Procedure'

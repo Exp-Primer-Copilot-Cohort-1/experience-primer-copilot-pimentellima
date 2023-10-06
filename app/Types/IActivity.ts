@@ -142,12 +142,12 @@ export type ActivityPendingValues = {
 }
 
 export type RecurrentActivityValues = {
-	pending: number
-	values: {
-		prof: Prof
-		client: Client
-		procedures: Procedure[]
-		obs?: string
-	}
+	prof: Prof
+	client: Client
+	procedures: Procedure[]
+	obs?: string
 	dates: DateValues[]
+	isRecurrent: boolean
+	recurrences: number
+	schedulings: number
 }
