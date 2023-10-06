@@ -16,6 +16,16 @@ const BusinessFranchisesSchema = new Schema<IBusinessFranchises>(
 		unities: [{ type: Schema.Types.ObjectId, required: true, ref: COLLECTION_NAME_UNITIES }],
 		admins: [{ type: Schema.Types.ObjectId, required: true, ref: COLLECTION_NAME_USER }],
 		superAdmins: [{ type: Schema.Types.ObjectId, required: true, ref: COLLECTION_NAME_USER }],
+		questions: [
+			{
+				version: { type: Number, default: 1 },
+				questions: [
+					{
+						question: { type: String, required: true },
+					},
+				],
+			},
+		]
 	},
 	{
 		timestamps: {

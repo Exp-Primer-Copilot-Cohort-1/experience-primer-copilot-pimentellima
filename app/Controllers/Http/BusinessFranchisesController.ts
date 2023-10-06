@@ -64,6 +64,51 @@ class BusinessFranchisesController {
 		return user
 	}
 
+	async isAFranchise(ctx: HttpContextContract) {
+		const unity_id = ctx.auth.user?.unity_id.toString()
+
+		const isAFranchise = await BusinessFranchises.exists({ unities: unity_id }).exec()
+
+		return isAFranchise
+	}
+
+	async getQuestions(ctx: HttpContextContract) {
+		const unity_id = ctx.auth.user?.unity_id.toString()
+
+		const businessFranchise = await BusinessFranchises.findOne({ unities: unity_id }).exec()
+
+		if (!businessFranchise) throw new UnitNotFoundError()
+
+		if (!businessFranchise.questions) {
+			businessFranchise.questions = [
+				{
+					version: 1,
+					questions: [
+						{
+							question: 'Qual o seu nível de dor?'
+						},
+						{
+							question: 'Qual o seu nível de dor?'
+						},
+						{
+							question: 'Qual o seu nível de dor?'
+						},
+						{
+							question: 'Qual o seu nível de dor?'
+						},
+						{
+							question: 'Qual o seu nível de dor?'
+						},
+					]
+				}
+			]
+
+			await businessFranchise.save()
+		}
+
+		return businessFranchise?.questions
+	}
+
 }
 
 export default BusinessFranchisesController
