@@ -2,6 +2,11 @@ import Mongoose, { Schema } from '@ioc:Mongoose'
 import { PaymentStatus } from 'App/Helpers'
 import { IActivityPending, STATUS_ACTIVITY } from 'App/Types/IActivity'
 import { COLLECTION_NAME } from './Activity'
+import { COLLECTION_NAME as COLLECTION_CLIENT_NAME } from './Client'
+import { COLLECTION_NAME as COLLECTION_HEALTH_INSURANCE_NAME } from './HealthInsurance'
+import { COLLECTION_NAME as COLLECTION_PROCEDURE_NAME } from './Procedure'
+import { COLLECTION_NAME as COLLECTION_UNITY_NAME } from './Unity'
+import { COLLECTION_NAME as COLLECTION_USER_NAME } from './User'
 
 interface IActivityPendingModel extends Omit<IActivityPending, 'prof' | 'client'> {
 	prof: Schema.Types.ObjectId
@@ -91,7 +96,7 @@ const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 				_id: {
 					type: Schema.Types.ObjectId,
 					required: true,
-					ref: 'procedures',
+					ref: COLLECTION_PROCEDURE_NAME,
 				},
 				minutes: {
 					type: Number,
@@ -102,33 +107,42 @@ const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 					required: true,
 				},
 				price: {
-					type: String,
+					type: Number,
 					required: true,
 				},
 				health_insurance: {
 					type: Schema.Types.ObjectId,
-
+					ref: COLLECTION_HEALTH_INSURANCE_NAME,
 				},
 			},
 		],
 		payment: {
-
+			type: {
+				amount: {
+					type: Number,
+				},
+				date: {
+					type: Date,
+				},
+				paymentForm: {
+					type: String,
+				},
+			},
 			default: {},
 		},
 		client: {
 			type: Schema.Types.ObjectId,
 			required: true,
-			ref: 'clients',
+			ref: COLLECTION_CLIENT_NAME,
 		},
 		obs: {
 			type: String,
-
 			default: null,
 		},
 		prof: {
 			type: Schema.Types.ObjectId,
 			required: true,
-			ref: 'users',
+			ref: COLLECTION_USER_NAME,
 		},
 		active: {
 			type: Boolean,
@@ -138,11 +152,10 @@ const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 		unity_id: {
 			type: Schema.Types.ObjectId,
 			required: true,
-			ref: 'unities',
+			ref: COLLECTION_UNITY_NAME,
 		},
 		type: {
 			type: String,
-
 			default: STATUS_ACTIVITY.PENDING,
 		},
 	},
@@ -153,6 +166,10 @@ const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 		},
 	},
 )
+
+ActivityPendingSchema.index({ prof: 1 }, { unique: false })
+ActivityPendingSchema.index({ client: 1 }, { unique: false })
+ActivityPendingSchema.index({ unity_id: 1, scheduled: 1, date: 1, type: 1 }, { unique: false })
 
 export default Mongoose.model<IActivityPendingModel>(
 	'activities_pending',
