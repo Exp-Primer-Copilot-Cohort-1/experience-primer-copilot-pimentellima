@@ -1,0 +1,229 @@
+config:
+  target: "http://localhost:3333"
+  phases:
+    - name: "Fase Inicial Carga Leve"
+      arrivalRate: 20
+      duration: 10
+    - name: "Fase de Carga Moderada"
+      arrivalRate: 50
+      duration: 10
+    - name: "Fase de Carga Significativa"
+      arrivalRate: 75
+      duration: 10
+    # - name: "Fase Final Sobrecarga"
+    #   arrivalRate: 75
+    #   duration: 10
+
+before:
+  flow:
+    - post:
+        url: "/sessions"
+        json:
+          email: "murilomontinojr@hotmail.com"
+          password: "@Kingdom2012"
+        capture:
+          json: $.token.token
+          as: token
+        expect:
+          - statusCode: 200
+    - log: "Token capturado: {{ token }}"
+
+scenarios:
+  - name: "busca de unidades por email"
+    weight: 2
+    flow:
+      - get:
+          url: "/unities?name=myUnity"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca de todos os procedimentos da unidade"
+    weight: 2
+    flow:
+      - get:
+          url: "/procedures"
+          headers:
+            Content-Type: "application/json"
+            authorization: "Bearer {{ token }}"
+
+  - name: "Busca de respostas por unidade"
+    weight: 2
+    flow:
+      - get:
+          url: "/answers"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca de todos os pacientes por unidade"
+    weight: 2
+    flow:
+      - get:
+          url: "/clients"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Autenticação do usuário"
+    weight: 2
+    flow:
+      - get:
+          url: "/sessions/user"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca de todos os profissionais da unidade"
+    weight: 2
+    flow:
+      - get:
+          url: "/users/profs"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "UserControllerV2.findAllUsersSecs"
+    weight: 2
+    flow:
+      - get:
+          url: "/users/secs"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca de planos de saúde da unidade do usuário"
+    weight: 2
+    flow:
+      - get:
+          url: "/health-insurances"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca de todos os agendamentos por unidade"
+    weight: 2
+    flow:
+      - get:
+          url: "/schedule-block"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca de estoque da unidade"
+    weight: 2
+    flow:
+      - get:
+          url: "/stocks"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca de todas as categorias da unidade autenticada"
+    weight: 2
+    flow:
+      - get:
+          url: "/categories"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Lista de parceiros da unidade autenticada"
+    weight: 2
+    flow:
+      - get:
+          url: "/partners"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca todos os formularios do usuário autenticado"
+    weight: 2
+    flow:
+      - get:
+          url: "/forms"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca todos os formularios inativos do usuário  autenticado"
+    weight: 2
+    flow:
+      - get:
+          url: "/forms/inactives"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca de todas as atividades de acordo com o tipo de usuário autenticado"
+    weight: 3
+    flow:
+      - get:
+          url: "/activities"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca de todas as atividades a espera de aprovação"
+    weight: 3
+    flow:
+      - get:
+          url: "/activities/await"
+          headers:
+            Authorization: "Bearer {{ token }}"
+  - name: "Busca de todas as atividades pendentes de acordo com o tipo de usuário autenticado"
+    weight: 2
+    flow:
+      - get:
+          url: "/activities/pending"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca de prescrições do profissional autenticado"
+    weight: 2
+    flow:
+      - get:
+          url: "/prescriptions"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca de atestados médicos com base no nome do paciente"
+    weight: 2
+    flow:
+      - get:
+          url: "/medical-certificate"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca de todos os pagamentos dos Profissionais"
+    weight: 2
+    flow:
+      - get:
+          url: "/payment-participations"
+          headers:
+            Authorization: "Bearer {{ token }}"
+  - name: "busca dos centros de custo ativos da unidade do usuário logado"
+    weight: 2
+    flow:
+      - get:
+          url: "/cost-centers"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  # - name: "Busca todas as contas"
+  #   weight: 2
+  #   flow:
+  #     - get:
+  #         url: "/accounts"
+  #         headers:
+  #           Authorization: "Bearer {{ token }}"
+
+  - name: "Busca por uma lista de transações"
+    weight: 3
+    flow:
+      - get:
+          url: "/transactions"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca por todos os feriados de uma unidade"
+    weight: 2
+    flow:
+      - get:
+          url: "/holidays"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca pelos faturamentos do ano atual de uma unidade"
+    weight: 2
+    flow:
+      - get:
+          url: "/revenues"
+          headers:
+            Authorization: "Bearer {{ token }}"
