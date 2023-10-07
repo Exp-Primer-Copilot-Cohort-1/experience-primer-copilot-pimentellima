@@ -13,7 +13,7 @@ import { AccountManagerInterface } from '../interface/account-manager-interface'
 export class AccountMongoRepository implements AccountManagerInterface {
 
 	constructor(
-		@inject(OptsQuery) private readonly opts?: OptsQuery
+		@inject(OptsQuery) private readonly opts: OptsQuery
 	) { } // eslint-disable-line
 
 
@@ -22,11 +22,11 @@ export class AccountMongoRepository implements AccountManagerInterface {
 
 		const data = await Account.find({
 			unity_id,
-			active: this.opts?.active,
+			active: this.opts.active,
 		})
-			.sort(this.opts?.sort)
-			.limit(this.opts?.limit as number)
-			.skip(this.opts?.skip as number)
+			.sort(this.opts.sort)
+			.limit(this.opts.limit as number)
+			.skip(this.opts.skip as number)
 			.exec()
 
 		return right(data)

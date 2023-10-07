@@ -348,11 +348,11 @@ Route.group(() => {
 	}).prefix('cost-centers')
 
 	Route.group(() => {
-		Route.get('', 'AccountController.findAllAccounts').as('accounts.index')
-		Route.get('/:id', 'AccountController.findAccountById').as('accounts.show')
-		Route.put('/:id', 'AccountController.updateAccount').as('accounts.update')
-		Route.delete('/:id', 'AccountController.deleteAccountById').as('accounts.destroy')
-		Route.post('', 'AccountController.createAccount').as('accounts.store')
+		Route.get('', 'AccountController.index').as('accounts.index')
+		Route.get('/:id', 'AccountController.show').as('accounts.show')
+		Route.put('/:id', 'AccountController.update').as('accounts.update')
+		Route.delete('/:id', 'AccountController.destroy').as('accounts.destroy')
+		Route.post('', 'AccountController.store').as('accounts.store')
 	}).prefix('accounts')
 
 	Route.group(() => {
