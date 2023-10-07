@@ -5,8 +5,8 @@ export type IQuestion = {
 	answer: string
 }
 
-export interface IFormStandardBusinessFranchises {
-	_id: ObjectId | string
+export interface IReplyFormStandardFranchises {
+	_id?: ObjectId | string
 	version: number
 	client: ObjectId | string
 	prof: ObjectId | string

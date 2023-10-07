@@ -1,14 +1,18 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
-import { IFormStandardBusinessFranchises } from 'App/Types/IFormStandardBusinessFranchises'
+import {
+	IReplyFormStandardFranchises
+} from "App/Types/IReplyFormStandardFranchises"
 import { COLLECTION_NAME as COLLECTION_NAME_ACTIVITY } from './Activity'
 import { COLLECTION_NAME as COLLECTION_NAME_FRANCHISES } from './BusinessFranchises'
 import { COLLECTION_NAME as COLLECTION_NAME_CLIENTS } from './Client'
 import { COLLECTION_NAME as COLLECTION_NAME_UNITIES } from './Unity'
 import { COLLECTION_NAME as COLLECTION_NAME_USERS } from './User'
 
-export const COLLECTION_NAME = 'form_standard_business_franchises'
 
-const ClientSchema = new Schema<IFormStandardBusinessFranchises>(
+export const COLLECTION_NAME = 'reply_form_standard_franchises'
+
+const schema = new Schema<IReplyFormStandardFranchises
+>(
 	{
 		client: {
 			type: Schema.Types.ObjectId,
@@ -62,4 +66,7 @@ const ClientSchema = new Schema<IFormStandardBusinessFranchises>(
 	},
 )
 
-export default Mongoose.model<IFormStandardBusinessFranchises>(COLLECTION_NAME, ClientSchema)
+schema.index({ unity_id: 1, client: 1, activity: 1 }, { unique: true })
+
+export default Mongoose.model<IReplyFormStandardFranchises
+>(COLLECTION_NAME, schema)

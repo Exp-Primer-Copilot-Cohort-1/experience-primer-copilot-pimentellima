@@ -31,6 +31,8 @@ const generatePipeline = (unity_id) => [
 	}
 ]
 
+// ! AVISO
+// ! refatorar para usar o padrão da nossa arquitetura
 class BusinessFranchisesController {
 
 	async index(ctx: HttpContextContract) {
@@ -70,54 +72,6 @@ class BusinessFranchisesController {
 		const isAFranchise = await BusinessFranchises.exists({ unities: unity_id }).exec()
 
 		return isAFranchise
-	}
-
-	async getQuestions(ctx: HttpContextContract) {
-		const unity_id = ctx.auth.user?.unity_id.toString()
-
-		const businessFranchise = await BusinessFranchises.findOne({ unities: unity_id }).exec()
-
-		if (!businessFranchise) throw new UnitNotFoundError()
-
-		if (!businessFranchise.questions?.length) {
-			businessFranchise.questions = [
-				{
-					version: 1,
-					min: 0,
-					max: 5,
-					questions: [
-						{
-							question: 'Qual o seu nível de dor?'
-						},
-						{
-							question: 'Qual o seu nível de dor?'
-						},
-						{
-							question: 'Qual o seu nível de dor?'
-						},
-						{
-							question: 'Qual o seu nível de dor?'
-						},
-						{
-							question: 'Qual o seu nível de dor?'
-						},
-					]
-				}
-			]
-
-			await businessFranchise.save()
-		}
-
-		return businessFranchise?.questions.reduce(
-			(acc, cur) => {
-				if (acc.version < cur.version) {
-					acc.version = cur.version
-					acc.min = cur.min
-					acc.max = cur.max
-					acc.questions = cur.questions
-				}
-				return acc
-			}, { version: 0, questions: [], min: 0, max: 0 })
 	}
 
 }

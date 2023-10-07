@@ -420,9 +420,6 @@ Route.group(() => {
 	}).prefix('unities')
 
 	Route.group(() => {
-
-
-
 		Route.get('', 'BusinessFranchisesController.index').as(
 			'business-franchises.index',
 		)
@@ -432,11 +429,19 @@ Route.group(() => {
 	}).prefix('business-franchises')
 
 	Route.group(() => {
-		Route.get('issues', 'BusinessFranchisesController.getQuestions').as('business-franchises.issues')
+		Route.get('issues', 'StandardFormFranchisesController.index').as('business-franchises.issues')
 		Route.get(
 			'is-a-franchise',
 			'BusinessFranchisesController.isAFranchise',
 		).as('business-franchises.isAFranchise')
+		Route.get(
+			'form/:activity',
+			'ReplyStandardFormController.show',
+		).as('business-franchises.form-standard')
+		Route.post(
+			'form',
+			'ReplyStandardFormController.store',
+		).as('business-franchises.form-standard.store')
 	}).prefix('franchises')
 
 	Route.group(() => {
