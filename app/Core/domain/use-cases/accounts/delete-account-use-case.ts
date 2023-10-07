@@ -2,7 +2,7 @@ import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left } from "App/Core/shared";
 import { IAccount } from "App/Types/IAccount";
-import { autoInjectable, inject } from "tsyringe";
+import { inject, injectable, registry } from "tsyringe";
 import { MissingParamsError } from "../../errors";
 import { AccountMongoRepository } from '../../repositories';
 import { AccountManagerInterface } from "../../repositories/interface/account-manager-interface";
@@ -11,7 +11,8 @@ type TypeParams = {
 	id: string
 }
 
-@autoInjectable()
+@injectable()
+@registry([{ token: DeleteAccountByIdUseCase, useClass: DeleteAccountByIdUseCase }])
 export class DeleteAccountByIdUseCase
 	implements UseCase<TypeParams, IAccount>
 {

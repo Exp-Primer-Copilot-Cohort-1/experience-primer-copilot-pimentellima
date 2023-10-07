@@ -1,15 +1,31 @@
-import { Controller } from 'App/Core/adapters/controller'
 import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
-import { DeleteAccountByIdUseCase } from 'App/Core/domain/use-cases/accounts'
-import { CreateAccountUseCase } from 'App/Core/domain/use-cases/accounts/create-account-use-case'
+import ControllerInjection from 'App/Core/adapters/controller/ports/controller-injection'
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import {
+	CreateAccountUseCase,
+	DeleteAccountByIdUseCase,
+	FindAccountByIdUseCase,
+	FindAllAccountUseCase,
+	UpdateAccountByIdUseCase
+} from 'App/Core/domain/use-cases/accounts'
 
 export const makeCreateAccountComposer = (): ControllerGeneric => {
-	return new Controller(new CreateAccountUseCase())
+	return ControllerInjection.resolve(CreateAccountUseCase)
 }
 
-
 export const makeDeleteAccountComposer = (): ControllerGeneric => {
-	return new Controller(
-		new DeleteAccountByIdUseCase(),
-	);
+	return ControllerInjection.resolve(DeleteAccountByIdUseCase)
 };
+
+
+export const makeFindAccountComposer = (): ControllerGeneric => {
+	return ControllerInjection.resolve(FindAccountByIdUseCase)
+};
+
+export const makeUpdateAccountByIdComposer = (): ControllerGeneric => {
+	return ControllerInjection.resolve(UpdateAccountByIdUseCase)
+};
+
+export const makeFindAllAccountsComposer = (opts: OptsQuery): ControllerGeneric => {
+	return ControllerInjection.resolve(FindAllAccountUseCase, opts)
+}

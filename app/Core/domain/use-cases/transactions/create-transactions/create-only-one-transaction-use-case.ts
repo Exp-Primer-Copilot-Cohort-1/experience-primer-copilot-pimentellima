@@ -1,8 +1,10 @@
 import { InappropriateUseCase } from 'App/Core/domain/errors/inappropriate-use-case'
+import { TransactionsMongooseRepository } from 'App/Core/domain/repositories'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import { ITransaction } from 'App/Types/ITransaction'
+import { inject, injectable } from 'tsyringe'
 import { UnitNotFoundError } from '../../../errors/unit-not-found'
 import { TransactionsManagerInterface } from '../../../repositories/interface/transactions-manager-interface'
 import { TransactionWithoutProcedure } from '../helpers'
@@ -11,6 +13,7 @@ import { TransactionWithoutProcedure } from '../helpers'
  * Use case responsible for creating only one transaction without procedures.
  * @implements {UseCase}
  */
+@injectable()
 export class CreateOnlyOneTransactionUseCase
 	implements UseCase<TransactionWithoutProcedure, ITransaction>
 {
@@ -18,7 +21,9 @@ export class CreateOnlyOneTransactionUseCase
 	 * Creates an instance of CreateOnlyOneTransactionUseCase.
 	 * @param {TransactionsManagerInterface} manager - The manager for transactions.
 	 */
-	constructor(private readonly manager: TransactionsManagerInterface) { } // eslint-disable-line
+	constructor(
+		@inject(TransactionsMongooseRepository) private readonly manager: TransactionsManagerInterface
+	) { } // eslint-disable-line
 
 	/**
 	 * Executes the use case.

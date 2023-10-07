@@ -9,12 +9,14 @@ import { ISessionTransaction } from 'App/Core/infra/session-transaction'
 import type { ITransaction } from 'App/Types/ITransaction'
 import divideCurrencyByInteger from 'App/utils/divide-currency'
 import { Types } from 'mongoose'
+import { injectable } from 'tsyringe'
 import { UnitNotFoundError } from '../../../errors/unit-not-found'
 import { TransactionWithProcedure, TransactionWithoutProcedure } from '../helpers'
 
 /**
  * Classe responsável por criar transações.
  */
+@injectable()
 export class CreateTransactionUseCase implements UseCase<ITransaction, ITransaction> {
 	/**
 	 * Construtor da classe.

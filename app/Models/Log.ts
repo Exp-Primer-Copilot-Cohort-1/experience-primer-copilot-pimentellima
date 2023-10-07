@@ -129,6 +129,8 @@ LogSchema.index({ collection_id: 1, date: 1 })
 LogSchema.index({ user: 1, date: 1 })
 
 const generateCollectionLog = async (unity_id: string) => {
+	if (!unity_id) return null
+
 	return Mongoose.model(`logs_${unity_id}`, LogSchema)
 }
 

@@ -3,12 +3,13 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import Account from 'App/Models/Account'
 import { IAccount } from 'App/Types/IAccount'
-import { autoInjectable, inject } from "tsyringe"
+import { inject, injectable, registry } from "tsyringe"
 import AccountEntity from '../../entities/account/account'
 import { OptsQuery } from '../../entities/helpers/opts-query'
 import { AccountNotFoundError, UnitNotFoundError } from '../../errors'
 import { AccountManagerInterface } from '../interface/account-manager-interface'
-@autoInjectable()
+@injectable()
+@registry([{ token: AccountMongoRepository, useClass: AccountMongoRepository }])
 export class AccountMongoRepository implements AccountManagerInterface {
 
 	constructor(

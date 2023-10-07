@@ -2,17 +2,21 @@ import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left } from "App/Core/shared";
 import { IAccount } from "App/Types/IAccount";
+import { inject, injectable, registry } from "tsyringe";
+import { AccountMongoRepository } from "../../repositories";
 import { AccountManagerInterface } from "../../repositories/interface/account-manager-interface";
 
 type TypeParams = {
 	id: string
 }
 
+@injectable()
+@registry([{ token: FindAccountByIdUseCase, useClass: FindAccountByIdUseCase }])
 export class FindAccountByIdUseCase
 	implements UseCase<TypeParams, IAccount>
 {
 	constructor(
-		private readonly manager: AccountManagerInterface
+		@inject(AccountMongoRepository) private readonly manager: AccountManagerInterface
 	) { }
 
 	public async execute(
