@@ -422,19 +422,22 @@ Route.group(() => {
 	Route.group(() => {
 
 
+
 		Route.get('', 'BusinessFranchisesController.index').as(
 			'business-franchises.index',
 		)
 		Route.get('/:id', 'BusinessFranchisesController.show').as(
 			'business-franchises.show',
 		)
-
 	}).prefix('business-franchises')
 
-	Route.get(
-		'is-a-franchise',
-		'BusinessFranchisesController.isAFranchise',
-	).as('business-franchises.isAFranchise')
+	Route.group(() => {
+		Route.get('issues', 'BusinessFranchisesController.getQuestions').as('business-franchises.issues')
+		Route.get(
+			'is-a-franchise',
+			'BusinessFranchisesController.isAFranchise',
+		).as('business-franchises.isAFranchise')
+	}).prefix('franchises')
 
 	Route.group(() => {
 		Route.get('', 'ProfileController.show').as('profile.show')

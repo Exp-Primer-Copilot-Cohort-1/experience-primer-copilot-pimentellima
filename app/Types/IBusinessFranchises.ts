@@ -2,6 +2,8 @@ import { ObjectId } from '@ioc:Mongoose'
 
 export type IForm = {
 	version: number
+	min: number
+	max: number
 	questions: {
 		question: string
 	}[]

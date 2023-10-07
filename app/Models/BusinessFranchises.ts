@@ -19,8 +19,11 @@ const BusinessFranchisesSchema = new Schema<IBusinessFranchises>(
 		questions: [
 			{
 				version: { type: Number, default: 1 },
+				min: { type: Number, default: 0 },
+				max: { type: Number, default: 5 },
 				questions: [
 					{
+						_id: false,
 						question: { type: String, required: true },
 					},
 				],

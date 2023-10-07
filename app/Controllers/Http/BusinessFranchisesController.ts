@@ -79,10 +79,12 @@ class BusinessFranchisesController {
 
 		if (!businessFranchise) throw new UnitNotFoundError()
 
-		if (!businessFranchise.questions) {
+		if (!businessFranchise.questions?.length) {
 			businessFranchise.questions = [
 				{
 					version: 1,
+					min: 0,
+					max: 5,
 					questions: [
 						{
 							question: 'Qual o seu nível de dor?'
@@ -106,7 +108,16 @@ class BusinessFranchisesController {
 			await businessFranchise.save()
 		}
 
-		return businessFranchise?.questions
+		return businessFranchise?.questions.reduce(
+			(acc, cur) => {
+				if (acc.version < cur.version) {
+					acc.version = cur.version
+					acc.min = cur.min
+					acc.max = cur.max
+					acc.questions = cur.questions
+				}
+				return acc
+			}, { version: 0, questions: [], min: 0, max: 0 })
 	}
 
 }
