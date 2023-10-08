@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
+import { TypeForms } from 'App/Types/IBusinessFranchises'
 import { IQuestion, IReplyFormStandardFranchises } from 'App/Types/IReplyFormStandardFranchises'
 import { ArrayNotEmpty, IsNumber, IsString } from 'class-validator'
 import { InvalidParamsError } from '../../errors/invalid-params-error'
@@ -20,6 +21,8 @@ export class ReplyFormStandardFranchisesEntity extends Entity implements IReplyF
 	@IsString() activity: string
 
 	@ArrayNotEmpty() questions: IQuestion[]
+
+	@IsString() type: TypeForms
 
 	private constructor() {
 		super()
@@ -60,6 +63,11 @@ export class ReplyFormStandardFranchisesEntity extends Entity implements IReplyF
 		return this
 	}
 
+	defineType(type: TypeForms = TypeForms.START): this {
+		this.type = type
+		return this
+	}
+
 	public static async build(
 		params: IReplyFormStandardFranchises,
 	): PromiseEither<AbstractError, ReplyFormStandardFranchisesEntity> {
@@ -75,6 +83,7 @@ export class ReplyFormStandardFranchisesEntity extends Entity implements IReplyF
 					.defineFranchise(params.franchise.toString())
 					.defineActivity(params.activity.toString())
 					.defineQuestions(params.questions)
+					.defineType(params.type),
 			)
 		} catch (err) {
 			return left(new InvalidParamsError(err))

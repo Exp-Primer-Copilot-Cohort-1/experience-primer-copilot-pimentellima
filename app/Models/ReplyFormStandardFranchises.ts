@@ -19,6 +19,11 @@ const schema = new Schema<IReplyFormStandardFranchises
 			ref: COLLECTION_NAME_CLIENTS,
 			required: true,
 		},
+		type: {
+			type: String,
+			enum: ['start', 'end'],
+			required: true,
+		},
 		prof: {
 			type: Schema.Types.ObjectId,
 			ref: COLLECTION_NAME_USERS,
@@ -66,7 +71,7 @@ const schema = new Schema<IReplyFormStandardFranchises
 	},
 )
 
-schema.index({ unity_id: 1, client: 1, activity: 1 }, { unique: true })
+schema.index({ unity_id: 1, client: 1, activity: 1, type: 1 }, { unique: true })
 
 export default Mongoose.model<IReplyFormStandardFranchises
 >(COLLECTION_NAME, schema)

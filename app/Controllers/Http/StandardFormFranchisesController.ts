@@ -1,6 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { UnitNotFranchise } from 'App/Core/domain/errors/unit-not-franchise'
 import BusinessFranchises from 'App/Models/BusinessFranchises'
+import { TypeForms } from 'App/Types/IBusinessFranchises'
 
 // ! AVISO
 // ! refatorar para usar o padrão da nossa arquitetura
@@ -13,56 +14,18 @@ class StandardFormFranchisesController {
 
 		if (!businessFranchise) throw new UnitNotFranchise()
 
-		if (!businessFranchise.questions?.length) {
-			businessFranchise.questions = [
-				{
-					version: 1,
-					min: 0,
-					max: 5,
-					questions: [
-						{
-							question: 'Qual o seu nível de dor?'
-						},
-						{
-							question: 'Qual o seu nível de dor?'
-						},
-						{
-							question: 'Qual o seu nível de dor?'
-						},
-						{
-							question: 'Qual o seu nível de dor?'
-						},
-						{
-							question: 'Qual o seu nível de dor?'
-						},
-					]
-				}
-			]
-
-			await businessFranchise.save()
-		}
-
-		return businessFranchise?.questions.reduce(
-			(acc, cur) => {
-				if (acc.version < cur.version) {
-					acc.version = cur.version
-					acc.min = cur.min
-					acc.max = cur.max
-					acc.questions = cur.questions
-				}
-				return acc
-			}, { version: 0, questions: [], min: 0, max: 0 })
+		return businessFranchise?.questions
 	}
 
 	async store(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id.toString()
-		const { version, min, max, questions } = ctx.request.body()
+		const { version, min, max, questions, type } = ctx.request.body()
 
 		const businessFranchise = await BusinessFranchises.findOne({ unities: unity_id }).exec()
 
 		if (!businessFranchise) throw new UnitNotFranchise()
 
-		businessFranchise.questions?.push({ version, min, max, questions })
+		businessFranchise.questions?.push({ version, min, max, questions, type })
 
 		await businessFranchise.save()
 
@@ -71,7 +34,7 @@ class StandardFormFranchisesController {
 
 	async update(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id.toString()
-		const { version, min, max, questions } = ctx.request.body()
+		const { version, min, max, questions, type } = ctx.request.body()
 
 		const businessFranchise = await BusinessFranchises.findOne({ unities: unity_id }).exec()
 
@@ -81,13 +44,60 @@ class StandardFormFranchisesController {
 
 		if (index === undefined || index === -1) throw new Error('Versão não encontrada')
 
-		businessFranchise.questions[index] = { version, min, max, questions }
+		businessFranchise.questions[index] = { version, min, max, questions, type }
 
 		await businessFranchise.save()
 
 		return businessFranchise
 	}
 
+	async show(ctx: HttpContextContract) {
+		const unity_id = ctx.auth.user?.unity_id.toString()
+		const { type } = ctx.params as { type: TypeForms }
+
+		const businessFranchise = await BusinessFranchises.findOne({
+			unities: unity_id,
+		}).exec()
+
+		if (!businessFranchise) throw new UnitNotFranchise()
+
+		const filtered = businessFranchise.questions?.filter(q => q.type === type)
+
+		if (!filtered?.length) {
+			businessFranchise.questions = [
+				{
+					version: 1,
+					min: 0,
+					type,
+					max: 5,
+					questions: [
+						{
+							question: `Qual o seu nível de dor? ${type}`
+						},
+						{
+							question: `Qual o seu nível de dor? ${type}`
+						},
+						{
+							question: `Qual o seu nível de dor? ${type}`
+						},
+						{
+							question: `Qual o seu nível de dor? ${type}`
+						},
+						{
+							question: `Qual o seu nível de dor? ${type}`
+						},
+					]
+				}
+			]
+
+			await businessFranchise.save()
+		}
+
+		return businessFranchise.questions.reduce((acc, cur) => {
+			if (cur.type === type && cur.version > acc.version) return cur
+			return acc
+		}, { version: 0, min: 0, max: 0, questions: [], type })
+	}
 }
 
 export default StandardFormFranchisesController

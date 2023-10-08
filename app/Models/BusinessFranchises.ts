@@ -19,12 +19,18 @@ const BusinessFranchisesSchema = new Schema<IBusinessFranchises>(
 		questions: [
 			{
 				version: { type: Number, default: 1 },
+				type: {
+					type: String,
+					enum: ['start', 'end'],
+					required: true
+				},
 				min: { type: Number, default: 0 },
 				max: { type: Number, default: 5 },
 				questions: [
 					{
 						_id: false,
 						question: { type: String, required: true },
+						description: { type: String, required: false, default: '' },
 					},
 				],
 			},
@@ -37,6 +43,8 @@ const BusinessFranchisesSchema = new Schema<IBusinessFranchises>(
 		},
 	},
 )
+
+BusinessFranchisesSchema.index({ 'questions.version': 1, 'questions.type': 1 }, { unique: true })
 
 export default Mongoose.model<IBusinessFranchises>(
 	COLLECTION_NAME,

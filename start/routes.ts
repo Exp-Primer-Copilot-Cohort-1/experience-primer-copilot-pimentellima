@@ -430,6 +430,7 @@ Route.group(() => {
 
 	Route.group(() => {
 		Route.get('issues', 'StandardFormFranchisesController.index').as('business-franchises.issues')
+		Route.get('issues/:type', 'StandardFormFranchisesController.show').as('business-franchises.issues.show')
 		Route.get(
 			'is-a-franchise',
 			'BusinessFranchisesController.isAFranchise',

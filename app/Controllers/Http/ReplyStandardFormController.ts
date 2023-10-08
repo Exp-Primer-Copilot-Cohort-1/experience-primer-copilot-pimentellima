@@ -3,6 +3,7 @@ import ReplyFormStandardFranchisesEntity from 'App/Core/domain/entities/reply-fo
 import { UnitNotFranchise } from 'App/Core/domain/errors/unit-not-franchise'
 import BusinessFranchises from 'App/Models/BusinessFranchises'
 import ReplyFormStandardFranchises from 'App/Models/ReplyFormStandardFranchises'
+import { TypeForms } from 'App/Types/IBusinessFranchises'
 import {
 	IReplyFormStandardFranchises
 } from "App/Types/IReplyFormStandardFranchises"
@@ -13,11 +14,17 @@ import {
 class ReplyStandardFormController {
 	async show(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id.toString()
-		const { client, activity } = ctx.params
+		const { activity } = ctx.params
+		const type = ctx.request.qs().type || TypeForms.START
 
-		if (!client || !activity) return ctx.response.status(400).send({ message: 'Dados inválidos' })
+		if (!activity) return ctx.response.status(400).send({ message: 'Dados inválidos' })
 
-		const doc = await ReplyFormStandardFranchises.findOne({ unity_id, client, activity }).exec()
+		const doc = await ReplyFormStandardFranchises.findOne({
+			unity_id,
+			activity,
+			type,
+		}).exec()
+
 
 		if (!doc) return ctx.response.status(404).send({ message: 'Formulário não encontrado' })
 

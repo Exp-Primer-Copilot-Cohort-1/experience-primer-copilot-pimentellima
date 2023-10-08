@@ -1,11 +1,18 @@
 import { ObjectId } from '@ioc:Mongoose'
 
+export enum TypeForms {
+	START = 'start',
+	END = 'end',
+}
+
 export type IForm = {
 	version: number
+	type: TypeForms
 	min: number
 	max: number
 	questions: {
 		question: string
+		description?: string
 	}[]
 }
 export interface IBusinessFranchises {
