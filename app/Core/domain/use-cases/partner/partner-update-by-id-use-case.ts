@@ -4,10 +4,15 @@ import { PromiseEither, left } from 'App/Core/shared'
 
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { IPartner } from 'App/Types/IPartner'
+import { inject, injectable, registry } from 'tsyringe'
+import { PartnerMongooseRepository } from '../../repositories'
 import { PartnerManagerInterface } from '../../repositories/interface'
 
+@injectable()
+@registry([{ token: UpdatePartnersByIdUseCase, useClass: UpdatePartnersByIdUseCase }])
+
 export class UpdatePartnersByIdUseCase implements UseCase<Partial<IPartner>, IPartner> {
-	constructor(private readonly partnerManager: PartnerManagerInterface) { } // eslint-disable-line
+	constructor(@inject(PartnerMongooseRepository) private readonly manager: PartnerManagerInterface) { } // eslint-disable-line
 
 	public async execute(
 		{ _id, ...partner }: Partial<IPartner>,
@@ -15,7 +20,7 @@ export class UpdatePartnersByIdUseCase implements UseCase<Partial<IPartner>, IPa
 		if (!_id) {
 			return left(new MissingParamsError('_id is required'))
 		}
-		return await this.partnerManager.update(
+		return await this.manager.update(
 			_id.toString(),
 			partner,
 		)

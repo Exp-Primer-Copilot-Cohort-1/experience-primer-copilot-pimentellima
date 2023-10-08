@@ -22,10 +22,9 @@ export * from './medical-certificate/make-medical-certificate-delete-by-id-compo
 export * from './medical-certificate/make-medical-certificate-find-by-name-composer'
 export * from './medical-certificate/make-medical-certificate-show-by-id-composer'
 export * from './medical-certificate/make-medical-certificate-update-by-id-composer'
-export * from './partner/make-partner-create-composer'
+export * from './partner/make'
+
 export * from './partner/make-partner-delete-by-id-composer'
-export * from './partner/make-partner-find-by-unity-composer'
-export * from './partner/make-partner-update-by-id-composer'
 export * from './payment-participations/make'
 export * from './procedures/make-procedures-create-composer'
 export * from './procedures/make-procedures-delete-by-id-composer'

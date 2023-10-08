@@ -3,15 +3,18 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
 
 import { IPartner } from 'App/Types/IPartner'
+import { inject, injectable, registry } from 'tsyringe'
+import { PartnerMongooseRepository } from '../../repositories'
 import { PartnerManagerInterface } from '../../repositories/interface'
-
+@injectable()
+@registry([{ token: CreatePartnersUseCase, useClass: CreatePartnersUseCase }])
 export class CreatePartnersUseCase implements UseCase<Partial<IPartner>, IPartner> {
-	constructor(private readonly partnerManager: PartnerManagerInterface) { }
+	constructor(@inject(PartnerMongooseRepository) private readonly manager: PartnerManagerInterface) { }
 
 	public async execute(
 		partner: Partial<IPartner>,
 	): PromiseEither<AbstractError, IPartner> {
 
-		return await this.partnerManager.create(partner)
+		return await this.manager.create(partner)
 	}
 }
