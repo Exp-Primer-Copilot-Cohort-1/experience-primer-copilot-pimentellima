@@ -4,7 +4,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import { ITransaction } from 'App/Types/ITransaction'
-import { inject, injectable } from 'tsyringe'
+import { inject, injectable, registry } from 'tsyringe'
 import { UnitNotFoundError } from '../../../errors/unit-not-found'
 import { TransactionsManagerInterface } from '../../../repositories/interface/transactions-manager-interface'
 import { TransactionWithoutProcedure } from '../helpers'
@@ -14,6 +14,7 @@ import { TransactionWithoutProcedure } from '../helpers'
  * @implements {UseCase}
  */
 @injectable()
+@registry([{ token: CreateOnlyOneTransactionUseCase, useClass: CreateOnlyOneTransactionUseCase }])
 export class CreateOnlyOneTransactionUseCase
 	implements UseCase<TransactionWithoutProcedure, ITransaction>
 {

@@ -1,20 +1,25 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction } from 'App/Core/infra/session-transaction'
+import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
 import Activity from 'App/Models/Activity'
 import { IActivity } from 'App/Types/IActivity'
 import { ITransaction } from 'App/Types/ITransaction'
+import { inject, injectable, registry } from 'tsyringe'
 import { ActivityPaymentEntity } from '../../entities/activity-payment/ActivityPaymentEntity'
 import { ActivityNotFoundError } from '../../errors'
 import { PaymentAlreadyError } from '../../errors/payment-already-error'
 import { UpdateStatusActivityError } from '../../errors/update-status-activity'
 import { ActivitiesManagerAttendanceInterface } from '../interface/activity-manager-attendance.interface'
 
+@injectable()
+@registry([{ token: ActivityAttendanceMongoRepository, useClass: ActivityAttendanceMongoRepository }])
 export class ActivityAttendanceMongoRepository
 	implements ActivitiesManagerAttendanceInterface { // eslint-disable-line
 	// eslint-disable-line
-	constructor(private readonly session?: ISessionTransaction) { } // eslint-disable-line
+	constructor(
+		@inject(SessionTransaction) private readonly session?: ISessionTransaction
+	) { } // eslint-disable-line
 
 	async updateActivityStartedAt(
 		id: string,

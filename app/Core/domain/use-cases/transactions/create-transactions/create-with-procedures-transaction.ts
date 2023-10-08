@@ -2,14 +2,14 @@ import { ProcedureTransactionEntity } from 'App/Core/domain/entities/transaction
 import { TransactionEntity } from 'App/Core/domain/entities/transaction/TransactionEntity'
 import { ParticipationPaymentsNotFoundError } from 'App/Core/domain/errors/participation-payments-not-found'
 import { ProcedureNotFoundError } from 'App/Core/domain/errors/procedure-not-found'
-import { TransactionsMongooseRepository } from 'App/Core/domain/repositories'
+import { PaymentProfMongoRepository, ProceduresMongooseRepository, TransactionsMongooseRepository } from 'App/Core/domain/repositories'
 import { ProceduresManagerInterface } from 'App/Core/domain/repositories/interface'
 import { PaymentProfManagerInterface } from 'App/Core/domain/repositories/interface/payment-prof-manager-interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import { IProcedureTransaction, ITransaction } from 'App/Types/ITransaction'
-import { inject, injectable } from 'tsyringe'
+import { inject, injectable, registry } from 'tsyringe'
 import { TransactionsManagerInterface } from '../../../repositories/interface/transactions-manager-interface'
 import { TransactionWithProcedure } from '../helpers'
 
@@ -21,13 +21,14 @@ import { TransactionWithProcedure } from '../helpers'
  * @returns A promise that resolves to either the created transaction or an error.
  */
 @injectable()
+@registry([{ token: CreateWithProceduresTransactionUseCase, useClass: CreateWithProceduresTransactionUseCase }])
 export class CreateWithProceduresTransactionUseCase
 	implements UseCase<TransactionWithProcedure, ITransaction>
 {
 	constructor(
 		@inject(TransactionsMongooseRepository) private readonly manager: TransactionsManagerInterface,
-		private readonly proceduresManager: ProceduresManagerInterface,
-		private readonly paymentParticipationsManager: PaymentProfManagerInterface,
+		@inject(ProceduresMongooseRepository) private readonly proceduresManager: ProceduresManagerInterface,
+		@inject(PaymentProfMongoRepository) private readonly paymentParticipationsManager: PaymentProfManagerInterface,
 	) { } // eslint-disable-line
 
 	/**

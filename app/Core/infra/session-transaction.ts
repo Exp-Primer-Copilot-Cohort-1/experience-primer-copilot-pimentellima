@@ -1,4 +1,5 @@
 import db, { ClientSession } from '@ioc:Mongoose'
+import { Lifecycle, registry, scoped } from 'tsyringe'
 
 export interface ISessionTransaction {
 	manager?: any
@@ -9,6 +10,8 @@ export interface ISessionTransaction {
 	endSession(): Promise<void>
 }
 
+@scoped(Lifecycle.ResolutionScoped)
+@registry([{ token: SessionTransaction, useClass: SessionTransaction }])
 export class SessionTransaction {
 	manager?: ClientSession
 	options?: any = {}

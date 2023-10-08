@@ -19,7 +19,7 @@ export class ControllerInjection implements ControllerGeneric {
 
 	static resolve(
 		dep: InjectionToken<UseCase<any, unknown>>,
-		opts: OptsQuery = OptsQuery.build()
+		opts: OptsQuery = OptsQuery.build(),
 	) {
 		container.registerInstance<OptsQuery>(OptsQuery, opts);
 		const useCase = container.resolve(dep)

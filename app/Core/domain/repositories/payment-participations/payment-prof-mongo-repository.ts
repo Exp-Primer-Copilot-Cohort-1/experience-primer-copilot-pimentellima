@@ -10,8 +10,9 @@ import {
 } from '../../errors'
 import { PaymentProfManagerInterface } from '../interface/payment-prof-manager-interface'
 
-import { ISessionTransaction } from 'App/Core/infra/session-transaction'
+import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
 import PaymentParticipations from 'App/Models/PaymentParticipations'
+import { inject, injectable, registry } from 'tsyringe'
 
 const ObjectId = Types.ObjectId
 
@@ -81,11 +82,14 @@ const createFilter = (participation: IPaymentProf) => ({
 	procedure: new ObjectId(participation.procedure.value.toString()),
 	prof: new ObjectId(participation.prof.value.toString()),
 })
+@injectable()
+@registry([{ token: PaymentProfMongoRepository, useClass: PaymentProfMongoRepository }])
 export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
-		private readonly session?: ISessionTransaction,
-		private readonly opts: OptsQuery = OptsQuery.build()) { } // eslint-disable-line
+		@inject(SessionTransaction) private readonly session?: ISessionTransaction,
+		@inject(OptsQuery) private readonly opts: OptsQuery = OptsQuery.build()
+	) { } // eslint-disable-line
 
 	async createOrUpdatePaymentProf(
 		participation: IPaymentProf,

@@ -1,16 +1,19 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction } from 'App/Core/infra/session-transaction'
+import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
 import { PromiseEither, right } from 'App/Core/shared/either'
 import Procedure, { COLLECTIONS_REFS } from 'App/Models/Procedure'
 import { IProcedure } from 'App/Types/IProcedure'
+import { inject, injectable, registry } from 'tsyringe'
 import { ProcedureNotFoundError } from '../../errors/procedure-not-found'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
 import { ProceduresManagerInterface } from '../interface/procedures-manager.interface'
 
+@injectable()
+@registry([{ token: ProceduresMongooseRepository, useClass: ProceduresMongooseRepository }])
 export class ProceduresMongooseRepository implements ProceduresManagerInterface {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
-		private readonly session: ISessionTransaction
+		@inject(SessionTransaction) private readonly session: ISessionTransaction
 	) { }
 
 	async findByUnityId(unity_id: string): PromiseEither<AbstractError, IProcedure[]> {

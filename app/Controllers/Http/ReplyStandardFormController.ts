@@ -15,6 +15,8 @@ class ReplyStandardFormController {
 		const unity_id = ctx.auth.user?.unity_id.toString()
 		const { client, activity } = ctx.params
 
+		if (!client || !activity) return ctx.response.status(400).send({ message: 'Dados inválidos' })
+
 		const doc = await ReplyFormStandardFranchises.findOne({ unity_id, client, activity }).exec()
 
 		if (!doc) return ctx.response.status(404).send({ message: 'Formulário não encontrado' })
