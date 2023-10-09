@@ -19,7 +19,7 @@ export class FindAllActivitiesPendingUseCase
 		unity_id,
 		...rest
 	}: Params): PromiseEither<AbstractError, IActivityPending[]> {
-		const activitiesOrErr = await this.activitiesManager.findAllActivitiesPending(
+		const activitiesOrErr = await this.activitiesManager.findAll(
 			unity_id,
 			rest,
 		)
