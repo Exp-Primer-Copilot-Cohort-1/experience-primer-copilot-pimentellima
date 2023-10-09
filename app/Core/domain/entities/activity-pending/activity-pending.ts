@@ -14,7 +14,6 @@ const validation = z.object({
 		}),
 	),
 	obs: z.string().optional(),
-	unity_id: z.string(),
 })
 
 
