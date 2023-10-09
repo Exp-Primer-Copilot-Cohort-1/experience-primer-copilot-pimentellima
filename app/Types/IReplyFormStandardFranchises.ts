@@ -11,6 +11,7 @@ export interface IReplyFormStandardFranchises {
 	version: number
 	type: TypeForms
 	client: ObjectId | string
+	group_id: string
 	prof: ObjectId | string
 	unity_id: ObjectId | string
 	franchise: ObjectId | string

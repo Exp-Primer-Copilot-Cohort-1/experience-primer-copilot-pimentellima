@@ -19,6 +19,10 @@ const schema = new Schema<IReplyFormStandardFranchises
 			ref: COLLECTION_NAME_CLIENTS,
 			required: true,
 		},
+		group_id: {
+			type: String,
+			required: true,
+		},
 		type: {
 			type: String,
 			enum: ['start', 'end'],
@@ -39,6 +43,7 @@ const schema = new Schema<IReplyFormStandardFranchises
 			ref: COLLECTION_NAME_ACTIVITY,
 			required: true,
 		},
+
 		questions: [
 			{
 				question: {
