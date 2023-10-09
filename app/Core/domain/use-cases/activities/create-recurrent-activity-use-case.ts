@@ -1,25 +1,30 @@
 import { ActivitiesRecurrentManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
-import { PromiseEither, left, right } from 'App/Core/shared'
+import { PromiseEither, left } from 'App/Core/shared'
 import { IActivity, RecurrentActivityValues } from 'App/Types/IActivity'
+import { inject, injectable, registry } from 'tsyringe'
+import { UnityIdNotProvidedError } from '../../errors/unit-not-id-provider'
+import { ActivityRecurrentMongoRepository } from '../../repositories'
 
 type Props = RecurrentActivityValues & {
 	unity_id: string
 }
 
+@injectable()
+@registry([{ token: CreateRecurrentActivityUseCase, useClass: CreateRecurrentActivityUseCase }])
 export class CreateRecurrentActivityUseCase implements UseCase<Props, IActivity[]> {
 	constructor(
-		private readonly activitiesManager: ActivitiesRecurrentManagerInterface,
+		@inject(ActivityRecurrentMongoRepository) private readonly manager: ActivitiesRecurrentManagerInterface,
 	) { } // eslint-disable-line
 
-	public async execute(params: Props): PromiseEither<AbstractError, IActivity[]> {
-		const activitiesOrErr = await this.activitiesManager.createRecurrentActivity(
-			params.unity_id,
-			params,
-		)
+	public async execute({ unity_id, ...activity }: Props): PromiseEither<AbstractError, IActivity[]> {
+		if (!unity_id) return left(new UnityIdNotProvidedError())
 
-		if (activitiesOrErr.isLeft()) return left(activitiesOrErr.extract())
-		return right(activitiesOrErr.extract())
+
+		return await this.manager.create(
+			unity_id,
+			activity,
+		)
 	}
 }

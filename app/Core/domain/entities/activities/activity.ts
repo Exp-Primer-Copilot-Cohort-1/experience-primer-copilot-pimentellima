@@ -1,14 +1,9 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { AppointmentStatus } from 'App/Helpers'
-import ScheduleBlock from 'App/Models/ScheduleBlock'
-import User from 'App/Models/User'
 import { ActivityPayment, IActivity, STATUS_ACTIVITY } from 'App/Types/IActivity'
-import { IScheduleBlock } from 'App/Types/IScheduleBlock'
-import { IUser } from 'App/Types/IUser'
-import { isSameDay } from 'date-fns'
-import { UserNotFoundError } from '../../errors'
 import { AbstractActivity } from '../abstract/activity-abstract'
+import fetchUserAndScheduleBlocks from '../helpers/fetch-user-and-schedule-blocks'
 import validationActivity from './validations-activity'
 
 
@@ -102,35 +97,33 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		params: IActivity,
 	): PromiseEither<AbstractError, ActivityEntity> {
 		try {
+
 			const activity = new ActivityEntity()
 				.defineDate(new Date(params.date))
+				.defineGroupId(params.group_id?.toString() as string)
+				.defineIsRecurrent(params.is_recurrent || false)
 				.defineHourStart(params.hour_start)
 				.defineHourEnd(params.hour_end)
 				.defineProcedures(params.procedures)
 				.defineScheduled(params.scheduled || AppointmentStatus.SCHEDULED)
-				.defineClient(params.client?.toString())
+				.defineClient(params.client as string)
 				.defineType(STATUS_ACTIVITY.MARKED)
 				.defineObs(params.obs)
-				.defineProf(params.prof?.toString())
+				.defineProf(params.prof as string)
 				.defineActive(true)
 				.defineUnityId(params.unity_id as string)
 
-			const profData = (await User.findById(params.prof)) as IUser
-			if (!profData) return left(new UserNotFoundError())
 
-			const scheduleBlocksData = (await ScheduleBlock.find({
-				'prof.value': params.prof,
-			})) as IScheduleBlock[]
-
-			const scheduleBlocks = scheduleBlocksData.filter(({ date }) => {
-				return isSameDay(new Date(params?.date), new Date(date))
-			})
+			const { profData, scheduleBlocks } = await fetchUserAndScheduleBlocks(
+				activity.prof as string,
+				activity.date.toISOString(),
+			)
 
 			validationActivity(profData, scheduleBlocks).parse(activity)
 
 			return right(activity)
 		} catch (err) {
-			console.log(JSON.stringify(err, null, 2))
+			console.log(err)
 			return left(err)
 		}
 	}

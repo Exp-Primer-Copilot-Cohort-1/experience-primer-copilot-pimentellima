@@ -3,12 +3,12 @@ import { PromiseEither } from 'App/Core/shared/either'
 import { IActivity, IActivityPending, RecurrentActivityValues } from 'App/Types/IActivity'
 
 export interface ActivitiesRecurrentManagerInterface {
-	createRecurrentActivity: (
+	create: (
 		unity_id: string,
 		values: RecurrentActivityValues,
 	) => PromiseEither<AbstractError, IActivity[]>
 
-	findAllActivitiesPending: (
+	findAll: (
 		unity_id: string,
 		...args: unknown[]
 	) => PromiseEither<AbstractError, IActivityPending[]>

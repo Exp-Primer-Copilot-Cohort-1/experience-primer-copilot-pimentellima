@@ -1,4 +1,4 @@
-import { Controller } from 'App/Core/adapters/controller'
+import { Controller, ControllerInjection } from 'App/Core/adapters/controller'
 import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
 import {
 	ActivityAttendanceMongoRepository,
@@ -42,9 +42,7 @@ export const makeUpdateActivityPaymentComposer = (): ControllerGeneric => {
 	)
 }
 export const makeCreateRecurrentActivityComposer = (): ControllerGeneric => {
-	return new Controller(
-		new CreateRecurrentActivityUseCase(new ActivityRecurrentMongoRepository()),
-	)
+	return ControllerInjection.resolve(CreateRecurrentActivityUseCase)
 }
 export const makeDeleteActivityByIdComposer = (): ControllerGeneric => {
 	return new Controller(

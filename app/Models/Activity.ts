@@ -143,6 +143,16 @@ export const COLLECTION_NAME = 'activities'
  */
 const ActivitySchema = new Schema<IActivityModel>(
 	{
+		is_recurrent: {
+			type: Boolean,
+			default: false,
+		},
+		group_id: {
+			type: Schema.Types.ObjectId,
+			required: function () {
+				return this.type === STATUS_ACTIVITY.PENDING
+			},
+		},
 		date: {
 			type: Date,
 			required: true,

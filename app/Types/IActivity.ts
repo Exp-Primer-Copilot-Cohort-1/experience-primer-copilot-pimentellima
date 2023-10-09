@@ -47,6 +47,8 @@ export type ActivityPayment = {
 
 export interface IAbstractActivity {
 	_id: string | ObjectId
+	group_id: string | ObjectId
+	is_recurrent: boolean
 	procedures: Procedure[]
 	client: Client | string
 	obs?: string
@@ -74,23 +76,26 @@ export interface IActivityAwait {
 }
 
 export interface IActivityPending {
-	_id: string | ObjectId
-	group_id: string
+	_id?: string | ObjectId
+	group_id?: string
+	is_recurrent?: true
 	procedures: Procedure[]
-	type: STATUS_ACTIVITY.PENDING
+	type?: STATUS_ACTIVITY.PENDING
 	client: Generic | string | ObjectId
 	obs?: string
 	prof: Generic | string | ObjectId
-	active: boolean
-	status: PaymentStatus
+	active?: boolean
+	status?: PaymentStatus
 	payment?: ActivityPayment
-	unity_id: string | ObjectId
-	created_at: Date
-	updated_at: Date
+	unity_id?: string | ObjectId
+	created_at?: Date
+	updated_at?: Date
 }
 
 export interface IActivity {
 	_id?: string | ObjectId
+	is_recurrent?: boolean
+	group_id?: string | ObjectId
 	type?: STATUS_ACTIVITY.MARKED
 	date: Date | string
 	hour_start: string

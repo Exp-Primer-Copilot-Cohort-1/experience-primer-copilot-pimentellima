@@ -9,19 +9,22 @@ import {
 	STATUS_ACTIVITY,
 } from 'App/Types/IActivity'
 import mongoose from 'mongoose'
+import { injectable, registry } from 'tsyringe'
 import ActivityEntity from '../../entities/activities/activity'
-import { MissingParamsError } from '../../errors/missing-params'
+import { ActivityPendingEntity } from '../../entities/activity-pending'
 import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { UnityIdNotProvidedError } from '../../errors/unit-not-id-provider'
 import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
 import { ActivitiesRecurrentManagerInterface } from '../interface/activity-recurrent-manager.interface'
 
+@injectable()
+@registry([{ token: ActivityRecurrentMongoRepository, useClass: ActivityRecurrentMongoRepository }])
 export class ActivityRecurrentMongoRepository
-	implements ActivitiesRecurrentManagerInterface
-{
+	implements ActivitiesRecurrentManagerInterface {
 	// eslint-disable-line
-	constructor() {} // eslint-disable-line
+	constructor() { } // eslint-disable-line
 
-	async findAllActivitiesPending(
+	async findAll(
 		unity_id: string,
 		...args: unknown[]
 	): PromiseEither<AbstractError, IActivityPending[]> {
@@ -42,12 +45,13 @@ export class ActivityRecurrentMongoRepository
 		return right(activities)
 	}
 
-	async createRecurrentActivity(
+	async create(
 		unity_id: string,
 		{ dates, ...values }: RecurrentActivityValues,
 	): PromiseEither<AbstractError, IActivity[]> {
 		try {
-			if (!unity_id) return left(new MissingParamsError('unity_id'))
+			if (!unity_id) return left(new UnityIdNotProvidedError())
+			const group_id = new mongoose.Types.ObjectId().toString()
 
 			const validatedActivities: IActivity[] = []
 
@@ -56,6 +60,7 @@ export class ActivityRecurrentMongoRepository
 				const activityOrErr = await ActivityEntity.build({
 					...date,
 					...values,
+					group_id,
 					unity_id,
 				})
 				if (activityOrErr.isLeft()) {
@@ -65,24 +70,35 @@ export class ActivityRecurrentMongoRepository
 				validatedActivities.push(activityOrErr.extract())
 			}
 
-			const group_id = new mongoose.Types.ObjectId().toString()
-			const pendingActivity = {
+
+			const pendingActivityOrErr = await ActivityPendingEntity.build({
 				...values,
 				unity_id,
 				group_id,
+			})
+
+			if (pendingActivityOrErr.isLeft()) {
+				return left(pendingActivityOrErr.extract())
 			}
-			await Promise.all(
-				new Array(values.recurrences - values.schedulings).map(async () => {
-					const act = await ActivityPending.create(pendingActivity)
-					return act
+
+			const pendingActivity = pendingActivityOrErr.extract()
+
+			const recurrences = values.recurrences - values.schedulings
+
+			const promisePending = Promise.all(
+				new Array(recurrences).fill(0).map(async () => {
+					return await ActivityPending.create(pendingActivity)
 				}),
 			)
 
-			const scheduledActivities = await Promise.all(
+			const promiseScheduled = Promise.all(
 				validatedActivities.map(
 					async (activity) => await Activity.create(activity),
 				),
 			)
+
+			const [scheduledActivities] = await Promise.all([promiseScheduled, promisePending])
+
 			return right(scheduledActivities)
 		} catch (err) {
 			console.log(err)
