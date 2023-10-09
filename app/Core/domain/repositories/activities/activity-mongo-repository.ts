@@ -1,19 +1,27 @@
 import { Document } from '@ioc:Mongoose'
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction } from 'App/Core/infra/session-transaction'
+import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import Activity, { COLLECTIONS_REFS } from 'App/Models/Activity'
 import { STATUS_ACTIVITY, type IActivity } from 'App/Types/IActivity'
+import { inject, injectable, registry } from 'tsyringe'
 import ActivityEntity from '../../entities/activities/activity'
+import { OptsQuery } from '../../entities/helpers/opts-query'
 import { ClientNotFoundError, UserNotFoundError } from '../../errors'
 import { ActivityNotFoundError } from '../../errors/activity-not-found'
 import { MissingParamsError } from '../../errors/missing-params'
 import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { UnityIdNotProvidedError } from '../../errors/unit-not-id-provider'
 import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
 import { ActivitiesManagerInterface } from '../interface/activity-manager.interface'
 
+@injectable()
+@registry([{ token: ActivityMongoRepository, useClass: ActivityMongoRepository }])
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
-	constructor(private readonly session?: ISessionTransaction) { } // eslint-disable-line
+	constructor(
+		@inject(SessionTransaction) private readonly session: ISessionTransaction,
+		@inject(OptsQuery) private readonly opts?: OptsQuery,
+	) { } // eslint-disable-line
 
 	async findAllActivities(unity_id: string): PromiseEither<AbstractError, IActivity[]> {
 		if (!unity_id) return left(new UnitNotFoundError())
@@ -22,6 +30,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			unity_id,
 			type: STATUS_ACTIVITY.MARKED,
 		})
+			.where(this.opts?.where || {})
 			.populate(COLLECTIONS_REFS.CLIENTS, PROJECTION_CLIENT)
 			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
 			.populate(COLLECTIONS_REFS.PROCEDURES, PROJECTION_DEFAULT)
@@ -80,7 +89,8 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			...params
 		}: IActivity,
 	): PromiseEither<AbstractError, IActivity> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityIdNotProvidedError())
+
 		const activityOrErr = await ActivityEntity.build(params)
 
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract())
@@ -142,7 +152,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		return right(updated.toObject())
 	}
 
-	async updateActivyStatus(
+	async updateActivityStatus(
 		id: string,
 		values: IActivity,
 	): PromiseEither<AbstractError, IActivity> {

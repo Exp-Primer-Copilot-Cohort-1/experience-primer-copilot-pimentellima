@@ -34,7 +34,7 @@ const mountActivity = ({
 
 describe('Activity Entity (Unit)', () => {
 
-	vi.mock('./validations-activity', () => ({
+	vi.mock('App/Core/domain/entities/activities/validations-activity', () => ({
 		__esModule: true,
 		default: vi.fn().mockImplementation(() => {
 			return {

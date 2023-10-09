@@ -8,7 +8,7 @@ import {
 	makeFindAllAccountsComposer,
 	makeUpdateAccountByIdComposer
 } from 'App/Core/composers/accounts/make'
-import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/Account'
 
@@ -41,7 +41,7 @@ class AccountController {
 	 *                 $ref: '#/components/schemas/Account'
 	 */
 	async index(ctx: HttpContextContract) {
-		const opts = OptsQuery.build(ctx.request.qs())
+		const opts = getterOptInRequest(ctx)
 		return adaptRoute(makeFindAllAccountsComposer(opts), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})

@@ -1,12 +1,12 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
-import { IActivity, IActivityPending, RecurrentActivityValues } from 'App/Types/IActivity'
+import { IActivityPending } from 'App/Types/IActivity'
 
 export interface ActivitiesRecurrentManagerInterface {
 	create: (
 		unity_id: string,
-		values: RecurrentActivityValues,
-	) => PromiseEither<AbstractError, IActivity[]>
+		values: IActivityPending,
+	) => PromiseEither<AbstractError, IActivityPending>
 
 	findAll: (
 		unity_id: string,

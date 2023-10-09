@@ -3,13 +3,11 @@ import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
 import {
 	ActivityAttendanceMongoRepository,
 	ActivityAwaitMongoRepository,
-	ActivityMongoRepository,
-	ActivityRecurrentMongoRepository,
+	ActivityMongoRepository
 } from 'App/Core/domain/repositories'
 import { FindAllActivitiesUseCase } from 'App/Core/domain/use-cases'
 import { CreateActivityAwaitUseCase } from 'App/Core/domain/use-cases/activities/create-activity-await-use-case'
 import { CreateActivityUseCase } from 'App/Core/domain/use-cases/activities/create-activity-use-case'
-import { CreateRecurrentActivityUseCase } from 'App/Core/domain/use-cases/activities/create-recurrent-activity-use-case'
 import { DeleteActivityByIdUseCase } from 'App/Core/domain/use-cases/activities/delete-activity-by-id-use-case'
 import { FindActivitiesByClientIdUseCase } from 'App/Core/domain/use-cases/activities/find-activities-by-client-use-case'
 import { FindActivitiesByProfIdUseCase } from 'App/Core/domain/use-cases/activities/find-activities-by-prof-use-case'
@@ -17,12 +15,14 @@ import { FindActivityByIdUseCase } from 'App/Core/domain/use-cases/activities/fi
 import { FindAllActivitiesAwaitUseCase } from 'App/Core/domain/use-cases/activities/find-all-activities-await-use-case'
 import { FindAllActivitiesPendingUseCase } from 'App/Core/domain/use-cases/activities/find-all-activities-pending-use-case'
 import { FindDayActivitiesUseCase } from 'App/Core/domain/use-cases/activities/find-day-activities-use-case'
+import { CreateRecurrentActivityUseCase } from 'App/Core/domain/use-cases/activities/recurrents'
 import { UpdateActivityFinishedAtUseCase } from 'App/Core/domain/use-cases/activities/update-activity-finished-at-use-case'
 import { UpdateActivityPaymentUseCase } from 'App/Core/domain/use-cases/activities/update-activity-payment-use-case'
 import { UpdateActivityStartedAtUseCase } from 'App/Core/domain/use-cases/activities/update-activity-started-at-use-case'
 import { UpdateActivityStatusByIdUseCase } from 'App/Core/domain/use-cases/activities/update-activity-status-by-use-case'
 import { UpdateActivityByIdUseCase } from 'App/Core/domain/use-cases/activities/update-activity-use-case'
 import { SessionTransaction } from 'App/Core/infra/session-transaction'
+import { IOptsQuery } from 'App/Types/IOptsQuery'
 
 export const makeCreateActivityComposer = (): ControllerGeneric => {
 	return new Controller(
@@ -44,6 +44,7 @@ export const makeUpdateActivityPaymentComposer = (): ControllerGeneric => {
 export const makeCreateRecurrentActivityComposer = (): ControllerGeneric => {
 	return ControllerInjection.resolve(CreateRecurrentActivityUseCase)
 }
+
 export const makeDeleteActivityByIdComposer = (): ControllerGeneric => {
 	return new Controller(
 		new DeleteActivityByIdUseCase(
@@ -81,8 +82,8 @@ export const makeFindActivitiesByProfIdComposer = (): ControllerGeneric => {
 		),
 	)
 }
-export const makeFindAllActivitiesComposer = (): ControllerGeneric => {
-	return new Controller(new FindAllActivitiesUseCase(new ActivityMongoRepository()))
+export const makeFindAllActivitiesComposer = (opts: IOptsQuery): ControllerGeneric => {
+	return ControllerInjection.resolve(FindAllActivitiesUseCase, opts)
 }
 
 export const makeFindAllActivitiesAwaitComposer = (): ControllerGeneric => {
@@ -91,10 +92,8 @@ export const makeFindAllActivitiesAwaitComposer = (): ControllerGeneric => {
 	)
 }
 
-export const makeFindAllActivitiesPendingComposer = (): ControllerGeneric => {
-	return new Controller(
-		new FindAllActivitiesPendingUseCase(new ActivityRecurrentMongoRepository()),
-	)
+export const makeFindAllActivitiesPendingComposer = (opts: IOptsQuery): ControllerGeneric => {
+	return ControllerInjection.resolve(FindAllActivitiesPendingUseCase, opts)
 }
 
 export const makeUpdateActivityByIdComposer = (): ControllerGeneric => {

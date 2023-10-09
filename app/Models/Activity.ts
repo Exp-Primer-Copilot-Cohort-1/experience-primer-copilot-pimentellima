@@ -149,9 +149,7 @@ const ActivitySchema = new Schema<IActivityModel>(
 		},
 		group_id: {
 			type: Schema.Types.ObjectId,
-			required: function () {
-				return this.type === STATUS_ACTIVITY.PENDING
-			},
+			required: false,
 		},
 		date: {
 			type: Date,

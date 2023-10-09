@@ -65,109 +65,120 @@ const makeSutUpdate = () => {
 	return { sut, }
 }
 
-describe('Use cases ref account (Unit)', () => {
-	it('should create account', async () => {
-		const { sut } = makeSutCreate()
-		const respOrErr = await sut.execute(account)
-		expect(respOrErr.isRight()).toBeTruthy()
-	})
-
-	it('should find all accounts', async () => {
-		const { sut } = makeSutFindAll()
-		const respOrErr = await sut.execute({ unity_id: 'unity_id' })
-		expect(respOrErr.isRight()).toBeTruthy()
-	})
-
-	it('should delete account by id', async () => {
-		const { sut } = makeSutDelete()
-		const respOrErr = await sut.execute({ id: '123' })
-		expect(respOrErr.isRight()).toBeTruthy()
-	})
-
-	it('should find account by id', async () => {
-		const { sut } = makeSutFindById()
-		const respOrErr = await sut.execute({ id: '123' })
-		expect(respOrErr.isRight()).toBeTruthy()
-	})
-
-	it('should update account', async () => {
-		const { sut } = makeSutUpdate()
-		const respOrErr = await sut.execute({ id: '123', ...account })
-		expect(respOrErr.isRight()).toBeTruthy()
-	})
-
-	it('should return error when create account', async () => {
-		const { sut } = makeSutCreate()
-		vi.spyOn(AccountManager, 'create').mockImplementationOnce(async () => {
-			return left(undefined) as any
-		})
-		const respOrErr = await sut.execute(account)
-		expect(respOrErr.isLeft()).toBeTruthy()
-	})
-
-	it('should return error when find all accounts', async () => {
-		const { sut } = makeSutFindAll()
-
-		vi.spyOn(AccountManager, 'findAll').mockImplementationOnce(async () => {
-			return left(undefined) as any
+describe('Use cases ref account (Only)', () => {
+	describe('Create account Use Case', () => {
+		it('should create account', async () => {
+			const { sut } = makeSutCreate()
+			const respOrErr = await sut.execute(account)
+			expect(respOrErr.isRight()).toBeTruthy()
 		})
 
-		const respOrErr = await sut.execute({ unity_id: 'unity-invalid' })
-
-		expect(respOrErr.isLeft()).toBeTruthy()
-	})
-
-	it('should return error when delete account by id', async () => {
-		const { sut } = makeSutDelete()
-		vi.spyOn(AccountManager, 'deleteByID').mockImplementationOnce(async () => {
-			return left(undefined) as any
+		it('should return error when create account', async () => {
+			const { sut } = makeSutCreate()
+			vi.spyOn(AccountManager, 'create').mockImplementationOnce(async () => {
+				return left(undefined) as any
+			})
+			const respOrErr = await sut.execute(account)
+			expect(respOrErr.isLeft()).toBeTruthy()
 		})
-		const respOrErr = await sut.execute({ id: 'id-invalid' })
-		expect(respOrErr.isLeft()).toBeTruthy()
 	})
 
-	it('should return error when find account by id', async () => {
-		const { sut } = makeSutFindById()
-		vi.spyOn(AccountManager, 'findByID').mockImplementationOnce(async () => {
-			return left(undefined) as any
+	describe('Find all accounts Use Case', () => {
+		it('should find all accounts', async () => {
+			const { sut } = makeSutFindAll()
+			const respOrErr = await sut.execute({ unity_id: 'unity_id' })
+			expect(respOrErr.isRight()).toBeTruthy()
 		})
-		const respOrErr = await sut.execute({ id: 'id-invalid' })
-		expect(respOrErr.isLeft()).toBeTruthy()
-	})
 
-	it('should return error when update account', async () => {
-		const { sut } = makeSutUpdate()
-		vi.spyOn(AccountManager, 'update').mockImplementationOnce(async () => {
-			return left(undefined) as any
+		it('should return error when find all accounts', async () => {
+			const { sut } = makeSutFindAll()
+
+			vi.spyOn(AccountManager, 'findAll').mockImplementationOnce(async () => {
+				return left(undefined) as any
+			})
+
+			const respOrErr = await sut.execute({ unity_id: 'unity-invalid' })
+
+			expect(respOrErr.isLeft()).toBeTruthy()
 		})
-		const respOrErr = await sut.execute({ id: 'id-invalid', ...account })
-		expect(respOrErr.isLeft()).toBeTruthy()
+
+		it('should return error when find all categories with unity_id invalid', async () => {
+			const { sut } = makeSutFindAll()
+
+			const respOrErr = await sut.execute({ unity_id: null as any })
+
+			expect(respOrErr.isLeft()).toBeTruthy()
+			expect(respOrErr.extract()).toBeInstanceOf(AbstractError)
+		})
 	})
 
-	it('should return error when find all categories with unity_id invalid', async () => {
-		const { sut } = makeSutFindAll()
+	describe('Delete account by id Use Case', () => {
+		it('should delete account by id', async () => {
+			const { sut } = makeSutDelete()
+			const respOrErr = await sut.execute({ id: '123' })
+			expect(respOrErr.isRight()).toBeTruthy()
+		})
 
-		const respOrErr = await sut.execute({ unity_id: null as any })
+		it('should return error when delete account by id', async () => {
+			const { sut } = makeSutDelete()
+			vi.spyOn(AccountManager, 'deleteByID').mockImplementationOnce(async () => {
+				return left(undefined) as any
+			})
+			const respOrErr = await sut.execute({ id: 'id-invalid' })
+			expect(respOrErr.isLeft()).toBeTruthy()
+		})
 
-		expect(respOrErr.isLeft()).toBeTruthy()
-		expect(respOrErr.extract()).toBeInstanceOf(AbstractError)
+		it('should return error when delete account with id invalid', async () => {
+			const { sut } = makeSutDelete()
+			const respOrErr = await sut.execute({ id: null as any })
+			expect(respOrErr.isLeft()).toBeTruthy()
+		})
 	})
 
-	it('should return error when find by id account with id invalid', async () => {
-		const { sut } = makeSutFindById()
-		const respOrErr = await sut.execute({ id: null as any, ...account })
-		expect(respOrErr.isLeft()).toBeTruthy()
+	describe('Find account by id Use Case', () => {
+		it('should find account by id', async () => {
+			const { sut } = makeSutFindById()
+			const respOrErr = await sut.execute({ id: '123' })
+			expect(respOrErr.isRight()).toBeTruthy()
+		})
+
+		it('should return error when find account by id', async () => {
+			const { sut } = makeSutFindById()
+			vi.spyOn(AccountManager, 'findByID').mockImplementationOnce(async () => {
+				return left(undefined) as any
+			})
+			const respOrErr = await sut.execute({ id: 'id-invalid' })
+			expect(respOrErr.isLeft()).toBeTruthy()
+		})
+
+		it('should return error when find by id account with id invalid', async () => {
+			const { sut } = makeSutFindById()
+			const respOrErr = await sut.execute({ id: null as any, ...account })
+			expect(respOrErr.isLeft()).toBeTruthy()
+		})
+
 	})
 
-	it('should return error when update account with id invalid', async () => {
-		const { sut } = makeSutUpdate()
-		const respOrErr = await sut.execute({ id: null as any, ...account })
-		expect(respOrErr.isLeft()).toBeTruthy()
-	})
 
-	it('should return error when delete account with id invalid', async () => {
-		const { sut } = makeSutDelete()
-		const respOrErr = await sut.execute({ id: null as any })
-		expect(respOrErr.isLeft()).toBeTruthy()
+	describe('Update account by id Use Case', () => {
+		it('should update account', async () => {
+			const { sut } = makeSutUpdate()
+			const respOrErr = await sut.execute({ id: '123', ...account })
+			expect(respOrErr.isRight()).toBeTruthy()
+		})
+
+		it('should return error when update account', async () => {
+			const { sut } = makeSutUpdate()
+			vi.spyOn(AccountManager, 'update').mockImplementationOnce(async () => {
+				return left(undefined) as any
+			})
+			const respOrErr = await sut.execute({ id: 'id-invalid', ...account })
+			expect(respOrErr.isLeft()).toBeTruthy()
+		})
+		it('should return error when update account with id invalid', async () => {
+			const { sut } = makeSutUpdate()
+			const respOrErr = await sut.execute({ id: null as any, ...account })
+			expect(respOrErr.isLeft()).toBeTruthy()
+		})
 	})
 })

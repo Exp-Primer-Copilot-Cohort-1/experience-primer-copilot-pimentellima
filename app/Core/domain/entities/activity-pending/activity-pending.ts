@@ -13,6 +13,7 @@ const validation = z.object({
 			_id: z.string(),
 		}),
 	),
+	group_id: z.string(),
 	obs: z.string().optional(),
 })
 
@@ -68,7 +69,6 @@ export class ActivityPendingEntity extends AbstractActivity implements IActivity
 
 			return right(activityPending)
 		} catch (err) {
-			console.log(err)
 			return left(err)
 		}
 	}

@@ -17,6 +17,7 @@ import {
 	makeUpdateActivityStartedAtComposer,
 	makeUpdateActivityStatusComposer,
 } from 'App/Core/composers/activities/make'
+import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/Activity'
 import { ROLES } from 'App/Roles/types'
@@ -71,18 +72,10 @@ class ActivityController {
 	 * @returns Uma lista de atividades.
 	 */
 	async findAllActivities(ctx: HttpContextContract) {
-		switch (ctx.auth.user?.type) {
-			case ROLES.PROF:
-				return adaptRoute(makeFindActivitiesByProfIdComposer(), ctx, {
-					unity_id: ctx.auth.user?.unity_id,
-					prof_id: ctx.auth.user?._id,
-				})
-
-			default:
-				return adaptRoute(makeFindAllActivitiesComposer(), ctx, {
-					unity_id: ctx.auth.user?.unity_id,
-				})
-		}
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeFindAllActivitiesComposer(opts), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		})
 	}
 
 	async findDayActivities(ctx: HttpContextContract) {
@@ -162,18 +155,10 @@ class ActivityController {
 	 *         $ref: '#/components/responses/InternalServerError'
 	 */
 	async findAllActivitiesPending(ctx: HttpContextContract) {
-		switch (ctx.auth.user?.type) {
-			case ROLES.PROF:
-				return adaptRoute(makeFindAllActivitiesPendingComposer(), ctx, {
-					unity_id: ctx.auth.user?.unity_id,
-					prof: ctx.auth.user?._id,
-				})
-
-			default:
-				return adaptRoute(makeFindAllActivitiesPendingComposer(), ctx, {
-					unity_id: ctx.auth.user?.unity_id,
-				})
-		}
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeFindAllActivitiesPendingComposer(opts), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		})
 	}
 
 	/**

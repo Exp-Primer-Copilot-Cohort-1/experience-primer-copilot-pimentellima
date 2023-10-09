@@ -1,6 +1,5 @@
 import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
 import ControllerInjection from 'App/Core/adapters/controller/ports/controller-injection'
-import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import {
 	CreateAccountUseCase,
 	DeleteAccountByIdUseCase,
@@ -8,6 +7,7 @@ import {
 	FindAllAccountUseCase,
 	UpdateAccountByIdUseCase
 } from 'App/Core/domain/use-cases/accounts'
+import { IOptsQuery } from 'App/Types/IOptsQuery'
 
 export const makeCreateAccountComposer = (): ControllerGeneric => {
 	return ControllerInjection.resolve(CreateAccountUseCase)
@@ -26,6 +26,6 @@ export const makeUpdateAccountByIdComposer = (): ControllerGeneric => {
 	return ControllerInjection.resolve(UpdateAccountByIdUseCase)
 };
 
-export const makeFindAllAccountsComposer = (opts: OptsQuery): ControllerGeneric => {
+export const makeFindAllAccountsComposer = (opts: IOptsQuery): ControllerGeneric => {
 	return ControllerInjection.resolve(FindAllAccountUseCase, opts)
 }

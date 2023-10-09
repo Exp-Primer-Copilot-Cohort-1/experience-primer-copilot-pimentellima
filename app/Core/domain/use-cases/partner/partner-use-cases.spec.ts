@@ -1,7 +1,6 @@
-import { faker } from '@faker-js/faker'
-import { AbstractError } from 'App/Core/errors/error.interface'
 import { left, right } from 'App/Core/shared'
 import { IAccount } from 'App/Types/IAccount'
+import { IPartner } from 'App/Types/IPartner'
 import { describe, expect, it, vi } from 'vitest'
 import { PartnerManagerInterface } from '../../repositories/interface'
 import {
@@ -12,11 +11,8 @@ import {
 	UpdatePartnersByIdUseCase
 } from './index'
 
-const account: IAccount = {
+const partner: IPartner = {
 	name: 'DR. PERFORMANCE PITANGA',
-	cash: 0,
-	date: faker.date.recent(),
-	bank: 'SANTANDER',
 	active: true,
 	unity_id: '63528c11c109b232759921d1',
 }
@@ -68,7 +64,7 @@ const makeSutUpdate = () => {
 describe('Use cases ref partner (Only)', () => {
 	it('should create account', async () => {
 		const { sut } = makeSutCreate()
-		const respOrErr = await sut.execute(account)
+		const respOrErr = await sut.execute(partner)
 		expect(respOrErr.isRight()).toBeTruthy()
 	})
 
@@ -78,28 +74,28 @@ describe('Use cases ref partner (Only)', () => {
 		expect(respOrErr.isRight()).toBeTruthy()
 	})
 
-	it('should delete account by id', async () => {
+	it('should delete partner by id', async () => {
 		const { sut } = makeSutDelete()
 		const respOrErr = await sut.execute({ id: '123' })
 		expect(respOrErr.isRight()).toBeTruthy()
 	})
 
-	it('should update account', async () => {
+	it('should update partner', async () => {
 		const { sut } = makeSutUpdate()
-		const respOrErr = await sut.execute({ id: '123', ...account })
+		const respOrErr = await sut.execute({ _id: '123', ...partner })
 		expect(respOrErr.isRight()).toBeTruthy()
 	})
 
-	it('should return error when create account', async () => {
+	it('should return error when create partner', async () => {
 		const { sut } = makeSutCreate()
 		vi.spyOn(PartnerManager, 'create').mockImplementationOnce(async () => {
 			return left(undefined) as any
 		})
-		const respOrErr = await sut.execute(account)
+		const respOrErr = await sut.execute(partner)
 		expect(respOrErr.isLeft()).toBeTruthy()
 	})
 
-	it('should return error when find all accounts', async () => {
+	it('should return error when find all partners', async () => {
 		const { sut } = makeSutFindAll()
 
 		vi.spyOn(PartnerManager, 'findAll').mockImplementationOnce(async () => {
@@ -111,7 +107,7 @@ describe('Use cases ref partner (Only)', () => {
 		expect(respOrErr.isLeft()).toBeTruthy()
 	})
 
-	it('should return error when delete account by id', async () => {
+	it('should return error when delete partner by id', async () => {
 		const { sut } = makeSutDelete()
 		vi.spyOn(PartnerManager, 'deleteByID').mockImplementationOnce(async () => {
 			return left(undefined) as any
@@ -120,31 +116,22 @@ describe('Use cases ref partner (Only)', () => {
 		expect(respOrErr.isLeft()).toBeTruthy()
 	})
 
-	it('should return error when update account', async () => {
+	it('should return error when update partner', async () => {
 		const { sut } = makeSutUpdate()
 		vi.spyOn(PartnerManager, 'update').mockImplementationOnce(async () => {
 			return left(undefined) as any
 		})
-		const respOrErr = await sut.execute({ id: 'id-invalid', ...account })
+		const respOrErr = await sut.execute({ _id: 'id-invalid', ...partner })
 		expect(respOrErr.isLeft()).toBeTruthy()
 	})
 
-	it('should return error when find all categories with unity_id invalid', async () => {
-		const { sut } = makeSutFindAll()
-
-		const respOrErr = await sut.execute({ unity_id: null as any })
-
-		expect(respOrErr.isLeft()).toBeTruthy()
-		expect(respOrErr.extract()).toBeInstanceOf(AbstractError)
-	})
-
-	it('should return error when update account with id invalid', async () => {
+	it('should return error when update partner with id invalid', async () => {
 		const { sut } = makeSutUpdate()
-		const respOrErr = await sut.execute({ id: null as any, ...account })
+		const respOrErr = await sut.execute({ _id: null as any, ...partner })
 		expect(respOrErr.isLeft()).toBeTruthy()
 	})
 
-	it('should return error when delete account with id invalid', async () => {
+	it('should return error when delete partner with id invalid', async () => {
 		const { sut } = makeSutDelete()
 		const respOrErr = await sut.execute({ id: null as any })
 		expect(respOrErr.isLeft()).toBeTruthy()

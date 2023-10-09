@@ -9,6 +9,7 @@ import { ControllerGeneric } from '../helpers/controller-generic'
 
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import container from 'App/Core/shared/container'
+import { IOptsQuery } from 'App/Types/IOptsQuery'
 import { InjectionToken } from 'tsyringe'
 
 export class ControllerInjection implements ControllerGeneric {
@@ -19,8 +20,9 @@ export class ControllerInjection implements ControllerGeneric {
 
 	static resolve(
 		dep: InjectionToken<UseCase<any, unknown>>,
-		opts: OptsQuery = OptsQuery.build(),
+		query?: IOptsQuery,
 	) {
+		const opts = OptsQuery.build(query)
 		container.registerInstance<OptsQuery>(OptsQuery, opts);
 		const useCase = container.resolve(dep)
 		return new ControllerInjection(useCase)
