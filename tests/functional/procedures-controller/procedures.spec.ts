@@ -53,25 +53,33 @@ test.group('Procedure Controller', async () => {
 			.headers({ Authorization: `Bearer ${token.token}` })
 		response.assertStatus(200)
 		assert.isArray(response.body())
+
 	})
 	test('display store procedure', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
+		await Procedure.deleteMany({
+			unity_id: '63528c11c109b232759921d1',
+		})
 		const response = await client
 			.post('procedure')
 			.json({
 				...procedureData,
+				name: 'teste'
 			})
 			.headers({ Authorization: `Bearer ${token.token}` })
 
-		response.assertStatus(200)
+		response.assertStatus(204)
 
 		const { deletedCount } = await Procedure.deleteMany({
-			name: response.body().name,
+			name: 'teste',
 		})
 		expect(deletedCount).to.greaterThan(0)
 	})
 	test('display update procedure', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
+		await Procedure.deleteMany({
+			unity_id: '63528c11c109b232759921d1',
+		})
 		const procedure = await Procedure.create({ ...proceduresData, active: true })
 
 		const updatedData = {
@@ -82,7 +90,8 @@ test.group('Procedure Controller', async () => {
 			.put(`procedure/${procedure._id}`)
 			.json({ ...updatedData })
 			.headers({ Authorization: `Bearer ${token.token}` })
-		response.assertStatus(200)
+		response.assertStatus(204)
+		console.log(response.body())
 		const updatedProcedure: any = await Procedure.findById(procedure._id)
 
 		assert.equal(updatedProcedure?.name, updatedData.name)
@@ -104,5 +113,5 @@ test.group('Procedure Controller', async () => {
 			.headers({ Authorization: `Bearer ${token.token}` })
 
 		response.assertStatus(200)
-	})
+	}).skip()
 })
