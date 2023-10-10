@@ -65,7 +65,7 @@ const makeSutUpdate = () => {
 	return { sut, }
 }
 
-describe('Use cases ref account (Only)', () => {
+describe('Use cases ref account (Unit)', () => {
 	describe('Create account Use Case', () => {
 		it('should create account', async () => {
 			const { sut } = makeSutCreate()

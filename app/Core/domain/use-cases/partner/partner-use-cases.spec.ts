@@ -1,5 +1,4 @@
 import { left, right } from 'App/Core/shared'
-import { IAccount } from 'App/Types/IAccount'
 import { IPartner } from 'App/Types/IPartner'
 import { describe, expect, it, vi } from 'vitest'
 import { PartnerManagerInterface } from '../../repositories/interface'
@@ -19,8 +18,8 @@ const partner: IPartner = {
 
 
 const PartnerManager: PartnerManagerInterface = {
-	create: vi.fn(async (account) => {
-		return right(account as IAccount) as any
+	create: vi.fn(async (partner) => {
+		return right(partner as IPartner) as any
 	}),
 	findAll: vi.fn(async () => {
 		return right([]) as any
@@ -31,8 +30,8 @@ const PartnerManager: PartnerManagerInterface = {
 	findByName: vi.fn(async (id) => {
 		return right(id) as any
 	}),
-	update: vi.fn(async (_id, account) => {
-		return right(account) as any
+	update: vi.fn(async (_id, partner) => {
+		return right(partner) as any
 	})
 }
 
@@ -61,14 +60,14 @@ const makeSutUpdate = () => {
 	return { sut, }
 }
 
-describe('Use cases ref partner (Only)', () => {
-	it('should create account', async () => {
+describe('Use cases ref partner (Unit)', () => {
+	it('should create partner', async () => {
 		const { sut } = makeSutCreate()
 		const respOrErr = await sut.execute(partner)
 		expect(respOrErr.isRight()).toBeTruthy()
 	})
 
-	it('should find all accounts', async () => {
+	it('should find all partners', async () => {
 		const { sut } = makeSutFindAll()
 		const respOrErr = await sut.execute({ unity_id: 'unity_id' })
 		expect(respOrErr.isRight()).toBeTruthy()

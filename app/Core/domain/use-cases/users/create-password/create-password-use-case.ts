@@ -10,7 +10,9 @@ const roles = [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SUPERADMIN]
 export class CreatePasswordUseCase implements UseCase<CreatePasswordProps, Password> {
 	constructor() { }
 
-	@EmitEventDecorator('new:password', false)
+	@EmitEventDecorator('new:password', {
+		all_attrs: true,
+	})
 	public async execute({
 		password,
 		type,

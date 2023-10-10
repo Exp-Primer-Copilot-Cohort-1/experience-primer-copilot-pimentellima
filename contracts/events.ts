@@ -15,5 +15,6 @@ declare module '@ioc:Adonis/Core/Event' {
 		'new:password': { password: string; email: string };
 		'new:unity': { unity: IUnity, user: IAdminUser, session: ISessionTransaction }
 		'new:reply-form-standard-franchise': { group_id: string; }
+		'new:email-current-reply-in-greater-previous': { group_id: string; }
 	}
 }

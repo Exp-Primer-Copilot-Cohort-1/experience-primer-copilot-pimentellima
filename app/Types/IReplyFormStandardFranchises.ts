@@ -2,6 +2,7 @@ import { ObjectId } from '@ioc:Mongoose'
 import { TypeForms } from './IBusinessFranchises'
 
 export type IQuestion = {
+	_id?: ObjectId | string
 	question: string
 	answer: string
 }
@@ -17,4 +18,31 @@ export interface IReplyFormStandardFranchises {
 	franchise: ObjectId | string
 	activity: ObjectId | string
 	questions: IQuestion[]
+	created_at?: Date | string
+	updated_at?: Date | string
+}
+
+export interface IInfoReplyFormStandardFranchises {
+	client: {
+		name: string
+		email: string
+	}
+	coordinator: {
+		name: string
+		email: string
+	}
+	unity: {
+		name: string
+		email: string
+	}
+	prof: {
+		name: string
+		email: string
+	}
+	procedures: {
+		color: string,
+		name: string,
+		minutes: number,
+	}[]
+	date: string
 }

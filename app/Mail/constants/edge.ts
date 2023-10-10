@@ -7,7 +7,9 @@ const EDGE = {
 	forgot_password_text: 'emails/forgot-password-text',
 	new_account: 'emails/new-account',
 	welcome: 'emails/welcome',
+	reply_current_greater_previous: 'emails/reply-current-greater-previous',
 }
+
 export type EdgeValues = (typeof EDGE)[keyof typeof EDGE]
 
 export default EDGE

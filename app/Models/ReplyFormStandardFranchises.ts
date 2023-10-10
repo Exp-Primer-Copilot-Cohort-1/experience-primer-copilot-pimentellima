@@ -46,6 +46,10 @@ const schema = new Schema<IReplyFormStandardFranchises
 
 		questions: [
 			{
+				_id: {
+					type: Schema.Types.ObjectId,
+					required: true,
+				},
 				question: {
 					type: String,
 					required: true,
