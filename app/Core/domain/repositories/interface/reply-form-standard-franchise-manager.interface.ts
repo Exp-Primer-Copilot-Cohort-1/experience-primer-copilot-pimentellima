@@ -1,0 +1,23 @@
+import { AbstractError } from 'App/Core/errors/error.interface';
+import { PromiseEither } from 'App/Core/shared/either';
+import { IReplyFormStandardFranchises } from 'App/Types/IReplyFormStandardFranchises';
+
+/**
+ * Interface que define os métodos para manipulação de respostas padrão de formulários de franquias.
+ */
+export interface RFormSFManagerInterface {
+	/**
+	 * Busca todas as respostas padrão de formulários de franquias de uma unidade específica.
+	 * @param unity_id O ID da unidade.
+	 * @returns Uma promessa que pode ser resolvida com um array de respostas padrão de formulários de franquias ou rejeitada com um erro abstrato.
+	 */
+	// findAll: (unity_id: string) => PromiseEither<AbstractError, IReplyFormStandardFranchises[]>;
+
+	/**
+	 * Cria uma nova resposta padrão de formulário de franquia.
+	 * @param item A resposta padrão de formulário de franquia a ser criada.
+	 * @returns Uma promessa que pode ser resolvida com a resposta padrão de formulário de franquia criada ou rejeitada com um erro abstrato.
+	 */
+	create: (item: IReplyFormStandardFranchises) => PromiseEither<AbstractError, IReplyFormStandardFranchises>;
+}
+

@@ -1,17 +1,14 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import ReplyFormStandardFranchisesEntity from 'App/Core/domain/entities/reply-form-standard-franchises/reply-form-standard-franchises'
-import { UnitNotFranchise } from 'App/Core/domain/errors/unit-not-franchise'
-import BusinessFranchises from 'App/Models/BusinessFranchises'
 import ReplyFormStandardFranchises from 'App/Models/ReplyFormStandardFranchises'
 import { TypeForms } from 'App/Types/IBusinessFranchises'
-import {
-	IReplyFormStandardFranchises
-} from "App/Types/IReplyFormStandardFranchises"
 
+import { adaptRoute } from 'App/Core/adapters'
+import { makeCreateRFormsStandardFUseCase } from 'App/Core/composers/reply-form-standard-franchise/make'
 
-// ! AVISO
-// ! refatorar para usar o padrão da nossa arquitetura
 class ReplyStandardFormController {
+
+	// ! AVISO
+	// ! refatorar para usar o padrão da nossa arquitetura
 	async show(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id.toString()
 		const { activity } = ctx.params
@@ -34,24 +31,10 @@ class ReplyStandardFormController {
 
 	async store(ctx: HttpContextContract) {
 		const user = ctx.auth.user
-		const body = ctx.request.body() as IReplyFormStandardFranchises
-
-		const businessFranchise = await BusinessFranchises.findOne({ unities: user?.unity_id }).exec()
-
-		if (!businessFranchise) throw new UnitNotFranchise()
-
-		const entityOrErr = await ReplyFormStandardFranchisesEntity.build({
-			...body,
-			prof: user?._id as string,
-			franchise: businessFranchise._id,
+		return adaptRoute(makeCreateRFormsStandardFUseCase(), ctx, {
 			unity_id: user?.unity_id as string,
+			prof: user?._id as string,
 		})
-
-		if (entityOrErr.isLeft()) throw entityOrErr.extract()
-
-		const entity = entityOrErr.extract()
-
-		return await ReplyFormStandardFranchises.create(entity)
 	}
 }
 

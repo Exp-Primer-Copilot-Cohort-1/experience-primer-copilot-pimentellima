@@ -13,3 +13,4 @@ Event.on('new:user', 'User.onNewUser')
 Event.on('new:password', 'User.onNewPassword')
 
 Event.on('new:unity', 'Unity.onNewUnity')
+Event.on('new:reply-form-standard-franchise', 'ReplySFormFranchise.onNewReplyFormStandardFranchise')
