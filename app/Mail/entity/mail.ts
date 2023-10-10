@@ -8,6 +8,8 @@ type MailParams = {
 	title: string
 }
 
+const isProd = process.env.NODE_ENV === 'production'
+
 class MailEntity {
 	private readonly from: string = 'ti@dpsystem.com.br'
 
@@ -15,7 +17,7 @@ class MailEntity {
 
 	async send({ edge, props, email, title }: MailParams) {
 		try {
-			if (process.env.NODE_ENV !== 'production') return
+			if (isProd) return
 
 			const Application = (await import('@ioc:Adonis/Core/Application')).default
 			const Mail = (await import('@ioc:Adonis/Addons/Mail')).default

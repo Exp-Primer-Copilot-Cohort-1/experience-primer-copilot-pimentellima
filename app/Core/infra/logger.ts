@@ -23,6 +23,10 @@ class Logger {
 			LoggerAdonisjs.info(message)
 		}
 	}
+
+	emit(msg: string, err?: Error | any) {
+		LoggerAdonisjs.info(msg, err)
+	}
 }
 
 

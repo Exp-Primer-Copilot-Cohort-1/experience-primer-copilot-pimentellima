@@ -89,6 +89,7 @@
 		"reflect-metadata": "^0.1.13",
 		"socket.io": "^4.7.2",
 		"source-map-support": "^0.5.21",
+		"ts-retry-promise": "^0.7.1",
 		"tsyringe": "^4.8.0",
 		"winston": "^3.10.0",
 		"zod": "^3.22.2"
