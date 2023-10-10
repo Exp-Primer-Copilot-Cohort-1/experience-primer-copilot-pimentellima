@@ -2,6 +2,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, right } from 'App/Core/shared'
 import ReplyFormStandardFranchises from 'App/Models/ReplyFormStandardFranchises'
+import { TypeForms } from 'App/Types/IBusinessFranchises'
 import { IInfoReplyFormStandardFranchises, IReplyFormStandardFranchises } from 'App/Types/IReplyFormStandardFranchises'
 import { injectable, registry } from 'tsyringe'
 import { RFormSFManagerInterface } from '../interface/reply-form-standard-franchise-manager.interface'
@@ -9,8 +10,11 @@ import { RFormSFManagerInterface } from '../interface/reply-form-standard-franch
 @injectable()
 @registry([{ token: RFormSFMongooseManager, useClass: RFormSFMongooseManager }])
 export class RFormSFMongooseManager implements RFormSFManagerInterface {
-	async findAllByGroupId(group_id: string): PromiseEither<AbstractError, IReplyFormStandardFranchises[]> {
-		const docs = await ReplyFormStandardFranchises.find({ group_id })
+	async findAllByGroupId(
+		group_id: string,
+		type: TypeForms,
+	): PromiseEither<AbstractError, IReplyFormStandardFranchises[]> {
+		const docs = await ReplyFormStandardFranchises.find({ group_id, type })
 
 		return right(docs.map(doc => doc.toObject()))
 	}

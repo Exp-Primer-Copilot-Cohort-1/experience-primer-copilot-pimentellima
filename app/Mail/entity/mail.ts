@@ -15,9 +15,7 @@ class MailEntity {
 
 	async send({ edge, props, email, title }: MailParams) {
 		try {
-			if (process.env.NODE_ENV !== 'production') {
-				return
-			}
+			if (process.env.NODE_ENV !== 'production') return
 
 			const Application = (await import('@ioc:Adonis/Core/Application')).default
 			const Mail = (await import('@ioc:Adonis/Addons/Mail')).default

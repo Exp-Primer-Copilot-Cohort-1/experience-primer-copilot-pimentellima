@@ -1,3 +1,4 @@
+import { TypeForms } from 'App/Types/IBusinessFranchises';
 import mongoose from 'mongoose';
 import { beforeAll, describe, expect, it } from "vitest";
 import { RFormSFMongooseManager } from './reply-form-standard-franchise-mongoose-repository';
@@ -18,6 +19,7 @@ describe('Reply Form Standard Franchise Repository (Integration)', () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findAllByGroupId(
 			process.env.TEST_INTEGRATION_GROUP_ID as string,
+			TypeForms.START,
 		)
 
 		expect(resultOrErr.isRight()).toBeTruthy()

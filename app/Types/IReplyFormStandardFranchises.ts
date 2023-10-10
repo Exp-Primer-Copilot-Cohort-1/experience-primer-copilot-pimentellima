@@ -2,9 +2,9 @@ import { ObjectId } from '@ioc:Mongoose'
 import { TypeForms } from './IBusinessFranchises'
 
 export type IQuestion = {
-	_id?: ObjectId | string
+	value?: ObjectId | string
 	question: string
-	answer: string
+	answer: number
 }
 
 export interface IReplyFormStandardFranchises {

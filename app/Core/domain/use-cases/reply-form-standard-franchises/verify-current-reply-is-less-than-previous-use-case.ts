@@ -3,12 +3,14 @@ import { PromiseEither, left, right } from 'App/Core/shared'
 
 import { RFormSFManagerInterface } from 'App/Core/domain/repositories/interface/reply-form-standard-franchise-manager.interface'
 import { RFormSFMongooseManager } from 'App/Core/domain/repositories/reply-form-standard-franchise/reply-form-standard-franchise-mongoose-repository'
-import EmitEventDecorator from 'App/Decorators/EmitEvent'
+import { EventEmitter, IEventEmitter } from 'App/Core/infra/event-emitter'
+import { TypeForms } from 'App/Types/IBusinessFranchises'
 import { inject, injectable, registry } from 'tsyringe'
 import { ActivityNotGroupIdProvider } from '../../errors/activity-not-group-id-provider'
 import { CurrentNotSmallerError } from '../../errors/current-not-smaller-error'
-
-type In = { group_id: string }
+import { FormNotTypeProvider } from '../../errors/form-not-type-provider'
+import { QuestionNotFound } from '../../errors/question-not-found'
+type In = { group_id: string, type: TypeForms }
 type Out = { message: string }
 
 @injectable()
@@ -20,24 +22,22 @@ export class VerifyCurrentReplyInLessThanPreviousUseCase implements UseCase<In, 
 
 	constructor(
 		@inject(RFormSFMongooseManager) private readonly manager: RFormSFManagerInterface,
+		@inject(EventEmitter) private readonly eventEmitter?: IEventEmitter
 	) { } // eslint-disable-line
 
-	@EmitEventDecorator('new:email-current-reply-in-greater-previous',
-		{
-			all_attrs: true,
-			hasEmitterInRight: false,
-		}
-	)
 	public async execute(
-		{ group_id }: In,
+		{ group_id, type }: In,
 	): PromiseEither<CurrentNotSmallerError, Out> {
 		if (!group_id) return left(new ActivityNotGroupIdProvider())
-		const repliesOrErr = await this.manager.findAllByGroupId(group_id)
+		if (!type) return left(new FormNotTypeProvider())
+
+		const repliesOrErr = await this.manager.findAllByGroupId(group_id, type)
 
 		if (repliesOrErr.isLeft()) return left(repliesOrErr.extract())
 
 		const replies = repliesOrErr.extract()
 
+		if (!replies) return right({ message: "Don't have previous reply" })
 		if (replies.length <= 1) return right({ message: "Don't have previous reply" })
 
 		// ordena do mais novo para o mais velho
@@ -52,11 +52,20 @@ export class VerifyCurrentReplyInLessThanPreviousUseCase implements UseCase<In, 
 
 		// comparar questões de currentReply com previousReply
 		const isSmaller = currentReply.questions.every((question) => {
-			const index = previousReply.questions.findIndex((q) => q._id === question._id)
+			const index = previousReply.questions.findIndex((q) =>
+				q.value?.toString() === question.value?.toString()
+			)
+			if (index === -1) throw new QuestionNotFound()
+
+			if (question.answer === 0) return true
+
 			return question.answer < previousReply.questions[index].answer
 		})
 
-		if (!isSmaller) return left(new CurrentNotSmallerError())
+		if (!isSmaller) {
+			this.eventEmitter?.emit('new:email-current-reply-in-greater-previous', { group_id })
+			return left(new CurrentNotSmallerError())
+		}
 
 		return right({ message: 'The current reply is less than previous' })
 	}

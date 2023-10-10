@@ -12,24 +12,19 @@ function verifyWhiteListLefts(item: Either<AbstractError, unknown>) {
 		CurrentNotSmallerError.name,
 	]
 
-	if (item.isLeft()) {
-		const error = item.extract()
+	if (item.isRight()) return true
 
-		if (whiteListLefts.includes(error.constructor.name)) return true
-	}
+	const error = item.extract()
 
-	return false
+	return whiteListLefts.includes(error.name)
 }
 
-type OptionsEmitEvent = {
-	all_attrs?: boolean
-	hasEmitterInRight?: boolean
-}
 
-export default function EmitEventDecorator(event: KeysEvents, {
-	all_attrs = false,
-	hasEmitterInRight = true,
-}: OptionsEmitEvent = {}) {
+
+export default function EmitEventDecorator(
+	event: KeysEvents,
+	all_attrs: boolean = false,
+) {
 	return (
 		_target,
 		_propertyKey: string,
@@ -52,8 +47,8 @@ export default function EmitEventDecorator(event: KeysEvents, {
 					...result.extract()
 				} : result.extract()
 
-				if (hasEmitterInRight) Event.emit(event, arg)
-				if (hasErrorPermission) Event.emit(event, arg)
+
+				await Event.emit(event, arg)
 
 				return result
 			} catch (error) {
