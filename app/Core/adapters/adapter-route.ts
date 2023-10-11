@@ -1,5 +1,4 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import logger from '../infra/logger'
 import { ControllerGeneric } from './controller/helpers'
 import { HttpRequest } from './controller/ports/http'
 
@@ -27,10 +26,8 @@ export const adaptRoute = async (
 
 		const { body, statusCode } = await controller.handle(httpRequest, auth?.user)
 
-		logger.log(request.url(), request.method(), statusCode, body?.message)
-
 		return response.status(statusCode).json(body)
 	} catch (error) {
-		logger.log(request.url(), request.method(), 501, error)
+		return response.status(500).json(error)
 	}
 }

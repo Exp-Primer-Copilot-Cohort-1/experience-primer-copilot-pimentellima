@@ -21,6 +21,8 @@ const makeKey = (url: string, user: IUser) => {
 const blacklist = [
 	'census',
 	'pictures',
+	'activities', // TODO: atividades deve ter um cacheamento mais inteligente
+	'transactions', // TODO: transações deve ter um cacheamento mais inteligente
 ]
 
 export default class CacheMiddleware {
