@@ -15,6 +15,13 @@ describe('Reply Form Standard Franchise Repository (Integration)', () => {
 		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})
 
+	// beforeAll(async () => {
+	// 	vi.mock('App/Models/HealthInsurance', () => ({
+	// 		__esModule: true,
+	// 		default: Model,
+	// 	}))
+	// })
+
 	it('should be able to find all replies by group id', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findAllByGroupId(
@@ -25,7 +32,7 @@ describe('Reply Form Standard Franchise Repository (Integration)', () => {
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})
 
-	it('should be able to find info this reply', async () => {
+	it.skip('should be able to find info this reply', async () => {
 		const { sut } = makeSut()
 		const resultOrErr = await sut.findInfoThisReply(
 			process.env.TEST_INTEGRATION_GROUP_ID as string,

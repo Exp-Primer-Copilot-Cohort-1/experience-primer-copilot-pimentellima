@@ -34,9 +34,8 @@ class MailEntity {
 			})
 			Logger.info(`Email enviado para ${email}`)
 		} catch (error) {
-			console.log(error)
-			const Logger = (await import('@ioc:Adonis/Core/Logger')).default
 
+			const Logger = (await import('@ioc:Adonis/Core/Logger')).default
 			Logger.error(error)
 		}
 	}

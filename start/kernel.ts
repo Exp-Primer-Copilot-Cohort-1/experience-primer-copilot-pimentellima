@@ -47,4 +47,5 @@ Server.middleware.registerNamed({
 	role: 'App/Middleware/Role',
 	statusPermission: 'App/Middleware/PermissionStatus',
 	successNoContent: 'App/Middleware/SuccessNoContent',
+	cache: 'App/Middleware/Cache',
 })
