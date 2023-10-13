@@ -10,7 +10,7 @@ import type { ITransaction } from 'App/Types/ITransaction'
 import divideCurrencyByInteger from 'App/utils/divide-currency'
 import { Types } from 'mongoose'
 import { inject, injectable, registry } from 'tsyringe'
-import { UnitNotFoundError } from '../../../errors/unit-not-found'
+import { UnityNotFoundError } from '../../../errors/unity-not-found'
 import { UpdateActivityPaymentUseCase } from '../../activities'
 import { TransactionWithProcedure, TransactionWithoutProcedure } from '../helpers'
 import { CreateOnlyOneTransactionUseCase } from './create-only-one-transaction-use-case'
@@ -103,7 +103,7 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 		activity_id,
 		...transaction
 	}: ITransaction): PromiseEither<AbstractError, ITransaction> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityNotFoundError())
 		await this.session.startSession()
 		try {
 			const total = divideCurrencyByInteger(transaction.amount, installments)

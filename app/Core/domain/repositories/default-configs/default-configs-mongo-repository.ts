@@ -2,7 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import DefaultConfig from 'App/Models/DefaultConfig'
 import { IDefaultConfig } from 'App/Types/IDefaultConfig'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { DefaultConfigsManagerInterface } from '../interface'
 
 export class DefaultConfigsMongooseRepository implements DefaultConfigsManagerInterface {
@@ -23,14 +23,14 @@ export class DefaultConfigsMongooseRepository implements DefaultConfigsManagerIn
 			unity_id: unity_id,
 		})
 		if (!configs) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 		return right(configs)
 	}
 	async findById(id: string): PromiseEither<AbstractError, IDefaultConfig> {
 		const configs = await DefaultConfig.findById(id)
 		if (!configs) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 		return right(configs)
 	}
@@ -39,7 +39,7 @@ export class DefaultConfigsMongooseRepository implements DefaultConfigsManagerIn
 	): PromiseEither<AbstractError, IDefaultConfig> {
 		const configs = await DefaultConfig.findById(id)
 		if (!configs) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 		await configs.deleteOne()
 		return right(configs)
@@ -50,7 +50,7 @@ export class DefaultConfigsMongooseRepository implements DefaultConfigsManagerIn
 	): PromiseEither<AbstractError, IDefaultConfig> {
 		const configs = await DefaultConfig.findByIdAndUpdate(id, data)
 		if (!configs) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 		return right(configs)
 	}

@@ -3,7 +3,7 @@ import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Partner from 'App/Models/Partner'
 import { IPartner } from 'App/Types/IPartner'
 import { OptsQuery } from '../../entities/helpers/opts-query'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { PartnerManagerInterface } from '../interface/partner-manage-interface'
 
 export class PartnerMongooseRepository implements PartnerManagerInterface {
@@ -29,7 +29,7 @@ export class PartnerMongooseRepository implements PartnerManagerInterface {
 		})
 
 		if (!partner) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 		return right(partner)
 	}
@@ -48,7 +48,7 @@ export class PartnerMongooseRepository implements PartnerManagerInterface {
 	public async deleteByID(id: string): PromiseEither<AbstractError, IPartner> {
 		const partner = await Partner.findById(id)
 		if (!partner) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 		await partner.deleteOne()
 		return right(partner)

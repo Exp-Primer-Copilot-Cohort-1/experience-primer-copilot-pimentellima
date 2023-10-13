@@ -6,7 +6,7 @@ import { IAccount } from 'App/Types/IAccount'
 import { inject, injectable, registry } from "tsyringe"
 import AccountEntity from '../../entities/account/account'
 import { OptsQuery } from '../../entities/helpers/opts-query'
-import { AccountNotFoundError, UnitNotFoundError } from '../../errors'
+import { AccountNotFoundError, UnityNotFoundError } from '../../errors'
 import { AccountManagerInterface } from '../interface/account-manager-interface'
 @injectable()
 @registry([{ token: AccountMongoRepository, useClass: AccountMongoRepository }])
@@ -18,7 +18,7 @@ export class AccountMongoRepository implements AccountManagerInterface {
 
 
 	async findAll(unity_id: string): PromiseEither<AbstractError, IAccount[]> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityNotFoundError())
 
 		const data = await Account.find({
 			unity_id,

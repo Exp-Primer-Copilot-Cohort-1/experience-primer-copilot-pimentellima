@@ -1,5 +1,5 @@
 import { InappropriateUseCase } from 'App/Core/domain/errors/inappropriate-use-case'
-import { UnitNotFoundError } from 'App/Core/domain/errors/unit-not-found'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unit-not-found'
 import { TransactionsManagerInterface } from 'App/Core/domain/repositories/interface/transactions-manager-interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { left, right } from 'App/Core/shared'
@@ -40,7 +40,7 @@ describe('Create only one transaction use case (Unit)', () => {
 			unity_id: undefined as unknown as string,
 		})
 
-		expect(result).toEqual(left(new UnitNotFoundError()))
+		expect(result).toEqual(left(new UnityNotFoundError()))
 	})
 
 	it('should create a transaction if all data is valid', async () => {

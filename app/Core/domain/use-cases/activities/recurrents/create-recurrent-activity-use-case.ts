@@ -1,6 +1,6 @@
 import ActivityEntity from 'App/Core/domain/entities/activities/activity'
 import { ActivityPendingEntity } from 'App/Core/domain/entities/activity-pending'
-import { UnityIdNotProvidedError } from 'App/Core/domain/errors/unit-not-id-provider'
+import { UnityIdNotProvidedError } from 'App/Core/domain/errors/unity-not-id-provider'
 import { ActivityMongoRepository, ActivityRecurrentMongoRepository } from 'App/Core/domain/repositories'
 import { ActivitiesManagerInterface, ActivitiesRecurrentManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'

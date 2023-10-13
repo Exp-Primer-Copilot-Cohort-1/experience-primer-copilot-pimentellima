@@ -1,4 +1,4 @@
-import { UnitNotFoundError } from 'App/Core/domain/errors'
+import { UnityNotFoundError } from 'App/Core/domain/errors'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -23,7 +23,7 @@ export class FindAllProceduresByUnityUseCase
 		input: FindAllProps,
 	): PromiseEither<AbstractError, IProcedure[]> {
 		if (!input?.unity_id) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		const proceduresOrErr = await this.manager.findByUnityId(input.unity_id)

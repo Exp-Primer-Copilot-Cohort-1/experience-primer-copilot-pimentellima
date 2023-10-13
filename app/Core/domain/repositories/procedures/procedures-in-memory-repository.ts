@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IProcedure } from 'App/Types/IProcedure'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { ProceduresManagerInterface } from '../interface'
 
 export class ProceduresInMemoryRepository implements ProceduresManagerInterface {
@@ -26,7 +26,7 @@ export class ProceduresInMemoryRepository implements ProceduresManagerInterface 
 		const procedure = this.items.find((item) => item.unity_id.toString() === unity_id)
 
 		if (!procedure) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(this.items)
@@ -35,7 +35,7 @@ export class ProceduresInMemoryRepository implements ProceduresManagerInterface 
 		const procedure = this.items.find((item) => item._id === id)
 
 		if (!procedure) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(procedure)
@@ -46,7 +46,7 @@ export class ProceduresInMemoryRepository implements ProceduresManagerInterface 
 		const procedures = this.items.find((item) => item._id === id)
 
 		if (!procedures) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(procedures)

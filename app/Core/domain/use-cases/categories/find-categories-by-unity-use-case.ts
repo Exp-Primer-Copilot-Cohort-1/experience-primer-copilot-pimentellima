@@ -4,7 +4,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import { ICategory } from 'App/Types/ICategory'
 import { inject, injectable, registry } from 'tsyringe'
-import { UnitNotFoundError } from '../../errors'
+import { UnityNotFoundError } from '../../errors'
 import { CategoriesMongooseRepository } from '../../repositories'
 
 type FindAllProps = {
@@ -17,7 +17,7 @@ export class FindCategoriesByUnityUseCase implements UseCase<FindAllProps, ICate
 
 	public async execute({ unity_id }: FindAllProps): PromiseEither<AbstractError, ICategory[]> {
 		if (!unity_id) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return await this.manager.findAll(unity_id)

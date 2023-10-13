@@ -3,7 +3,7 @@ import { PromiseEither, left, right } from 'App/Core/shared'
 import BusinessFranchises from 'App/Models/BusinessFranchises'
 import { IBusinessFranchises } from 'App/Types/IBusinessFranchises'
 import { injectable, registry } from "tsyringe"
-import { UnitNotFranchise } from '../../errors/unit-not-franchise'
+import { UnityNotFranchise } from '../../errors/unity-not-franchise'
 import { BusinessFranchisesManagerInterface } from '../interface/business-franchises-manager.interface'
 
 @injectable()
@@ -15,7 +15,7 @@ export class BusinessFranchisesRepository implements BusinessFranchisesManagerIn
 	async findByUnityId(unity_id: string): PromiseEither<AbstractError, IBusinessFranchises> {
 		const businessFranchise = await BusinessFranchises.findOne({ unities: unity_id }).exec()
 
-		if (!businessFranchise) return left(new UnitNotFranchise())
+		if (!businessFranchise) return left(new UnityNotFranchise())
 
 		return right(businessFranchise.toObject())
 	}

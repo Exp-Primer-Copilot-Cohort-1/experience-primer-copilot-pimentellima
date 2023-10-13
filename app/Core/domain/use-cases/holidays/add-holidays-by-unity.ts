@@ -5,7 +5,7 @@ import { IHoliday } from 'App/Types/IHoliday'
 import { format, parseISO } from 'date-fns'
 import { EntityHoliday } from '../../entities/holidays/holiday-entity'
 import { InvalidParamsError } from '../../errors/invalid-params-error'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { HolidaysManagerInterface } from '../../repositories/interface/holidays.interface'
 
 type NewHoliday = {
@@ -20,7 +20,7 @@ export class AddHolidaysByUnityUseCase implements UseCase<NewHoliday, IHoliday> 
 		...holiday
 	}: NewHoliday): PromiseEither<AbstractError, IHoliday> {
 		if (!unity_id) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		if (!holiday) {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { UnitNotFoundError } from 'App/Core/domain/errors/unit-not-found'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unit-not-found'
 import { UnitiesInMemoryRepository } from '../../../repositories'
 import { DeleteUnitiesByIdUseCase } from './delete-unities-by-id-use-case'
 
@@ -19,12 +19,12 @@ describe('DeleteUnitiesByIdUseCase (Unit)', () => {
 
 		expect(unitiesOrErr.isRight()).toBeTruthy()
 	})
-	it('should return UnitNotFoundError if left', async () => {
+	it('should return UnityNotFoundError if left', async () => {
 		const { sut } = makeSut()
 		const unitiesOrErr = await sut.execute({ id: 'idtest4' })
 
 		expect(unitiesOrErr.isLeft()).toBeTruthy()
-		expect(unitiesOrErr.extract()).toBeInstanceOf(UnitNotFoundError)
+		expect(unitiesOrErr.extract()).toBeInstanceOf(UnityNotFoundError)
 	})
 	it('should return is left', async () => {
 		const { sut } = makeSut()

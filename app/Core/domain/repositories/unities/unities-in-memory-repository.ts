@@ -3,7 +3,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import { IUnity } from 'App/Types/IUnity'
 import { cnpj } from 'cpf-cnpj-validator'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { UnitiesManagerInterface } from '../interface/unities-manager.interface'
 
 const fabricateUnity = (qtd: number): IUnity[] => {
@@ -55,7 +55,7 @@ export class UnitiesInMemoryRepository implements UnitiesManagerInterface {
 		const unity = this.items.find((item) => item._id === id)
 
 		if (!unity) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(unity)
@@ -64,7 +64,7 @@ export class UnitiesInMemoryRepository implements UnitiesManagerInterface {
 		const unity = this.items.find((item) => item._id === id)
 
 		if (!unity) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(unity)
@@ -74,7 +74,7 @@ export class UnitiesInMemoryRepository implements UnitiesManagerInterface {
 		const unity = this.items.find((item) => item._id === id)
 
 		if (!unity) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(unity)
@@ -83,7 +83,7 @@ export class UnitiesInMemoryRepository implements UnitiesManagerInterface {
 		const unity = this.items.find((item) => item._id === id)
 
 		if (!unity) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(unity)

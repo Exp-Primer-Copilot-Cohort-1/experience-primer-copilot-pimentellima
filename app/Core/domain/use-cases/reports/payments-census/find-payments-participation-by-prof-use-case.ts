@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { UnitNotFoundError } from 'App/Core/domain/errors/unit-not-found'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unit-not-found'
 import { CensusPaymentParticipationsManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
@@ -31,7 +31,7 @@ export class FindPaymentsParticipationByProfUseCase
 		ICensusParticipationPaymentByProf[]
 	> {
 		if (!unity_id) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		if (!date_start) {

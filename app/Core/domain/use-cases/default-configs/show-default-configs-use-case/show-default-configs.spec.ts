@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { UnitNotFoundError } from 'App/Core/domain/errors/unit-not-found'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unit-not-found'
 import { DefaultConfigsInMemoryRepository } from 'App/Core/domain/repositories/default-configs/default-configs-in-memory-repository'
 import { ShowDefaultConfigsByIdUseCase } from './show-default-configs-use-case'
 
@@ -31,11 +31,11 @@ describe.skip('ShowDefaultConfigsByIdUseCase (Unit)', () => {
 
 		expect(configsOrErr.isLeft()).toBeTruthy()
 	})
-	it('should return UnitNotFoundError if left', async () => {
+	it('should return UnityNotFoundError if left', async () => {
 		const { sut } = makeSut()
 		const configsOrErr = await sut.execute({ id: 'id_inexistente' })
 
 		expect(configsOrErr.isLeft()).toBeTruthy()
-		expect(configsOrErr.extract()).toBeInstanceOf(UnitNotFoundError)
+		expect(configsOrErr.extract()).toBeInstanceOf(UnityNotFoundError)
 	})
 })

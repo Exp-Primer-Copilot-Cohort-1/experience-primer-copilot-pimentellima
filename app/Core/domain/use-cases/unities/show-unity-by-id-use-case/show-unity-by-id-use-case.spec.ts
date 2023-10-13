@@ -1,4 +1,4 @@
-import { UnitNotFoundError } from 'App/Core/domain/errors/unit-not-found'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unit-not-found'
 import { describe, expect, it } from 'vitest'
 import { UnitiesInMemoryRepository } from '../../../repositories'
 import { ShowUnityByIdUseCase } from './show-unity-by-id-use-case'
@@ -11,12 +11,12 @@ const makeSut = () => {
 }
 
 describe('ShowUnityByIdUseCase (Unit)', () => {
-	it('should return UnitNotFoundError if left', async () => {
+	it('should return UnityNotFoundError if left', async () => {
 		const { sut } = makeSut()
 		const unitiesOrErr = await sut.execute({ id: 'id_inexistente' })
 
 		expect(unitiesOrErr.isLeft()).toBeTruthy()
-		expect(unitiesOrErr.extract()).toBeInstanceOf(UnitNotFoundError)
+		expect(unitiesOrErr.extract()).toBeInstanceOf(UnityNotFoundError)
 	})
 	it('should return right', async () => {
 		const { sut, repo } = makeSut()

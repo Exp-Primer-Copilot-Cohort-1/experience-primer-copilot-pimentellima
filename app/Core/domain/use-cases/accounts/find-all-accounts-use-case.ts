@@ -3,7 +3,7 @@ import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left } from "App/Core/shared";
 import { IAccount } from "App/Types/IAccount";
 import { inject, injectable, registry } from "tsyringe";
-import { UnitNotFoundError } from "../../errors";
+import { UnityNotFoundError } from "../../errors";
 import { AccountMongoRepository } from "../../repositories";
 import { AccountManagerInterface } from "../../repositories/interface/account-manager-interface";
 
@@ -24,7 +24,7 @@ export class FindAllAccountUseCase
 		{ unity_id }: TypeParams
 	): PromiseEither<AbstractError, IAccount[]> {
 		if (!unity_id) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return await this.manager.findAll(unity_id)

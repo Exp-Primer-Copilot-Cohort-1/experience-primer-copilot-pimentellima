@@ -7,7 +7,7 @@ import { HealthInsuranceEntity } from '../../entities/health-insurances/health-i
 import { OptsQuery } from '../../entities/helpers/opts-query'
 import { HealthInsuranceNotFoundError } from '../../errors/health-insurance-not-found'
 import { MissingParamsError } from '../../errors/missing-params'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
 import { HealthInsuranceManagerInterface } from '../interface/health-insurance-manager.interface'
 
@@ -17,7 +17,7 @@ export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInt
 	async findAllByUnityId(
 		unity_id: string,
 	): PromiseEither<AbstractError, IHealthInsurance[]> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityNotFoundError())
 
 		const doc = await HealthInsurance.find({
 			unity_id,

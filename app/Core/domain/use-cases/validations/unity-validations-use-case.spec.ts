@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { faker } from '@faker-js/faker'
 import { cnpj } from 'cpf-cnpj-validator'
-import { UnitDateExpiredError } from '../../errors/unit-date-expired'
+import { UnityDateExpiredError } from '../../errors/unity-date-expired'
 import { UnitiesInMemoryRepository } from '../../repositories'
 import { UnityValidationUseCase } from './unity-validation-use-case'
 
@@ -65,7 +65,7 @@ describe('Unity Validations (Unit)', () => {
 		const respOrErr = await sut.execute(unit)
 
 		expect(respOrErr.isLeft()).toBeTruthy()
-		expect(respOrErr.extract()).toBeInstanceOf(UnitDateExpiredError)
+		expect(respOrErr.extract()).toBeInstanceOf(UnityDateExpiredError)
 	})
 
 	it('should be valid when unity date expiration is greater than now', async () => {

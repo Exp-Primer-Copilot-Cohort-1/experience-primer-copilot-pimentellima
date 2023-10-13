@@ -6,7 +6,7 @@ import { Types } from 'mongoose'
 import {
 	MissingParamsError,
 	ParticipationPaymentsNotFoundError,
-	UnitNotFoundError,
+	UnityNotFoundError,
 } from '../../errors'
 import { PaymentProfManagerInterface } from '../interface/payment-prof-manager-interface'
 
@@ -163,7 +163,7 @@ export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
 	async findAllPaymentProfs(
 		unity_id: string,
 	): PromiseEither<AbstractError, IPaymentProf[]> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityNotFoundError())
 
 		const pipeline = generatePipeline(
 			{ unity_id: new ObjectId(unity_id.toString()) },

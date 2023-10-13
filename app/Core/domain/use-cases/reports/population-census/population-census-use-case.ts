@@ -1,4 +1,4 @@
-import { UnitNotFoundError } from 'App/Core/domain/errors/unit-not-found'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unit-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -31,7 +31,7 @@ export class PopulationCensusByDateUseCase
 		prof_id,
 	}: PopulationCensusByDateProps): PromiseEither<AbstractError, ICensusCount> {
 		if (!unity_id) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		if (!date_start) {

@@ -5,7 +5,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import type { IAdminUser } from 'App/Types/IAdminUser'
 
-import { UnitNotFoundError } from 'App/Core/domain/errors/unit-not-found'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unit-not-found'
 import EmitEventDecorator from 'App/Decorators/EmitEvent'
 import { ROLES } from 'App/Roles/types'
 import { CreatePasswordProps, Password } from '../type'
@@ -20,7 +20,7 @@ export class CreateUserUseCase implements UseCase<IAdminUser, IAdminUser> {
 
 	@EmitEventDecorator('new:user')
 	public async execute(data: IAdminUser): PromiseEither<AbstractError, IAdminUser> {
-		if (!data.unity_id) return left(new UnitNotFoundError())
+		if (!data.unity_id) return left(new UnityNotFoundError())
 
 		const adminOrErr = await AdminUser.build(data)
 

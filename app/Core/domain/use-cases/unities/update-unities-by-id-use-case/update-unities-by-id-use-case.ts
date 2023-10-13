@@ -1,5 +1,5 @@
 import { ProfileUnityEntity } from 'App/Core/domain/entities/profile/unity'
-import { UnitNotFoundError } from 'App/Core/domain/errors'
+import { UnityNotFoundError } from 'App/Core/domain/errors'
 import { UnitiesManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
@@ -11,7 +11,7 @@ export class UpdateUnitiesByIdUseCase implements UseCase<Partial<IUnity>, IUnity
 
 	public async execute(data: IUnity): PromiseEither<AbstractError, IUnity> {
 		if (!data?._id) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		const unityOrErr = await ProfileUnityEntity.build(data)

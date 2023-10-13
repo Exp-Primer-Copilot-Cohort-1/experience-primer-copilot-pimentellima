@@ -5,7 +5,7 @@ import { IQuestion, IReplyFormStandardFranchises } from 'App/Types/IReplyFormSta
 import { ArrayNotEmpty, IsNumber, IsString, validateSync } from 'class-validator'
 import { ActivityNotGroupIdProvider } from '../../errors/activity-not-group-id-provider'
 import { InvalidParamsError } from '../../errors/invalid-params-error'
-import { UnityIdNotProvidedError } from '../../errors/unit-not-id-provider'
+import { UnityIdNotProvidedError } from '../../errors/unity-not-id-provider'
 import { Entity } from '../abstract/entity.abstract'
 import { ValidationAbstractError } from '../errors/validation-error'
 

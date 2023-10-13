@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IDefaultConfig } from 'App/Types/IDefaultConfig'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { DefaultConfigsManagerInterface } from '../interface'
 
 export class DefaultConfigsInMemoryRepository implements DefaultConfigsManagerInterface {
@@ -14,7 +14,7 @@ export class DefaultConfigsInMemoryRepository implements DefaultConfigsManagerIn
 		const configs = this.items.find((item) => item.unity_id.toString() === unity_id)
 
 		if (!configs) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(this.items)
@@ -23,7 +23,7 @@ export class DefaultConfigsInMemoryRepository implements DefaultConfigsManagerIn
 		const configs = this.items.find((item) => item._id.toString() === id)
 
 		if (!configs) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(this.items)
@@ -34,7 +34,7 @@ export class DefaultConfigsInMemoryRepository implements DefaultConfigsManagerIn
 		const configs = this.items.find((item) => item._id.toString() === id)
 
 		if (!configs) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(this.items)
@@ -45,7 +45,7 @@ export class DefaultConfigsInMemoryRepository implements DefaultConfigsManagerIn
 		const configs = this.items.find((item) => item._id.toString() === id)
 
 		if (!configs) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(this.items)

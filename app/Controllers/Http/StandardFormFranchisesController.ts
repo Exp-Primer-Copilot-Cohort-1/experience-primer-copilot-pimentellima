@@ -1,5 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { UnitNotFranchise } from 'App/Core/domain/errors/unit-not-franchise'
+import { UnityNotFranchise } from 'App/Core/domain/errors/unit-not-franchise'
 import BusinessFranchises from 'App/Models/BusinessFranchises'
 import { TypeForms } from 'App/Types/IBusinessFranchises'
 
@@ -12,7 +12,7 @@ class StandardFormFranchisesController {
 
 		const businessFranchise = await BusinessFranchises.findOne({ unities: unity_id }).exec()
 
-		if (!businessFranchise) throw new UnitNotFranchise()
+		if (!businessFranchise) throw new UnityNotFranchise()
 
 		return businessFranchise?.questions
 	}
@@ -23,7 +23,7 @@ class StandardFormFranchisesController {
 
 		const businessFranchise = await BusinessFranchises.findOne({ unities: unity_id }).exec()
 
-		if (!businessFranchise) throw new UnitNotFranchise()
+		if (!businessFranchise) throw new UnityNotFranchise()
 
 		businessFranchise.questions?.push({ version, min, max, questions, type })
 
@@ -38,7 +38,7 @@ class StandardFormFranchisesController {
 
 		const businessFranchise = await BusinessFranchises.findOne({ unities: unity_id }).exec()
 
-		if (!businessFranchise) throw new UnitNotFranchise()
+		if (!businessFranchise) throw new UnityNotFranchise()
 
 		const index = businessFranchise.questions?.findIndex(q => q.version === version)
 
@@ -59,7 +59,7 @@ class StandardFormFranchisesController {
 			unities: unity_id,
 		}).exec()
 
-		if (!businessFranchise) throw new UnitNotFranchise()
+		if (!businessFranchise) throw new UnityNotFranchise()
 
 		const filtered = businessFranchise.questions?.filter(q => q.type === type)
 

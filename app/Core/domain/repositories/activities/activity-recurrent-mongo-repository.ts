@@ -9,8 +9,8 @@ import {
 import { inject, injectable, registry } from 'tsyringe'
 import { OptsQuery } from '../../entities/helpers/opts-query'
 import { ActivityNotGroupIdProvider } from '../../errors/activity-not-group-id-provider'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
-import { UnityIdNotProvidedError } from '../../errors/unit-not-id-provider'
+import { UnityNotFoundError } from '../../errors/unity-not-found'
+import { UnityIdNotProvidedError } from '../../errors/unity-not-id-provider'
 import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
 import { ActivitiesRecurrentManagerInterface } from '../interface/activity-recurrent-manager.interface'
 
@@ -27,7 +27,7 @@ export class ActivityRecurrentMongoRepository
 		unity_id: string,
 		...args: unknown[]
 	): PromiseEither<AbstractError, IActivityPending[]> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityNotFoundError())
 
 		const attrs = (args[0] as { [key: string]: string }) || {}
 

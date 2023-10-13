@@ -2,7 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import MedicalCertificate from 'App/Models/MedicalCertificate'
 import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { MedicalCertificateManagerInterface } from '../interface'
 
 export class MedicalCertificateMongooseRepository
@@ -24,7 +24,7 @@ export class MedicalCertificateMongooseRepository
 		).populate('prof', { label: '$name', value: '$_id', _id: 0 })
 
 		if (!medicalCertificate) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(medicalCertificate as unknown as IMedicalCertificate)
@@ -41,7 +41,7 @@ export class MedicalCertificateMongooseRepository
 		}).populate('prof', { label: '$name', value: '$_id', _id: 0 })
 
 		if (!medicalCertificate) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 		return right(medicalCertificate as unknown as IMedicalCertificate[])
 	}
@@ -56,7 +56,7 @@ export class MedicalCertificateMongooseRepository
 		}).populate('prof', { label: '$name', value: '$_id', _id: 0 })
 
 		if (!medicalCertificate) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 		return right(medicalCertificate as unknown as IMedicalCertificate[])
 	}
@@ -66,7 +66,7 @@ export class MedicalCertificateMongooseRepository
 			{ label: '$name', value: '$_id', _id: 0 },
 		)
 		if (!medicalCertificate) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 		return right(medicalCertificate as unknown as IMedicalCertificate)
 	}
@@ -95,7 +95,7 @@ export class MedicalCertificateMongooseRepository
 			new: true,
 		}).populate('prof', { label: '$name', value: '$_id', _id: 0 })
 		if (!medicalCertificate) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 		return right(medicalCertificate as unknown as IMedicalCertificate)
 	}
@@ -104,7 +104,7 @@ export class MedicalCertificateMongooseRepository
 	): PromiseEither<AbstractError, IMedicalCertificate> {
 		const medicalCertificate = await MedicalCertificate.findById(id)
 		if (!medicalCertificate) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 		await medicalCertificate.deleteOne()
 		return right(medicalCertificate as unknown as IMedicalCertificate)

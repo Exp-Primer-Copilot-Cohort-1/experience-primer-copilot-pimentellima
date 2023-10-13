@@ -3,7 +3,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import { IUnity } from 'App/Types/IUnity'
 import { MissingParamsError } from '../../errors/missing-params'
-import { UnitDateExpiredError } from '../../errors/unit-date-expired'
+import { UnityDateExpiredError } from '../../errors/unity-date-expired'
 import { UnitiesManagerInterface } from '../../repositories/interface'
 
 export class UnityValidationUseCase implements UseCase<IUnity, IUnity> {
@@ -27,7 +27,7 @@ export class UnityValidationUseCase implements UseCase<IUnity, IUnity> {
 		}
 
 		if (unity.date_expiration && new Date(unity.date_expiration) < dateNow) {
-			return left(new UnitDateExpiredError())
+			return left(new UnityDateExpiredError())
 		}
 
 		return right(unity)

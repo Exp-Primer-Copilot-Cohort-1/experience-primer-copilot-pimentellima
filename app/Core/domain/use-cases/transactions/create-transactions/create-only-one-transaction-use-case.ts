@@ -5,7 +5,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import { ITransaction } from 'App/Types/ITransaction'
 import { inject, injectable, registry } from 'tsyringe'
-import { UnitNotFoundError } from '../../../errors/unit-not-found'
+import { UnityNotFoundError } from '../../../errors/unity-not-found'
 import { TransactionsManagerInterface } from '../../../repositories/interface/transactions-manager-interface'
 import { TransactionWithoutProcedure } from '../helpers'
 
@@ -36,7 +36,7 @@ export class CreateOnlyOneTransactionUseCase
 		...transaction
 	}: TransactionWithoutProcedure): PromiseEither<AbstractError, ITransaction> {
 		if (procedures && procedures?.length > 0) return left(new InappropriateUseCase())
-		if (!transaction.unity_id) return left(new UnitNotFoundError())
+		if (!transaction.unity_id) return left(new UnityNotFoundError())
 
 		const docOrErr = await this.manager.create(
 			transaction,

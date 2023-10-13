@@ -10,8 +10,8 @@ import { OptsQuery } from '../../entities/helpers/opts-query'
 import { ClientNotFoundError, UserNotFoundError } from '../../errors'
 import { ActivityNotFoundError } from '../../errors/activity-not-found'
 import { MissingParamsError } from '../../errors/missing-params'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
-import { UnityIdNotProvidedError } from '../../errors/unit-not-id-provider'
+import { UnityNotFoundError } from '../../errors/unity-not-found'
+import { UnityIdNotProvidedError } from '../../errors/unity-not-id-provider'
 import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
 import { ActivitiesManagerInterface } from '../interface/activity-manager.interface'
 
@@ -24,7 +24,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	) { } // eslint-disable-line
 
 	async findAllActivities(unity_id: string): PromiseEither<AbstractError, IActivity[]> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityNotFoundError())
 
 		const activities = await Activity.find({
 			unity_id,
@@ -44,7 +44,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		unity_id: string,
 		prof_id: string,
 	): PromiseEither<AbstractError, IActivity[]> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityNotFoundError())
 		if (!prof_id) return left(new UserNotFoundError())
 
 		const activities = await Activity.find({
@@ -65,7 +65,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		unity_id: string,
 		client_id: string,
 	): PromiseEither<AbstractError, IActivity[]> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityNotFoundError())
 		if (!client_id) return left(new ClientNotFoundError())
 
 		const activities = await Activity.find({

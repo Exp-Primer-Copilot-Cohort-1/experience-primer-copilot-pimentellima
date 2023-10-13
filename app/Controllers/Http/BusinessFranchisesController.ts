@@ -1,5 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { MissingParamsError, UnitNotFoundError } from 'App/Core/domain/errors'
+import { MissingParamsError, UnityNotFoundError } from 'App/Core/domain/errors'
 import BusinessFranchises from 'App/Models/BusinessFranchises'
 import User from 'App/Models/User'
 
@@ -53,7 +53,7 @@ class BusinessFranchisesController {
 			throw new MissingParamsError('id')
 		}
 
-		if (!ctx.auth.user?.unity_id) throw new UnitNotFoundError()
+		if (!ctx.auth.user?.unity_id) throw new UnityNotFoundError()
 
 		ctx.auth.user.unity_id = id
 

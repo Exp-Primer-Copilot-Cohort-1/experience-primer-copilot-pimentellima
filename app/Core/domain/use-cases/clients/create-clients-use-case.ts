@@ -3,14 +3,14 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import type { IUserClient } from 'App/Types/IClient'
 import { ClientEntity } from '../../entities/clients/client'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { ClientManagerInterface } from '../../repositories/interface'
 
 export class CreateClientsUseCase implements UseCase<IUserClient, IUserClient> {
 	constructor(private readonly manager: ClientManagerInterface) { } // eslint-disable-line
 
 	public async execute(data: IUserClient): PromiseEither<AbstractError, IUserClient> {
-		if (!data.unity_id) return left(new UnitNotFoundError())
+		if (!data.unity_id) return left(new UnityNotFoundError())
 
 		const clientEntity = await ClientEntity.build(data)
 
