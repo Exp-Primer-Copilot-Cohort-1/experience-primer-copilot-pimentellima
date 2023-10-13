@@ -38,24 +38,26 @@ export default class CacheMiddleware {
 
 
 		const key = makeKey(URL, user)
-		const cached = await Cache.get(key)
+
 		const originalResponse = response.response
 
-		if (cached && method == Methods.GET) {
+		if (getter.includes(method)) {
+			const cached = await Cache.get(key)
 			logger.emit(colorize(0, URL, Methods.CACHE))
-			return response.send(JSON.parse(cached))
+			if (cached) return response.send(cached)
 		}
 
 		originalResponse.on('finish', async () => {
-			const body = response.getBody()
 			const statusCode = response.getStatus()
 
 			if (statusCode >= 400) return
 
 			if (setter.includes(method)) return await Cache.delete(key)
-			if (getter.includes(method)) return await Cache.set(key, JSON.stringify(body))
-		})
 
+			const body = response.getBody()
+			if (getter.includes(method)) return await Cache.set(key, body)
+
+		})
 
 		return await next()
 	}
