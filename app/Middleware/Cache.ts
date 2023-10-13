@@ -1,4 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { colorize } from 'App/Core/adapters/controller/helpers/colorize'
 import Cache from 'App/Core/infra/cache'
 import logger from 'App/Core/infra/logger'
 import { ROLES } from 'App/Roles/types'
@@ -32,30 +33,32 @@ export default class CacheMiddleware {
 		const user = auth.user
 
 		const isUrlBlacklisted = blacklist.some((url) => URL.includes(url))
+		if (!methods.includes(method) || isUrlBlacklisted) return await next()
 
-		if (!methods.includes(method) || isUrlBlacklisted) {
-			return await next()
-		}
 
-		if (user && method === Methods.GET) {
+		if (user && method == Methods.GET) {
 			const key = makeKey(URL, user)
 			const cached = await Cache.get(key)
-			logger.emit(JSON.stringify({ key, cached: !!cached }))
+
+			logger.emit(colorize(0, URL, Methods.CACHE))
+
 			if (cached) return response.send(JSON.parse(cached))
 
 			const originalResponse = response.response
 
 			originalResponse.on('finish', async () => {
-				logger.emit(JSON.stringify({ key, cached: !!cached }))
 				const body = response.getBody()
 				await Cache.set(key, JSON.stringify(body))
 			})
+
 		}
+
 
 		if (user && setter.includes(method)) {
 			const key = makeKey(URL, user)
 			await Cache.delete(key)
 		}
+
 
 		return await next()
 	}

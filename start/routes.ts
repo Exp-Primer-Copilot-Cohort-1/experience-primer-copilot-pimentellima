@@ -187,7 +187,7 @@ Route.group(() => {
 		// Route.delete('unity/:id', 'UnityController.destroy')
 		Route.put(':_id', 'UnityController.update')
 	}).prefix('unity')
-}).middleware(['auth', 'role'])
+}).middleware(['auth', 'role', 'cache', 'statusPermission', 'successNoContent',])
 
 Route.group(() => {
 	Route.group(() => {
@@ -452,4 +452,4 @@ Route.group(() => {
 		Route.put('unity', 'UnityController.updateProfile').as('profile.unity.update')
 	}).prefix('profile')
 
-}).middleware(['auth', 'role', 'statusPermission', 'successNoContent', 'cache'])
+}).middleware(['auth', 'role', 'cache', 'statusPermission', 'successNoContent',])
