@@ -7,6 +7,7 @@ import { inject, injectable, registry } from "tsyringe"
 import AccountEntity from '../../entities/account/account'
 import { OptsQuery } from '../../entities/helpers/opts-query'
 import { AccountNotFoundError, UnityNotFoundError } from '../../errors'
+import { ICount } from '../helpers/count'
 import { AccountManagerInterface } from '../interface/account-manager-interface'
 @injectable()
 @registry([{ token: AccountMongoRepository, useClass: AccountMongoRepository }])
@@ -16,6 +17,14 @@ export class AccountMongoRepository implements AccountManagerInterface {
 		@inject(OptsQuery) private readonly opts: OptsQuery
 	) { } // eslint-disable-line
 
+
+	async getCount(unity_id: string): PromiseEither<AbstractError, ICount> {
+		const count = await Account.countDocuments({ unity_id })
+			.where(this.opts.where)
+			.exec()
+		console.log('count', count)
+		return right({ count })
+	}
 
 	async findAll(unity_id: string): PromiseEither<AbstractError, IAccount[]> {
 		if (!unity_id) return left(new UnityNotFoundError())

@@ -1,5 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { UnityNotFranchise } from 'App/Core/domain/errors/unit-not-franchise'
+import { UnityNotFranchise } from 'App/Core/domain/errors/unity-not-franchise'
 import BusinessFranchises from 'App/Models/BusinessFranchises'
 import { TypeForms } from 'App/Types/IBusinessFranchises'
 

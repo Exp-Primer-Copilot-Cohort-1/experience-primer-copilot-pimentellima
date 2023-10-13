@@ -1,4 +1,4 @@
-import { UnityNotFoundError } from 'App/Core/domain/errors/unit-not-found'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { describe, expect, it } from 'vitest'
 import { UnitiesInMemoryRepository } from '../../../repositories'
 import { ShowUnityByIdUseCase } from './show-unity-by-id-use-case'

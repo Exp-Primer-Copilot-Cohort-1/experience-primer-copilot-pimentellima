@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { UnityNotFoundError } from 'App/Core/domain/errors/unit-not-found'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { DefaultConfigsInMemoryRepository } from 'App/Core/domain/repositories/default-configs/default-configs-in-memory-repository'
 import { UpdateDefaultConfigsByIdUseCase } from './update-default-configs-by-id-use-case'
 

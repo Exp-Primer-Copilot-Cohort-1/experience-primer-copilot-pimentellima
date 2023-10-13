@@ -5,7 +5,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import type { IAdminUser } from 'App/Types/IAdminUser'
 
-import { UnityNotFoundError } from 'App/Core/domain/errors/unit-not-found'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import EmitEventDecorator from 'App/Decorators/EmitEvent'
 import { ROLES } from 'App/Roles/types'
 import { CreatePasswordProps, Password } from '../type'

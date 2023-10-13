@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { UnityNotFoundError } from 'App/Core/domain/errors/unit-not-found'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { CensusPaymentParticipationsManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'

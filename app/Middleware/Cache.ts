@@ -40,9 +40,10 @@ export default class CacheMiddleware {
 			const key = makeKey(URL, user)
 			const cached = await Cache.get(key)
 
-			logger.emit(colorize(0, URL, Methods.CACHE))
-
-			if (cached) return response.send(JSON.parse(cached))
+			if (cached) {
+				logger.emit(colorize(0, URL, Methods.CACHE))
+				return response.send(JSON.parse(cached))
+			}
 
 			const originalResponse = response.response
 

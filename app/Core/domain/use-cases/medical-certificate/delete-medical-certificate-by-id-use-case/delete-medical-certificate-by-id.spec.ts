@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { UnityNotFoundError } from 'App/Core/domain/errors/unit-not-found'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { MedicalCertificateInMemoryRepository } from 'App/Core/domain/repositories'
 import { DeleteMedicalCertificateByIdUseCase } from './delete-medical-certificate-by-id-use-case'
 
