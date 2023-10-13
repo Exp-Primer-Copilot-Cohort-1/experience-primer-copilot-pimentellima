@@ -33,32 +33,28 @@ export default class CacheMiddleware {
 		const user = auth.user
 
 		const isUrlBlacklisted = blacklist.some((url) => URL.includes(url))
+		if (!user) return await next()
 		if (!methods.includes(method) || isUrlBlacklisted) return await next()
 
 
-		if (user && method == Methods.GET) {
-			const key = makeKey(URL, user)
-			const cached = await Cache.get(key)
+		const key = makeKey(URL, user)
+		const cached = await Cache.get(key)
+		const originalResponse = response.response
 
-			if (cached) {
-				logger.emit(colorize(0, URL, Methods.CACHE))
-				return response.send(JSON.parse(cached))
-			}
-
-			const originalResponse = response.response
-
-			originalResponse.on('finish', async () => {
-				const body = response.getBody()
-				await Cache.set(key, JSON.stringify(body))
-			})
-
+		if (cached && method == Methods.GET) {
+			logger.emit(colorize(0, URL, Methods.CACHE))
+			return response.send(JSON.parse(cached))
 		}
 
+		originalResponse.on('finish', async () => {
+			const body = response.getBody()
+			const statusCode = response.getStatus()
 
-		if (user && setter.includes(method)) {
-			const key = makeKey(URL, user)
-			await Cache.delete(key)
-		}
+			if (statusCode >= 400) return
+
+			if (setter.includes(method)) return await Cache.delete(key)
+			if (getter.includes(method)) return await Cache.set(key, JSON.stringify(body))
+		})
 
 
 		return await next()
