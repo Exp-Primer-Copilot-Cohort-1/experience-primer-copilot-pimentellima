@@ -15,7 +15,7 @@ export class CreateProceduresUseCase implements UseCase<Partial<IProcedure>, IPr
 	public async execute(
 		params: Partial<IProcedure>,
 	): PromiseEither<AbstractError, IProcedure> {
-		const procedureOrErr = await this.manager.createProcedure(params)
+		const procedureOrErr = await this.manager.create(params)
 
 		return procedureOrErr
 	}

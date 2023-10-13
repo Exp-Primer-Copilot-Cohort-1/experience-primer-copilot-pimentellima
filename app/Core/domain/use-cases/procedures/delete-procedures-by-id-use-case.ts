@@ -11,12 +11,12 @@ type Input = {
 export class DeleteProceduresByIdUseCase implements UseCase<Input, any> {
 	constructor(private readonly procedureManager: ProceduresManagerInterface) { }
 
-	public async execute(input: Input): PromiseEither<AbstractError, any> {
-		if (!input?.id) {
+	public async execute({ id }): PromiseEither<AbstractError, any> {
+		if (!id) {
 			return left(new MissingParamsError('id'))
 		}
 
-		const procedureOrErr = await this.procedureManager.deleteById(input.id)
+		const procedureOrErr = await this.procedureManager.delete(id)
 
 		return procedureOrErr
 	}

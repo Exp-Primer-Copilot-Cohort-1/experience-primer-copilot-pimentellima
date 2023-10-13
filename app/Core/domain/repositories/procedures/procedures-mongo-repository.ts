@@ -16,7 +16,7 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 		@inject(SessionTransaction) private readonly session: ISessionTransaction
 	) { }
 
-	async findByUnityId(unity_id: string): PromiseEither<AbstractError, IProcedure[]> {
+	async findAll(unity_id: string): PromiseEither<AbstractError, IProcedure[]> {
 		const procedures = await Procedure.find({
 			unity_id: unity_id,
 		})
@@ -26,7 +26,7 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 		return right(procedures as unknown as IProcedure[])
 	}
 
-	async findByProcedureId(id: string): PromiseEither<AbstractError, IProcedure> {
+	async findByID(id: string): PromiseEither<AbstractError, IProcedure> {
 		const procedure = await Procedure.findById(id)
 			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
 			.populate(COLLECTIONS_REFS.HEALTH_INSURANCES, PROJECTION_DEFAULT)
@@ -50,7 +50,7 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 		return right(procedure as unknown as IProcedure[])
 	}
 
-	async deleteById(id: string): PromiseEither<AbstractError, IProcedure> {
+	async delete(id: string): PromiseEither<AbstractError, IProcedure> {
 		const procedure = await Procedure.findById(id).orFail(
 			new ProcedureNotFoundError(),
 		)
@@ -58,7 +58,7 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 	}
 
 	// Remove o _id do objeto e retorna o objeto com o _id gerado pelo mongo
-	async createProcedure({
+	async create({
 		_id, // eslint-disable-line @typescript-eslint/no-unused-vars
 		...data
 	}: Partial<IProcedure>): PromiseEither<AbstractError, IProcedure> {
@@ -74,7 +74,7 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 		return right(procedure.toObject())
 	}
 
-	async updateProceduresById(
+	async update(
 		id: string,
 		data: Partial<IProcedure>,
 	): PromiseEither<AbstractError, IProcedure> {
