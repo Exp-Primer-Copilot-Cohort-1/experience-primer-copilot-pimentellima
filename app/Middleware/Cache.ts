@@ -11,12 +11,16 @@ const setter = [Methods.POST, Methods.PUT, Methods.PATCH, Methods.DELETE]
 
 const methods = [...getter, ...setter]
 
-const makeKey = (url: string, user: IUser) => {
+const makeSuperKey = (url: string, user: IUser) => {
 	const isOnlyProf = user.type === ROLES.PROF || ROLES.CLIENT
 
 	if (isOnlyProf) return `${user._id}:${url}`
 
-	return `${user.unity_id}:${url}`
+	return `${user.unity_id}:${url}:`
+}
+
+const makeKey = (...params: Record<string, any>[]) => {
+	return params.map((param) => JSON.stringify(param)).join(':')
 }
 
 const blacklist = [
@@ -26,8 +30,13 @@ const blacklist = [
 	'transactions', // TODO: transações deve ter um cacheamento mais inteligente
 ]
 
+const isProd = process.env.NODE_ENV === 'production'
+
 export default class CacheMiddleware {
 	public async handle({ request, response, auth }: HttpContextContract, next) {
+
+		if (!isProd) return await next()
+
 		const method = request.method() as Methods
 		const URL = request.url()
 		const user = auth.user
@@ -36,8 +45,8 @@ export default class CacheMiddleware {
 		if (!user) return await next()
 		if (!methods.includes(method) || isUrlBlacklisted) return await next()
 
-
-		const key = makeKey(URL, user)
+		const superKey = makeSuperKey(URL, user)
+		const key = makeKey({ superKey }, request.qs(), request.params())
 
 		const originalResponse = response.response
 
@@ -52,7 +61,7 @@ export default class CacheMiddleware {
 
 			if (statusCode >= 400) return
 
-			if (setter.includes(method)) return await Cache.delete(key)
+			if (setter.includes(method)) return await Cache.flushKey(superKey)
 
 			const body = response.getBody()
 			if (getter.includes(method)) return await Cache.set(key, body)

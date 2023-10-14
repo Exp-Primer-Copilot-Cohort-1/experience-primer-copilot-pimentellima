@@ -452,4 +452,8 @@ Route.group(() => {
 		Route.put('unity', 'UnityController.updateProfile').as('profile.unity.update')
 	}).prefix('profile')
 
+	Route.group(() => {
+		Route.get('accounts', 'AccountController.getCount').as('account.getCount')
+	}).prefix('count')
+
 }).middleware(['auth', 'role', 'cache', 'statusPermission', 'successNoContent',])

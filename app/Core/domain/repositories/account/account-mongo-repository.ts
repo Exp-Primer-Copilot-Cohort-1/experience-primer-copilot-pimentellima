@@ -20,9 +20,9 @@ export class AccountMongoRepository implements AccountManagerInterface {
 
 	async getCount(unity_id: string): PromiseEither<AbstractError, ICount> {
 		const count = await Account.countDocuments({ unity_id })
-			.where(this.opts.where)
+			.where({ active: this.opts.active })
 			.exec()
-		console.log('count', count)
+
 		return right({ count })
 	}
 
@@ -33,9 +33,8 @@ export class AccountMongoRepository implements AccountManagerInterface {
 			unity_id,
 			active: this.opts.active,
 		})
-			.sort(this.opts.sort)
-			.limit(this.opts.limit as number)
 			.skip(this.opts.skip as number)
+			.limit(this.opts.limit as number)
 			.exec()
 
 		return right(data)

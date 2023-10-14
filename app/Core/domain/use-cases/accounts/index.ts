@@ -1,3 +1,4 @@
+export * from './count-accounts-use-case'
 export * from './create-account-use-case'
 export * from './delete-account-use-case'
 export * from './find-account-by-id-use-case'

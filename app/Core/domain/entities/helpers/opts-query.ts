@@ -15,7 +15,7 @@ export class OptsQuery implements IOptsQuery {
 
 	constructor() {
 		this.defineSort()
-		this.defineSize()
+		this.defineLimit()
 		this.defineSkip()
 		this.defineActive()
 	} // eslint-disable-line @typescript-eslint/no-empty-function, prettier/prettier
@@ -25,7 +25,7 @@ export class OptsQuery implements IOptsQuery {
 		return this
 	}
 
-	defineSize(limit = 100): this {
+	defineLimit(limit = 20): this {
 		this.limit = Number(limit)
 		return this
 	}
@@ -77,7 +77,7 @@ export class OptsQuery implements IOptsQuery {
 	static build(opts?: IOptsQuery): OptsQuery {
 		return new OptsQuery()
 			.defineSort(opts?.sort)
-			.defineSize(opts?.limit)
+			.defineLimit(opts?.limit)
 			.defineSkip(opts?.skip)
 			.defineActive(opts?.active)
 			.defineRoles(opts?.role as ROLES, opts?.prof)

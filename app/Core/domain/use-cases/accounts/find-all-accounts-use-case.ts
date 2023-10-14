@@ -7,25 +7,23 @@ import { UnityNotFoundError } from "../../errors";
 import { AccountMongoRepository } from "../../repositories";
 import { AccountManagerInterface } from "../../repositories/interface/account-manager-interface";
 
-type TypeParams = {
+type In = {
 	unity_id: string
 }
 
 @injectable()
 @registry([{ token: FindAllAccountUseCase, useClass: FindAllAccountUseCase }])
 export class FindAllAccountUseCase
-	implements UseCase<TypeParams, IAccount[]>
+	implements UseCase<In, IAccount[]>
 {
 	constructor(
 		@inject(AccountMongoRepository) private readonly manager: AccountManagerInterface
 	) { }
 
 	public async execute(
-		{ unity_id }: TypeParams
+		{ unity_id }: In
 	): PromiseEither<AbstractError, IAccount[]> {
-		if (!unity_id) {
-			return left(new UnityNotFoundError())
-		}
+		if (!unity_id) return left(new UnityNotFoundError())
 
 		return await this.manager.findAll(unity_id)
 	}

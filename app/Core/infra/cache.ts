@@ -6,8 +6,9 @@ const DAY = 60 * 60 * 24 // 1 day
 interface CacheInterface {
 	set(key: string, value: Object, seconds?: number): Promise<string>
 	get(key: string): Promise<Object | null>
-	delete(key: string): Promise<number>
+	delete(key: string | string[]): Promise<number>
 	flush(): Promise<string>
+	flushKey(key: string): Promise<number>
 }
 
 @singleton()
@@ -27,6 +28,10 @@ class Cache implements CacheInterface {
 
 	delete(key: string) {
 		return Redis.del(key)
+	}
+
+	flushKey(key: string) {
+		return Redis.del([`${key}*`])
 	}
 
 	flush() {
