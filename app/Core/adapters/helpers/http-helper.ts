@@ -14,7 +14,7 @@ export const notFound = (error: AbstractError): HttpResponse => ({
 })
 
 export const okNoBody = (): HttpResponse => ({
-	statusCode: 200,
+	statusCode: 204,
 	body: {},
 })
 

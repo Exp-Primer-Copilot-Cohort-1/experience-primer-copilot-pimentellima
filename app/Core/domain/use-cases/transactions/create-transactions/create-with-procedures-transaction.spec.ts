@@ -29,7 +29,7 @@ const makeMocks = () => {
 		findCurrentPaymentParticipation: vi.fn(),
 	} as unknown as PaymentProfManagerInterface
 
-	const mockProceduresManager = proceduresManager.findByProcedureId as Mock
+	const mockProceduresManager = proceduresManager.findById as Mock
 	const mockParticipationsManager =
 		participationManager.findCurrentPaymentParticipation as Mock
 
