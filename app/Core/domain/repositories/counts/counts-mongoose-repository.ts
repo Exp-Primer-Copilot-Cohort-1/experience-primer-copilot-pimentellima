@@ -1,7 +1,7 @@
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, right } from 'App/Core/shared/either'
 import { inject, injectable, registry } from 'tsyringe'
-import { OptsQuery } from '../../entities/helpers/opts-query'
 import { ICount } from '../helpers/count'
 import { CountsManagerInterface } from './counts-manager.interface'
 
@@ -14,8 +14,8 @@ export class CountsMongooseRepository implements CountsManagerInterface {
 		@inject('Model') private readonly model
 	) { } // eslint-disable-line
 
-	async getCount(unity_id: string): PromiseEither<AbstractError, ICount> {
-		const count = await this.model.countDocuments({ unity_id })
+	async getCount(): PromiseEither<AbstractError, ICount> {
+		const count = await this.model.countDocuments({ unity_id: this.opts.unity_id })
 			.where({ active: this.opts.active })
 			.exec()
 

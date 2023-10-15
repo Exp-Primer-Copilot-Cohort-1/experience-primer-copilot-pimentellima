@@ -1,6 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import {
+	makeCategoriesCountCompose,
 	makeCategoriesCreateComposer,
 	makeCategoriesDeleteByIdComposer,
 	makeCategoriesFindByUnityComposer,
@@ -176,6 +177,11 @@ export class CategoryController {
 	@LogDecorator(COLLECTION_NAME, ACTION.DELETE)
 	async destroy(ctx: HttpContextContract) {
 		return adaptRoute(makeCategoriesDeleteByIdComposer(), ctx)
+	}
+
+	async counts(ctx: HttpContextContract) {
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeCategoriesCountCompose(opts), ctx)
 	}
 }
 

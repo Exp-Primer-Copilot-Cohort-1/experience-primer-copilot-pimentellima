@@ -1,6 +1,5 @@
 export * from './activities/make'
 export * from './categories/make'
-export * from './categories/make-categories-delete-by-id-composer'
 
 export * from './census/make'
 export * from './census/make-census-activities-by-days-month-or-prof-composer'
@@ -33,3 +32,4 @@ export * from './unities/make-unity-delete-by-id-composer'
 export * from './unities/make-unity-find-by-name-composer'
 export * from './unities/make-unity-show-by-id-composer'
 export * from './users/make'
+
