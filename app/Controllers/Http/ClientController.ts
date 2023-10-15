@@ -4,9 +4,11 @@ import Client, { COLLECTIONS_REFS, COLLECTION_NAME } from 'App/Models/Client'
 import { adaptRoute } from 'App/Core/adapters'
 import {
 	makeClientCreateComposer,
+	makeClientFindAllComposer,
 	makeClientUpdateComposer,
+	makeCountClientComposer,
 } from 'App/Core/composers/clients/make'
-import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import { PROJECTION_DEFAULT } from 'App/Core/domain/repositories/helpers/projections'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { left } from 'App/Core/shared'
@@ -14,6 +16,8 @@ import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { IUserClient } from 'App/Types/IClient'
 import { IFormAnswer } from 'Types/IFormAnswer'
 
+// ! AVISO
+// ! refatorar para usar o padrão da nossa arquitetura
 class ClientController {
 	async verifyExistenceClient({ request, auth, response }: HttpContextContract) {
 		const { name, birth_date } = request.all()
@@ -90,16 +94,17 @@ class ClientController {
 		})
 	}
 
-	async findAllUsersClients({ auth, request }) {
-		const userLogged = auth.user
-		const opts = OptsQuery.build(request.qs())
+	async counts(ctx: HttpContextContract) {
+		return adaptRoute(makeCountClientComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		})
+	}
 
-		const clients = await Client.find({
-			unity_id: userLogged?.unity_id.toString(),
-			active: opts.active,
-		}).populate(COLLECTIONS_REFS.PARTNERS, PROJECTION_DEFAULT)
-
-		return clients
+	async index(ctx: HttpContextContract) {
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeClientFindAllComposer(opts), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		})
 	}
 
 	async findUserClientByID({ params }) {

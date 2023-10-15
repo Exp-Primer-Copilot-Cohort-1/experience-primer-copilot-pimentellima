@@ -5,7 +5,7 @@ import { IAccount } from "App/Types/IAccount";
 import { inject, injectable, registry } from "tsyringe";
 import { UnityNotFoundError } from "../../errors";
 import { AccountMongoRepository } from "../../repositories";
-import { AccountManagerInterface } from "../../repositories/interface/account-manager-interface";
+import { AccountManagerInterface } from "../../repositories/account/account-manager.interface";
 
 type In = {
 	unity_id: string

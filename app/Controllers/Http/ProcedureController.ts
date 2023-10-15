@@ -301,7 +301,7 @@ class ProcedureController {
 		return healthInsurance
 	}
 
-	async getCount(ctx: HttpContextContract) {
+	async counts(ctx: HttpContextContract) {
 		return adaptRoute(makeProceduresCountComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})

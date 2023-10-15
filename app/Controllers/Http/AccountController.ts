@@ -164,7 +164,7 @@ class AccountController {
 		})
 	}
 
-	async getCount(ctx: HttpContextContract) {
+	async counts(ctx: HttpContextContract) {
 		return adaptRoute(makeCountAccountsComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})

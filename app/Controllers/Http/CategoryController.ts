@@ -7,6 +7,7 @@ import {
 	makeCategoriesShowByIdComposer,
 	makeCategoriesUpdateByIdComposer,
 } from 'App/Core/composers'
+import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/Category'
 
@@ -44,7 +45,8 @@ export class CategoryController {
 	 */
 	async index(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id
-		return adaptRoute(makeCategoriesFindByUnityComposer(), ctx, { unity_id })
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeCategoriesFindByUnityComposer(opts), ctx, { unity_id })
 	}
 
 	/**

@@ -8,7 +8,7 @@ import AccountEntity from '../../entities/account/account'
 import { OptsQuery } from '../../entities/helpers/opts-query'
 import { AccountNotFoundError, UnityNotFoundError } from '../../errors'
 import { ICount } from '../helpers/count'
-import { AccountManagerInterface } from '../interface/account-manager-interface'
+import { AccountManagerInterface } from './account-manager.interface'
 @injectable()
 @registry([{ token: AccountMongoRepository, useClass: AccountMongoRepository }])
 export class AccountMongoRepository implements AccountManagerInterface {

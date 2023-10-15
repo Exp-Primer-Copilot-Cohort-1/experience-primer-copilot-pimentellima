@@ -1,15 +1,30 @@
+import { ClientEntity } from 'App/Core/domain/entities/clients/client'
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import { ClientNotFoundError } from 'App/Core/domain/errors/clients-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Client, { COLLECTIONS_REFS } from 'App/Models/Client'
 import { IUserClient } from 'App/Types/IClient'
-import { ClientEntity } from '../../entities/clients/client'
-import { ClientNotFoundError } from '../../errors/clients-not-found'
+import { inject, injectable, registry } from 'tsyringe'
+import { ICount } from '../helpers/count'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
-import { ClientManagerInterface } from '../interface'
+import { ClientManagerInterface } from './client-manager.interface'
 
+@injectable()
+@registry([{ token: ClientsMongooseRepository, useClass: ClientsMongooseRepository }])
 export class ClientsMongooseRepository implements ClientManagerInterface {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
-	constructor() { }
+	constructor(
+		@inject(OptsQuery) private readonly opts: OptsQuery
+	) { }
+
+	async getCount(unity_id: string): PromiseEither<AbstractError, ICount> {
+		const count = await Client.countDocuments({ unity_id })
+			.where({ active: this.opts.active })
+			.exec()
+
+		return right({ count })
+	}
 
 	async create(
 		{ _id, ...data }: ClientEntity,

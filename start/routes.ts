@@ -58,7 +58,7 @@ Route.group(() => {
 	Route.post('users', 'UserController.store')
 
 	Route.group(() => {
-		Route.get('', 'ClientController.findAllUsersClients').as('clients.index')
+		Route.get('', 'ClientController.index').as('clients.index')
 
 		Route.get(':id', 'ClientController.findUserClientByID').as('clients.show')
 		Route.get('verify/client', 'ClientController.verifyExistenceClient').as(
@@ -453,8 +453,9 @@ Route.group(() => {
 	}).prefix('profile')
 
 	Route.group(() => {
-		Route.get('accounts', 'AccountController.getCount').as('account.getCount')
-		Route.get('procedures', 'ProcedureController.getCount').as('procedure.getCount')
+		Route.get('accounts', 'AccountController.counts').as('account.counts')
+		Route.get('procedures', 'ProcedureController.counts').as('procedure.counts')
+		Route.get('clients', 'ClientController.counts').as('client.counts')
 	}).prefix('count')
 
 }).middleware(['auth', 'role', 'cache', 'statusPermission', 'successNoContent',])

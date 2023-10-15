@@ -16,3 +16,5 @@ export interface UseCase<In, Out> {
 	 */
 	execute: (body?: In, ...args: any) => PromiseEither<AbstractError, Out>;
 }
+
+

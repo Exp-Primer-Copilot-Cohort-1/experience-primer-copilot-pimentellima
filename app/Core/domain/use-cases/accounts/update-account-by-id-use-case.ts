@@ -5,7 +5,7 @@ import { IAccount } from 'App/Types/IAccount'
 import { inject, injectable, registry } from "tsyringe"
 import { MissingParamsError } from '../../errors'
 import { AccountMongoRepository } from '../../repositories'
-import { AccountManagerInterface } from '../../repositories/interface/account-manager-interface'
+import { AccountManagerInterface } from '../../repositories/account/account-manager.interface'
 
 type TypeParams = {
 	id: string

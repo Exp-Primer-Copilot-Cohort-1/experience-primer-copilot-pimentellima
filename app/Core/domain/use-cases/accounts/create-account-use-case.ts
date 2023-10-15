@@ -3,7 +3,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
 import type { IAccount } from 'App/Types/IAccount'
 import { inject, injectable, registry } from 'tsyringe'
-import { AccountManagerInterface } from '../../repositories/interface/account-manager-interface'
+import { AccountManagerInterface } from '../../repositories/account/account-manager.interface'
 
 import { AccountMongoRepository } from '../../repositories'
 

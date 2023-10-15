@@ -4,7 +4,7 @@ import { PromiseEither, left } from "App/Core/shared";
 import { IAccount } from "App/Types/IAccount";
 import { inject, injectable, registry } from "tsyringe";
 import { AccountMongoRepository } from "../../repositories";
-import { AccountManagerInterface } from "../../repositories/interface/account-manager-interface";
+import { AccountManagerInterface } from "../../repositories/account/account-manager.interface";
 
 type TypeParams = {
 	id: string
