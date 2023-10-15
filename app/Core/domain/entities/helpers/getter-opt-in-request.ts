@@ -7,7 +7,7 @@ function getterOptInRequest(ctx: HttpContextContract): IOptsQuery {
 		sort: ctx.request.qs().sort as string,
 		limit: Number(ctx.request.qs().limit),
 		skip: Number(ctx.request.qs().skip),
-		active: Boolean(ctx.request.qs().active),
+		active: ctx.request.qs().active,
 		role: ctx.auth.user?.type as ROLES,
 		prof: ctx.auth.user?._id?.toString() as string,
 		unity_id: ctx.auth.user?.unity_id as string,

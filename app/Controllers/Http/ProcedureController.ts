@@ -1,7 +1,13 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeProceduresCreateComposer, makeProceduresFindAllComposer, makeProceduresUpdateByIdComposer } from 'App/Core/composers/procedures/make'
+import {
+	makeProceduresCountComposer,
+	makeProceduresCreateComposer,
+	makeProceduresFindAllComposer,
+	makeProceduresUpdateByIdComposer
+} from 'App/Core/composers/procedures/make'
 import { makeProceduresDeleteByIdComposer } from 'App/Core/composers/procedures/make-procedures-delete-by-id-composer'
+import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import { PROJECTION_HEALTH_INSURANCE } from 'App/Core/domain/repositories/helpers/projections'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import Procedure, { COLLECTIONS_REFS, COLLECTION_NAME } from 'App/Models/Procedure'
@@ -37,8 +43,8 @@ class ProcedureController {
 	 */
 	async index(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id
-
-		return adaptRoute(makeProceduresFindAllComposer(), ctx, { unity_id })
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeProceduresFindAllComposer(opts), ctx, { unity_id })
 	}
 
 	/**
@@ -293,7 +299,12 @@ class ProcedureController {
 		}
 
 		return healthInsurance
+	}
 
+	async getCount(ctx: HttpContextContract) {
+		return adaptRoute(makeProceduresCountComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		})
 	}
 }
 

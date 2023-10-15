@@ -454,6 +454,7 @@ Route.group(() => {
 
 	Route.group(() => {
 		Route.get('accounts', 'AccountController.getCount').as('account.getCount')
+		Route.get('procedures', 'ProcedureController.getCount').as('procedure.getCount')
 	}).prefix('count')
 
 }).middleware(['auth', 'role', 'cache', 'statusPermission', 'successNoContent',])

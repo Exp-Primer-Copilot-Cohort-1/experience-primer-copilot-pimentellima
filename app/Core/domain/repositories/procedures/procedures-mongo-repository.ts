@@ -4,7 +4,9 @@ import { PromiseEither, right } from 'App/Core/shared/either'
 import Procedure, { COLLECTIONS_REFS } from 'App/Models/Procedure'
 import { IProcedure } from 'App/Types/IProcedure'
 import { inject, injectable, registry } from 'tsyringe'
+import { OptsQuery } from '../../entities/helpers/opts-query'
 import { ProcedureNotFoundError } from '../../errors/procedure-not-found'
+import { ICount } from '../helpers/count'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
 import { ProceduresManagerInterface } from '../interface/procedures-manager.interface'
 
@@ -13,20 +15,37 @@ import { ProceduresManagerInterface } from '../interface/procedures-manager.inte
 export class ProceduresMongooseRepository implements ProceduresManagerInterface {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
-		@inject(SessionTransaction) private readonly session: ISessionTransaction
+		@inject(OptsQuery) private readonly opts: OptsQuery,
+		@inject(SessionTransaction) private readonly session: ISessionTransaction,
 	) { }
 
-	async findByUnityId(unity_id: string): PromiseEither<AbstractError, IProcedure[]> {
+	async getCount(unity_id: string): PromiseEither<AbstractError, ICount> {
+		const count = await Procedure.countDocuments({ unity_id })
+			.where({ active: this.opts.active })
+			.exec()
+
+		return right({ count })
+	}
+
+	async findAll(unity_id: string): PromiseEither<AbstractError, IProcedure[]> {
+
 		const procedures = await Procedure.find({
 			unity_id: unity_id,
+			active: this.opts.active
 		})
+			.skip(this.opts.skip)
+			.limit(this.opts.limit)
+			.sort(this.opts.sort)
 			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
 			.populate(COLLECTIONS_REFS.HEALTH_INSURANCES, PROJECTION_DEFAULT)
+			.exec()
+
+		if (!procedures) return right([])
 
 		return right(procedures as unknown as IProcedure[])
 	}
 
-	async findByProcedureId(id: string): PromiseEither<AbstractError, IProcedure> {
+	async findById(id: string): PromiseEither<AbstractError, IProcedure> {
 		const procedure = await Procedure.findById(id)
 			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
 			.populate(COLLECTIONS_REFS.HEALTH_INSURANCES, PROJECTION_DEFAULT)
@@ -58,7 +77,7 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 	}
 
 	// Remove o _id do objeto e retorna o objeto com o _id gerado pelo mongo
-	async createProcedure({
+	async create({
 		_id, // eslint-disable-line @typescript-eslint/no-unused-vars
 		...data
 	}: Partial<IProcedure>): PromiseEither<AbstractError, IProcedure> {
@@ -74,7 +93,7 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 		return right(procedure.toObject())
 	}
 
-	async updateProceduresById(
+	async update(
 		id: string,
 		data: Partial<IProcedure>,
 	): PromiseEither<AbstractError, IProcedure> {

@@ -12,23 +12,18 @@ import { ProceduresMongooseRepository } from '../../repositories'
 export class UpdateProceduresByIdUseCase
 	implements UseCase<Partial<IProcedure>, IProcedure>
 {
-	constructor(@inject(ProceduresMongooseRepository) private readonly manager: ProceduresManagerInterface) { }
+	constructor(
+		@inject(ProceduresMongooseRepository) private readonly manager: ProceduresManagerInterface
+	) { }
 
 	public async execute(
 		procedure: Partial<IProcedure>,
 	): PromiseEither<AbstractError, IProcedure> {
-		if (!procedure?._id) {
-			return left(new MissingParamsError('_id is required'))
-		}
-		const proceduresOrErr = await this.manager.updateProceduresById(
+		if (!procedure?._id) return left(new MissingParamsError('_id is required'))
+
+		return await this.manager.update(
 			procedure._id,
 			procedure,
 		)
-
-		if (proceduresOrErr.isLeft()) {
-			return left(proceduresOrErr.extract())
-		}
-
-		return proceduresOrErr
 	}
 }

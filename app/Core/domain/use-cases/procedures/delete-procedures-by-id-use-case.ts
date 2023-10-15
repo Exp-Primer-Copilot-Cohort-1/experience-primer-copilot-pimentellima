@@ -4,20 +4,17 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 
-type Input = {
+type In = {
 	id: string
 }
 
-export class DeleteProceduresByIdUseCase implements UseCase<Input, any> {
-	constructor(private readonly procedureManager: ProceduresManagerInterface) { }
+export class DeleteProceduresByIdUseCase implements UseCase<In, any> {
+	constructor(private readonly manager: ProceduresManagerInterface) { }
 
-	public async execute(input: Input): PromiseEither<AbstractError, any> {
-		if (!input?.id) {
-			return left(new MissingParamsError('id'))
-		}
+	public async execute({ id }: In): PromiseEither<AbstractError, any> {
 
-		const procedureOrErr = await this.procedureManager.deleteById(input.id)
+		if (!id) return left(new MissingParamsError('id'))
 
-		return procedureOrErr
+		return await this.manager.deleteById(id)
 	}
 }

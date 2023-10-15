@@ -20,7 +20,7 @@ export class OptsQuery implements IOptsQuery {
 		this.defineActive()
 	} // eslint-disable-line @typescript-eslint/no-empty-function, prettier/prettier
 
-	defineSort(sort = '--name'): this {
+	defineSort(sort = '--created_at'): this {
 		this.sort = sort
 		return this
 	}
@@ -46,11 +46,13 @@ export class OptsQuery implements IOptsQuery {
 	}
 
 	defineActive(active = true): this {
-		if (typeof active === 'string') {
-			active = active === 'true'
+		if (typeof active === 'string') active = active === 'false' ? false : true
+
+		if (typeof active !== 'boolean') {
+			active = true
 		}
 
-		this.active = Boolean(active)
+		this.active = active
 		return this
 	}
 
@@ -74,12 +76,12 @@ export class OptsQuery implements IOptsQuery {
 		return this
 	}
 
-	static build(opts?: IOptsQuery): OptsQuery {
+	static build(opts = {} as IOptsQuery): OptsQuery {
 		return new OptsQuery()
 			.defineSort(opts?.sort)
 			.defineLimit(opts?.limit)
 			.defineSkip(opts?.skip)
-			.defineActive(opts?.active)
+			.defineActive(opts?.active ?? true)
 			.defineRoles(opts?.role as ROLES, opts?.prof)
 			.defineUnityId(opts?.unity_id as string)
 	}
