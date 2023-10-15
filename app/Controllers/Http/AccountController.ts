@@ -1,13 +1,13 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
+import { makeCounts } from 'App/Core/composers'
 
 import {
-	makeCountAccountsComposer,
 	makeCreateAccountComposer,
 	makeDeleteAccountComposer,
 	makeFindAccountComposer,
 	makeFindAllAccountsComposer,
-	makeUpdateAccountByIdComposer,
+	makeUpdateAccountByIdComposer
 } from 'App/Core/composers/accounts/make'
 import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
@@ -165,9 +165,8 @@ class AccountController {
 	}
 
 	async counts(ctx: HttpContextContract) {
-		return adaptRoute(makeCountAccountsComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeCounts(opts, COLLECTION_NAME), ctx)
 	}
 }
 

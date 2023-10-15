@@ -8,7 +8,7 @@ import { inject, injectable, registry } from 'tsyringe'
 import { ProcedureNotFoundError } from '../../errors/procedure-not-found'
 import { ICount } from '../helpers/count'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
-import { ProceduresManagerInterface } from '../interface/procedures-manager.interface'
+import { ProceduresManagerInterface } from './procedures-manager.interface'
 
 @injectable()
 @registry([{ token: ProceduresMongooseRepository, useClass: ProceduresMongooseRepository }])
@@ -18,14 +18,8 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 		@inject(OptsQuery) private readonly opts: OptsQuery,
 		@inject(SessionTransaction) private readonly session: ISessionTransaction,
 	) { }
+	getCount: (unity_id: string) => PromiseEither<AbstractError, ICount>
 
-	async getCount(unity_id: string): PromiseEither<AbstractError, ICount> {
-		const count = await Procedure.countDocuments({ unity_id })
-			.where({ active: this.opts.active })
-			.exec()
-
-		return right({ count })
-	}
 
 	async findAll(unity_id: string): PromiseEither<AbstractError, IProcedure[]> {
 

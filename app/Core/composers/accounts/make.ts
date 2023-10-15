@@ -1,7 +1,6 @@
 import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
 import ControllerInjection from 'App/Core/adapters/controller/ports/controller-injection'
 import {
-	CountAccountsUseCase,
 	CreateAccountUseCase,
 	DeleteAccountByIdUseCase,
 	FindAccountByIdUseCase,
@@ -24,6 +23,3 @@ export const makeUpdateAccountByIdComposer = (): ControllerGeneric =>
 
 export const makeFindAllAccountsComposer = (opts: IOptsQuery): ControllerGeneric =>
 	ControllerInjection.resolve(FindAllAccountUseCase, opts)
-
-export const makeCountAccountsComposer = (): ControllerGeneric =>
-	ControllerInjection.resolve(CountAccountsUseCase)

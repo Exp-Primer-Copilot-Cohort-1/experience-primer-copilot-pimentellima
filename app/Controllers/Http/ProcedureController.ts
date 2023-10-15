@@ -1,7 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
+import { makeCounts } from 'App/Core/composers'
 import {
-	makeProceduresCountComposer,
 	makeProceduresCreateComposer,
 	makeProceduresFindAllComposer,
 	makeProceduresUpdateByIdComposer
@@ -302,9 +302,8 @@ class ProcedureController {
 	}
 
 	async counts(ctx: HttpContextContract) {
-		return adaptRoute(makeProceduresCountComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeCounts(opts, COLLECTION_NAME), ctx)
 	}
 }
 

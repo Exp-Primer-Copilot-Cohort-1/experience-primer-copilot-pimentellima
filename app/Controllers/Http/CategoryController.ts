@@ -1,12 +1,12 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import {
-	makeCategoriesCountCompose,
 	makeCategoriesCreateComposer,
 	makeCategoriesDeleteByIdComposer,
 	makeCategoriesFindByUnityComposer,
 	makeCategoriesShowByIdComposer,
 	makeCategoriesUpdateByIdComposer,
+	makeCounts,
 } from 'App/Core/composers'
 import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
@@ -181,7 +181,7 @@ export class CategoryController {
 
 	async counts(ctx: HttpContextContract) {
 		const opts = getterOptInRequest(ctx)
-		return adaptRoute(makeCategoriesCountCompose(opts), ctx)
+		return adaptRoute(makeCounts(opts, COLLECTION_NAME), ctx)
 	}
 }
 

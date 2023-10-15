@@ -29,6 +29,7 @@ import Transactions, {
 } from './Transactions'
 import Unity, { COLLECTION_NAME as COLLECTION_NAME_UNITY } from './Unity'
 import User, { COLLECTION_NAME as COLLECTION_NAME_USER } from './User'
+
 const COLLECTIONS = {
 	[COLLECTION_NAME_ACCOUNT]: Account,
 	[COLLECTION_NAME_ACTIVITY]: Activity,
