@@ -1,5 +1,7 @@
 export * from './activities'
+export * from './categories'
 export * from './clients'
+export * from './counts'
 export * from './default-configs'
 export * from './financial-category'
 export * from './health-insurances'

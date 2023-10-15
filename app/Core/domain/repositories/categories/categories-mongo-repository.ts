@@ -2,11 +2,25 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Category from 'App/Models/Category'
 import { ICategory } from 'App/Types/ICategory'
-import { CategoriesManagerInterface } from '../interface'
-
+import { inject, injectable, registry } from 'tsyringe'
+import { OptsQuery } from '../../entities/helpers/opts-query'
+import { ICount } from '../helpers/count'
+import { CategoriesManagerInterface } from './categories-manager.interface'
+@injectable()
+@registry([{ token: CategoriesMongooseRepository, useClass: CategoriesMongooseRepository }])
 export class CategoriesMongooseRepository implements CategoriesManagerInterface {
-	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
-	constructor() { }
+
+	constructor(
+		@inject(OptsQuery) private readonly opts: OptsQuery
+	) { } // eslint-disable-line
+
+	async getCount(unity_id: string): PromiseEither<AbstractError, ICount> {
+		const count = await Category.countDocuments({ unity_id })
+			.where({ active: this.opts.active })
+			.exec()
+
+		return right({ count })
+	}
 
 	async findByID(id: string): PromiseEither<AbstractError, ICategory> {
 		const categories = await Category.findById(id).populate('prof', {
@@ -37,10 +51,7 @@ export class CategoriesMongooseRepository implements CategoriesManagerInterface 
 
 		return right(category as unknown as ICategory)
 	}
-	// o _id precisa ser removido para que o mongoose possa criar o id automaticamente e o
-	// prof precisa ser convertido para o formato que o mongoose espera
-	// o _id precisa ser extraído para que o mongoose retorne o id no formato que o decorators de logs espera
-	public async create({
+	async create({
 		_id, // eslint-disable-line @typescript-eslint/no-unused-vars
 		...data
 	}: Partial<ICategory>): PromiseEither<AbstractError, ICategory> {
@@ -57,7 +68,7 @@ export class CategoriesMongooseRepository implements CategoriesManagerInterface 
 
 		return right(category.toObject() as unknown as ICategory)
 	}
-	public async update(
+	async update(
 		data: Partial<ICategory>,
 		id: string,
 	): PromiseEither<AbstractError, ICategory> {

@@ -33,6 +33,7 @@ export class AccountMongoRepository implements AccountManagerInterface {
 			unity_id,
 			active: this.opts.active,
 		})
+			.sort(this.opts.sort)
 			.skip(this.opts.skip as number)
 			.limit(this.opts.limit as number)
 			.exec()

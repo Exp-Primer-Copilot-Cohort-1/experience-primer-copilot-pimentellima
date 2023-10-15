@@ -1,9 +1,15 @@
 import { ControllerInjection } from 'App/Core/adapters/controller'
 import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
-import { FindCategoriesByUnityUseCase, ShowCategoriesByIdUseCase, UpdateCategoriesByIdUseCase } from 'App/Core/domain/use-cases/categories'
-
-import { CreateCategoriesUseCase } from 'App/Core/domain/use-cases/categories'
-
+import {
+	CountsUseCase,
+	CreateCategoriesUseCase,
+	DeleteCategoriesByIdUseCase,
+	FindCategoriesByUnityUseCase,
+	ShowCategoriesByIdUseCase,
+	UpdateCategoriesByIdUseCase
+} from 'App/Core/domain/use-cases'
+import Category from 'App/Models/Category'
+import { container } from 'tsyringe'
 
 export const makeCategoriesFindByUnityComposer = (): ControllerGeneric => {
 	return ControllerInjection.resolve(FindCategoriesByUnityUseCase)
@@ -19,4 +25,13 @@ export const makeCategoriesCreateComposer = (): ControllerGeneric => {
 
 export const makeCategoriesUpdateByIdComposer = (): ControllerGeneric => {
 	return ControllerInjection.resolve(UpdateCategoriesByIdUseCase)
+}
+
+export const makeCategoriesDeleteByIdComposer = (): ControllerGeneric => {
+	return ControllerInjection.resolve(DeleteCategoriesByIdUseCase)
+}
+
+export const makeCountCategoriesCompose = (): ControllerGeneric => {
+	container.registerInstance('Model', Category)
+	return ControllerInjection.resolve(CountsUseCase)
 }

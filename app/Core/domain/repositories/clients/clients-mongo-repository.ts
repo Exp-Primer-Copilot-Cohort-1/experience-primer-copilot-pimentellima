@@ -66,10 +66,14 @@ export class ClientsMongooseRepository implements ClientManagerInterface {
 	}
 
 	async findAll(unity_id: string): PromiseEither<AbstractError, IUserClient[]> {
-		const clients = await Client.find({ unity_id }).populate(
-			COLLECTIONS_REFS.PARTNERS,
-			PROJECTION_DEFAULT,
-		)
+		const clients = await Client.find({ unity_id })
+			.sort(this.opts.sort)
+			.skip(this.opts.skip)
+			.limit(this.opts.limit)
+			.populate(
+				COLLECTIONS_REFS.PARTNERS,
+				PROJECTION_DEFAULT,
+			)
 
 		return right(clients.map((client) => client.toObject()) || [])
 	}
