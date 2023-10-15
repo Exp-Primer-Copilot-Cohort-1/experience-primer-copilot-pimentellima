@@ -14,7 +14,7 @@ const makeSut = () => {
 
 
 describe('ActivityRepository (Integration)', () => {
-	vi.mock('../../entities/activities/validations-activity', () => ({
+	vi.mock('App/Core/domain/entities/activities/validations-activity', () => ({
 		__esModule: true,
 		default: vi.fn().mockImplementation(() => {
 			return {

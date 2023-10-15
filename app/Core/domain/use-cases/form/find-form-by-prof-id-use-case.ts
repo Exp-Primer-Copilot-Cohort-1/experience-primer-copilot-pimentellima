@@ -1,12 +1,12 @@
+import FormEntity from "App/Core/domain/entities/form/form";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
-import FormEntity from "../../entities/form/form";
 import { FormManagerInterface } from "../../repositories/interface/form-manager-interface";
 
 type TypeParams = {
 	unity_id: string
-    prof_id: string
+	prof_id: string
 }
 
 export class FindFormByProfIdUseCase
@@ -14,7 +14,7 @@ export class FindFormByProfIdUseCase
 {
 	constructor(
 		private readonly formManager: FormManagerInterface
-	) {}
+	) { }
 
 	public async execute(
 		params: TypeParams

@@ -1,7 +1,7 @@
+import FormEntity from 'App/Core/domain/entities/form/form';
 import { AbstractError } from 'App/Core/errors/error.interface';
 import { PromiseEither } from 'App/Core/shared/either';
 import { IForm } from 'App/Types/IForm';
-import FormEntity from '../../entities/form/form';
 
 export interface FormManagerInterface {
 	createForm: (form: IForm) => PromiseEither<AbstractError, FormEntity>;

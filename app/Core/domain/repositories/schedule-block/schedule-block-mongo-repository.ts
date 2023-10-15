@@ -1,8 +1,8 @@
+import { ScheduleBlockEntity } from "App/Core/domain/entities/schedule-block/ScheduleBlock";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import ScheduleBlock from "App/Models/ScheduleBlock";
 import { IScheduleBlock, ScheduleBlockParams } from "App/Types/IScheduleBlock";
-import { ScheduleBlockEntity } from "../../entities/schedule-block/ScheduleBlock";
 import { MissingParamsError } from "../../errors/missing-params";
 import { ScheduleBlockManagerInterface } from "../interface/schedule-block-manager-interface";
 
