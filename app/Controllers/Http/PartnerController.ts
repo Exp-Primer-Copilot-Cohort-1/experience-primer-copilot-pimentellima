@@ -1,11 +1,13 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import {
+	makeCounts,
 	makePartnerCreateComposer,
 	makePartnerDeleteByIdComposer,
 	makePartnerFindByUnityComposer,
 	makePartnerUpdateComposer,
 } from 'App/Core/composers'
+import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/Partner'
@@ -46,6 +48,12 @@ class PartnerController {
 		return adaptRoute(makePartnerFindByUnityComposer(opts), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
+	}
+
+
+	async counts(ctx: HttpContextContract) {
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeCounts(opts, COLLECTION_NAME), ctx)
 	}
 
 	/**

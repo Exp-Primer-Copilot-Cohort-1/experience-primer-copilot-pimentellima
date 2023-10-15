@@ -1,7 +1,6 @@
 import { ControllerInjection } from 'App/Core/adapters/controller'
 import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
 import {
-	CountClientsUseCase,
 	CreateClientsUseCase,
 	FindAllClientsUseCase,
 	UpdateClientsByIdUseCase
@@ -18,8 +17,4 @@ export const makeClientUpdateComposer = (): ControllerGeneric => {
 
 export const makeClientFindAllComposer = (opts: IOptsQuery): ControllerGeneric => {
 	return ControllerInjection.resolve(FindAllClientsUseCase, opts)
-}
-
-export const makeCountClientComposer = (): ControllerGeneric => {
-	return ControllerInjection.resolve(CountClientsUseCase)
 }

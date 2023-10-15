@@ -2,11 +2,11 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Client, { COLLECTIONS_REFS, COLLECTION_NAME } from 'App/Models/Client'
 
 import { adaptRoute } from 'App/Core/adapters'
+import { makeCounts } from 'App/Core/composers'
 import {
 	makeClientCreateComposer,
 	makeClientFindAllComposer,
-	makeClientUpdateComposer,
-	makeCountClientComposer,
+	makeClientUpdateComposer
 } from 'App/Core/composers/clients/make'
 import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import { PROJECTION_DEFAULT } from 'App/Core/domain/repositories/helpers/projections'
@@ -95,9 +95,8 @@ class ClientController {
 	}
 
 	async counts(ctx: HttpContextContract) {
-		return adaptRoute(makeCountClientComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeCounts(opts, COLLECTION_NAME), ctx)
 	}
 
 	async index(ctx: HttpContextContract) {
@@ -124,7 +123,7 @@ class ClientController {
 		})
 	}
 
-	public async getAnswers(ctx: HttpContextContract) {
+	async getAnswers(ctx: HttpContextContract) {
 		try {
 			const clientId = ctx.params.id
 			const user = ctx.auth.user
@@ -151,7 +150,7 @@ class ClientController {
 		}
 	}
 
-	public async putAnswer(ctx: HttpContextContract) {
+	async putAnswer(ctx: HttpContextContract) {
 		try {
 			const user = ctx.auth.user
 			if (!user) throw new Error()
@@ -187,7 +186,7 @@ class ClientController {
 		}
 	}
 
-	public async putProfAccess(ctx: HttpContextContract) {
+	async putProfAccess(ctx: HttpContextContract) {
 		try {
 			const user = ctx.auth.user
 			if (!user) throw new Error()

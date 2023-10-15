@@ -1,4 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { adaptRoute } from 'App/Core/adapters'
+import { makeCounts } from 'App/Core/composers'
+import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import CostCenter, { COLLECTION_NAME } from 'App/Models/CostCenter'
 
@@ -9,6 +12,8 @@ import CostCenter, { COLLECTION_NAME } from 'App/Models/CostCenter'
  *   description: Endpoints para gerenciar os centros de custo
  */
 
+// ! AVISO
+// ! refatorar para usar o padrão da nossa arquitetura
 class CostCenterController {
 	/**
 	 * @swagger
@@ -181,6 +186,11 @@ class CostCenterController {
 	async destroy({ params }: HttpContextContract) {
 		const costCenters = await CostCenter.findByIdAndDelete(params.id).orFail()
 		return costCenters
+	}
+
+	async counts(ctx: HttpContextContract) {
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeCounts(opts, COLLECTION_NAME), ctx)
 	}
 }
 

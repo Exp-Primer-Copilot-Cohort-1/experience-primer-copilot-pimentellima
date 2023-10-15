@@ -1,12 +1,14 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import {
+	makeCounts,
 	makeMedicalCertificateCreateComposer,
 	makeMedicalCertificateDeleteByIdComposer,
 	makeMedicalCertificateFindByNameComposer,
 	makeMedicalCertificateShowByIdComposer,
 	makeMedicalCertificateUpdateByIdComposer,
 } from 'App/Core/composers'
+import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import MedicalCertificate, { COLLECTION_NAME } from 'App/Models/MedicalCertificate'
 
@@ -102,6 +104,11 @@ class MedicalCertificateController {
 	@LogDecorator(COLLECTION_NAME, ACTION.DELETE)
 	async destroy(ctx: HttpContextContract) {
 		return adaptRoute(makeMedicalCertificateDeleteByIdComposer(), ctx)
+	}
+
+	async counts(ctx: HttpContextContract) {
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeCounts(opts, COLLECTION_NAME), ctx)
 	}
 }
 

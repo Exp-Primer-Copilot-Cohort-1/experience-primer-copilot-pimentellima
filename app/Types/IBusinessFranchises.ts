@@ -11,7 +11,7 @@ export type IForm = {
 	min: number
 	max: number
 	questions: {
-		_id: ObjectId | string
+		_id?: ObjectId | string
 		question: string
 		description?: string
 	}[]
