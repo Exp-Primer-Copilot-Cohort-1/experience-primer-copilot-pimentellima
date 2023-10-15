@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import { MedicalCertificateManagerInterface } from '../../../repositories/interface'
+import { MedicalCertificateManagerInterface } from '../App/Core/domain/repositories/interface'
 
 type FindAllProps = {
 	name?: string

@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
+import { HolidaysMongoRepository } from 'App/Core/domain/repositories/holidays/holiday-mongo-repository'
 import Unity from 'App/Models/Unity'
-import { HolidaysMongoRepository } from '../../repositories/holidays/holiday-mongo-repository'
 import { RemoveHolidaysByUnityUseCase } from './remove-holidays-by-unity'
 
 const makeSut = () => {

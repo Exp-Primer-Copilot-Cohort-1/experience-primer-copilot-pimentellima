@@ -10,7 +10,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import { IProcedureTransaction, ITransaction } from 'App/Types/ITransaction'
 import { inject, injectable, registry } from 'tsyringe'
-import { TransactionsManagerInterface } from '../../../repositories/interface/transactions-manager-interface'
+import { TransactionsManagerInterface } from '../App/Core/domain/repositories/interface/transactions-manager-interface'
 import { TransactionWithProcedure } from '../helpers'
 
 /**

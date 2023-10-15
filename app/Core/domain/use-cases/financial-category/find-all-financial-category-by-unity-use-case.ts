@@ -1,9 +1,9 @@
 import { UnityNotFoundError } from 'App/Core/domain/errors'
+import { FinancialCategoryManagerInterface } from 'App/Core/domain/repositories/interface/financial-category-manager.interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import { IFinancialCategory } from 'App/Types/IFinancialCategory'
-import { FinancialCategoryManagerInterface } from '../../repositories/interface/financial-category-manager.interface'
 
 type FindAllProps = {
     unity_id: string

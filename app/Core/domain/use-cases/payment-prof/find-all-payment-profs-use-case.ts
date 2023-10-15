@@ -1,11 +1,11 @@
+import { PaymentProfMongoRepository } from 'App/Core/domain/repositories'
+import { PaymentProfManagerInterface } from 'App/Core/domain/repositories/interface/payment-prof-manager-interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import { IPaymentProf } from 'App/Types/IPaymentProf'
 import { inject, injectable } from 'tsyringe'
 import { UnityNotFoundError } from '../../errors'
-import { PaymentProfMongoRepository } from '../../repositories'
-import { PaymentProfManagerInterface } from '../../repositories/interface/payment-prof-manager-interface'
 
 type TypeParams = {
 	unity_id: string

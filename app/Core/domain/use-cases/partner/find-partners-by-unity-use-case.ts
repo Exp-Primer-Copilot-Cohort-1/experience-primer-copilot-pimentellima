@@ -1,10 +1,10 @@
+import { PartnerMongooseRepository } from 'App/Core/domain/repositories'
+import { PartnerManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
 import { IPartner } from 'App/Types/IPartner'
 import { inject, injectable, registry } from 'tsyringe'
-import { PartnerMongooseRepository } from '../../repositories'
-import { PartnerManagerInterface } from '../../repositories/interface'
 
 type FindAllProps = {
 	name?: string

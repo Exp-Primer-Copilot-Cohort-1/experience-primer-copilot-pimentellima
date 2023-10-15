@@ -1,7 +1,7 @@
+import { PartnerManagerInterface } from 'App/Core/domain/repositories/interface'
 import { left, right } from 'App/Core/shared'
 import { IPartner } from 'App/Types/IPartner'
 import { describe, expect, it, vi } from 'vitest'
-import { PartnerManagerInterface } from '../../repositories/interface'
 import {
 	CreatePartnersUseCase,
 	DeletePartnerByIdUseCase,

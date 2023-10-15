@@ -2,10 +2,10 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
 
+import { CategoriesMongooseRepository } from 'App/Core/domain/repositories'
+import { CategoriesManagerInterface } from 'App/Core/domain/repositories/interface'
 import { ICategory } from 'App/Types/ICategory'
 import { inject, injectable, registry } from 'tsyringe'
-import { CategoriesMongooseRepository } from '../../repositories'
-import { CategoriesManagerInterface } from '../../repositories/interface'
 @injectable()
 @registry([{ token: CreateCategoriesUseCase, useClass: CreateCategoriesUseCase }])
 

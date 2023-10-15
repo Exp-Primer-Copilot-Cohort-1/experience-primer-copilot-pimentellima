@@ -1,10 +1,10 @@
+import { ActivityRecurrentMongoRepository } from 'App/Core/domain/repositories'
+import { ActivitiesRecurrentManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
 import { IActivityPending } from 'App/Types/IActivity'
 import { inject, injectable, registry } from 'tsyringe'
-import { ActivityRecurrentMongoRepository } from '../../repositories'
-import { ActivitiesRecurrentManagerInterface } from '../../repositories/interface'
 
 type Params = {
 	unity_id: string

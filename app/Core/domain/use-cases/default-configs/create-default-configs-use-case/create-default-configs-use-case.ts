@@ -3,7 +3,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
 
 import { IDefaultConfig } from 'App/Types/IDefaultConfig'
-import { DefaultConfigsManagerInterface } from '../../../repositories/interface'
+import { DefaultConfigsManagerInterface } from '../App/Core/domain/repositories/interface'
 
 export class CreateDefaultConfigsUseCase
 	implements UseCase<Partial<IDefaultConfig>, IDefaultConfig>

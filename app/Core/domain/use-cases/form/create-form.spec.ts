@@ -1,6 +1,6 @@
+import { FormInMemoryRepository } from 'App/Core/domain/repositories/form/form-in-memory-repository';
 import { describe, expect, it } from 'vitest';
 import { CreateFormUseCase } from './create-form-use-case';
-import { FormInMemoryRepository } from '../../repositories/form/form-in-memory-repository';
 
 const form = {
     name: 'PLANO TERAPÊUTICO',
@@ -51,9 +51,9 @@ const form = {
 }
 
 describe('Create form (Unit)', () => {
-	it('should create form', async () => {
+    it('should create form', async () => {
         const sut = new CreateFormUseCase(new FormInMemoryRepository());
         const respOrErr = await sut.execute(form as any);
         expect(respOrErr.isRight()).toBeTruthy();
-	});
+    });
 });

@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { RFormSFManagerInterface } from "App/Core/domain/repositories/interface/reply-form-standard-franchise-manager.interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { left, right } from "App/Core/shared";
 import { TypeForms } from "App/Types/IBusinessFranchises";
@@ -8,7 +9,6 @@ import { ActivityNotGroupIdProvider } from "../../errors/activity-not-group-id-p
 import { CurrentNotSmallerError } from "../../errors/current-not-smaller-error";
 import { FormNotTypeProvider } from "../../errors/form-not-type-provider";
 import { QuestionNotFound } from "../../errors/question-not-found";
-import { RFormSFManagerInterface } from "../../repositories/interface/reply-form-standard-franchise-manager.interface";
 import { VerifyCurrentReplyInLessThanPreviousUseCase } from './verify-current-reply-is-less-than-previous-use-case';
 
 const makeQuestion = (id: number, sentence: string, min = 1, max = 5) => {

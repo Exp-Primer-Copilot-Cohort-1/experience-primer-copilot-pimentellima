@@ -3,7 +3,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
 
 import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
-import { MedicalCertificateManagerInterface } from '../../../repositories/interface'
+import { MedicalCertificateManagerInterface } from '../App/Core/domain/repositories/interface'
 
 export class CreateMedicalCertificateUseCase
 	implements UseCase<Partial<IMedicalCertificate>, IMedicalCertificate>

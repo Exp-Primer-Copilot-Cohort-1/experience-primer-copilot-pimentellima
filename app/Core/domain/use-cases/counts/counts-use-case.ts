@@ -1,10 +1,10 @@
+import { CountsMongooseRepository } from "App/Core/domain/repositories/counts";
+import { CountsManagerInterface } from "App/Core/domain/repositories/counts/counts-manager.interface";
 import { ICount } from "App/Core/domain/repositories/helpers/count";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither } from "App/Core/shared";
 import { inject, injectable, registry } from "tsyringe";
-import { CountsMongooseRepository } from "../../repositories/counts";
-import { CountsManagerInterface } from "../../repositories/counts/counts-manager.interface";
 
 type In = never
 

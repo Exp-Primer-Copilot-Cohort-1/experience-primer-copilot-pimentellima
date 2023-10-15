@@ -4,7 +4,7 @@ import { PromiseEither, left } from 'App/Core/shared'
 
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
-import { MedicalCertificateManagerInterface } from '../../../repositories/interface'
+import { MedicalCertificateManagerInterface } from '../App/Core/domain/repositories/interface'
 
 export class UpdateMedicalCertificateByIdUseCase
 	implements UseCase<Partial<IMedicalCertificate>, IMedicalCertificate>

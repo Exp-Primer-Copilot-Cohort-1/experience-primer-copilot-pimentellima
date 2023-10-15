@@ -3,10 +3,10 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
+import { PartnerMongooseRepository } from 'App/Core/domain/repositories'
+import { PartnerManagerInterface } from 'App/Core/domain/repositories/interface'
 import { IPartner } from 'App/Types/IPartner'
 import { inject, injectable, registry } from 'tsyringe'
-import { PartnerMongooseRepository } from '../../repositories'
-import { PartnerManagerInterface } from '../../repositories/interface'
 
 @injectable()
 @registry([{ token: UpdatePartnersByIdUseCase, useClass: UpdatePartnersByIdUseCase }])

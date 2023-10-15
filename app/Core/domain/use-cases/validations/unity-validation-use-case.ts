@@ -1,10 +1,10 @@
+import { UnitiesManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import { IUnity } from 'App/Types/IUnity'
 import { MissingParamsError } from '../../errors/missing-params'
 import { UnityDateExpiredError } from '../../errors/unity-date-expired'
-import { UnitiesManagerInterface } from '../../repositories/interface'
 
 export class UnityValidationUseCase implements UseCase<IUnity, IUnity> {
 	constructor(private readonly manager: UnitiesManagerInterface) { }

@@ -6,7 +6,7 @@ import { PromiseEither, left } from 'App/Core/shared'
 import { ITransaction } from 'App/Types/ITransaction'
 import { inject, injectable, registry } from 'tsyringe'
 import { UnityNotFoundError } from '../../../errors/unity-not-found'
-import { TransactionsManagerInterface } from '../../../repositories/interface/transactions-manager-interface'
+import { TransactionsManagerInterface } from '../App/Core/domain/repositories/interface/transactions-manager-interface'
 import { TransactionWithoutProcedure } from '../helpers'
 
 /**
