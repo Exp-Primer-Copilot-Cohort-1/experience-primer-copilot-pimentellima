@@ -10,7 +10,9 @@ import { inject, injectable, registry } from 'tsyringe'
 @injectable()
 @registry([{ token: CreateProceduresUseCase, useClass: CreateProceduresUseCase }])
 export class CreateProceduresUseCase implements UseCase<Partial<IProcedure>, IProcedure> {
-	constructor(@inject(ProceduresMongooseRepository) private readonly manager: ProceduresManagerInterface) { } // eslint-disable-line
+	constructor(
+		@inject(ProceduresMongooseRepository) private readonly manager: ProceduresManagerInterface
+	) { } // eslint-disable-line
 
 	public async execute(
 		params: Partial<IProcedure>,
