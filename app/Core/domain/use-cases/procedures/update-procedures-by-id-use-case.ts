@@ -20,7 +20,7 @@ export class UpdateProceduresByIdUseCase
 		if (!procedure?._id) {
 			return left(new MissingParamsError('_id is required'))
 		}
-		const proceduresOrErr = await this.manager.updateProceduresById(
+		const proceduresOrErr = await this.manager.update(
 			procedure._id,
 			procedure,
 		)

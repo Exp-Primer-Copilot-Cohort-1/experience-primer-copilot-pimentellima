@@ -12,8 +12,8 @@ type FindAllProps = {
 	unity_id: string
 }
 @injectable()
-@registry([{ token: FindAllProceduresByUnityUseCase, useClass: FindAllProceduresByUnityUseCase }])
-export class FindAllProceduresByUnityUseCase
+@registry([{ token: FindAllProceduresUseCase, useClass: FindAllProceduresUseCase }])
+export class FindAllProceduresUseCase
 	implements UseCase<FindAllProps, IProcedure[]>
 {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
@@ -26,7 +26,7 @@ export class FindAllProceduresByUnityUseCase
 			return left(new UnitNotFoundError())
 		}
 
-		const proceduresOrErr = await this.manager.findByUnityId(input.unity_id)
+		const proceduresOrErr = await this.manager.findAll(input.unity_id)
 
 		return proceduresOrErr
 	}
