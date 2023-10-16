@@ -1,21 +1,25 @@
 import ActivityAwaitEntity from 'App/Core/domain/entities/activity-await/activity-await'
+import { ActivityNotFoundError } from 'App/Core/domain/errors/activity-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import ActivityAwait, { COLLECTION_REFS } from 'App/Models/ActivityAwait'
 import { IActivityAwait } from 'App/Types/IActivity'
-import { ActivityNotFoundError } from '../../errors/activity-not-found'
-import { MissingParamsError } from '../../errors/missing-params'
 import { generateScores } from '../helpers/scores'
-import { ActivityAwaitManagerInterface } from '../interface/activity-await-manager-interface'
+import { ActivityAwaitManagerInterface } from './activity-await-manager-interface'
 
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { Generic } from 'App/Types/ITransaction'
-import { Types } from 'mongoose'
+import { inject, injectable, registry } from 'tsyringe'
 import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
-
+@injectable()
+@registry([{ token: ActivityAwaitMongoRepository, useClass: ActivityAwaitMongoRepository }])
 export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterface {
-	constructor() { } // eslint-disable-line
 
-	async createActivity(
+	constructor(
+		@inject(OptsQuery) private readonly opts: OptsQuery
+	) { } // eslint-disable-line
+
+	async create(
 		unity_id: string,
 		values: IActivityAwait,
 	): PromiseEither<AbstractError, IActivityAwait> {
@@ -33,22 +37,14 @@ export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterfa
 		return right(created)
 	}
 
-	async findAllActivities(
-		unity_id: string,
-		...args: any[]
-	): PromiseEither<AbstractError, IActivityAwait[]> {
-		if (!unity_id) return left(new MissingParamsError('unity id'))
+	async findAll(): PromiseEither<AbstractError, IActivityAwait[]> {
 
-		const id = new Types.ObjectId(unity_id)
-		const attrs = (args[0] as { [key: string]: string }) || {}
-
-		const scoreMap = await generateScores(id as any)
+		const scoreMap = await generateScores(this.opts.unity_id)
 
 		const activities = await ActivityAwait.find({
-			...attrs,
 			type: 'await',
-			unity_id: id,
 		})
+			.where(this.opts.where)
 			.populate(COLLECTION_REFS.CLIENTS, PROJECTION_CLIENT)
 			.populate(COLLECTION_REFS.PROFS, PROJECTION_DEFAULT)
 			.populate(COLLECTION_REFS.HEALTH_INSURANCE, PROJECTION_DEFAULT)
@@ -62,7 +58,7 @@ export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterfa
 		return right(activities)
 	}
 
-	async updateActivityById(
+	async updateById(
 		id: string,
 		activity: IActivityAwait,
 	): PromiseEither<AbstractError, IActivityAwait> {
@@ -80,26 +76,4 @@ export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterfa
 		return right(updatedActivity)
 	}
 
-	async findActivityById(id: string): PromiseEither<AbstractError, IActivityAwait> {
-		if (!id) return left(new ActivityNotFoundError())
-
-		const activity = await ActivityAwait.findById(id)
-			.populate(COLLECTION_REFS.CLIENTS, PROJECTION_CLIENT)
-			.populate(COLLECTION_REFS.PROFS, PROJECTION_DEFAULT)
-			.populate(COLLECTION_REFS.HEALTH_INSURANCE, PROJECTION_DEFAULT)
-			.populate(COLLECTION_REFS.PROCEDURES, PROJECTION_DEFAULT)
-
-		if (!activity) return left(new ActivityNotFoundError())
-
-		return right(activity)
-	}
-
-	async deleteActivityById(id: string): PromiseEither<AbstractError, IActivityAwait> {
-		if (!id) return left(new MissingParamsError('id'))
-
-		const activity = await ActivityAwait.findByIdAndDelete(id)
-		if (!activity) return left(new ActivityNotFoundError())
-
-		return right(activity)
-	}
 }

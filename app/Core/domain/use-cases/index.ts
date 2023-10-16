@@ -1,4 +1,5 @@
 export * from './activities'
+export * from './activities-awaits'
 export * from './categories'
 export * from './clients'
 export * from './default-configs'

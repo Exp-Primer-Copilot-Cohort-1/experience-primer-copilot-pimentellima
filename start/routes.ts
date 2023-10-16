@@ -191,25 +191,45 @@ Route.group(() => {
 
 Route.group(() => {
 	Route.group(() => {
-		Route.put('status/:id', 'ActivityController.updateActivityStatusById').as(
-			'activity.status',
-		)
+
 		Route.get('/day/:prof_id', 'ActivityController.findDayActivities').as('activity.day')
-		Route.put('started_at/:id', 'ActivityController.updateActivityStartedAt').as(
-			'activity.startedAt',
-		)
-		Route.put('finished_at/:id', 'ActivityController.updateActivityFinishedAt').as(
-			'activity.finishedAt',
-		)
+
 		Route.put(':id', 'ActivityController.updateActivityById').as('activity.update')
 		Route.get('', 'ActivityController.findAllActivities').as('activity.index')
-		Route.get('pending', 'ActivityController.findAllActivitiesPending').as(
-			'activity.indexPending',
-		)
 
-		Route.get('await', 'ActivityController.findAllActivitiesAwait').as(
-			'activity.indexAwait',
-		)
+
+		Route.group(() => {
+			Route.put('status/:id', 'ActivityController.updateActivityStatusById').as(
+				'activity.status',
+			)
+
+			Route.put('started_at/:id', 'ActivityController.updateActivityStartedAt').as(
+				'activity.startedAt',
+			)
+			Route.put('finished_at/:id', 'ActivityController.updateActivityFinishedAt').as(
+				'activity.finishedAt',
+			)
+		}).as('attendance')
+
+		Route.group(() => {
+			Route.get('await', 'ActivityController.index').as(
+				'index',
+			)
+
+			Route.post('await', 'ActivityController.store').as(
+				'store',
+			)
+		}).as('activity-await')
+
+		Route.group(() => {
+			Route.post('recurrent', 'ActivityController.createRecurrentActivity').as(
+				'activity.storeRecurrent',
+			)
+
+			Route.get('pending', 'ActivityController.findAllActivitiesPending').as(
+				'activity.indexPending',
+			)
+		}).as('recurrent')
 
 		Route.get('prof/:prof_id', 'ActivityController.findActivitiesByProfId').as(
 			'activity.byProfId',
@@ -218,12 +238,6 @@ Route.group(() => {
 			'activity.byClientId',
 		)
 		Route.post('', 'ActivityController.createActivity').as('activity.store')
-		Route.post('await', 'ActivityController.createActivityAwait').as(
-			'activity.storeAwait',
-		)
-		Route.post('recurrent', 'ActivityController.createRecurrentActivity').as(
-			'activity.storeRecurrent',
-		)
 
 		Route.delete(':id', 'ActivityController.deleteActivityById').as(
 			'activity.destroy',

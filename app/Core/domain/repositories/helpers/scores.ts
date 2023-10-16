@@ -1,11 +1,12 @@
 import Activity from 'App/Models/Activity'
-import type { ObjectId } from 'mongoose'
+import { Types } from 'mongoose'
 
 type Scores = {
 	[key: string]: number
 }
 
-export async function generateScores(unity_id: ObjectId): Promise<Scores> {
+export async function generateScores(id: string): Promise<Scores> {
+	const unity_id = new Types.ObjectId(id.toString())
 	const scores: Scores[] = await Activity.aggregate([
 		{
 			$match: {

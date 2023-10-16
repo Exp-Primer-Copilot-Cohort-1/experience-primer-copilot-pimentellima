@@ -1,14 +1,12 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import {
-	makeCreateActivityAwaitComposer,
 	makeCreateActivityComposer,
 	makeCreateRecurrentActivityComposer,
 	makeDeleteActivityByIdComposer,
 	makeFindActivitiesByProfIdComposer,
 	makeFindActivityByClientIdComposer,
 	makeFindActivityByIdComposer,
-	makeFindAllActivitiesAwaitComposer,
 	makeFindAllActivitiesComposer,
 	makeFindAllActivitiesPendingComposer,
 	makeFindDayActivitiesComposer,
@@ -27,13 +25,6 @@ import { ROLES } from 'App/Roles/types'
  * tags:
  *   name: Atividades
  *   description: Endpoints para gerenciar as atividades (Consultas).
- */
-
-/**
- * @swagger
- * tags:
- *   name: Atividades em Espera
- *   description: Endpoints para gerenciar as atividades em espera (Consultas).
  */
 
 /**
@@ -88,43 +79,6 @@ class ActivityController {
 
 			default:
 				return adaptRoute(makeFindDayActivitiesComposer(), ctx, {
-					unity_id: ctx.auth.user?.unity_id,
-				})
-		}
-	}
-
-	/**
-	 * Retorna todas as atividades aguardando aprovação.
-	 * @swagger
-	 * /activities/await:
-	 *   get:
-	 *     summary: Retorna todas as atividades aguardando aprovação.
-	 *     tags:
-	 *       - Atividades em Espera
-	 *     security:
-	 *       - jwt: []
-	 *     responses:
-	 *       200:
-	 *         description: Lista de atividades aguardando aprovação.
-	 *         content:
-	 *           application/json:
-	 *             schema:
-	 *               type: array
-	 *               items:
-	 *                 $ref: '#/components/schemas/ActivityAwait'
-	 *       401:
-	 *         $ref: '#/components/responses/UnauthorizedError'
-	 */
-	async findAllActivitiesAwait(ctx: HttpContextContract) {
-		switch (ctx.auth.user?.type) {
-			case ROLES.PROF:
-				return adaptRoute(makeFindAllActivitiesAwaitComposer(), ctx, {
-					unity_id: ctx.auth.user?.unity_id,
-					prof: ctx.auth.user?._id,
-				})
-
-			default:
-				return adaptRoute(makeFindAllActivitiesAwaitComposer(), ctx, {
 					unity_id: ctx.auth.user?.unity_id,
 				})
 		}
@@ -423,42 +377,6 @@ class ActivityController {
 	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async createActivity(ctx: HttpContextContract) {
 		return adaptRoute(makeCreateActivityComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
-	}
-
-	/**
-	 * Cria uma nova atividade aguardando aprovação.
-	 * @param ctx O contexto HTTP da requisição.
-	 * @returns Uma Promise que resolve com a resposta HTTP.
-	 * @swagger
-	 * /activities/await:
-	 *   post:
-	 *     summary: Cria uma nova atividade aguardando aprovação.
-	 *     tags: [Atividades em Espera]
-	 *     security:
-	 *       - bearerAuth: []
-	 *     requestBody:
-	 *       required: true
-	 *       content:
-	 *         application/json:
-	 *           schema:
-	 *             $ref: '#/components/schemas/ActivityAwait'
-	 *     responses:
-	 *       '200':
-	 *         description: Atividade em Espera criada com sucesso.
-	 *         content:
-	 *           application/json:
-	 *             schema:
-	 *               $ref: '#/components/schemas/ActivityAwait'
-	 *       '401':
-	 *         $ref: '#/components/responses/UnauthorizedError'
-	 *       '422':
-	 *         $ref: '#/components/responses/UnprocessableEntityError'
-	 */
-	@LogDecorator(COLLECTION_NAME, ACTION.POST)
-	async createActivityAwait(ctx: HttpContextContract) {
-		return adaptRoute(makeCreateActivityAwaitComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
