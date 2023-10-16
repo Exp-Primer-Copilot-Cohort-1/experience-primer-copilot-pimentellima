@@ -3,6 +3,7 @@ import { beforeAll, describe, expect, it, vi } from 'vitest'
 import { faker } from '@faker-js/faker'
 import { AppointmentStatus } from 'App/Helpers'
 import { IActivity } from 'App/Types/IActivity'
+import { addWeeks } from 'date-fns'
 import mongoose from 'mongoose'
 import { ActivityEntity } from './activity'
 
@@ -45,6 +46,16 @@ describe('Activity Entity (Unit)', () => {
 		}),
 	}));
 
+	vi.mock('App/Core/domain/entities/helpers/fetch-user-and-schedule-blocks', () => ({
+		__esModule: true,
+		default: vi.fn().mockImplementation(() => {
+			return {
+				is_monday: true,
+				is_saturday: true,
+			}
+		}),
+	}))
+
 	beforeAll(async () => {
 		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})
@@ -77,7 +88,7 @@ describe('Activity Entity (Unit)', () => {
 		const activityEntity = activityOrErr.extract() as ActivityEntity
 
 		const updated = activityEntity.update({
-			date: new Date().toISOString(),
+			date: addWeeks(new Date(), 2).toISOString(),
 		})
 
 		expect(updated.scheduled).toEqual(AppointmentStatus.RESCHEDULED)

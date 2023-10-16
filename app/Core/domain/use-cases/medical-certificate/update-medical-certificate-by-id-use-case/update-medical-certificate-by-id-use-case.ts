@@ -3,8 +3,8 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
+import { MedicalCertificateManagerInterface } from 'App/Core/domain/repositories/interface'
 import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
-import { MedicalCertificateManagerInterface } from '../App/Core/domain/repositories/interface'
 
 export class UpdateMedicalCertificateByIdUseCase
 	implements UseCase<Partial<IMedicalCertificate>, IMedicalCertificate>

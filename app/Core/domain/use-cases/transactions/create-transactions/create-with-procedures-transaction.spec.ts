@@ -22,7 +22,7 @@ const mountTransaction = () => ({
 
 const makeMocks = () => {
 	const proceduresManager = {
-		findByProcedureId: vi.fn(),
+		findById: vi.fn(),
 	} as unknown as ProceduresManagerInterface
 
 	const participationManager = {

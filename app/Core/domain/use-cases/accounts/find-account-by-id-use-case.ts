@@ -1,3 +1,4 @@
+import { IdNotProvidedError } from "App/Core/domain/errors/id-not-provided";
 import { AccountMongoRepository } from "App/Core/domain/repositories";
 import { AccountManagerInterface } from "App/Core/domain/repositories/account/account-manager.interface";
 import { AbstractError } from "App/Core/errors/error.interface";
@@ -22,7 +23,7 @@ export class FindAccountByIdUseCase
 	public async execute(
 		{ id }: TypeParams
 	): PromiseEither<AbstractError, IAccount> {
-		if (!id) return left(new AbstractError('id is required', 404));
+		if (!id) return left(new IdNotProvidedError());
 
 		return await this.manager.findByID(id);
 	}

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
-import { UnitiesInMemoryRepository } from '../App/Core/domain/repositories'
+import { UnitiesInMemoryRepository } from 'App/Core/domain/repositories'
 import { DeleteUnitiesByIdUseCase } from './delete-unities-by-id-use-case'
 
 const makeSut = () => {

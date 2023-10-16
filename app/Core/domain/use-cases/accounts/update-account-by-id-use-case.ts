@@ -5,7 +5,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import { IAccount } from 'App/Types/IAccount'
 import { inject, injectable, registry } from "tsyringe"
-import { MissingParamsError } from '../../errors'
+import { IdNotProvidedError } from '../../errors/id-not-provided'
 
 type TypeParams = {
 	id: string
@@ -15,15 +15,15 @@ type TypeParams = {
 @registry([{ token: UpdateAccountByIdUseCase, useClass: UpdateAccountByIdUseCase }])
 export class UpdateAccountByIdUseCase implements UseCase<TypeParams, IAccount> {
 	constructor(
-		@inject(AccountMongoRepository) private readonly accountManager: AccountManagerInterface) {
+		@inject(AccountMongoRepository) private readonly manager: AccountManagerInterface) {
 	} // eslint-disable-line
 
 	public async execute({
 		id,
 		...account
 	}: TypeParams): PromiseEither<AbstractError, IAccount> {
-		if (!id) return left(new MissingParamsError('id'))
+		if (!id) return left(new IdNotProvidedError())
 
-		return await this.accountManager.update(account, id)
+		return await this.manager.update(account, id)
 	}
 }

@@ -1,5 +1,5 @@
+import { UnitiesInMemoryRepository } from 'App/Core/domain/repositories'
 import { describe, expect, it } from 'vitest'
-import { UnitiesInMemoryRepository } from '../App/Core/domain/repositories'
 import { UpdateUnitiesByIdUseCase } from './update-unities-by-id-use-case'
 
 const makeSut = () => {
