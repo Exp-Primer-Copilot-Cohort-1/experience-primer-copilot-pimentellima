@@ -6,16 +6,19 @@ import { PromiseEither, left } from 'App/Core/shared'
 import type { IAdminUser } from 'App/Types/IAdminUser'
 
 import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
+import { AdminMongooseRepository } from 'App/Core/domain/repositories'
 import EmitEventDecorator from 'App/Decorators/EmitEvent'
 import { ROLES } from 'App/Roles/types'
-import { CreatePasswordProps, Password } from '../type'
+import { inject, injectable, registry } from 'tsyringe'
+import { CreatePasswordUseCase } from '../create-password/create-password-use-case'
+import { ICreatePasswordUseCase } from '../type'
 
-type CreatePasswordUseCase = UseCase<CreatePasswordProps, Password>
-
+@injectable()
+@registry([{ token: CreateUserUseCase, useClass: CreateUserUseCase }])
 export class CreateUserUseCase implements UseCase<IAdminUser, IAdminUser> {
 	constructor(
-		private readonly adminManager: AdminManagerInterface,
-		private readonly createPasswordUseCase: CreatePasswordUseCase,
+		@inject(AdminMongooseRepository) private readonly adminManager: AdminManagerInterface,
+		@inject(CreatePasswordUseCase) private readonly createPasswordUseCase: ICreatePasswordUseCase,
 	) { } // eslint-disable-line
 
 	@EmitEventDecorator('new:user')
@@ -27,7 +30,6 @@ export class CreateUserUseCase implements UseCase<IAdminUser, IAdminUser> {
 		if (adminOrErr.isLeft()) return left(adminOrErr.extract())
 
 		const admin = adminOrErr.extract()
-
 
 		const passwordOrErr = await this.createPasswordUseCase.execute({
 			password: admin.password,

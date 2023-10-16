@@ -1,18 +1,21 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction } from 'App/Core/infra/session-transaction'
+import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Unity, { COLLECTIONS_REFS } from 'App/Models/Unity'
 import { IUnity } from 'App/Types/IUnity'
+import { inject, injectable, registry } from 'tsyringe'
 import { UnityCreatedError } from '../../errors/unity-not-created-error'
 import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
 import { UnitiesManagerInterface } from '../interface/unities-manager.interface'
-
+@injectable()
+@registry([{ token: UnitiesMongooseRepository, useClass: UnitiesMongooseRepository }])
 export class UnitiesMongooseRepository implements UnitiesManagerInterface {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
-		private readonly session?: ISessionTransaction,
-	) { }
+		@inject(SessionTransaction) private readonly session: ISessionTransaction
+	) { } // eslint-disable-line
+
 	async findAll(): PromiseEither<AbstractError, IUnity[]> {
 		const unities = await Unity.find()
 

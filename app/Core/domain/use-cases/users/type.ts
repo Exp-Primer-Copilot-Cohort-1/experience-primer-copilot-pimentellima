@@ -1,3 +1,4 @@
+import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { ROLES } from 'App/Roles/types'
 
 export type Password = { password: string }
@@ -7,3 +8,6 @@ export type CreatePasswordProps = {
 	email: string
 	type: ROLES
 }
+
+
+export type ICreatePasswordUseCase = UseCase<CreatePasswordProps, Password>

@@ -1,18 +1,28 @@
-import Event from '@ioc:Adonis/Core/Event'
 import AdminUser from 'App/Core/domain/entities/user/admin'
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction } from 'App/Core/infra/session-transaction'
+import { EventEmitter, IEventEmitter } from 'App/Core/infra/event-emitter'
+import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import type { IAdminUser } from 'App/Types/IAdminUser'
 import type { IUnity } from 'App/Types/IUnity'
-import { NewDrPerformanceUseCase } from '../create-user-dr-performance/create-user-dr-performance-use-case'
+import { inject, injectable, registry } from 'tsyringe'
+import { CreateUnityUseCase } from '../../unities'
+import {
+	CreateFranchiseDrPerformanceUseCase,
+	INewDrPerformanceUseCase
+} from '../create-user-dr-performance/create-user-dr-performance-use-case'
+import { CreateUserUseCase } from '../create-user/create-user-use-case'
+
+@injectable()
+@registry([{ token: CreateUserAdminUseCase, useClass: CreateUserAdminUseCase }])
 export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {
 	constructor(
-		private readonly createUser: UseCase<IAdminUser, IAdminUser>,
-		private readonly createUnity: UseCase<IUnity, IUnity>,
-		private readonly createDrPerformance: NewDrPerformanceUseCase,
-		private readonly session: ISessionTransaction,
+		@inject(CreateUserUseCase) private readonly createUser: UseCase<IAdminUser, IAdminUser>,
+		@inject(CreateUnityUseCase) private readonly createUnity: UseCase<IUnity, IUnity>,
+		@inject(CreateFranchiseDrPerformanceUseCase) private readonly createDrPerformance: INewDrPerformanceUseCase,
+		@inject(SessionTransaction) private readonly session: ISessionTransaction,
+		@inject(EventEmitter) private readonly event: IEventEmitter
 	) { } // eslint-disable-line
 
 	public async execute(data: IAdminUser): PromiseEither<AbstractError, IAdminUser> {
@@ -47,13 +57,15 @@ export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {
 
 			const user = userOrErr.extract()
 
-			await Event.emit('new:unity', { unity, user, session: this.session })
+			await this.event.emit('new:unity', { unity, user, session: this.session })
 
-			await this.createDrPerformance.execute({
-				admin: user,
-				unity,
-				franchised: data.franchised,
-			})
+			if (data.franchised) {
+				await this.createDrPerformance.execute({
+					admin: user,
+					unity,
+					franchised: data.franchised,
+				})
+			}
 
 			await this.session.commitTransaction()
 

@@ -1,19 +1,24 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { UseCase } from 'App/Core/interfaces/use-case.interface'
+import { EventEmitter, IEventEmitter } from 'App/Core/infra/event-emitter'
 import { PromiseEither, right } from 'App/Core/shared'
-import EmitEventDecorator from 'App/Decorators/EmitEvent'
 import { ROLES } from 'App/Roles/types'
-import { CreatePasswordProps, Password } from '../type'
+import { inject, injectable, registry } from 'tsyringe'
+import { CreatePasswordProps, ICreatePasswordUseCase, Password } from '../type'
 
 const roles = [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.SUPERADMIN]
 
-export class CreatePasswordUseCase implements UseCase<CreatePasswordProps, Password> {
-	constructor() { }
+@injectable()
+@registry([{ token: CreatePasswordUseCase, useClass: CreatePasswordUseCase }])
+export class CreatePasswordUseCase implements ICreatePasswordUseCase {
 
-	@EmitEventDecorator('new:password', true)
+	constructor(
+		@inject(EventEmitter) private readonly event: IEventEmitter
+	) { }
+
 	public async execute({
 		password,
 		type,
+		email,
 	}: CreatePasswordProps): PromiseEither<AbstractError, Password> {
 		if (password && roles.includes(type)) {
 			return right({ password })
@@ -25,6 +30,8 @@ export class CreatePasswordUseCase implements UseCase<CreatePasswordProps, Passw
 			.fill(pwdChars)
 			.map((x) => x[Math.floor(Math.random() * x.length)])
 			.join('')
+
+		await this.event.emit('new:password', { password: randPassword, email })
 
 		return right({ password: randPassword })
 	}

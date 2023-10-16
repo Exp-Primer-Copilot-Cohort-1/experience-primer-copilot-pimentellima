@@ -9,7 +9,7 @@ const validateUnity = () => z.object({
 		const numbers = val.replace(/\D/g, '')
 		return cpf.isValid(numbers) || cnpj.isValid(numbers)
 	}),
-	date_expiration: z.date().optional(),
+	date_expiration: z.date().or(z.string()).optional(),
 	active: z.boolean(),
 	email: z.string().email(),
 	address: z.string().optional(),

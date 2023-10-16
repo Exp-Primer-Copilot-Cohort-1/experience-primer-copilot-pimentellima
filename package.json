@@ -18,7 +18,7 @@
 		"swagger": "node ace swagger:generate && cp -a docs/ build/docs",
 		"test:e2e": "node ace test --watch",
 		"test:unit": "cross-env NODE_ENV=test vitest --ui --watch --t Unit",
-		"test:integration": "cross-env NODE_ENV=test vitest --ui --watch --t Integration",
+		"test:integration": "cross-env NODE_ENV=test vitest --ui  --watch --t Integration",
 		"test:only": "cross-env NODE_ENV=test vitest --ui --watch --t Only",
 		"test-ci": "vitest run --coverage.enabled --coverage.reporter='text-summary'",
 		"test": "cross-env NODE_ENV=test vitest && node ace test",

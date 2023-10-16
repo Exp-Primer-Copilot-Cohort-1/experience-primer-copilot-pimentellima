@@ -5,13 +5,14 @@ import { AdminInMemoryRepository } from 'App/Core/domain/repositories'
 import { CreatePasswordUseCase } from '../create-password/create-password-use-case'
 
 import { faker } from '@faker-js/faker'
+import { EventEmitterTest } from 'App/Core/infra/event-emitter'
 import { ROLES } from 'App/Roles/types'
 import { IAdminUser } from 'App/Types/IAdminUser'
 import { cpf } from 'cpf-cnpj-validator'
 
 const user: IAdminUser = {
 	unity_id: '63528c11c109b232759921d1',
-	name: faker.name.fullName(),
+	name: faker.person.fullName(),
 	date_expiration: '2021-01-01',
 	password: faker.internet.password(),
 	email: faker.internet.email(),
@@ -28,7 +29,9 @@ const user: IAdminUser = {
 const makeSut = () => {
 	const sut = new CreateUserUseCase(
 		new AdminInMemoryRepository(),
-		new CreatePasswordUseCase(),
+		new CreatePasswordUseCase(
+			new EventEmitterTest()
+		),
 	)
 
 	return {
@@ -50,23 +53,24 @@ describe('Create User Admin Use Case (Unit)', () => {
 		})
 	})
 
-	it.skip('should return right with user created', async () => {
+	it('should return right with user created', async () => {
 		const { sut } = makeSut()
 		const userOrErr = await sut.execute(user)
 		expect(userOrErr.isRight()).toBeTruthy()
 	})
 
-	it.skip('should return left with error when user already exists', async () => {
+	it('should return left with error when user already exists', async () => {
 		const { sut } = makeSut()
 		const userOrErr = await sut.execute(user)
 
 		expect(userOrErr.isRight()).toBeTruthy()
 
 		const user2OrErr = await sut.execute(user)
+
 		expect(user2OrErr.isLeft()).toBeTruthy()
 	})
 
-	it.skip('should return right with user created if not passed password', async () => {
+	it('should return right with user created if not passed password', async () => {
 		const { sut } = makeSut()
 		const userOrErr = await sut.execute({ ...user, password: '' })
 		expect(userOrErr.isRight()).toBeTruthy()

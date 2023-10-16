@@ -3,13 +3,19 @@ import { PromiseEither, left, right } from 'App/Core/shared/either'
 import { AdminManagerInterface } from '../interface/admin-manager.interface'
 
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction } from 'App/Core/infra/session-transaction'
+import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
 import User from 'App/Models/User'
 import { IAdminUser } from 'App/Types/IAdminUser'
+import { inject, injectable, registry } from 'tsyringe'
 import { UserNotFoundError } from '../../errors/user-not-found'
 
+@injectable()
+@registry([{ token: AdminMongooseRepository, useClass: AdminMongooseRepository }])
 export class AdminMongooseRepository implements AdminManagerInterface {
-	constructor(private readonly session: ISessionTransaction) { } // eslint-disable-line
+
+	constructor(
+		@inject(SessionTransaction) private readonly session: ISessionTransaction
+	) { } // eslint-disable-line
 
 	public async create({
 		_id, // eslint-disable-line

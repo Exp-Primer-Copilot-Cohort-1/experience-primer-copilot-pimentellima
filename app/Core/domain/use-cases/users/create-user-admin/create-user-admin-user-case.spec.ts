@@ -3,24 +3,29 @@ import { CreateUserAdminUseCase } from './create-user-admin-use-case'
 
 import {
 	AdminInMemoryRepository,
-	UnitiesInMemoryRepository,
+	UnitiesInMemoryRepository
 } from 'App/Core/domain/repositories'
 import { CreatePasswordUseCase } from '../create-password/create-password-use-case'
 
 import { faker } from '@faker-js/faker'
+import { DrPerformanceInMemory } from 'App/Core/domain/repositories/dr_performance/dr-performance.in-memory.repository'
+import { EventEmitterTest } from 'App/Core/infra/event-emitter'
 import { SessionTransaction } from 'App/Core/infra/session-transaction'
 import { ROLES } from 'App/Roles/types'
 import { IAdminUser } from 'App/Types/IAdminUser'
 import { cpf } from 'cpf-cnpj-validator'
+import { CreateUnityUseCase } from '../../unities'
+import { CreateFranchiseDrPerformanceUseCase } from '../create-user-dr-performance/create-user-dr-performance-use-case'
+import { CreateUserUseCase } from '../create-user/create-user-use-case'
 
 const user: IAdminUser = {
 	unity_id: '63528c11c109b232759921d1',
-	name: faker.name.fullName(),
-	date_expiration: '2021-01-01',
+	name: faker.person.fullName(),
+	date_expiration: faker.date.future().toISOString(),
 	password: faker.internet.password(),
 	email: faker.internet.email(),
 	document: cpf.generate(),
-	celphone: faker.phone.number('(99) 99999-9999'),
+	celphone: faker.phone.number(),
 	type: ROLES.ADMIN_PROF,
 	_id: '',
 	active: false,
@@ -31,12 +36,17 @@ const user: IAdminUser = {
 
 const makeSut = () => {
 	const session = new SessionTransaction()
+	const event = new EventEmitterTest()
 
 	const sut = new CreateUserAdminUseCase(
-		new UnitiesInMemoryRepository(),
-		new AdminInMemoryRepository(),
-		new CreatePasswordUseCase(),
+		new CreateUserUseCase(
+			new AdminInMemoryRepository(),
+			new CreatePasswordUseCase(event),
+		),
+		new CreateUnityUseCase(new UnitiesInMemoryRepository()),
+		new CreateFranchiseDrPerformanceUseCase(new DrPerformanceInMemory()),
 		session,
+		event
 	)
 
 	return {
@@ -44,7 +54,7 @@ const makeSut = () => {
 	}
 }
 
-describe.skip('Create User Admin Use Case (Unit)', () => {
+describe('Create User Admin Use Case (Unit)', () => {
 	beforeAll(() => {
 		vi.mock('App/Mail/entity/mail', () => {
 			return {
@@ -83,11 +93,5 @@ describe.skip('Create User Admin Use Case (Unit)', () => {
 		}
 
 		expect(userOrErr.extract().password).toBeDefined()
-	})
-
-	it('should return left with error when unit not exists', async () => {
-		const { sut } = makeSut()
-		const userOrErr = await sut.execute({ ...user, unity_id: 'invalid_unity' })
-		expect(userOrErr.isLeft()).toBeTruthy()
 	})
 })
