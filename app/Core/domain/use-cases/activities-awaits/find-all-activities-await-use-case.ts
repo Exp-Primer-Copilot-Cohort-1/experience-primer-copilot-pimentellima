@@ -19,7 +19,6 @@ export class FindAllActivitiesAwaitUseCase
 	) { }
 
 	public async execute(): PromiseEither<AbstractError, IActivityAwait[]> {
-
 		return await this.manager.findAll()
 	}
 }

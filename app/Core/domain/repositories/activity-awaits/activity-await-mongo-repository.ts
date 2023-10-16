@@ -20,18 +20,8 @@ export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterfa
 	) { } // eslint-disable-line
 
 	async create(
-		unity_id: string,
-		values: IActivityAwait,
+		activity: IActivityAwait,
 	): PromiseEither<AbstractError, IActivityAwait> {
-		const activityOrErr = await ActivityAwaitEntity.build({
-			...values,
-			unity_id,
-		})
-
-		if (activityOrErr.isLeft()) return left(activityOrErr.extract())
-
-		const activity = activityOrErr.extract()
-
 		const created = await ActivityAwait.create(activity)
 
 		return right(created)

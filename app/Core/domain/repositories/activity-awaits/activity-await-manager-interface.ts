@@ -4,7 +4,6 @@ import { IActivityAwait } from 'App/Types/IActivity'
 
 export interface ActivityAwaitManagerInterface {
 	create: (
-		unity_id: string,
 		activity: IActivityAwait,
 	) => PromiseEither<AbstractError, IActivityAwait>
 	findAll: () => PromiseEither<AbstractError, IActivityAwait[]>
