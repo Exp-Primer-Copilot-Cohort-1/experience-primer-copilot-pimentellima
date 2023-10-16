@@ -3,6 +3,8 @@ import { PromiseEither } from 'App/Core/shared/either'
 import { ICount } from '../helpers/count'
 
 
-export interface CountsManagerInterface {
+export interface GenericManagerInterface<T> {
 	getCount: () => PromiseEither<AbstractError, ICount>
+	findAll: () => PromiseEither<AbstractError, T[]>
+	findById: (id: string) => PromiseEither<AbstractError, T>
 }

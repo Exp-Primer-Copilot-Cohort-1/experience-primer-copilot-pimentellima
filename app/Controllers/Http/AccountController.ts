@@ -1,15 +1,13 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeCounts } from 'App/Core/composers'
+import { makeCounts, makeFindAll } from 'App/Core/composers'
 
 import {
 	makeCreateAccountComposer,
 	makeDeleteAccountComposer,
 	makeFindAccountComposer,
-	makeFindAllAccountsComposer,
 	makeUpdateAccountByIdComposer
 } from 'App/Core/composers/accounts/make'
-import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/Account'
 
@@ -42,10 +40,7 @@ class AccountController {
 	 *                 $ref: '#/components/schemas/Account'
 	 */
 	async index(ctx: HttpContextContract) {
-		const opts = getterOptInRequest(ctx)
-		return adaptRoute(makeFindAllAccountsComposer(opts), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
+		return adaptRoute(makeFindAll(ctx, COLLECTION_NAME), ctx)
 	}
 
 	/**
@@ -165,8 +160,7 @@ class AccountController {
 	}
 
 	async counts(ctx: HttpContextContract) {
-		const opts = getterOptInRequest(ctx)
-		return adaptRoute(makeCounts(opts, COLLECTION_NAME), ctx)
+		return adaptRoute(makeCounts(ctx, COLLECTION_NAME), ctx)
 	}
 }
 

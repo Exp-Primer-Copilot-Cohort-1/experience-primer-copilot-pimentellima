@@ -1,9 +1,8 @@
 
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeCounts, makeFinancialCategoryFindAllComposer } from 'App/Core/composers'
+import { makeCounts, makeFindAll } from 'App/Core/composers'
 import FinancialCategoryEntity from 'App/Core/domain/entities/financial-category/financial-category'
-import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import FinancialCategory, { COLLECTION_NAME } from 'App/Models/FinancialCategory'
 import { IFinancialCategory } from 'App/Types/IFinancialCategory'
@@ -126,9 +125,7 @@ import { IFinancialCategory } from 'App/Types/IFinancialCategory'
  */
 class FinancialCategoryController {
 	async index(ctx: HttpContextContract) {
-		return adaptRoute(makeFinancialCategoryFindAllComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
+		return adaptRoute(makeFindAll(ctx, COLLECTION_NAME), ctx)
 	}
 
 	@LogDecorator(COLLECTION_NAME, ACTION.POST)
@@ -182,8 +179,7 @@ class FinancialCategoryController {
 	}
 
 	async counts(ctx: HttpContextContract) {
-		const opts = getterOptInRequest(ctx)
-		return adaptRoute(makeCounts(opts, COLLECTION_NAME), ctx)
+		return adaptRoute(makeCounts(ctx, COLLECTION_NAME), ctx)
 	}
 }
 

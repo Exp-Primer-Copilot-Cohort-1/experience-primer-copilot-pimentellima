@@ -43,7 +43,7 @@ class LogController {
 
 		const Log = await generateLogModel(unity_id?.toString())
 
-		const logs = await Log.find({ unity_id }).sort({ createdAt: -1 })
+		const logs = await Log?.find({ unity_id }).sort({ createdAt: -1 })
 
 		return logs
 	}
@@ -89,7 +89,7 @@ class LogController {
 		}
 
 		const Log = await generateLogModel(unity_id?.toString())
-		const logs = await Log.find({ collection_id: id, unity_id })
+		const logs = await Log?.find({ collection_id: id, unity_id })
 
 		if (!logs) {
 			return ctx.response.status(404).send({ error: 'Log not found' })

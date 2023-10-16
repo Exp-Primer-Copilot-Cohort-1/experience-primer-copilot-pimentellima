@@ -95,8 +95,7 @@ class ClientController {
 	}
 
 	async counts(ctx: HttpContextContract) {
-		const opts = getterOptInRequest(ctx)
-		return adaptRoute(makeCounts(opts, COLLECTION_NAME), ctx)
+		return adaptRoute(makeCounts(ctx, COLLECTION_NAME), ctx)
 	}
 
 	async index(ctx: HttpContextContract) {

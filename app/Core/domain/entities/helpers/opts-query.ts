@@ -13,12 +13,7 @@ export class OptsQuery implements IOptsQuery {
 	@IsString() prof?: string
 	@IsString() unity_id: string
 
-	constructor() {
-		this.defineSort()
-		this.defineLimit()
-		this.defineSkip()
-		this.defineActive()
-	} // eslint-disable-line @typescript-eslint/no-empty-function, prettier/prettier
+	constructor() { } // eslint-disable-line @typescript-eslint/no-empty-function, prettier/prettier
 
 	defineSort(sort = '--created_at'): this {
 		this.sort = sort
@@ -38,9 +33,10 @@ export class OptsQuery implements IOptsQuery {
 	get where(): Record<string, unknown> {
 		const where: Record<string, unknown> = {}
 
-		if (this.active) where.active = this.active
+		where.active = this.active
+		where.unity_id = this.unity_id
+
 		if (this.prof) where.prof = this.prof
-		if (this.unity_id) where.unity_id = this.unity_id
 
 		return where
 	}

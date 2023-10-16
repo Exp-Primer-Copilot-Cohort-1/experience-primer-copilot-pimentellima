@@ -1,7 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeCounts } from 'App/Core/composers'
-import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
+import { makeCounts, makeFindAll } from 'App/Core/composers'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import Stock, { COLLECTION_NAME } from 'App/Models/Stock'
 import { isBefore, isSameDay } from 'date-fns'
@@ -46,18 +45,8 @@ const stockSchema = z
 	})
 
 class StocksController {
-	async index({ auth, request }) {
-		const params = request.qs()
-
-		const active = params.active === 'false' ? false : true
-
-		const userLogged = auth.user
-		const stocks = Stock.where({
-			unity_id: userLogged.unity_id,
-			active,
-		})
-
-		return stocks
+	async index(ctx: HttpContextContract) {
+		return adaptRoute(makeFindAll(ctx, COLLECTION_NAME), ctx)
 	}
 
 	async show({ params }) {
@@ -113,8 +102,7 @@ class StocksController {
 	}
 
 	async counts(ctx: HttpContextContract) {
-		const opts = getterOptInRequest(ctx)
-		return adaptRoute(makeCounts(opts, COLLECTION_NAME), ctx)
+		return adaptRoute(makeCounts(ctx, COLLECTION_NAME), ctx)
 	}
 }
 

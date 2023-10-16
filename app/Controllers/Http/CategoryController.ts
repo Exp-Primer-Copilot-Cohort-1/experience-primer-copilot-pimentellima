@@ -3,12 +3,11 @@ import { adaptRoute } from 'App/Core/adapters'
 import {
 	makeCategoriesCreateComposer,
 	makeCategoriesDeleteByIdComposer,
-	makeCategoriesFindByUnityComposer,
 	makeCategoriesShowByIdComposer,
 	makeCategoriesUpdateByIdComposer,
 	makeCounts,
+	makeFindAll
 } from 'App/Core/composers'
-import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/Category'
 
@@ -45,9 +44,7 @@ export class CategoryController {
 	 *         $ref: '#/components/responses/UnauthorizedError'
 	 */
 	async index(ctx: HttpContextContract) {
-		const unity_id = ctx.auth.user?.unity_id
-		const opts = getterOptInRequest(ctx)
-		return adaptRoute(makeCategoriesFindByUnityComposer(opts), ctx, { unity_id })
+		return adaptRoute(makeFindAll(ctx, COLLECTION_NAME), ctx)
 	}
 
 	/**
@@ -180,8 +177,7 @@ export class CategoryController {
 	}
 
 	async counts(ctx: HttpContextContract) {
-		const opts = getterOptInRequest(ctx)
-		return adaptRoute(makeCounts(opts, COLLECTION_NAME), ctx)
+		return adaptRoute(makeCounts(ctx, COLLECTION_NAME), ctx)
 	}
 }
 
