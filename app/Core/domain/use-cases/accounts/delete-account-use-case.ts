@@ -25,6 +25,6 @@ export class DeleteAccountByIdUseCase
 	): PromiseEither<AbstractError, IAccount> {
 		if (!id) return left(new IdNotProvidedError())
 
-		return await this.manager.deleteByID(id);;
+		return await this.manager.deleteById(id);;
 	}
 }

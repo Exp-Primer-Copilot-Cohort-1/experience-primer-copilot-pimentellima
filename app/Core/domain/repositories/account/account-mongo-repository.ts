@@ -24,8 +24,8 @@ export class AccountMongoRepository implements AccountManagerInterface {
 			active: this.opts.active,
 		})
 			.sort(this.opts.sort)
-			.skip(this.opts.skip as number)
-			.limit(this.opts.limit as number)
+			.skip(this.opts.skip)
+			.limit(this.opts.limit)
 			.exec()
 
 		return right(data)
@@ -57,7 +57,7 @@ export class AccountMongoRepository implements AccountManagerInterface {
 		return right(doc?.toObject())
 	}
 
-	async findByID(id: string): PromiseEither<AbstractError, AccountEntity> {
+	async findById(id: string): PromiseEither<AbstractError, AccountEntity> {
 		if (!id || !isValidObjectId(id)) return left(new AccountNotFoundError())
 
 		const item = await Account.findById(id).orFail(new AccountNotFoundError())
@@ -65,7 +65,7 @@ export class AccountMongoRepository implements AccountManagerInterface {
 		return right(item.toObject())
 	}
 
-	async deleteByID(id: string): PromiseEither<AbstractError, AccountEntity> {
+	async deleteById(id: string): PromiseEither<AbstractError, AccountEntity> {
 		if (!id) return left(new AccountNotFoundError())
 
 		const doc = await Account.findByIdAndDelete(id).orFail(new AccountNotFoundError())

@@ -25,6 +25,6 @@ export class FindAccountByIdUseCase
 	): PromiseEither<AbstractError, IAccount> {
 		if (!id) return left(new IdNotProvidedError());
 
-		return await this.manager.findByID(id);
+		return await this.manager.findById(id);
 	}
 }

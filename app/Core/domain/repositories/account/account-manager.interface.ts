@@ -9,6 +9,6 @@ export interface AccountManagerInterface {
 		account: IAccount,
 		id: string,
 	) => PromiseEither<AbstractError, IAccount>
-	findByID: (id: string) => PromiseEither<AbstractError, IAccount>
-	deleteByID: (id: string) => PromiseEither<AbstractError, IAccount>
+	findById: (id: string) => PromiseEither<AbstractError, IAccount>
+	deleteById: (id: string) => PromiseEither<AbstractError, IAccount>
 }

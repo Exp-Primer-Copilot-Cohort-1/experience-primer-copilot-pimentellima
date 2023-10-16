@@ -29,10 +29,10 @@ const AccountManager: AccountManagerInterface = {
 	findAll: vi.fn(async () => {
 		return right([]) as any
 	}),
-	deleteByID: vi.fn(async (id) => {
+	deleteById: vi.fn(async (id) => {
 		return right(id) as any
 	}),
-	findByID: vi.fn(async (id) => {
+	findById: vi.fn(async (id) => {
 		return right(id) as any
 	}),
 	update: vi.fn(async (_id, account) => {
@@ -121,7 +121,7 @@ describe('Use cases ref account (Unit)', () => {
 
 		it('should return error when delete account by id', async () => {
 			const { sut } = makeSutDelete()
-			vi.spyOn(AccountManager, 'deleteByID').mockImplementationOnce(async () => {
+			vi.spyOn(AccountManager, 'deleteById').mockImplementationOnce(async () => {
 				return left(undefined) as any
 			})
 			const respOrErr = await sut.execute({ id: 'id-invalid' })
@@ -144,7 +144,7 @@ describe('Use cases ref account (Unit)', () => {
 
 		it('should return error when find account by id', async () => {
 			const { sut } = makeSutFindById()
-			vi.spyOn(AccountManager, 'findByID').mockImplementationOnce(async () => {
+			vi.spyOn(AccountManager, 'findById').mockImplementationOnce(async () => {
 				return left(undefined) as any
 			})
 			const respOrErr = await sut.execute({ id: 'id-invalid' })
