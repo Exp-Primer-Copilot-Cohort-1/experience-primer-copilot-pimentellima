@@ -8,18 +8,28 @@ class Document extends Validate<string> {
 		this.validate(document, force)
 	}
 
+	private validateDecryptedDocument(document: string): boolean {
+		try {
+			const decryptedDoc = decryptSync(document)
+			const isCNPJ = cnpj.isValid(decryptedDoc)
+			const isCPF = cpf.isValid(decryptedDoc)
+			return isCNPJ || isCPF
+		} catch (error) {
+			return false
+		}
+	}
+
 	public validate(document: string, force: boolean): this {
 
 		if (process.env.NODE_ENV === 'test' && !force) {
 			return this
 		}
 
-		const decryptedDoc = decryptSync(document)
+		const isCPF = cpf.isValid(document)
+		const isCNPJ = cnpj.isValid(document)
+		const isDecrypted = this.validateDecryptedDocument(document)
 
-		const isCPF = cpf.isValid(decryptedDoc) || cpf.isValid(document)
-		const isCNPJ = cnpj.isValid(decryptedDoc) || cnpj.isValid(document)
-
-		if (!isCPF && !isCNPJ) {
+		if (!isCPF && !isCNPJ && !isDecrypted) {
 			throw new DocumentInvalidError()
 		}
 
