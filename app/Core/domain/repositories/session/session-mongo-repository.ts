@@ -3,11 +3,15 @@ import { SessionUser } from 'App/Core/domain/entities/user/session'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { ISessionAuth } from 'App/Core/infra/session-auth'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
+import { injectable, registry } from 'tsyringe'
 import { UserNotActiveError } from '../../errors'
 import { InvalidCredentialsError } from '../../errors/invalid-credentials'
 import { ISession, SessionManagerInterface } from '../interface/session-manager.interface'
 
 const production = process.env.NODE_ENV === 'production'
+
+@injectable()
+@registry([{ token: SessionRepository, useClass: SessionRepository }])
 export class SessionRepository implements SessionManagerInterface {
 	constructor(private readonly auth: ISessionAuth) { } // eslint-disable-line
 

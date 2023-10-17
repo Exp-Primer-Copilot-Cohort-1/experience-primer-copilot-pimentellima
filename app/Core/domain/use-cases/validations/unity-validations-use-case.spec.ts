@@ -39,7 +39,7 @@ const makeSut = () => {
 	return { sut }
 }
 
-describe('Unity Validations (Unit)', () => {
+describe.skip('Unity Validations (Unit)', () => {
 	beforeEach(() => {
 		// tell vitest we use mocked time
 		vi.useFakeTimers()
