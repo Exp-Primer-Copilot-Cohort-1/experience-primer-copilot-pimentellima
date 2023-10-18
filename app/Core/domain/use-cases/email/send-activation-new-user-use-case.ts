@@ -9,7 +9,6 @@ import { inject, injectable, registry } from 'tsyringe';
 import { SendEmailError } from '../../errors/send-email.err';
 import EDGE, { ISendEmailUseCase } from "../helpers/edge";
 import { SendEmailUseCase } from './send-use-case';
-
 /**
  * Entrada esperada pelo caso de uso de envio de email de ativação de novo usuário.
  */

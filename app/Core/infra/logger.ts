@@ -1,11 +1,12 @@
-import LoggerAdonisjs from '@ioc:Adonis/Core/Logger'
 import { Methods } from 'App/Types/IHelpers'
+import LoggerAdonisjs from 'Config/log'
 import { registry, singleton } from 'tsyringe'
 import { colorize } from '../adapters/controller/helpers/colorize'
 
 export interface ILogger {
 	log: (url: string, method: string, statusCode: number, err?: Error | any) => void
 	emit: (msg: string, err?: Error | any) => void
+	fatal: (msg: string, err?: Error | any) => void
 }
 
 @singleton()
@@ -17,7 +18,7 @@ export class Logger implements ILogger {
 		const message = colorize(statusCode, url, method as Methods)
 
 		if (statusCode >= 500) {
-			LoggerAdonisjs.fatal(message + '\n' + (err as Error)?.message)
+			LoggerAdonisjs.error(message + '\n' + (err as Error)?.message)
 		}
 
 		if (statusCode >= 400 && statusCode < 500) {
@@ -35,6 +36,10 @@ export class Logger implements ILogger {
 
 	emit(msg: string, err?: Error | any) {
 		LoggerAdonisjs.info(msg, err)
+	}
+
+	fatal(msg: string, err?: Error | any) {
+		LoggerAdonisjs.error(msg, err)
 	}
 }
 

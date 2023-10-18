@@ -46,7 +46,7 @@ export class SendEmailUseCase implements ISendEmailUseCase {
 			return right({ message: 'Email enviado com sucesso' })
 
 		} catch (error) {
-			this.logger.emit(error)
+			this.logger.fatal(error)
 			return left(new SendEmailError(error))
 		}
 	}

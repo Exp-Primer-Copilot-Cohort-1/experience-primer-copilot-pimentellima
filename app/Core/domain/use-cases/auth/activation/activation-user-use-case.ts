@@ -13,8 +13,8 @@ type In = {
 	code: string
 }
 
-type DecryptedCode = Pick<IUser, '_id' | 'email'>
 
+type DecryptedCode = Pick<IUser, '_id' | 'email'>
 const decryptCode = async (code: string): PromiseEither<AbstractError, DecryptedCode> => {
 	try {
 		const user: DecryptedCode = JSON.parse(await decrypt(code))
