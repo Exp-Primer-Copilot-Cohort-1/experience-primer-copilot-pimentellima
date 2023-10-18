@@ -1,5 +1,5 @@
 import { IdNotProvidedError } from "App/Core/domain/errors/id-not-provided";
-import { MongooseRepository } from "App/Core/domain/repositories";
+import { CRUDRepository } from "App/Core/domain/repositories";
 import { GenericManagerInterface } from "App/Core/domain/repositories/interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
@@ -16,7 +16,7 @@ export class FindByIdUseCase<T>
 	implements UseCase<In, T>
 {
 	constructor(
-		@inject(MongooseRepository) private readonly manager: GenericManagerInterface<T>
+		@inject(CRUDRepository) private readonly manager: GenericManagerInterface<T>
 	) { }
 
 	public async execute({ id }): PromiseEither<AbstractError, T> {

@@ -1,4 +1,4 @@
-import { MongooseRepository } from "App/Core/domain/repositories";
+import { CRUDRepository } from "App/Core/domain/repositories";
 import { ICount } from "App/Core/domain/repositories/helpers/count";
 import { GenericManagerInterface } from "App/Core/domain/repositories/interface";
 import { AbstractError } from "App/Core/errors/error.interface";
@@ -14,7 +14,7 @@ export class CountsUseCase<T>
 	implements UseCase<In, ICount>
 {
 	constructor(
-		@inject(MongooseRepository) private readonly manager: GenericManagerInterface<T>
+		@inject(CRUDRepository) private readonly manager: GenericManagerInterface<T>
 	) { }
 
 	public async execute(): PromiseEither<AbstractError, ICount> {
