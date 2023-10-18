@@ -1,9 +1,9 @@
+import { RFormSFMongooseManager } from "App/Core/domain/repositories";
+import { RFormSFManagerInterface } from "App/Core/domain/repositories/interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import { inject, injectable, registry } from 'tsyringe';
-import { RFormSFManagerInterface } from "../../repositories/interface/reply-form-standard-franchise-manager.interface";
-import { RFormSFMongooseManager } from "../../repositories/reply-form-standard-franchise/reply-form-standard-franchise-mongoose-repository";
 import {
 	ISendWaringCurrentReplyInGreaterPreviousUseCase,
 	SendWarningCurrentReplyInGreaterPreviousUseCase
