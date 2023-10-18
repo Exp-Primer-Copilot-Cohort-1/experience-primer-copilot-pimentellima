@@ -77,11 +77,15 @@ Route.group(() => {
 			'profs/medical',
 			'UserControllerV2.findAllUsersPerformsMedicalAppointments'
 		).as('users.profs.performs_medical_appointments.index')
-		Route.get('profs', 'UserControllerV2.findAllUsersProfs').as('users.prof.index')
+
 		Route.get('secs', 'UserControllerV2.findAllUsersSecs').as('users.secs.index')
 		Route.get('profs/:id', 'UserController.show').as('users.prof.show')
 		Route.put(':id', 'UserController.update').as('users.update')
 	}).prefix('users')
+
+	Route.group(() => {
+		Route.get('', 'ProfsController.index').as('users.prof.index')
+	}).prefix('profs')
 
 	Route.group(() => {
 		Route.put(':id', 'ScheduledConfigController.update').as('scheduled.update')
@@ -187,9 +191,7 @@ Route.group(() => {
 		// Route.delete('unity/:id', 'UnityController.destroy')
 		Route.put(':_id', 'UnityController.update')
 	}).prefix('unity')
-}).middleware(['auth', 'role', 'cache', 'statusPermission', 'successNoContent',])
 
-Route.group(() => {
 	Route.group(() => {
 
 		Route.get('/day/:prof_id', 'ActivityController.findDayActivities').as('activity.day')
@@ -478,6 +480,7 @@ Route.group(() => {
 		Route.get('partners', 'PartnerController.counts').as('partners.counts')
 		Route.get('payments-participations', 'PaymentProfController.counts').as('payments-participations.counts')
 		Route.get('stocks', 'StocksController.counts').as('stocks.counts')
+		Route.get('profs', 'ProfsController.counts').as('profs.counts')
 	}).prefix('counts')
 
 }).middleware(['auth', 'role', 'cache', 'statusPermission', 'successNoContent',])

@@ -5,6 +5,7 @@ import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Prof from 'App/Models/Prof'
 import { IUser as IProf } from 'App/Types/IUser'
 import { inject, injectable, registry } from 'tsyringe'
+import { ICount } from '../helpers/count'
 import { ProfManagerInterface } from '../interface/prof-manage-interface'
 
 @injectable()
@@ -36,7 +37,19 @@ export class ProfsMongooseRepository implements ProfManagerInterface {
 			.limit(this.opts.limit)
 			.sort(this.opts.sort)
 			.select('-payment_participations -password')
+			.exec()
 
 		return right(prof)
+	}
+
+	async getCount(): PromiseEither<AbstractError, ICount> {
+		const count = await Prof.countDocuments({
+			unity_id: this.opts.unity_id,
+			type: ['prof'],
+		})
+			.where(this.opts.only_prof)
+			.exec()
+
+		return right({ count })
 	}
 }
