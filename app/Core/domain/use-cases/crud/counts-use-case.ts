@@ -1,6 +1,6 @@
 import { CRUDRepository } from "App/Core/domain/repositories";
 import { ICount } from "App/Core/domain/repositories/helpers/count";
-import { GenericManagerInterface } from "App/Core/domain/repositories/interface";
+import { CRUDManagerInterface } from "App/Core/domain/repositories/interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither } from "App/Core/shared";
@@ -14,7 +14,7 @@ export class CountsUseCase<T>
 	implements UseCase<In, ICount>
 {
 	constructor(
-		@inject(CRUDRepository) private readonly manager: GenericManagerInterface<T>
+		@inject(CRUDRepository) private readonly manager: CRUDManagerInterface<T>
 	) { }
 
 	public async execute(): PromiseEither<AbstractError, ICount> {
