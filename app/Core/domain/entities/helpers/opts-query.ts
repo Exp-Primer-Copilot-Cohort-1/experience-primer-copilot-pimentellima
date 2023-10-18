@@ -30,6 +30,14 @@ export class OptsQuery implements IOptsQuery {
 		return this
 	}
 
+	get only_prof(): Record<string, unknown> {
+		const ids: Record<string, unknown> = {}
+
+		if (this.prof) ids._id = [this.prof]
+
+		return ids
+	}
+
 	get where(): Record<string, unknown> {
 		const where: Record<string, unknown> = {}
 

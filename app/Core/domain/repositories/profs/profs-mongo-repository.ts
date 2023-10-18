@@ -1,12 +1,20 @@
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import { UserNotFoundError } from 'App/Core/domain/errors/user-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Prof from 'App/Models/Prof'
 import { IUser as IProf } from 'App/Types/IUser'
-import { UserNotFoundError } from '../../errors/user-not-found'
+import { inject, injectable, registry } from 'tsyringe'
 import { ProfManagerInterface } from '../interface/prof-manage-interface'
 
+@injectable()
+@registry([{ token: ProfsMongooseRepository, useClass: ProfsMongooseRepository }])
 export class ProfsMongooseRepository implements ProfManagerInterface {
-	constructor() { }
+
+	constructor(
+		@inject(OptsQuery) private readonly opts: OptsQuery
+	) { } // eslint-disable-line
+
 	async findByID(id: string, unity_id: string): PromiseEither<AbstractError, IProf> {
 		const prof = await Prof.findOne({
 			_id: id,
@@ -16,18 +24,19 @@ export class ProfsMongooseRepository implements ProfManagerInterface {
 		if (!prof) return left(new UserNotFoundError())
 		return right(prof)
 	}
-	async findAll(unity_id: string): PromiseEither<AbstractError, IProf[]> {
+
+	async findAll(): PromiseEither<AbstractError, IProf[]> {
+
 		const prof = await Prof.find({
-			unity_id,
-			type: ['prof', 'admin_prof'],
+			unity_id: this.opts.unity_id,
+			type: ['prof'],
 		})
+			.where(this.opts.only_prof)
+			.skip(this.opts.skip)
+			.limit(this.opts.limit)
+			.sort(this.opts.sort)
+			.select('-payment_participations -password')
+
 		return right(prof)
 	}
-
-	createProf: (data: Partial<IProf>) => PromiseEither<AbstractError, IProf>
-	deleteProfById: (id: string) => PromiseEither<AbstractError, IProf>
-	updateProfById: (
-		id: string,
-		data: Partial<IProf>,
-	) => PromiseEither<AbstractError, IProf>
 }

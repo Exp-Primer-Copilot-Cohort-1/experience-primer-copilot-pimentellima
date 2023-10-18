@@ -4,11 +4,5 @@ import { IUser as IProf } from 'App/Types/IUser'
 
 export interface ProfManagerInterface {
 	findByID: (id: string, unity_id: string) => PromiseEither<AbstractError, IProf>
-	findAll: (unity_id: string) => PromiseEither<AbstractError, IProf[]>
-	createProf: (data: Partial<IProf>) => PromiseEither<AbstractError, IProf>
-	deleteProfById: (id: string) => PromiseEither<AbstractError, IProf>
-	updateProfById: (
-		id: string,
-		data: Partial<IProf>,
-	) => PromiseEither<AbstractError, IProf>
+	findAll: () => PromiseEither<AbstractError, IProf[]>
 }
