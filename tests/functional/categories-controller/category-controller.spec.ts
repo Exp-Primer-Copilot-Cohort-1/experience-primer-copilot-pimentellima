@@ -41,6 +41,9 @@ test.group('Category Controller', () => {
 	}).skip()
 	test('display update category', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
+		await Category.deleteMany({ unity_id: '63528c11c109b232759921d1' })
+
+
 		const category = await Category.create({ ...data })
 
 		const updatedData = {
@@ -52,6 +55,7 @@ test.group('Category Controller', () => {
 			.put(`categories/${category._id}`)
 			.json({ ...updatedData })
 			.bearerToken(token.token)
+		// console.log(response.body())
 
 		response.assertStatus(200)
 		const updatedCategory = await Category.findById(category._id)
@@ -63,6 +67,8 @@ test.group('Category Controller', () => {
 	})
 	test('display show category', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
+		await Category.deleteMany({ unity_id: '63528c11c109b232759921d1' })
+
 		const categories = await Category.create({ ...data, active: true, name: 'show' })
 
 		const response = await client
