@@ -6,6 +6,7 @@ import { colorize } from '../adapters/controller/helpers/colorize'
 export interface ILogger {
 	log: (url: string, method: string, statusCode: number, err?: Error | any) => void
 	emit: (msg: string, err?: Error | any) => void
+	fatal: (msg: string, err?: Error | any) => void
 }
 
 @singleton()
@@ -38,6 +39,7 @@ export class Logger implements ILogger {
 	}
 
 	fatal(msg: string, err?: Error | any) {
+		console.log(msg, err)
 		LoggerAdonisjs.error(msg, err)
 	}
 }

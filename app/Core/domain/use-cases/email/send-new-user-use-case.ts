@@ -40,8 +40,6 @@ export class SendNewUserUseCase implements ISendNewUserUseCase {
 	 */
 	async execute({ email, id, name }: In): PromiseEither<AbstractError, Message> {
 
-		console.log('SendNewUserUseCase', { email, id, name })
-
 		const promiseSendConfirm = this.sendActivation.execute({
 			id: id.toString(),
 			email: email,
