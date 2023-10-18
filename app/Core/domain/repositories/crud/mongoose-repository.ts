@@ -7,8 +7,8 @@ import { ICount } from '../helpers/count'
 import { GenericManagerInterface } from './generics-manager.interface'
 
 @injectable()
-@registry([{ token: MongooseRepository, useClass: MongooseRepository }])
-export class MongooseRepository<T> implements GenericManagerInterface<T> {
+@registry([{ token: CRUDRepository, useClass: CRUDRepository }])
+export class CRUDRepository<T> implements GenericManagerInterface<T> {
 
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery,

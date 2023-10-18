@@ -1,8 +1,16 @@
 import LoggerAdonisjs from '@ioc:Adonis/Core/Logger'
 import { Methods } from 'App/Types/IHelpers'
+import { registry, singleton } from 'tsyringe'
 import { colorize } from '../adapters/controller/helpers/colorize'
 
-class Logger {
+export interface ILogger {
+	log: (url: string, method: string, statusCode: number, err?: Error | any) => void
+	emit: (msg: string, err?: Error | any) => void
+}
+
+@singleton()
+@registry([{ token: Logger, useClass: Logger }])
+export class Logger implements ILogger {
 	constructor() { }
 
 	log(url: string, method: string, statusCode: number, err?: Error | any) {

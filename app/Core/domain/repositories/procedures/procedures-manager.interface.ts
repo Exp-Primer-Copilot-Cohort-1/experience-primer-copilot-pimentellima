@@ -9,7 +9,7 @@ export interface ProceduresManagerInterface {
 	) => PromiseEither<AbstractError, IProcedure[]>
 	findById: (id: string) => PromiseEither<AbstractError, IProcedure>
 	findAll: (unity_id: string) => PromiseEither<AbstractError, IProcedure[]>
-	deleteById: (id: string) => PromiseEither<AbstractError, IProcedure>
+	delete: (id: string) => PromiseEither<AbstractError, IProcedure>
 	create: (data: any) => PromiseEither<AbstractError, IProcedure>
 	update: (
 		id: string,

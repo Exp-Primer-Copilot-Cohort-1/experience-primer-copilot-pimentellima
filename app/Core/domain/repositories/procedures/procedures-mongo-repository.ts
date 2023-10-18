@@ -63,7 +63,7 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 		return right(procedure as unknown as IProcedure[])
 	}
 
-	async deleteById(id: string): PromiseEither<AbstractError, IProcedure> {
+	async delete(id: string): PromiseEither<AbstractError, IProcedure> {
 		const procedure = await Procedure.findById(id).orFail(
 			new ProcedureNotFoundError(),
 		)

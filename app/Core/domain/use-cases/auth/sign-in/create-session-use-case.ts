@@ -10,8 +10,6 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import { injectable, registry } from 'tsyringe'
 
-const production = process.env.NODE_ENV === 'production'
-
 @injectable()
 @registry([{ token: CreateSessionUseCase, useClass: CreateSessionUseCase }])
 export class CreateSessionUseCase implements UseCase<Credentials, ISession> {
@@ -46,8 +44,6 @@ export class CreateSessionUseCase implements UseCase<Credentials, ISession> {
 		}
 
 		const user = sessionOrErr.extract()
-
-		if (!user?.active && production) return left(new UserNotActiveError())
 
 		return right({
 			user,
