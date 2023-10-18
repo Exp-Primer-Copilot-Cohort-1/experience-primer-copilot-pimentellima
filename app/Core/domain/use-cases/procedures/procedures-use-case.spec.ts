@@ -7,7 +7,9 @@ import { IProcedure } from 'App/Types/IProcedure'
 import {
     CreateProceduresUseCase,
     DeleteProceduresByIdUseCase,
-    FindAllProceduresUseCase,
+
+    FindAllProceduresByUnityUseCase,
+
     UpdateProceduresByIdUseCase
 } from './index'
 
@@ -60,7 +62,7 @@ const makeSutCreate = () => {
 }
 
 const makeSutFindAll = () => {
-    const sut = new FindAllProceduresUseCase(ProcedureManager)
+    const sut = new FindAllProceduresByUnityUseCase(ProcedureManager)
     return { sut, }
 }
 

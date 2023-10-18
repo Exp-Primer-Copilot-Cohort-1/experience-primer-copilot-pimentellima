@@ -15,6 +15,6 @@ export class DeleteProceduresByIdUseCase implements UseCase<In, any> {
 
 		if (!id) return left(new IdNotProvidedError())
 
-		return await this.manager.deleteById(id)
+		return await this.manager.delete(id)
 	}
 }
