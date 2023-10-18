@@ -7,7 +7,7 @@ import { PromiseEither, left } from 'App/Core/shared'
 import type { IAdminUser } from 'App/Types/IAdminUser'
 import type { IUnity } from 'App/Types/IUnity'
 import { inject, injectable, registry } from 'tsyringe'
-import { CreateUnityUseCase } from '../../unities'
+import { CreateUnityUseCase } from '../../../unities'
 import {
 	CreateFranchiseDrPerformanceUseCase,
 	INewDrPerformanceUseCase

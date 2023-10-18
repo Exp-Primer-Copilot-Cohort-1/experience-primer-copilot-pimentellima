@@ -1,9 +1,10 @@
 import { faker } from '@faker-js/faker'
 import { AuthContract } from '@ioc:Adonis/Addons/Auth'
+import { ROLES } from 'App/Roles/types'
 import { IUser } from 'App/Types/IUser'
 import { cpf } from 'cpf-cnpj-validator'
 import { describe, expect, it } from 'vitest'
-import { SessionRepository } from './session-mongo-repository'
+import { CreateSessionUseCase } from './create-session-use-case'
 
 class Auth implements AuthContract {
 	private user: IUser = {
@@ -32,7 +33,7 @@ class Auth implements AuthContract {
 		lunch_time_active: faker.datatype.boolean(),
 		schedule_obs: faker.lorem.paragraph(),
 		show_lack: faker.datatype.boolean(),
-		type: 'admin',
+		type: ROLES.ADMIN,
 		unity_id: '1',
 		updated_at: new Date(),
 	}
@@ -63,7 +64,7 @@ class Auth implements AuthContract {
 
 const makeSut = () => {
 	const auth = new Auth() as any
-	const sut = new SessionRepository(auth)
+	const sut = new CreateSessionUseCase(auth)
 
 	return {
 		auth,
@@ -71,11 +72,11 @@ const makeSut = () => {
 	}
 }
 
-describe.skip('Session Mongo Repository (Unit)', () => {
+describe('Create Session Use Case (Unit)', () => {
 	it('should call auth attempt with correct values', async () => {
 		const { sut } = makeSut()
 
-		const result = await sut.signIn('test@hotmail.com', '123456')
+		const result = await sut.execute({ email: 'test@hotmail.com', password: '123456' })
 
 		expect(result.isRight()).toBeTruthy()
 	})
@@ -83,7 +84,7 @@ describe.skip('Session Mongo Repository (Unit)', () => {
 	it('should return InvalidCredentialsError if auth attempt throws', async () => {
 		const { sut } = makeSut()
 
-		const result = await sut.signIn('invalid-email', 'invalid-password')
+		const result = await sut.execute({ email: 'invalid', password: 'invalid' })
 
 		expect(result.isLeft()).toBeTruthy()
 	})
@@ -96,7 +97,7 @@ describe.skip('Session Mongo Repository (Unit)', () => {
 			password: '123456',
 		})
 
-		const result = await sut.signIn('test@hotmail.com', '123456')
+		const result = await sut.execute({ email: 'test@hotmail.com', password: '123456' })
 
 		expect(result.isLeft()).toBeTruthy()
 	})

@@ -14,7 +14,7 @@ import { SessionTransaction } from 'App/Core/infra/session-transaction'
 import { ROLES } from 'App/Roles/types'
 import { IAdminUser } from 'App/Types/IAdminUser'
 import { cpf } from 'cpf-cnpj-validator'
-import { CreateUnityUseCase } from '../../unities'
+import { CreateUnityUseCase } from '../../../unities'
 import { CreateFranchiseDrPerformanceUseCase } from '../create-user-dr-performance/create-user-dr-performance-use-case'
 import { CreateUserUseCase } from '../create-user/create-user-use-case'
 

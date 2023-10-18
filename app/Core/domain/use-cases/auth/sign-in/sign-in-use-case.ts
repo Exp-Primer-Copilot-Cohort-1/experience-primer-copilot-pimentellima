@@ -1,8 +1,7 @@
 import { UnitiesMongooseRepository } from 'App/Core/domain/repositories'
 import {
 	ISession,
-	SessionManagerInterface,
-	UnitiesManagerInterface,
+	UnitiesManagerInterface
 } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
@@ -16,7 +15,7 @@ import { UnityValidationUseCase } from '../../validations'
 @registry([{ token: SignInUseCase, useClass: SignInUseCase }])
 export class SignInUseCase implements UseCase<Credentials, ISession> {
 	constructor(
-		@inject('SessionRepository') private readonly sessionManager: SessionManagerInterface,
+		@inject('CreateSessionUseCase') private readonly sessionManager: UseCase<Credentials, ISession>,
 		@inject(UnitiesMongooseRepository) private readonly unitiesManager: UnitiesManagerInterface,
 		@inject(UnityValidationUseCase) private readonly unityValidationUseCase: UseCase<IUnity, IUnity>,
 	) { } // eslint-disable-line
@@ -25,7 +24,7 @@ export class SignInUseCase implements UseCase<Credentials, ISession> {
 		email,
 		password,
 	}: Credentials): PromiseEither<AbstractError, ISession> {
-		const sessionOrErr = await this.sessionManager.signIn(email, password)
+		const sessionOrErr = await this.sessionManager.execute({ email, password })
 
 		if (sessionOrErr.isLeft()) return left(sessionOrErr.extract())
 

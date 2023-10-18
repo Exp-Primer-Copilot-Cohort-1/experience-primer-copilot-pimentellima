@@ -17,7 +17,17 @@ export class AdminMongooseRepository implements AdminManagerInterface {
 		@inject(SessionTransaction) private readonly session: ISessionTransaction
 	) { } // eslint-disable-line
 
-	public async create({
+	async activation(id: string): PromiseEither<AbstractError, IAdminUser> {
+		const user = await User.findByIdAndUpdate(id, { active: true }, { ...this.session.options })
+
+		if (!user) {
+			return left(new UserNotFoundError())
+		}
+
+		return right(user as IAdminUser)
+	}
+
+	async create({
 		_id, // eslint-disable-line
 		...admin
 	}: IAdminUser): PromiseEither<AbstractError, IAdminUser> {
@@ -30,7 +40,7 @@ export class AdminMongooseRepository implements AdminManagerInterface {
 		return right(user[0] as IAdminUser)
 	}
 
-	public async findByEmail(email: string): PromiseEither<AbstractError, IAdminUser> {
+	async findByEmail(email: string): PromiseEither<AbstractError, IAdminUser> {
 		const user = await User.findOne({ email })
 
 		if (!user) {
@@ -46,7 +56,7 @@ export class AdminMongooseRepository implements AdminManagerInterface {
 		return right(adminOrErr.extract())
 	}
 
-	public async findAll(): PromiseEither<AbstractError, IAdminUser[]> {
+	async findAll(): PromiseEither<AbstractError, IAdminUser[]> {
 		const users = await User.find({
 			type: {
 				$in: ['admin', 'admin_prof'],
@@ -68,7 +78,7 @@ export class AdminMongooseRepository implements AdminManagerInterface {
 		return right(entities)
 	}
 
-	public async findById(id: string): PromiseEither<AbstractError, IAdminUser> {
+	async findById(id: string): PromiseEither<AbstractError, IAdminUser> {
 		const user = await User.findById(id)
 
 		if (!user) {

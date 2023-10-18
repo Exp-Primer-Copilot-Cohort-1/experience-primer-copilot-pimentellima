@@ -43,7 +43,7 @@ Route.post('recover', 'RecoverController.store')
 
 Route.group(() => {
 	Route.post('user', 'SignUpAdminController.store')
-	Route.put('users-confirm/:id', 'SignUpAdminController.activeUser')
+	Route.put('users-confirm/:code', 'SignUpAdminController.activeUser')
 })
 
 Route.group(() => {

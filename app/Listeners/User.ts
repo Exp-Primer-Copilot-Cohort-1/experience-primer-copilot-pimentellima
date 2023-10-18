@@ -1,13 +1,17 @@
 import Env from '@ioc:Adonis/Core/Env';
 import type { EventsList } from '@ioc:Adonis/Core/Event';
-import { base64 } from '@ioc:Adonis/Core/Helpers';
 import logger from 'App/Core/infra/logger';
+import { encrypt } from 'App/Helpers/encrypt';
 import EDGE from 'App/Mail/constants/edge';
 import Mail from 'App/Mail/entity/mail';
 import { retry } from 'ts-retry-promise';
 export default class User {
 	async onNewUser(user: EventsList['new:user']) {
-		const encodeId = base64.encode(user.id)
+		const encodeId = await encrypt(JSON.stringify({
+			id: user.id.toString(),
+			email: user.email,
+		}))
+
 		const promiseSendConfirm = retry(async () => Mail.send({
 			edge: EDGE.confirm,
 			props: {
