@@ -61,6 +61,26 @@
 		{
 			"pattern": "resources/views/**/*.edge",
 			"reloadServer": false
+		},
+		{
+			"pattern": "public/*",
+			"reloadServer": false
+		},
+		{
+			"pattern": ".env",
+			"reloadServer": false
+		},
+		{
+			"pattern": "certs/*",
+			"reloadServer": false
+		},
+		{
+			"pattern": "ecosystem.config.js",
+			"reloadServer": false
+		},
+		{
+			"pattern": "docs/*",
+			"reloadServer": false
 		}
 	]
 }
