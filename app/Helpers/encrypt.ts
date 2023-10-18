@@ -21,3 +21,13 @@ export const decrypt = async (text: string) => {
 	const ncryptInstance = new Ncrypt(Env.get('APP_KEY'))
 	return ncryptInstance.decrypt(text)
 }
+
+export const decryptSync = (text: string) => {
+	if (isTestMode) {
+		return text
+	}
+
+	const Env = require('@ioc:Adonis/Core/Env')
+	const ncryptInstance = new Ncrypt(Env.get('APP_KEY'))
+	return ncryptInstance.decrypt(text)
+}

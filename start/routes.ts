@@ -43,7 +43,7 @@ Route.post('recover', 'RecoverController.store')
 
 Route.group(() => {
 	Route.post('user', 'SignUpAdminController.store')
-	Route.put('users-confirm/:id', 'SignUpAdminController.activeUser')
+	Route.put('users-confirm/:code', 'SignUpAdminController.activeUser')
 })
 
 Route.group(() => {
@@ -212,11 +212,11 @@ Route.group(() => {
 		}).as('attendance')
 
 		Route.group(() => {
-			Route.get('await', 'ActivityController.index').as(
+			Route.get('await', 'ActivityAwaitController.index').as(
 				'index',
 			)
 
-			Route.post('await', 'ActivityController.store').as(
+			Route.post('await', 'ActivityAwaitController.store').as(
 				'store',
 			)
 		}).as('activity-await')

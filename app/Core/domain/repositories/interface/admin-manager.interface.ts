@@ -7,4 +7,5 @@ export interface AdminManagerInterface {
 	findByEmail: (email: string) => PromiseEither<AbstractError, IAdminUser>
 	findAll: () => PromiseEither<AbstractError, IAdminUser[]>
 	create: (data: IAdminUser, ...args: any) => PromiseEither<AbstractError, IAdminUser>
+	activation: (id: string) => PromiseEither<AbstractError, IAdminUser>
 }

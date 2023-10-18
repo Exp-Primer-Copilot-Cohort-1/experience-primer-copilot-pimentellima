@@ -1,12 +1,9 @@
-import { base64 } from '@ioc:Adonis/Core/Helpers'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeCreateAdminComposer } from 'App/Core/composers'
-import { UserNotFoundException } from 'App/Exceptions'
-import User from 'App/Models/User'
+import { makeActivationUserComposer, makeCreateAdminComposer } from 'App/Core/composers'
 import { CREATE_USER_RULES } from '../../Rules'
 class SignUpAdminController {
-	constructor(private readonly userModel = User) { } // eslint-disable-line
+	constructor() { } // eslint-disable-line
 
 	async store(ctx: HttpContextContract) {
 		ctx.request.validate({
@@ -27,16 +24,8 @@ class SignUpAdminController {
 		return adaptRoute(makeCreateAdminComposer(), ctx)
 	}
 
-	async activeUser({ params }) {
-		const id = base64.decode(params.id)
-
-		const user = await this.userModel.findById(id)
-		if (!user) {
-			throw new UserNotFoundException()
-		}
-		user.active = true
-		await user.save()
-		return user
+	async activeUser(ctx: HttpContextContract) {
+		return adaptRoute(makeActivationUserComposer(), ctx)
 	}
 }
 

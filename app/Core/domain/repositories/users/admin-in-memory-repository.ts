@@ -3,8 +3,9 @@ import { PromiseEither, left, right } from 'App/Core/shared/either';
 import { AdminManagerInterface } from '../interface/admin-manager.interface';
 
 import { faker } from '@faker-js/faker';
+import { UserAlreadyExistsError } from 'App/Core/domain/errors/user-already-exists-error';
+import { UserNotFoundError } from 'App/Core/domain/errors/user-not-found';
 import { AbstractError } from 'App/Core/errors/error.interface';
-import { UserNotFoundError } from '../../errors/user-not-found';
 
 export class AdminInMemoryRepository implements AdminManagerInterface {
 	private items: AdminEntity[] = [];
@@ -22,7 +23,11 @@ export class AdminInMemoryRepository implements AdminManagerInterface {
 
 		const admin = adminOrErr.extract();
 
-		admin.defineId(faker.datatype.uuid());
+		admin.defineId(faker.string.uuid());
+
+		const item = this.items.find((item) => item.email === admin.email)
+
+		if (item) return left(new UserAlreadyExistsError())
 
 		this.items.push(admin);
 
