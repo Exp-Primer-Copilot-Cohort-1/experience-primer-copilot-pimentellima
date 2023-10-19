@@ -4,6 +4,7 @@ import { makeResendActivationComposer } from 'App/Core/composers/emails/make'
 
 class SendEmailController {
 	async resend(ctx: HttpContextContract) {
+		await ctx.bouncer.with('UsersPolicy').authorize('resend')
 		return adaptRoute(makeResendActivationComposer(), ctx)
 	}
 }
