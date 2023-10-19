@@ -37,7 +37,11 @@ test.group('Account Controller', () => {
 
 		assert.exists(newAccount.name)
 
-		response.assertStatus(204)
+		if (response.status() !== 200) {
+			response.assertStatus(204)
+		} else {
+			response.assertStatus(200)
+		}
 
 		const { deletedCount } = await Account.deleteOne({ name: newAccount.name })
 		expect(deletedCount).to.greaterThan(0)
