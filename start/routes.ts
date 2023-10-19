@@ -483,4 +483,9 @@ Route.group(() => {
 		Route.get('profs', 'ProfsController.counts').as('profs.counts')
 	}).prefix('counts')
 
+	Route.group(() => {
+		Route.post('activation/:id', 'SendEmailController.resend').as('emails.resend')
+	}).prefix('emails')
+		.middleware('throttle:resend_email')
+
 }).middleware(['auth', 'role', 'cache', 'statusPermission', 'successNoContent',])

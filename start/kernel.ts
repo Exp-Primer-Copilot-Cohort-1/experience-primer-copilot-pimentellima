@@ -49,4 +49,5 @@ Server.middleware.registerNamed({
 	statusPermission: 'App/Middleware/PermissionStatus',
 	successNoContent: 'App/Middleware/SuccessNoContent',
 	cache: 'App/Middleware/Cache',
+	throttle: () => import('@adonisjs/limiter/build/throttle'),
 })

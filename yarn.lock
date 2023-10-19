@@ -214,6 +214,14 @@
   resolved "https://registry.yarnpkg.com/@adonisjs/ioc-transformer/-/ioc-transformer-2.3.4.tgz#803e522935cf90452bc0fea940aec54f453482ae"
   integrity sha512-ik1C7f0Hbqenw6S1Ty06B4pznGfpUH5bL2fiCYgwq+jKPw8CKdsTQKvYudS6Tj68Nr6Mpqow4RNbvFV/OC0mZg==
 
+"@adonisjs/limiter@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@adonisjs/limiter/-/limiter-1.0.2.tgz#39f355320619b8c67a8e69797e4a2b1655e7e240"
+  integrity sha512-Fye9o+6e+1CSEpIvZ7QHX44CW3Yjw+U9xy/gat0nSezvtyxF5ql02P42m+WFaPmzWwZrcZtxnfBCykCTUDhD4w==
+  dependencies:
+    "@poppinss/utils" "^5.0.0"
+    rate-limiter-flexible "^2.4.1"
+
 "@adonisjs/logger@^4.1.5":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@adonisjs/logger/-/logger-4.1.5.tgz#4fbce11fb0914a5188d00c32f674cbdc87f6ccc6"
@@ -6932,6 +6940,11 @@ range-parser@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
+
+rate-limiter-flexible@^2.4.1:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/rate-limiter-flexible/-/rate-limiter-flexible-2.4.2.tgz#2a219cc473f015142fd8fb599371223d730decbd"
+  integrity sha512-rMATGGOdO1suFyf/mI5LYhts71g1sbdhmd6YvdiXO2gJnd42Tt6QS4JUKJKSWVVkMtBacm6l40FR7Trjo6Iruw==
 
 raw-body@^2.5.1:
   version "2.5.2"

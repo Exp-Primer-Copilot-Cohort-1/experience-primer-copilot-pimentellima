@@ -44,7 +44,8 @@
 			"adonis5-swagger",
 			"@adonisjs/view",
 			"@adonisjs/shield",
-			"@adonisjs/bouncer"
+			"@adonisjs/bouncer",
+			"@adonisjs/limiter"
 		]
 	}
 }

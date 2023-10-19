@@ -25,7 +25,8 @@
 			"environment": [
 				"web"
 			]
-		}
+		},
+		"./start/limiter"
 	],
 	"providers": [
 		"./providers/AppProvider",
@@ -38,7 +39,8 @@
 		"adonis5-swagger",
 		"@adonisjs/view",
 		"@adonisjs/shield",
-		"@adonisjs/bouncer"
+		"@adonisjs/bouncer",
+		"@adonisjs/limiter"
 	],
 	"aceProviders": [
 		"@adonisjs/repl"
