@@ -78,10 +78,13 @@ Route.group(() => {
 			'UserControllerV2.findAllUsersPerformsMedicalAppointments'
 		).as('users.profs.performs_medical_appointments.index')
 
-		Route.get('secs', 'UserControllerV2.findAllUsersSecs').as('users.secs.index')
 		Route.get('profs/:id', 'UserController.show').as('users.prof.show')
 		Route.put(':id', 'UserController.update').as('users.update')
 	}).prefix('users')
+
+	Route.group(() => {
+		Route.get('', 'SecsController.index').as('users.secs.index')
+	}).prefix('secs')
 
 	Route.group(() => {
 		Route.get('', 'ProfsController.index').as('users.prof.index')
@@ -481,6 +484,7 @@ Route.group(() => {
 		Route.get('payments-participations', 'PaymentProfController.counts').as('payments-participations.counts')
 		Route.get('stocks', 'StocksController.counts').as('stocks.counts')
 		Route.get('profs', 'ProfsController.counts').as('profs.counts')
+		Route.get('secs', 'SecsController.counts').as('secs.counts')
 	}).prefix('counts')
 
 	Route.group(() => {

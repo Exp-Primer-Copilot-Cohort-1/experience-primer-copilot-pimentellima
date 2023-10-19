@@ -3,6 +3,8 @@ import Mongoose, { Schema } from '@ioc:Mongoose'
 import { decrypt, encrypt } from 'App/Helpers/encrypt'
 import type { IUser } from 'App/Types/IUser'
 
+import { COLLECTION_NAME } from './User'
+
 /**
  * @swagger
  * components:
@@ -55,36 +57,10 @@ import type { IUser } from 'App/Types/IUser'
  *           type: string
  *         show_lack:
  *           type: boolean
- *         exib_minutes:
- *           type: integer
- *         is_friday:
- *           type: boolean
- *         is_saturday:
- *           type: boolean
- *         is_sunday:
- *           type: boolean
- *         is_monday:
- *           type: boolean
- *         is_tuesday:
- *           type: boolean
- *         is_wednesday:
- *           type: boolean
- *         is_thursday:
- *           type: boolean
- *         hour_end:
- *           type: string
- *         hour_start:
- *           type: string
- *         hour_end_lunch:
- *           type: string
- *         hour_start_lunch:
- *           type: string
- *         lunch_time_active:
- *           type: boolean
  *         rememberMeToken:
  *           type: string
  */
-const ProfSchema = new Schema<IUser>(
+const SecSchema = new Schema<IUser>(
 	{
 		name: {
 			type: String,
@@ -212,7 +188,7 @@ const ProfSchema = new Schema<IUser>(
 	},
 )
 
-ProfSchema.pre('save', async function (next) {
+SecSchema.pre('save', async function (next) {
 	if (process.env.NODE_ENV === 'test') return next()
 
 	if (this.isNew) {
@@ -222,7 +198,7 @@ ProfSchema.pre('save', async function (next) {
 	next()
 })
 
-ProfSchema.post('find', async function (docs) {
+SecSchema.post('find', async function (docs) {
 	if (process.env.NODE_ENV === 'test') return
 
 	for (const doc of docs) {
@@ -234,7 +210,7 @@ ProfSchema.post('find', async function (docs) {
 	}
 })
 
-ProfSchema.post('findOne', async function (doc) {
+SecSchema.post('findOne', async function (doc) {
 	if (process.env.NODE_ENV === 'test') return
 
 	const numbers = doc?.document?.replace(/\D/g, '')
@@ -244,7 +220,7 @@ ProfSchema.post('findOne', async function (doc) {
 	}
 })
 
-ProfSchema.index({ email: 1, document: 1 }, { unique: true })
-ProfSchema.index({ unity_id: 1, type: 1 }, { unique: false })
+SecSchema.index({ email: 1, document: 1 }, { unique: true })
+SecSchema.index({ unity_id: 1, type: 1 }, { unique: false })
 
-export default Mongoose.model<IUser>('profs', ProfSchema, 'users')
+export default Mongoose.model<IUser>('secs', SecSchema, COLLECTION_NAME)
