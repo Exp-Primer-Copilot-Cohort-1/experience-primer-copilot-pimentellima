@@ -6,7 +6,7 @@ export type Password = { password: string }
 export type CreatePasswordProps = {
 	password?: string
 	email: string
-	type: ROLES
+	type?: ROLES
 }
 
 

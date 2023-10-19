@@ -1,11 +1,10 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { adaptRoute } from 'App/Core/adapters'
+import { makeResendActivationComposer } from 'App/Core/composers/emails/make'
 
 class SendEmailController {
 	async resend(ctx: HttpContextContract) {
-		setTimeout(() => {
-			console.log('resend')
-		}, 5000)
-		return ctx.response.status(200).send({ message: 'Email resent' })
+		return adaptRoute(makeResendActivationComposer(), ctx)
 	}
 }
 export default SendEmailController

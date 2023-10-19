@@ -20,7 +20,7 @@ export class CreatePasswordUseCase implements ICreatePasswordUseCase {
 		type,
 		email,
 	}: CreatePasswordProps): PromiseEither<AbstractError, Password> {
-		if (password && roles.includes(type)) {
+		if (password && type && roles.includes(type)) {
 			return right({ password })
 		}
 
