@@ -3,10 +3,10 @@ import { adaptRoute } from 'App/Core/adapters'
 import {
 	makeCategoriesCreateComposer,
 	makeCategoriesDeleteByIdComposer,
+	makeCategoriesFindByUnityComposer,
 	makeCategoriesShowByIdComposer,
 	makeCategoriesUpdateByIdComposer,
-	makeCounts,
-	makeFindAll
+	makeCounts
 } from 'App/Core/composers'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/Category'
@@ -44,7 +44,7 @@ export class CategoryController {
 	 *         $ref: '#/components/responses/UnauthorizedError'
 	 */
 	async index(ctx: HttpContextContract) {
-		return adaptRoute(makeFindAll(ctx, COLLECTION_NAME), ctx)
+		return adaptRoute(makeCategoriesFindByUnityComposer(ctx), ctx)
 	}
 
 	/**

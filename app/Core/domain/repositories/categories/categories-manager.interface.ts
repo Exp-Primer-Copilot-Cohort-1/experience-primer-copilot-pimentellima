@@ -6,7 +6,7 @@ import { ICount } from '../helpers/count'
 export interface CategoriesManagerInterface {
 	getCount: (unity_id: string) => PromiseEither<AbstractError, ICount>
 	findByID: (id: string) => PromiseEither<AbstractError, ICategory>
-	findAll: (unity_id: string) => PromiseEither<AbstractError, ICategory[]>
+	findAll: () => PromiseEither<AbstractError, ICategory[]>
 	delete: (id: string) => PromiseEither<AbstractError, ICategory>
 	create: (data: Partial<ICategory>) => PromiseEither<AbstractError, ICategory>
 	update: (

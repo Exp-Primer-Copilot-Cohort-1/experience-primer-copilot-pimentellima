@@ -492,4 +492,4 @@ Route.group(() => {
 	}).prefix('emails')
 		.middleware('throttle:resend_email')
 
-}).middleware(['auth', 'role', 'cache', 'statusPermission', 'successNoContent',])
+}).middleware(['auth', 'role', 'statusPermission', 'successNoContent',])

@@ -1,16 +1,19 @@
 import { ControllerInjection } from 'App/Core/adapters/controller'
 import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
+import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
+
 import {
 	CreateCategoriesUseCase,
 	DeleteCategoriesByIdUseCase,
-	FindCategoriesByUnityUseCase,
+	FindAllCategoriesUseCase,
 	ShowCategoriesByIdUseCase,
 	UpdateCategoriesByIdUseCase
 } from 'App/Core/domain/use-cases'
-import { IOptsQuery } from 'App/Types/IOptsQuery'
+import { HttpContextContract } from 'App/Types/helpers'
 
-export const makeCategoriesFindByUnityComposer = (opts: IOptsQuery): ControllerGeneric => {
-	return ControllerInjection.resolve(FindCategoriesByUnityUseCase, opts)
+export const makeCategoriesFindByUnityComposer = (ctx: HttpContextContract): ControllerGeneric => {
+	const opts = getterOptInRequest(ctx)
+	return ControllerInjection.resolve(FindAllCategoriesUseCase, opts)
 }
 
 export const makeCategoriesShowByIdComposer = (): ControllerGeneric => {

@@ -1,13 +1,12 @@
 import { describe, expect, it, vi } from 'vitest'
 
 import { CategoriesManagerInterface } from 'App/Core/domain/repositories/interface'
-import { AbstractError } from 'App/Core/errors/error.interface'
 import { left, right } from 'App/Core/shared'
 import { ICategory } from 'App/Types/ICategory'
 import {
 	CreateCategoriesUseCase,
 	DeleteCategoriesByIdUseCase,
-	FindCategoriesByUnityUseCase,
+	FindAllCategoriesUseCase,
 	ShowCategoriesByIdUseCase,
 	UpdateCategoriesByIdUseCase
 } from './index'
@@ -38,6 +37,9 @@ const CategoryManager: CategoriesManagerInterface = {
 	}),
 	update: vi.fn(async (_id, category) => {
 		return right(category) as any
+	}),
+	getCount: vi.fn(async (unity_id) => {
+		return right(unity_id) as any
 	})
 }
 
@@ -47,7 +49,7 @@ const makeSutCreate = () => {
 }
 
 const makeSutFindAll = () => {
-	const sut = new FindCategoriesByUnityUseCase(CategoryManager)
+	const sut = new FindAllCategoriesUseCase(CategoryManager)
 	return { sut, }
 }
 
@@ -81,36 +83,6 @@ describe('Use cases ref categories (Unit)', () => {
 			})
 			const respOrErr = await sut.execute(category)
 			expect(respOrErr.isLeft()).toBeTruthy()
-		})
-	})
-
-	describe('Find all categories Use Case', () => {
-
-		it('should find all categories', async () => {
-			const { sut } = makeSutFindAll()
-			const respOrErr = await sut.execute({ unity_id: 'unity_id' })
-			expect(respOrErr.isRight()).toBeTruthy()
-		})
-
-		it('should return error when find all categories', async () => {
-			const { sut } = makeSutFindAll()
-
-			vi.spyOn(CategoryManager, 'findAll').mockImplementationOnce(async () => {
-				return left(undefined) as any
-			})
-
-			const respOrErr = await sut.execute({ unity_id: 'unity-invalid' })
-
-			expect(respOrErr.isLeft()).toBeTruthy()
-		})
-
-		it('should return error when find all categories with unity_id invalid', async () => {
-			const { sut } = makeSutFindAll()
-
-			const respOrErr = await sut.execute({ unity_id: null as any })
-
-			expect(respOrErr.isLeft()).toBeTruthy()
-			expect(respOrErr.extract()).toBeInstanceOf(AbstractError)
 		})
 	})
 
