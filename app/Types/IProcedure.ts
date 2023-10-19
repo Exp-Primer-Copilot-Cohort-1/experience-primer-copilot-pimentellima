@@ -1,20 +1,20 @@
 import { ObjectId } from '@ioc:Mongoose'
-import { IProf } from './IProf'
-import { StockProcedure } from './ITransaction'
+import { Generic, StockProcedure } from './ITransaction'
+
+export interface IHealthInsuranceInProcedure {
+	_id: string | ObjectId
+	price: number
+}
 
 export interface IProcedure {
-	_id: string
+	_id?: string
 	active: boolean
-	value: number
 	color: string
-	profs: IProf[]
+	profs: Generic[] | string[] | ObjectId[]
 	name: string
 	avgPrice?: number
 	minutes: number
-	health_insurances: {
-		_id: string | ObjectId
-		price: string
-	}[]
+	health_insurances: IHealthInsuranceInProcedure[]
 	products?: StockProcedure[]
 	unity_id: string | ObjectId
 	created_at: Date | string

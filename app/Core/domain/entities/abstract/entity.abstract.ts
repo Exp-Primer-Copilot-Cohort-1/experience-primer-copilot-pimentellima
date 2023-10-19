@@ -12,6 +12,7 @@ export abstract class Entity implements IEntity {
 	_id: string
 	created_at: Date
 	updated_at: Date
+	unity_id: string
 
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor() { }
@@ -68,6 +69,15 @@ export abstract class Entity implements IEntity {
 		}
 
 		this.updated_at = date
+		return this
+	}
+
+	public defineUnityId(unity_id?: string): this {
+		if (!unity_id) {
+			return this
+		}
+
+		this.unity_id = unity_id
 		return this
 	}
 

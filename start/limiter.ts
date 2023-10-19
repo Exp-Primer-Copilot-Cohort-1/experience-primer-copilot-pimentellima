@@ -13,7 +13,7 @@ import { Limiter } from '@adonisjs/limiter/build/services'
 
 export const { httpLimiters } = Limiter
 	.define('global', () => {
-		return Limiter.allowRequests(100).every('1 min')
+		return Limiter.allowRequests(1000).every('1 min')
 	})
 	.define('resend_email', () => {
 		return Limiter.allowRequests(1).every('30 min')

@@ -1,6 +1,5 @@
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
 import { PromiseEither, right } from 'App/Core/shared/either'
 import Procedure, { COLLECTIONS_REFS } from 'App/Models/Procedure'
 import { IProcedure } from 'App/Types/IProcedure'
@@ -15,8 +14,7 @@ import { ProceduresManagerInterface } from './procedures-manager.interface'
 export class ProceduresMongooseRepository implements ProceduresManagerInterface {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
-		@inject(OptsQuery) private readonly opts: OptsQuery,
-		@inject(SessionTransaction) private readonly session: ISessionTransaction,
+		@inject(OptsQuery) private readonly opts: OptsQuery
 	) { }
 	getCount: (unity_id: string) => PromiseEither<AbstractError, ICount>
 
@@ -75,14 +73,7 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 		_id, // eslint-disable-line @typescript-eslint/no-unused-vars
 		...data
 	}: Partial<IProcedure>): PromiseEither<AbstractError, IProcedure> {
-		const procedure = await Procedure.create({
-			...data,
-			profs: data.profs?.map((prof) => prof.value),
-			health_insurances: data.health_insurances?.map((health_insurance) => ({
-				_id: (health_insurance as any).value,
-				price: health_insurance.price,
-			})),
-		})
+		const procedure = await Procedure.create(data)
 
 		return right(procedure.toObject())
 	}
@@ -91,10 +82,10 @@ export class ProceduresMongooseRepository implements ProceduresManagerInterface 
 		id: string,
 		data: Partial<IProcedure>,
 	): PromiseEither<AbstractError, IProcedure> {
-		const procedures = await Procedure.findByIdAndUpdate(id, data, { new: true })
-			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
-			.populate(COLLECTIONS_REFS.HEALTH_INSURANCES, PROJECTION_DEFAULT)
-			.orFail(new ProcedureNotFoundError())
-		return right(procedures as unknown as IProcedure)
+		const procedures = await Procedure
+			.findByIdAndUpdate(id, data, { new: true })
+			.orFail()
+
+		return right(procedures)
 	}
 }
