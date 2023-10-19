@@ -160,10 +160,13 @@ class FinancialCategoryController {
 
 		const financialCategory = financialCategoryOrErr.extract()
 
-		return await FinancialCategory.findByIdAndUpdate(
+		const category = await FinancialCategory.findByIdAndUpdate(
 			params.id,
 			financialCategory,
+			{ new: true }
 		).orFail()
+
+		return category
 	}
 
 	async show({ params }: HttpContextContract) {

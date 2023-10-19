@@ -14,6 +14,10 @@ export default class SuccessNoContent {
 
 		if (hasContent) return // Return the normal response
 
+		const status = response.response.statusCode
+
+		if (status < 200 || status >= 300) return // Return the normal response
+
 		return response.status(204).send(null) // Return a 204 No Content response
 
 	}
