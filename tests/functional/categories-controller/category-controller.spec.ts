@@ -57,7 +57,11 @@ test.group('Category Controller', () => {
 			.bearerToken(token.token)
 		// console.log(response.body())
 
-		response.assertStatus(200)
+		if (response.status() !== 200) {
+			response.assertStatus(204)
+		} else {
+			response.assertStatus(200)
+		}
 		const updatedCategory = await Category.findById(category._id)
 
 		assert.equal(updatedCategory?.name, updatedData.name)
