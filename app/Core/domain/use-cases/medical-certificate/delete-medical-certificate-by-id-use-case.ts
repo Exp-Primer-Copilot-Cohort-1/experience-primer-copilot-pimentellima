@@ -13,7 +13,7 @@ export class DeleteMedicalCertificateByIdUseCase
 	implements UseCase<Input, IMedicalCertificate>
 {
 	constructor(
-		private readonly medicalCertificateManager: MedicalCertificateManagerInterface,
+		private readonly manager: MedicalCertificateManagerInterface,
 	) { } // eslint-disable-line
 
 	public async execute(
@@ -24,7 +24,7 @@ export class DeleteMedicalCertificateByIdUseCase
 		}
 
 		const medicalCertificateErr =
-			await this.medicalCertificateManager.deleteMedicalCertificateById(input.id)
+			await this.manager.deleteById(input.id)
 
 		return medicalCertificateErr
 	}

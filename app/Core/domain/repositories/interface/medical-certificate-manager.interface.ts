@@ -8,10 +8,10 @@ export interface MedicalCertificateManagerInterface {
 		unity_id: string,
 	) => PromiseEither<AbstractError, IMedicalCertificate[]>
 	findById: (id: string) => PromiseEither<AbstractError, IMedicalCertificate>
-	deleteMedicalCertificateById: (
+	deleteById: (
 		id: string,
 	) => PromiseEither<AbstractError, IMedicalCertificate>
-	updateMedicalCertificateById: (
+	update: (
 		id: string,
 		data: Partial<IMedicalCertificate>,
 	) => PromiseEither<AbstractError, IMedicalCertificate>
@@ -19,7 +19,7 @@ export interface MedicalCertificateManagerInterface {
 		id: string,
 		active: boolean,
 	) => PromiseEither<AbstractError, IMedicalCertificate>
-	createMedicalCertificate: (
+	create: (
 		data: Partial<IMedicalCertificate>,
 	) => PromiseEither<AbstractError, IMedicalCertificate>
 }

@@ -10,6 +10,7 @@ export class MedicalCertificateMongooseRepository
 	implements MedicalCertificateManagerInterface {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor() { }
+	updateMedicalCertificateById: (id: string, data: Partial<IMedicalCertificate>) => PromiseEither<AbstractError, IMedicalCertificate>
 
 	async updateMedicalCertificateActive(
 		id: string,
@@ -70,7 +71,7 @@ export class MedicalCertificateMongooseRepository
 		}
 		return right(medicalCertificate as unknown as IMedicalCertificate)
 	}
-	public async createMedicalCertificate(
+	public async create(
 		data: Partial<IMedicalCertificate>,
 	): PromiseEither<AbstractError, IMedicalCertificate> {
 		const medicalCertificate = await MedicalCertificate.create({
@@ -87,7 +88,7 @@ export class MedicalCertificateMongooseRepository
 			}),
 		)
 	}
-	public async updateMedicalCertificateById(
+	public async update(
 		id: string,
 		data: Partial<IMedicalCertificate>,
 	): PromiseEither<AbstractError, IMedicalCertificate> {
@@ -99,7 +100,7 @@ export class MedicalCertificateMongooseRepository
 		}
 		return right(medicalCertificate as unknown as IMedicalCertificate)
 	}
-	public async deleteMedicalCertificateById(
+	public async deleteById(
 		id: string,
 	): PromiseEither<AbstractError, IMedicalCertificate> {
 		const medicalCertificate = await MedicalCertificate.findById(id)
