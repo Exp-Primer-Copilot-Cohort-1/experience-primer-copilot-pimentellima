@@ -20,11 +20,11 @@ import { ActivitiesManagerInterface } from '../interface/activity-manager.interf
 @registry([{ token: ActivityMongoRepository, useClass: ActivityMongoRepository }])
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	constructor(
+		@inject(OptsQuery) private readonly opts: OptsQuery,
 		@inject(SessionTransaction) private readonly session: ISessionTransaction,
-		@inject(OptsQuery) private readonly opts?: OptsQuery,
 	) { } // eslint-disable-line
 
-	async findAllActivities(unity_id: string): PromiseEither<AbstractError, IActivity[]> {
+	async findAll(unity_id: string): PromiseEither<AbstractError, IActivity[]> {
 		if (!unity_id) return left(new UnityNotFoundError())
 
 		const activities = await Activity.find({
@@ -41,7 +41,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		return right(activities)
 	}
 
-	async findActivitiesByProf(
+	async findByProf(
 		unity_id: string,
 		prof_id: string,
 	): PromiseEither<AbstractError, IActivity[]> {
@@ -62,7 +62,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		return right(activities)
 	}
 
-	async findActivitiesByClient(
+	async findByClient(
 		unity_id: string,
 		client_id: string,
 	): PromiseEither<AbstractError, IActivity[]> {
@@ -83,7 +83,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		return right(activities)
 	}
 
-	async createActivity(
+	async create(
 		unity_id: string,
 		{
 			_id, // eslint-disable-line
@@ -105,7 +105,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		return right(created.toObject())
 	}
 
-	async findActivityById(id: string): PromiseEither<AbstractError, IActivity> {
+	async find(id: string): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new MissingParamsError('id'))
 
 		const activity = await Activity.findById(id)
@@ -119,7 +119,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		return right(activity.toObject())
 	}
 
-	async deleteActivityById(id: string): PromiseEither<AbstractError, IActivity> {
+	async deleteById(id: string): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new MissingParamsError('id'))
 
 		const activity = await Activity.findByIdAndDelete(id)
@@ -133,30 +133,12 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		return right(activity.toObject())
 	}
 
-	async updateActivityById(
+	async updateById(
 		id: string,
 		values: IActivity,
 	): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new ActivityNotFoundError())
-		const activity = await Activity.findById(id, null)
-		if (!activity) return left(new ActivityNotFoundError())
-		const entityOrErr = await ActivityEntity.build(values)
 
-		if (entityOrErr.isLeft()) return left(entityOrErr.extract())
-		const entity = entityOrErr.extract()
-
-		const updated = (await Activity.findByIdAndUpdate(id, entity, {
-			new: true,
-		})) as unknown as Document
-
-		return right(updated.toObject())
-	}
-
-	async updateActivityStatus(
-		id: string,
-		values: IActivity,
-	): PromiseEither<AbstractError, IActivity> {
-		if (!id) return left(new ActivityNotFoundError())
 		const activity = await Activity.findById(id, null, { ...this.session?.options })
 
 		if (!activity) return left(new ActivityNotFoundError())
@@ -165,6 +147,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 		if (entityOrErr.isLeft()) return left(entityOrErr.extract())
 
+		console.log(values.date, values.hour_end, values.hour_start)
 		const entity = entityOrErr.extract().update(values)
 
 		const updated = (await Activity.findByIdAndUpdate(id, entity, {

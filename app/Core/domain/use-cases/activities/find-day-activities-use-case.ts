@@ -12,13 +12,13 @@ type ActivityProps = {
 }
 
 export class FindDayActivitiesUseCase implements UseCase<ActivityProps, IActivity[]> {
-	constructor(private readonly activitiesManager: ActivitiesManagerInterface) {}
+	constructor(private readonly activitiesManager: ActivitiesManagerInterface) { }
 
 	public async execute({
 		unity_id,
 		prof_id,
 	}: ActivityProps): PromiseEither<AbstractError, IActivity[]> {
-		const activitiesByProfOrErr = await this.activitiesManager.findActivitiesByProf(
+		const activitiesByProfOrErr = await this.activitiesManager.findByProf(
 			unity_id,
 			prof_id,
 		)
@@ -56,7 +56,7 @@ export class FindDayActivitiesUseCase implements UseCase<ActivityProps, IActivit
 					})
 				}
 				const clientActivities =
-					await this.activitiesManager.findActivitiesByClient(
+					await this.activitiesManager.findByClient(
 						unity_id,
 						clientId,
 					)

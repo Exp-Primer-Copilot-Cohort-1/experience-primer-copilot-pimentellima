@@ -106,13 +106,12 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 				.defineHourEnd(params.hour_end)
 				.defineProcedures(params.procedures)
 				.defineScheduled(params.scheduled || AppointmentStatus.SCHEDULED)
-				.defineClient(params.client as string)
+				.defineClient(params.client?.toString())
 				.defineType(STATUS_ACTIVITY.MARKED)
 				.defineObs(params.obs)
-				.defineProf(params.prof as string)
+				.defineProf(params.prof.toString())
 				.defineActive(true)
-				.defineUnityId(params.unity_id as string)
-
+				.defineUnityId(params.unity_id?.toString() as string)
 
 			const { profData, scheduleBlocks } = await fetchUserAndScheduleBlocks(
 				activity.prof as string,

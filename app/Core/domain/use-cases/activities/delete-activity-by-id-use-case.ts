@@ -12,7 +12,7 @@ export class DeleteActivityByIdUseCase implements UseCase<ActivityProps, IActivi
 	constructor(private readonly activitiesManager: ActivitiesManagerInterface) { } // eslint-disable-line
 
 	public async execute(params: ActivityProps): PromiseEither<AbstractError, IActivity> {
-		const activityOrErr = await this.activitiesManager.deleteActivityById(params?.id)
+		const activityOrErr = await this.activitiesManager.deleteById(params?.id)
 
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract())
 		const activity = activityOrErr.extract()

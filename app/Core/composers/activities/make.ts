@@ -16,12 +16,11 @@ import { CreateRecurrentActivityUseCase } from 'App/Core/domain/use-cases/activi
 import { UpdateActivityPaymentUseCase } from 'App/Core/domain/use-cases/activities/update-activity-payment-use-case'
 import { UpdateActivityStatusByIdUseCase } from 'App/Core/domain/use-cases/activities/update-activity-status-by-use-case'
 import { UpdateActivityByIdUseCase } from 'App/Core/domain/use-cases/activities/update-activity-use-case'
-import { SessionTransaction } from 'App/Core/infra/session-transaction'
 import { IOptsQuery } from 'App/Types/IOptsQuery'
 
 export const makeCreateActivityComposer = (): ControllerGeneric => {
 	return new Controller(
-		new CreateActivityUseCase(new ActivityMongoRepository(new SessionTransaction())),
+		new CreateActivityUseCase(new ActivityMongoRepository()),
 	)
 }
 
@@ -37,21 +36,21 @@ export const makeCreateRecurrentActivityComposer = (): ControllerGeneric => {
 export const makeDeleteActivityByIdComposer = (): ControllerGeneric => {
 	return new Controller(
 		new DeleteActivityByIdUseCase(
-			new ActivityMongoRepository(new SessionTransaction()),
+			new ActivityMongoRepository(),
 		),
 	)
 }
 export const makeFindActivityByClientIdComposer = (): ControllerGeneric => {
 	return new Controller(
 		new FindActivitiesByClientIdUseCase(
-			new ActivityMongoRepository(new SessionTransaction()),
+			new ActivityMongoRepository(),
 		),
 	)
 }
 export const makeFindActivityByIdComposer = (): ControllerGeneric => {
 	return new Controller(
 		new FindActivityByIdUseCase(
-			new ActivityMongoRepository(new SessionTransaction()),
+			new ActivityMongoRepository(),
 		),
 	)
 }
@@ -59,7 +58,7 @@ export const makeFindActivityByIdComposer = (): ControllerGeneric => {
 export const makeFindDayActivitiesComposer = (): ControllerGeneric => {
 	return new Controller(
 		new FindDayActivitiesUseCase(
-			new ActivityMongoRepository(new SessionTransaction()),
+			new ActivityMongoRepository(),
 		),
 	)
 }
@@ -67,7 +66,7 @@ export const makeFindDayActivitiesComposer = (): ControllerGeneric => {
 export const makeFindActivitiesByProfIdComposer = (): ControllerGeneric => {
 	return new Controller(
 		new FindActivitiesByProfIdUseCase(
-			new ActivityMongoRepository(new SessionTransaction()),
+			new ActivityMongoRepository(),
 		),
 	)
 }
@@ -80,10 +79,7 @@ export const makeFindAllActivitiesPendingComposer = (opts: IOptsQuery): Controll
 }
 
 export const makeUpdateActivityByIdComposer = (): ControllerGeneric => {
-	const session = new SessionTransaction()
-	return new Controller(
-		new UpdateActivityByIdUseCase(new ActivityMongoRepository(session), session),
-	)
+	return ControllerInjection.resolve(UpdateActivityByIdUseCase)
 }
 
 export const makeUpdateActivityStatusComposer = (): ControllerGeneric => {

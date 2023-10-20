@@ -12,7 +12,7 @@ export class FindActivityByIdUseCase implements UseCase<ActivityProps, IActivity
 	constructor(private readonly activitiesManager: ActivitiesManagerInterface) { }
 
 	public async execute(params: ActivityProps): PromiseEither<AbstractError, IActivity> {
-		const activityOrErr = await this.activitiesManager.findActivityById(params?.id)
+		const activityOrErr = await this.activitiesManager.find(params?.id)
 
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract())
 		const activity = activityOrErr.extract()

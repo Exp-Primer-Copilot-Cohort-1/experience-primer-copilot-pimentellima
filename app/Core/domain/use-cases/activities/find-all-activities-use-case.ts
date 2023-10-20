@@ -13,12 +13,14 @@ type ActivityProps = {
 @injectable()
 @registry([{ token: FindAllActivitiesUseCase, useClass: FindAllActivitiesUseCase }])
 export class FindAllActivitiesUseCase implements UseCase<ActivityProps, IActivity[]> {
+
 	constructor(
-		@inject(ActivityMongoRepository) private readonly manager: ActivitiesManagerInterface) { }
+		@inject(ActivityMongoRepository) private readonly manager: ActivitiesManagerInterface
+	) { }
 
 	public async execute({
 		unity_id
 	}: ActivityProps): PromiseEither<AbstractError, IActivity[]> {
-		return await this.manager.findAllActivities(unity_id)
+		return await this.manager.findAll(unity_id)
 	}
 }
