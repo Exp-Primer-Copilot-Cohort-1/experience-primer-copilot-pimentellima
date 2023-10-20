@@ -381,7 +381,7 @@ Route.group(() => {
 		Route.delete('/:id', 'DefaultConfigController.destroy').as(
 			'default-configs.destroy',
 		)
-		Route.post('', 'DefaultConfigController.store').as('default-configs.store')
+		Route.post('/:id', 'DefaultConfigController.store').as('default-configs.store')
 	}).prefix('default-configs')
 
 	Route.group(() => {

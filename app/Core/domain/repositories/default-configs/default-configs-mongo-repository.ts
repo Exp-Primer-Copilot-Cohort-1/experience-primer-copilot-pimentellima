@@ -1,57 +1,42 @@
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { PromiseEither, left, right } from 'App/Core/shared/either'
-import DefaultConfig from 'App/Models/DefaultConfig'
+import { PromiseEither, right } from 'App/Core/shared/either'
+import DefaultConfig, { COLLECTION_REFS } from 'App/Models/DefaultConfig'
 import { IDefaultConfig } from 'App/Types/IDefaultConfig'
-import { UnityNotFoundError } from '../../errors/unity-not-found'
+import { inject, injectable, registry } from 'tsyringe'
+import { PROJECTION_DEFAULT } from '../helpers/projections'
 import { DefaultConfigsManagerInterface } from '../interface'
-
+@injectable()
+@registry([{ token: DefaultConfigsMongooseRepository, useClass: DefaultConfigsMongooseRepository }])
 export class DefaultConfigsMongooseRepository implements DefaultConfigsManagerInterface {
-	constructor() { }
-	public async createDefaultConfigs(
+	constructor(
+		@inject(OptsQuery) private readonly optsQuery: OptsQuery
+	) { }
+
+	async updateOrCreate(
 		data,
 	): PromiseEither<AbstractError, IDefaultConfig> {
-		const configs = await DefaultConfig.create({
-			...data,
-		})
-		return right(configs)
+		const doc = await DefaultConfig.findByIdAndUpdate(
+			this.optsQuery.unity_id,
+			{
+				$set: {
+					configs: data,
+				},
+			},
+		).orFail()
+
+		return right(doc.configs)
 	}
 
-	public async findByUnity(
-		unity_id: string,
-	): PromiseEither<AbstractError, IDefaultConfig[]> {
-		const configs = await DefaultConfig.find({
-			unity_id: unity_id,
-		})
-		if (!configs) {
-			return left(new UnityNotFoundError())
-		}
-		return right(configs)
+	async find(): PromiseEither<AbstractError, IDefaultConfig> {
+		const doc = await DefaultConfig
+			.findById(this.optsQuery.unity_id)
+			.populate(COLLECTION_REFS.BANK, PROJECTION_DEFAULT)
+			.populate(COLLECTION_REFS.COST_CENTER, PROJECTION_DEFAULT)
+			.orFail(new UnityNotFoundError())
+
+		return right(doc.configs)
 	}
-	async findById(id: string): PromiseEither<AbstractError, IDefaultConfig> {
-		const configs = await DefaultConfig.findById(id)
-		if (!configs) {
-			return left(new UnityNotFoundError())
-		}
-		return right(configs)
-	}
-	public async deleteDefaultConfigsById(
-		id: string,
-	): PromiseEither<AbstractError, IDefaultConfig> {
-		const configs = await DefaultConfig.findById(id)
-		if (!configs) {
-			return left(new UnityNotFoundError())
-		}
-		await configs.deleteOne()
-		return right(configs)
-	}
-	public async updateDefaultConfigsById(
-		id: string,
-		data: Partial<IDefaultConfig>,
-	): PromiseEither<AbstractError, IDefaultConfig> {
-		const configs = await DefaultConfig.findByIdAndUpdate(id, data)
-		if (!configs) {
-			return left(new UnityNotFoundError())
-		}
-		return right(configs)
-	}
+
 }
