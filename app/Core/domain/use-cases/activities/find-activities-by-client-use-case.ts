@@ -17,7 +17,7 @@ export class FindActivitiesByClientIdUseCase
 	public async execute(
 		params: ActivityProps,
 	): PromiseEither<AbstractError, IActivity[]> {
-		const activityOrErr = await this.activitiesManager.findActivitiesByClient(
+		const activityOrErr = await this.activitiesManager.findByClient(
 			params?.unity_id,
 			params?.client_id,
 		)

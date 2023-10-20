@@ -12,7 +12,7 @@ export class CreateActivityUseCase implements UseCase<Props, IActivity> {
 	constructor(private readonly activitiesManager: ActivitiesManagerInterface) { } // eslint-disable-line
 
 	public async execute(params: Props): PromiseEither<AbstractError, IActivity> {
-		const newActivityOrErr = await this.activitiesManager.createActivity(
+		const newActivityOrErr = await this.activitiesManager.create(
 			params.unity_id,
 			params,
 		)

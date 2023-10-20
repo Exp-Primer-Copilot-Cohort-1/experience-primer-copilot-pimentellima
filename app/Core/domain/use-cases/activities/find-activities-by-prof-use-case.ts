@@ -17,7 +17,7 @@ export class FindActivitiesByProfIdUseCase
 	public async execute(
 		params: ActivityProps,
 	): PromiseEither<AbstractError, IActivity[]> {
-		const activityOrErr = await this.activitiesManager.findActivitiesByProf(
+		const activityOrErr = await this.activitiesManager.findByProf(
 			params.unity_id,
 			params.prof_id,
 		)
