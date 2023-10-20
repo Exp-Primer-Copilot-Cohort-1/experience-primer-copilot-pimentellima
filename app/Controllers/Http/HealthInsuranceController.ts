@@ -2,8 +2,8 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import {
 	makeCounts,
-	makeFindAll,
 	makeHealthInsuranceCreateComposer,
+	makeHealthInsuranceFindAllByUnityIdComposer,
 	makeHealthInsuranceFindByIdComposer,
 	makeHealthInsuranceUpdateComposer
 } from 'App/Core/composers'
@@ -42,7 +42,7 @@ class HealthInsuranceController {
 	 *         $ref: '#/components/responses/InternalServerError'
 	 */
 	async index(ctx: HttpContextContract) {
-		return adaptRoute(makeFindAll(ctx, COLLECTION_NAME), ctx)
+		return adaptRoute(makeHealthInsuranceFindAllByUnityIdComposer(ctx), ctx)
 	}
 
 	/**

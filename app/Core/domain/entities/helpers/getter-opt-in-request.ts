@@ -4,7 +4,7 @@ import { IOptsQuery } from 'App/Types/IOptsQuery';
 
 function getterOptInRequest(ctx: HttpContextContract): IOptsQuery {
 	return {
-		sort: ctx.request.qs().sort as string,
+		sort: ctx.request.qs().sort as string || '--created_at',
 		limit: Number(ctx.request.qs().limit),
 		skip: Number(ctx.request.qs().skip),
 		active: ctx.request.qs().active,
