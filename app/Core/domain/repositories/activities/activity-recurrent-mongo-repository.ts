@@ -70,7 +70,9 @@ export class ActivityRecurrentMongoRepository
 				...values,
 				unity_id,
 				group_id,
+				type: STATUS_ACTIVITY.PENDING,
 			}
+
 			await Promise.all(
 				new Array(values.recurrences - values.schedulings).map(async () => {
 					const act = await ActivityPending.create(pendingActivity)

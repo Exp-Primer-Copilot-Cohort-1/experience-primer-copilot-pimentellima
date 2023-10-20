@@ -478,7 +478,6 @@ class ActivityController {
 		})
 	}
 
-	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async createRecurrentActivity(ctx: HttpContextContract) {
 		return adaptRoute(makeCreateRecurrentActivityComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,

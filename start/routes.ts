@@ -24,6 +24,12 @@ Route.group(() => {
 	Route.get('/client-model', 'FileController.downloadClientModel')
 }).prefix('file')
 
+Route.group(() => {
+	Route.put('/profile-picture', 'FileController.uploadProfilePicture')
+	Route.post('/treatment-picture', 'FileController.createClientPicture')
+	Route.get('/treatment-picture', 'FileController.downloadClientPictures')
+}).prefix('file').middleware(['auth'])
+
 Route.get('/', async () => {
 	return { hello: 'world' }
 })
@@ -59,6 +65,7 @@ Route.group(() => {
 
 	Route.group(() => {
 		Route.get('', 'ClientController.findAllUsersClients').as('clients.index')
+		Route.put('treatment-pictures/:client_id', 'ClientController.putTreatmentPictures')
 
 		Route.get(':id', 'ClientController.findUserClientByID').as('clients.show')
 		Route.get('verify/client', 'ClientController.verifyExistenceClient').as(
@@ -75,7 +82,7 @@ Route.group(() => {
 	Route.group(() => {
 		Route.get(
 			'profs/medical',
-			'UserControllerV2.findAllUsersPerformsMedicalAppointments'
+			'UserControllerV2.findAllUsersPerformsMedicalAppointments',
 		).as('users.profs.performs_medical_appointments.index')
 		Route.get('profs', 'UserControllerV2.findAllUsersProfs').as('users.prof.index')
 		Route.get('secs', 'UserControllerV2.findAllUsersSecs').as('users.secs.index')
@@ -138,9 +145,10 @@ Route.group(() => {
 		Route.delete(':id/products', 'ProcedureController.removeProduct').as(
 			'procedures.removeProduct',
 		)
-		Route.get(':id/:health_insurance_id', 'ProcedureController.showByHealthInsurance').as(
-			'procedures.showByHealthInsurance',
-		)
+		Route.get(
+			':id/:health_insurance_id',
+			'ProcedureController.showByHealthInsurance',
+		).as('procedures.showByHealthInsurance')
 	}).prefix('procedures')
 
 	Route.group(() => {
@@ -194,7 +202,9 @@ Route.group(() => {
 		Route.put('status/:id', 'ActivityController.updateActivityStatusById').as(
 			'activity.status',
 		)
-		Route.get('/day/:prof_id', 'ActivityController.findDayActivities').as('activity.day')
+		Route.get('/day/:prof_id', 'ActivityController.findDayActivities').as(
+			'activity.day',
+		)
 		Route.put('started_at/:id', 'ActivityController.updateActivityStartedAt').as(
 			'activity.startedAt',
 		)
@@ -283,7 +293,9 @@ Route.group(() => {
 	}).prefix('ingredients')
 
 	Route.group(() => {
-		Route.get('', 'MedicalCertificateController.index').as('medical-certificates.index')
+		Route.get('', 'MedicalCertificateController.index').as(
+			'medical-certificates.index',
+		)
 
 		Route.get('/:id', 'MedicalCertificateController.show').as(
 			'medical-certificates.show',
@@ -420,21 +432,17 @@ Route.group(() => {
 	}).prefix('unities')
 
 	Route.group(() => {
-
-
 		Route.get('', 'BusinessFranchisesController.index').as(
 			'business-franchises.index',
 		)
 		Route.get('/:id', 'BusinessFranchisesController.show').as(
 			'business-franchises.show',
 		)
-
 	}).prefix('business-franchises')
 
-	Route.get(
-		'is-a-franchise',
-		'BusinessFranchisesController.isAFranchise',
-	).as('business-franchises.isAFranchise')
+	Route.get('is-a-franchise', 'BusinessFranchisesController.isAFranchise').as(
+		'business-franchises.isAFranchise',
+	)
 
 	Route.group(() => {
 		Route.get('', 'ProfileController.show').as('profile.show')
@@ -442,5 +450,4 @@ Route.group(() => {
 		Route.get('unity', 'UnityController.showProfile').as('profile.unity.showProfile')
 		Route.put('unity', 'UnityController.updateProfile').as('profile.unity.update')
 	}).prefix('profile')
-
 }).middleware(['auth', 'role', 'statusPermission', 'successNoContent'])

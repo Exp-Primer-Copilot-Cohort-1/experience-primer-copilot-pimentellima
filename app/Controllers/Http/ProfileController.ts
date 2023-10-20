@@ -4,7 +4,6 @@ import Profile from 'App/Models/Profile'
 import { ROLES } from 'App/Roles/types'
 import { IProfile } from 'App/Types/IUser'
 
-
 class ProfileController {
 	async show({ auth }: HttpContextContract) {
 		const userLogger = auth.user
@@ -16,7 +15,6 @@ class ProfileController {
 
 	async update({ auth, request, response }: HttpContextContract) {
 		const data = request.all() as IProfile
-
 		const userLogger = auth.user
 
 		const profileOrErr = await ProfileEntity.build({
@@ -33,7 +31,9 @@ class ProfileController {
 
 		const profile = profileOrErr.extract()
 
-		const user = await Profile.findByIdAndUpdate(userLogger?._id, profile, { new: true }).orFail()
+		const user = await Profile.findByIdAndUpdate(userLogger?._id, profile, {
+			new: true,
+		}).orFail()
 
 		return user
 	}

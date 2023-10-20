@@ -1,6 +1,4 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Client, { COLLECTIONS_REFS, COLLECTION_NAME } from 'App/Models/Client'
-
 import { adaptRoute } from 'App/Core/adapters'
 import {
 	makeClientCreateComposer,
@@ -11,10 +9,81 @@ import { PROJECTION_DEFAULT } from 'App/Core/domain/repositories/helpers/project
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { left } from 'App/Core/shared'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
-import { IUserClient } from 'App/Types/IClient'
+import Client, { COLLECTIONS_REFS, COLLECTION_NAME } from 'App/Models/Client'
+import { IUserClient, TreatmentPicture } from 'App/Types/IClient'
 import { IFormAnswer } from 'Types/IFormAnswer'
+import crypto from 'crypto'
+import { baseGCSUrl, bucket } from '../../../gcs'
+
+function generateHash() {
+	const randomValue = Math.random().toString(36).substring(2, 15)
+	const hash = crypto.createHash('sha256').update(randomValue).digest('hex')
+	return hash
+}
 
 class ClientController {
+	async putTreatmentPictures({ request, response, auth }: HttpContextContract) {
+		const { user } = auth
+		if (!user) return response.status(401).send({ error: 'User not found' })
+		const clientId = request.params().client_id
+
+		try {
+			const promises: Promise<string>[] = []
+			request.multipart.onFile('files', {}, async (file) => {
+				const promise = new Promise<string>((resolve, reject) => {
+					const hash = generateHash()
+					const filePath = clientId + '/' + hash
+					const publicUrl = baseGCSUrl + '/' + filePath
+					const bucketFile = bucket.file(filePath)
+
+					file.pipe(
+						bucketFile.createWriteStream({
+							metadata: { contentType: file.headers['content-type'] },
+						}),
+					)
+						.on('finish', async () => {
+							resolve(publicUrl)
+						})
+						.on('error', (err) => {
+							reject(err)
+						})
+				})
+				promises.push(promise)
+			})
+
+			await request.multipart.process()
+
+			const imagesUrls = await Promise.all(promises)
+			const { descriptions, date }: { descriptions: string[]; date: string } =
+				request.only(['descriptions', 'date', 'clientId'])
+			const dateObj = new Date(date)
+			const descriptionsArr: string[] = new Array(imagesUrls.length).fill('')
+			descriptions?.forEach((d, index) => (descriptionsArr[index] = d))
+			const treatment_pictures: TreatmentPicture[] = imagesUrls.map(
+				(image_url, index) => ({
+					description: descriptionsArr[index],
+					image_url,
+					date: dateObj,
+				}),
+			)
+
+			const client = await Client.findByIdAndUpdate(clientId, {
+				$push: {
+					treatment_pictures: {
+						$each: treatment_pictures,
+					},
+				},
+			}, {
+				new: true
+			})
+			console.log(client)
+			return client
+		} catch (err) {
+			console.log(err)
+			return err
+		}
+	}
+
 	async verifyExistenceClient({ request, auth, response }: HttpContextContract) {
 		const { name, birth_date } = request.all()
 		const unity_id = auth.user?.unity_id
@@ -129,7 +198,7 @@ class ClientController {
 				return ctx.response
 					.status(404)
 					.json({ message: 'Cliente não encontrado' })
-			const answers = client.form_answers.filter((ans) => {
+			const answers = client.form_answers?.filter((ans) => {
 				if (ans.prof.value === user._id.toString()) {
 					return true
 				}
@@ -194,7 +263,7 @@ class ClientController {
 			const client_id: string = ctx.params.client_id
 			const client = await Client.findById(client_id)
 			if (!client) return ctx.response.status(500)
-			client.form_answers = client.form_answers.map((ans) => {
+			client.form_answers = client.form_answers?.map((ans) => {
 				if (ans.prof.value !== user._id.toString()) return ans
 				return {
 					...ans,
@@ -204,7 +273,7 @@ class ClientController {
 					],
 				}
 			})
-			client.save((error, client) => {
+			client.save((error: any, client: any) => {
 				if (error) {
 					throw error
 				} else {

@@ -13,7 +13,7 @@ import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
 import { ActivitiesManagerInterface } from '../interface/activity-manager.interface'
 
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
-	constructor(private readonly session?: ISessionTransaction) { } // eslint-disable-line
+	constructor(private readonly session?: ISessionTransaction) {} // eslint-disable-line
 
 	async findAllActivities(unity_id: string): PromiseEither<AbstractError, IActivity[]> {
 		if (!unity_id) return left(new UnitNotFoundError())
@@ -137,7 +137,6 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		const updated = (await Activity.findByIdAndUpdate(id, entity, {
 			new: true,
 		})) as unknown as Document
-
 
 		return right(updated.toObject())
 	}
