@@ -24,6 +24,12 @@ Route.group(() => {
 	Route.get('/client-model', 'FileController.downloadClientModel')
 }).prefix('file')
 
+Route.group(() => {
+	Route.put('/profile-picture', 'FileController.uploadProfilePicture')
+	Route.post('/treatment-picture', 'FileController.createClientPicture')
+	Route.get('/treatment-picture', 'FileController.downloadClientPictures')
+}).prefix('file').middleware(['auth'])
+
 Route.get('/', async () => {
 	return { hello: 'world' }
 })
@@ -75,7 +81,7 @@ Route.group(() => {
 	Route.group(() => {
 		Route.get(
 			'profs/medical',
-			'UserControllerV2.findAllUsersPerformsMedicalAppointments'
+			'UserControllerV2.findAllUsersPerformsMedicalAppointments',
 		).as('users.profs.performs_medical_appointments.index')
 
 		Route.get('profs/:id', 'UserController.show').as('users.prof.show')
@@ -145,9 +151,10 @@ Route.group(() => {
 		Route.delete(':id/products', 'ProcedureController.removeProduct').as(
 			'procedures.removeProduct',
 		)
-		Route.get(':id/:health_insurance_id', 'ProcedureController.showByHealthInsurance').as(
-			'procedures.showByHealthInsurance',
-		)
+		Route.get(
+			':id/:health_insurance_id',
+			'ProcedureController.showByHealthInsurance',
+		).as('procedures.showByHealthInsurance')
 	}).prefix('procedures')
 
 	Route.group(() => {
@@ -197,7 +204,9 @@ Route.group(() => {
 
 	Route.group(() => {
 
-		Route.get('/day/:prof_id', 'ActivityController.findDayActivities').as('activity.day')
+		Route.get('/day/:prof_id', 'ActivityController.findDayActivities').as(
+			'activity.day',
+		)
 
 		Route.put(':id', 'ActivityController.updateActivityById').as('activity.update')
 		Route.get('', 'ActivityController.findAllActivities').as('activity.index')
@@ -302,7 +311,9 @@ Route.group(() => {
 	}).prefix('ingredients')
 
 	Route.group(() => {
-		Route.get('', 'MedicalCertificateController.index').as('medical-certificates.index')
+		Route.get('', 'MedicalCertificateController.index').as(
+			'medical-certificates.index',
+		)
 
 		Route.get('/:id', 'MedicalCertificateController.show').as(
 			'medical-certificates.show',

@@ -18,13 +18,15 @@ export type ISponsor = {
 	phone: string
 }
 
-
 export enum Genders {
 	male = 'M',
 	female = 'F',
 	other = 'NB',
 	not_informed = 'O',
 }
+
+export type TreatmentPicture = { image_url: string; description: string | null; date: Date }
+
 export interface IUserClient extends Partial<IAddress> {
 	_id?: string
 	name: string
@@ -44,6 +46,7 @@ export interface IUserClient extends Partial<IAddress> {
 	nationality?: string
 	profession?: string
 	observation?: string
+	treatment_pictures?: TreatmentPicture[]
 	sms_checked?: boolean
 	mail_checked?: boolean
 	email?: string

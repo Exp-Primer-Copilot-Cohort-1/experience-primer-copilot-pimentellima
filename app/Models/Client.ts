@@ -294,6 +294,20 @@ const ClientSchema = new Schema<IUserClient>(
 			type: Boolean,
 			default: false,
 		},
+		treatment_pictures: [{
+			image_url: {
+				type: String,
+				required: true,
+			},
+			description: {
+				type: String || null,
+			},
+			date: {
+				type: Date,
+				required: true
+			},
+			_id: false
+		}],
 		sponsor: {
 			name: {
 				type: String,

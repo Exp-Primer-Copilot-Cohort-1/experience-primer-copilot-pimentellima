@@ -136,7 +136,6 @@ const ActivityAwaitSchema = new Schema<IActivityAwaitModel>(
 		},
 		type: {
 			type: String,
-
 			default: STATUS_ACTIVITY.AWAIT,
 		},
 	},

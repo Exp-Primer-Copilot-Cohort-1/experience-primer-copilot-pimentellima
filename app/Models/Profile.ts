@@ -13,7 +13,6 @@ const ProfileSchema = new Schema<IProfile>(
 		},
 		email: {
 			type: String,
-			required: true,
 			immutable: true,
 		},
 		celphone: {

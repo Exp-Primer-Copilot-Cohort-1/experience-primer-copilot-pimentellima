@@ -9,6 +9,7 @@ export const PROJECTION_CLIENT = {
 	label: '$name',
 	value: '$_id',
 	celphone: 1,
+	avatar: 1,
 	email: 1,
 }
 
