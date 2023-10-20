@@ -244,6 +244,7 @@ ProfSchema.post('findOne', async function (doc) {
 	}
 })
 
-ProfSchema.index({ email: 1, document: 1, unity_id: 1 }, { unique: true })
+ProfSchema.index({ email: 1, document: 1 }, { unique: true })
+ProfSchema.index({ unity_id: 1, type: 1 }, { unique: false })
 
 export default Mongoose.model<IUser>('profs', ProfSchema, 'users')

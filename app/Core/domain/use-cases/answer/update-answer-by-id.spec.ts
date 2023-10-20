@@ -1,7 +1,7 @@
+import { AnswerInMemoryRepository } from "App/Core/domain/repositories/answer/answer-in-memory-repository";
 import { describe, expect, it } from "vitest";
-import { AnswerInMemoryRepository } from "../../repositories/answer/answer-in-memory-repository";
-import { UpdateAnswerByIdUseCase } from "./update-answer-by-id-use-case";
 import { MissingParamsError } from "../../errors/missing-params";
+import { UpdateAnswerByIdUseCase } from "./update-answer-by-id-use-case";
 
 const answer = {
     name: 'EXAME CLÍNICO/FÍSICO',
@@ -126,7 +126,7 @@ describe("Update Answer (Unit)", () => {
         } as any);
 
         expect(respOrErr.isRight()).toBeTruthy();
-        if(respOrErr.isLeft()) return new Error();
+        if (respOrErr.isLeft()) return new Error();
         expect(respOrErr.extract().active).toBe(false);
     })
 

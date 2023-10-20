@@ -1,10 +1,10 @@
+import { HolidaysManagerInterface } from 'App/Core/domain/repositories/interface/holidays.interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IHoliday } from 'App/Types/IHoliday'
 import { InvalidParamsError } from '../../errors/invalid-params-error'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
-import { HolidaysManagerInterface } from '../../repositories/interface/holidays.interface'
+import { UnityNotFoundError } from '../../errors/unity-not-found'
 
 type DeleteHoliday = {
 	unity_id: string
@@ -19,7 +19,7 @@ export class RemoveHolidaysByUnityUseCase implements UseCase<DeleteHoliday, IHol
 		_id,
 	}: DeleteHoliday): PromiseEither<AbstractError, IHoliday[]> {
 		if (!unity_id) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		if (!_id) {

@@ -1,5 +1,5 @@
+import { HealthInsuranceInMemoryManager } from 'App/Core/domain/repositories'
 import { describe, expect, it, vi } from 'vitest'
-import { HealthInsuranceInMemoryManager } from '../../repositories'
 import { CreateHealthInsuranceUseCase } from './create-use-case'
 
 const item = {

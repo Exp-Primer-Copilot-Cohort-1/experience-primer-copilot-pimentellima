@@ -13,3 +13,8 @@ Event.on('new:user', 'User.onNewUser')
 Event.on('new:password', 'User.onNewPassword')
 
 Event.on('new:unity', 'Unity.onNewUnity')
+Event.on('new:reply-form-standard-franchise', 'ReplyStandardForm.onNewReplyFormStandardFranchise')
+Event.on(
+	'new:email-current-reply-in-greater-previous',
+	'ReplyStandardForm.onNewEmailCurrentReplyInGreaterPrevious'
+)

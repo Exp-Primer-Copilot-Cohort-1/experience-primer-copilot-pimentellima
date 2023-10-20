@@ -49,7 +49,7 @@ Route.post('recover', 'RecoverController.store')
 
 Route.group(() => {
 	Route.post('user', 'SignUpAdminController.store')
-	Route.put('users-confirm/:id', 'SignUpAdminController.activeUser')
+	Route.put('users-confirm/:code', 'SignUpAdminController.activeUser')
 })
 
 Route.group(() => {
@@ -64,8 +64,7 @@ Route.group(() => {
 	Route.post('users', 'UserController.store')
 
 	Route.group(() => {
-		Route.get('', 'ClientController.findAllUsersClients').as('clients.index')
-		Route.put('treatment-pictures/:client_id', 'ClientController.putTreatmentPictures')
+		Route.get('', 'ClientController.index').as('clients.index')
 
 		Route.get(':id', 'ClientController.findUserClientByID').as('clients.show')
 		Route.get('verify/client', 'ClientController.verifyExistenceClient').as(
@@ -84,11 +83,18 @@ Route.group(() => {
 			'profs/medical',
 			'UserControllerV2.findAllUsersPerformsMedicalAppointments',
 		).as('users.profs.performs_medical_appointments.index')
-		Route.get('profs', 'UserControllerV2.findAllUsersProfs').as('users.prof.index')
-		Route.get('secs', 'UserControllerV2.findAllUsersSecs').as('users.secs.index')
+
 		Route.get('profs/:id', 'UserController.show').as('users.prof.show')
 		Route.put(':id', 'UserController.update').as('users.update')
 	}).prefix('users')
+
+	Route.group(() => {
+		Route.get('', 'SecsController.index').as('users.secs.index')
+	}).prefix('secs')
+
+	Route.group(() => {
+		Route.get('', 'ProfsController.index').as('users.prof.index')
+	}).prefix('profs')
 
 	Route.group(() => {
 		Route.put(':id', 'ScheduledConfigController.update').as('scheduled.update')
@@ -195,31 +201,49 @@ Route.group(() => {
 		// Route.delete('unity/:id', 'UnityController.destroy')
 		Route.put(':_id', 'UnityController.update')
 	}).prefix('unity')
-}).middleware(['auth', 'role'])
 
-Route.group(() => {
 	Route.group(() => {
-		Route.put('status/:id', 'ActivityController.updateActivityStatusById').as(
-			'activity.status',
-		)
+
 		Route.get('/day/:prof_id', 'ActivityController.findDayActivities').as(
 			'activity.day',
 		)
-		Route.put('started_at/:id', 'ActivityController.updateActivityStartedAt').as(
-			'activity.startedAt',
-		)
-		Route.put('finished_at/:id', 'ActivityController.updateActivityFinishedAt').as(
-			'activity.finishedAt',
-		)
+
 		Route.put(':id', 'ActivityController.updateActivityById').as('activity.update')
 		Route.get('', 'ActivityController.findAllActivities').as('activity.index')
-		Route.get('pending', 'ActivityController.findAllActivitiesPending').as(
-			'activity.indexPending',
-		)
 
-		Route.get('await', 'ActivityController.findAllActivitiesAwait').as(
-			'activity.indexAwait',
-		)
+
+		Route.group(() => {
+			Route.put('status/:id', 'ActivityController.updateActivityStatusById').as(
+				'activity.status',
+			)
+
+			Route.put('started_at/:id', 'AttendanceController.start').as(
+				'activity.startedAt',
+			)
+			Route.put('finished_at/:id', 'AttendanceController.stop').as(
+				'activity.finishedAt',
+			)
+		}).as('attendance')
+
+		Route.group(() => {
+			Route.get('await', 'ActivityAwaitController.index').as(
+				'index',
+			)
+
+			Route.post('await', 'ActivityAwaitController.store').as(
+				'store',
+			)
+		}).as('activity-await')
+
+		Route.group(() => {
+			Route.post('recurrent', 'ActivityController.createRecurrentActivity').as(
+				'activity.storeRecurrent',
+			)
+
+			Route.get('pending', 'ActivityController.findAllActivitiesPending').as(
+				'activity.indexPending',
+			)
+		}).as('recurrent')
 
 		Route.get('prof/:prof_id', 'ActivityController.findActivitiesByProfId').as(
 			'activity.byProfId',
@@ -228,12 +252,6 @@ Route.group(() => {
 			'activity.byClientId',
 		)
 		Route.post('', 'ActivityController.createActivity').as('activity.store')
-		Route.post('await', 'ActivityController.createActivityAwait').as(
-			'activity.storeAwait',
-		)
-		Route.post('recurrent', 'ActivityController.createRecurrentActivity').as(
-			'activity.storeRecurrent',
-		)
 
 		Route.delete(':id', 'ActivityController.deleteActivityById').as(
 			'activity.destroy',
@@ -360,11 +378,11 @@ Route.group(() => {
 	}).prefix('cost-centers')
 
 	Route.group(() => {
-		Route.get('', 'AccountController.findAllAccounts').as('accounts.index')
-		Route.get('/:id', 'AccountController.findAccountById').as('accounts.show')
-		Route.put('/:id', 'AccountController.updateAccount').as('accounts.update')
-		Route.delete('/:id', 'AccountController.deleteAccountById').as('accounts.destroy')
-		Route.post('', 'AccountController.createAccount').as('accounts.store')
+		Route.get('', 'AccountController.index').as('accounts.index')
+		Route.get('/:id', 'AccountController.show').as('accounts.show')
+		Route.put('/:id', 'AccountController.update').as('accounts.update')
+		Route.delete('/:id', 'AccountController.destroy').as('accounts.destroy')
+		Route.post('', 'AccountController.store').as('accounts.store')
 	}).prefix('accounts')
 
 	Route.group(() => {
@@ -374,7 +392,7 @@ Route.group(() => {
 		Route.delete('/:id', 'DefaultConfigController.destroy').as(
 			'default-configs.destroy',
 		)
-		Route.post('', 'DefaultConfigController.store').as('default-configs.store')
+		Route.post('/:id', 'DefaultConfigController.store').as('default-configs.store')
 	}).prefix('default-configs')
 
 	Route.group(() => {
@@ -440,9 +458,22 @@ Route.group(() => {
 		)
 	}).prefix('business-franchises')
 
-	Route.get('is-a-franchise', 'BusinessFranchisesController.isAFranchise').as(
-		'business-franchises.isAFranchise',
-	)
+	Route.group(() => {
+		Route.get('issues', 'StandardFormFranchisesController.index').as('business-franchises.issues')
+		Route.get('issues/:type', 'StandardFormFranchisesController.show').as('business-franchises.issues.show')
+		Route.get(
+			'is-a-franchise',
+			'BusinessFranchisesController.isAFranchise',
+		).as('business-franchises.isAFranchise')
+		Route.get(
+			'form/:activity',
+			'ReplyStandardFormController.show',
+		).as('business-franchises.form-standard')
+		Route.post(
+			'form',
+			'ReplyStandardFormController.store',
+		).as('business-franchises.form-standard.store')
+	}).prefix('franchises')
 
 	Route.group(() => {
 		Route.get('', 'ProfileController.show').as('profile.show')
@@ -450,4 +481,26 @@ Route.group(() => {
 		Route.get('unity', 'UnityController.showProfile').as('profile.unity.showProfile')
 		Route.put('unity', 'UnityController.updateProfile').as('profile.unity.update')
 	}).prefix('profile')
-}).middleware(['auth', 'role', 'statusPermission', 'successNoContent'])
+
+	Route.group(() => {
+		Route.get('accounts', 'AccountController.counts').as('account.counts')
+		Route.get('procedures', 'ProcedureController.counts').as('procedure.counts')
+		Route.get('clients', 'ClientController.counts').as('client.counts')
+		Route.get('categories', 'CategoryController.counts').as('categories.counts')
+		Route.get('cost-centers', 'CostCenterController.counts').as('cost-centers.counts')
+		Route.get('financial-categories', 'FinancialCategoryController.counts').as('financial-categories.counts')
+		Route.get('health-insurances', 'HealthInsuranceController.counts').as('health-insurances.counts')
+		Route.get('medical-certificates', 'MedicalCertificateController.counts').as('medical-certificates.counts')
+		Route.get('partners', 'PartnerController.counts').as('partners.counts')
+		Route.get('payments-participations', 'PaymentProfController.counts').as('payments-participations.counts')
+		Route.get('stocks', 'StocksController.counts').as('stocks.counts')
+		Route.get('profs', 'ProfsController.counts').as('profs.counts')
+		Route.get('secs', 'SecsController.counts').as('secs.counts')
+	}).prefix('counts')
+
+	Route.group(() => {
+		Route.post('activation/:id', 'SendEmailController.resend').as('emails.resend')
+	}).prefix('emails')
+		.middleware('throttle:resend_email')
+
+}).middleware(['auth', 'role', 'statusPermission', 'successNoContent',])

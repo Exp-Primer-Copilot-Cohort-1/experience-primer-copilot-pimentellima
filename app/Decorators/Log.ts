@@ -68,7 +68,7 @@ export default function LogDecorator(collectionName: COLLECTIONS_NAMES, action: 
 			try {
 				const [original, modified] = actionCompare(action, docOriginal, body)
 				const collection_id = getCollectionId(body, _id)
-				await Log.create({
+				await Log?.create({
 					action,
 					collection_name: collectionName,
 					date,

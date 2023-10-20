@@ -1,6 +1,6 @@
+import { SystemUser } from 'App/Core/domain/entities/abstract/system-user.abstract'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
-import { SystemUser } from '../../entities/abstract/system-user.abstract'
 
 export type ISession = {
 	token: {

@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
-import { HolidaysNationalsMongoRepository } from '../../repositories'
-import { HolidaysMongoRepository } from '../../repositories/holidays/holiday-mongo-repository'
+import { HolidaysNationalsMongoRepository } from 'App/Core/domain/repositories'
+import { HolidaysMongoRepository } from 'App/Core/domain/repositories/holidays/holiday-mongo-repository'
 import { FindAllHolidaysByUnityUseCase } from './find-all-holidays-by-unity'
 import { SaveHolidaysNationalsDefaultUseCase } from './save-holidays-nationals-default-by-year'
 

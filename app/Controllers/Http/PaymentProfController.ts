@@ -1,6 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import {
+	makeCounts,
 	makeCreatePaymentParticipationsComposer,
 	makeFindAllPaymentParticipationsComposer,
 	makeUpdatePaymentParticipationsComposer,
@@ -53,6 +54,10 @@ class PaymentProfController {
 		return adaptRoute(makeFindAllPaymentParticipationsComposer(opts), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
+	}
+
+	async counts(ctx: HttpContextContract) {
+		return adaptRoute(makeCounts(ctx, COLLECTION_NAME), ctx)
 	}
 
 	/**

@@ -1,3 +1,14 @@
+
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { adaptRoute } from 'App/Core/adapters'
+import { makeCounts, makeFindAll } from 'App/Core/composers'
+import FinancialCategoryEntity from 'App/Core/domain/entities/financial-category/financial-category'
+import LogDecorator, { ACTION } from 'App/Decorators/Log'
+import FinancialCategory, { COLLECTION_NAME } from 'App/Models/FinancialCategory'
+import { IFinancialCategory } from 'App/Types/IFinancialCategory'
+
+// ! AVISO
+// ! refatorar para usar o padrão da nossa arquitetura
 /**
  * @swagger
  * tags:
@@ -112,24 +123,9 @@
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import FinancialCategoryEntity from 'App/Core/domain/entities/financial-category/financial-category'
-import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
-import LogDecorator, { ACTION } from 'App/Decorators/Log'
-import FinancialCategory, { COLLECTION_NAME } from 'App/Models/FinancialCategory'
-import { IFinancialCategory } from 'App/Types/IFinancialCategory'
-
 class FinancialCategoryController {
-	async index({ auth, request }: HttpContextContract) {
-		const userLogged = auth.user
-		const opts = OptsQuery.build(request.qs())
-
-		const categories = await FinancialCategory.find({
-			unity_id: userLogged?.unity_id,
-			active: opts.active,
-		})
-
-		return categories
+	async index(ctx: HttpContextContract) {
+		return adaptRoute(makeFindAll(ctx, COLLECTION_NAME), ctx)
 	}
 
 	@LogDecorator(COLLECTION_NAME, ACTION.POST)
@@ -164,10 +160,13 @@ class FinancialCategoryController {
 
 		const financialCategory = financialCategoryOrErr.extract()
 
-		return await FinancialCategory.findByIdAndUpdate(
+		const category = await FinancialCategory.findByIdAndUpdate(
 			params.id,
 			financialCategory,
+			{ new: true }
 		).orFail()
+
+		return category
 	}
 
 	async show({ params }: HttpContextContract) {
@@ -180,6 +179,10 @@ class FinancialCategoryController {
 	async destroy({ params }: HttpContextContract) {
 		const category = await FinancialCategory.findByIdAndDelete(params.id).orFail()
 		await category
+	}
+
+	async counts(ctx: HttpContextContract) {
+		return adaptRoute(makeCounts(ctx, COLLECTION_NAME), ctx)
 	}
 }
 

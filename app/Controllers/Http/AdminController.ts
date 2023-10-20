@@ -8,7 +8,7 @@ const SELECTS_UNITY = ['_id', 'name', 'active', 'date_expiration']
 
 class AdminController {
 	public async activeUser({ params }) {
-		const user = await User.where({ _id: params._id }).orFail()
+		const user = await User.findOne({ _id: params._id }).orFail()
 
 		user.active = true
 

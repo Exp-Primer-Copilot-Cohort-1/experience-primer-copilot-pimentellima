@@ -22,11 +22,6 @@ export default Env.rules({
 	URL: Env.schema.string(),
 	DRIVE_DISK: Env.schema.enum(['local'] as const),
 	NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
-	DB_HOST: Env.schema.string({ format: 'host' }),
-	DB_PORT: Env.schema.number(),
-	DB_USER: Env.schema.string(),
-	DB_PASSWORD: Env.schema.string.optional(),
-	DB_DATABASE: Env.schema.string(),
 	DB_CONNECTION_STRING: Env.schema.string(),
 	SMTP_HOST: Env.schema.string({ format: 'host' }),
 	SMTP_PORT: Env.schema.number(),
@@ -36,5 +31,4 @@ export default Env.rules({
 	S3_REGION: Env.schema.string(),
 	S3_KEY: Env.schema.string(),
 	S3_SECRET: Env.schema.string(),
-	ADONNIS_LEGADO_URL: Env.schema.string(),
 })

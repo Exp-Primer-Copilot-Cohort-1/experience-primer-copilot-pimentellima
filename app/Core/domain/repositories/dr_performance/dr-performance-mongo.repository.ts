@@ -1,18 +1,21 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction } from 'App/Core/infra/session-transaction'
+import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
 import { PromiseEither, right } from 'App/Core/shared'
 import BusinessFranchises from 'App/Models/BusinessFranchises'
 import Unity from 'App/Models/Unity'
 import { IAdminUser } from 'App/Types/IAdminUser'
 import { IUnity } from 'App/Types/IUnity'
+import { inject, injectable, registry } from 'tsyringe'
 import { DrPerformanceManager } from '../interface/dr-performance-manager.interface'
 
 const FRANCHISE_NAME = 'dr_performance'
 
+@injectable()
+@registry([{ token: DrPerformanceMongoose, useClass: DrPerformanceMongoose }])
 export class DrPerformanceMongoose implements DrPerformanceManager {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
-		private readonly session: ISessionTransaction,
+		@inject(SessionTransaction) private readonly session: ISessionTransaction,
 	) { }
 
 	async addUnity(unity: IUnity): PromiseEither<AbstractError, IUnity> {

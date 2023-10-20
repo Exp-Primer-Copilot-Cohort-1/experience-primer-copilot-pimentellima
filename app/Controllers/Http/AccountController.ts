@@ -1,12 +1,13 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
+import { makeCounts, makeFindAll } from 'App/Core/composers'
+
 import {
 	makeCreateAccountComposer,
-	makeDeleteAccountComposer
+	makeDeleteAccountComposer,
+	makeFindAccountComposer,
+	makeUpdateAccountByIdComposer
 } from 'App/Core/composers/accounts/make'
-import { makeFindAccountComposer } from 'App/Core/composers/accounts/make-find-account-by-id-composer'
-import { makeFindAllAccountsComposer } from 'App/Core/composers/accounts/make-find-all-accounts-composer'
-import { makeUpdateAccountByIdComposer } from 'App/Core/composers/accounts/make-update-account-by-id-composer'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/Account'
 
@@ -38,10 +39,8 @@ class AccountController {
 	 *               items:
 	 *                 $ref: '#/components/schemas/Account'
 	 */
-	async findAllAccounts(ctx: HttpContextContract) {
-		return adaptRoute(makeFindAllAccountsComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
+	async index(ctx: HttpContextContract) {
+		return adaptRoute(makeFindAll(ctx, COLLECTION_NAME), ctx)
 	}
 
 	/**
@@ -71,7 +70,7 @@ class AccountController {
 	 *       404:
 	 *         description: Conta não encontrada.
 	 */
-	async findAccountById(ctx: HttpContextContract) {
+	async show(ctx: HttpContextContract) {
 		return adaptRoute(makeFindAccountComposer(), ctx)
 	}
 
@@ -112,11 +111,11 @@ class AccountController {
 	 *         description: Erro interno do servidor.
 	 */
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	async updateAccount(ctx: HttpContextContract) {
+	async update(ctx: HttpContextContract) {
 		return adaptRoute(makeUpdateAccountByIdComposer(), ctx)
 	}
 
-	async deleteAccountById(ctx: HttpContextContract) {
+	async destroy(ctx: HttpContextContract) {
 		return adaptRoute(makeDeleteAccountComposer(), ctx)
 	}
 
@@ -154,10 +153,14 @@ class AccountController {
 	 *         description: Erro interno do servidor.
 	 */
 	@LogDecorator(COLLECTION_NAME, ACTION.POST)
-	async createAccount(ctx: HttpContextContract) {
+	async store(ctx: HttpContextContract) {
 		return adaptRoute(makeCreateAccountComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
+	}
+
+	async counts(ctx: HttpContextContract) {
+		return adaptRoute(makeCounts(ctx, COLLECTION_NAME), ctx)
 	}
 }
 

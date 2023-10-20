@@ -1,5 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { MissingParamsError, UnitNotFoundError } from 'App/Core/domain/errors'
+import { MissingParamsError, UnityNotFoundError } from 'App/Core/domain/errors'
 import BusinessFranchises from 'App/Models/BusinessFranchises'
 import User from 'App/Models/User'
 
@@ -31,6 +31,8 @@ const generatePipeline = (unity_id) => [
 	}
 ]
 
+// ! AVISO
+// ! refatorar para usar o padrão da nossa arquitetura
 class BusinessFranchisesController {
 
 	async index(ctx: HttpContextContract) {
@@ -51,7 +53,7 @@ class BusinessFranchisesController {
 			throw new MissingParamsError('id')
 		}
 
-		if (!ctx.auth.user?.unity_id) throw new UnitNotFoundError()
+		if (!ctx.auth.user?.unity_id) throw new UnityNotFoundError()
 
 		ctx.auth.user.unity_id = id
 
@@ -70,43 +72,6 @@ class BusinessFranchisesController {
 		const isAFranchise = await BusinessFranchises.exists({ unities: unity_id }).exec()
 
 		return isAFranchise
-	}
-
-	async getQuestions(ctx: HttpContextContract) {
-		const unity_id = ctx.auth.user?.unity_id.toString()
-
-		const businessFranchise = await BusinessFranchises.findOne({ unities: unity_id }).exec()
-
-		if (!businessFranchise) throw new UnitNotFoundError()
-
-		if (!businessFranchise.questions) {
-			businessFranchise.questions = [
-				{
-					version: 1,
-					questions: [
-						{
-							question: 'Qual o seu nível de dor?'
-						},
-						{
-							question: 'Qual o seu nível de dor?'
-						},
-						{
-							question: 'Qual o seu nível de dor?'
-						},
-						{
-							question: 'Qual o seu nível de dor?'
-						},
-						{
-							question: 'Qual o seu nível de dor?'
-						},
-					]
-				}
-			]
-
-			await businessFranchise.save()
-		}
-
-		return businessFranchise?.questions
 	}
 
 }

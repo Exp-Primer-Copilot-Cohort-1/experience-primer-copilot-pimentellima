@@ -1,8 +1,8 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IDefaultConfig } from 'App/Types/IDefaultConfig'
-
 import { COLLECTION_NAME as COLLECTION_NAME_ACCOUNT } from './Account'
 import { COLLECTION_NAME as COLLECTION_NAME_COST_CENTER } from './CostCenter'
+import { COLLECTION_NAME as COLLECTION_NAME_UNITY } from './Unity'
 /**
  * Esquema de configuração padrão.
  * @swagger
@@ -63,26 +63,24 @@ import { COLLECTION_NAME as COLLECTION_NAME_COST_CENTER } from './CostCenter'
  *           label: Forma de pagamento 1
  *           key: 01
  */
-const DefaultConfigSchema = new Schema<IDefaultConfig>(
+const DefaultConfigSchema = new Schema<{ configs: IDefaultConfig }>(
 	{
-		bank: {
-			type: Schema.Types.ObjectId,
-			required: true,
-			ref: COLLECTION_NAME_ACCOUNT,
-		},
-		cost_center: {
-			type: Schema.Types.ObjectId,
-			required: true,
-			ref: COLLECTION_NAME_COST_CENTER,
-		},
-		payment_form: {
-			type: {
-				value: Schema.Types.ObjectId,
-				label: String,
-				key: String,
+		configs: {
+			bank: {
+				type: Schema.Types.ObjectId,
+				required: true,
+				ref: COLLECTION_NAME_ACCOUNT,
 			},
-			required: true,
-		},
+			cost_center: {
+				type: Schema.Types.ObjectId,
+				required: true,
+				ref: COLLECTION_NAME_COST_CENTER,
+			},
+			payment_form: {
+				type: String,
+				required: true,
+			},
+		}
 	},
 	{
 		timestamps: {
@@ -92,8 +90,13 @@ const DefaultConfigSchema = new Schema<IDefaultConfig>(
 	},
 )
 
-export default Mongoose.model<IDefaultConfig>(
+export enum COLLECTION_REFS {
+	BANK = 'configs.bank',
+	COST_CENTER = 'configs.cost_center',
+}
+
+export default Mongoose.model<{ configs: IDefaultConfig }>(
 	'default_configs',
 	DefaultConfigSchema,
-	'unities',
+	COLLECTION_NAME_UNITY,
 )

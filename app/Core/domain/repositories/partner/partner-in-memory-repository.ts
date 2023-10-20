@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IPartner } from 'App/Types/IPartner'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { PartnerManagerInterface } from '../interface'
 
 export class PartnerInMemoryRepository implements PartnerManagerInterface {
@@ -20,7 +20,7 @@ export class PartnerInMemoryRepository implements PartnerManagerInterface {
 		)
 
 		if (partners.length === 0) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(this.items)
@@ -30,7 +30,7 @@ export class PartnerInMemoryRepository implements PartnerManagerInterface {
 		const partner = this.items.find((item) => item._id.toString() === id)
 
 		if (!partner) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(partner)
@@ -39,7 +39,7 @@ export class PartnerInMemoryRepository implements PartnerManagerInterface {
 		const partner = this.items.find((item) => item._id.toString() === id)
 
 		if (!partner) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(partner)

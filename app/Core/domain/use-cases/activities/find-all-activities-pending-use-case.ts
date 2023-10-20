@@ -1,31 +1,28 @@
+import { ActivityRecurrentMongoRepository } from 'App/Core/domain/repositories'
+import { ActivitiesRecurrentManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
-import { PromiseEither, left, right } from 'App/Core/shared'
+import { PromiseEither } from 'App/Core/shared'
 import { IActivityPending } from 'App/Types/IActivity'
-import { ActivitiesRecurrentManagerInterface } from '../../repositories/interface'
+import { inject, injectable, registry } from 'tsyringe'
 
 type Params = {
 	unity_id: string
 }
 
+@injectable()
+@registry([{ token: FindAllActivitiesPendingUseCase, useClass: FindAllActivitiesPendingUseCase }])
 export class FindAllActivitiesPendingUseCase
 	implements UseCase<Params, IActivityPending[]>
 {
 	constructor(
-		private readonly activitiesManager: ActivitiesRecurrentManagerInterface,
+		@inject(ActivityRecurrentMongoRepository) private readonly manager: ActivitiesRecurrentManagerInterface,
 	) { } // eslint-disable-line
 
 	public async execute({
 		unity_id,
-		...rest
 	}: Params): PromiseEither<AbstractError, IActivityPending[]> {
-		const activitiesOrErr = await this.activitiesManager.findAllActivitiesPending(
-			unity_id,
-			rest,
-		)
 
-		if (activitiesOrErr.isLeft()) return left(activitiesOrErr.extract())
-		const newActivity = activitiesOrErr.extract()
-		return right(newActivity)
+		return await this.manager.findAll(unity_id)
 	}
 }

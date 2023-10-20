@@ -15,11 +15,13 @@ export interface IProcedureOut {
 export abstract class AbstractActivity extends Entity implements IAbstractActivity {
 	status: PaymentStatus
 	procedures: IProcedureOut[]
+	is_recurrent: boolean
 	client: string
 	obs?: string
 	prof: string
 	active: boolean
 	unity_id: string
+	group_id: string
 
 	public defineStatus(status = PaymentStatus.PENDING): this {
 		this.status = status
@@ -50,11 +52,7 @@ export abstract class AbstractActivity extends Entity implements IAbstractActivi
 	}
 
 	public defineClient(client: string | Generic): this {
-		if (typeof client === 'object') {
-			this.client = client.value
-			return this
-		}
-		this.client = client
+		this.client = typeof client === 'string' ? client : client.value
 		return this
 	}
 
@@ -64,21 +62,29 @@ export abstract class AbstractActivity extends Entity implements IAbstractActivi
 	}
 
 	public defineProf(prof: string | Generic): this {
-		if (typeof prof === 'object') {
-			this.prof = prof.value
-			return this
-		}
-		this.prof = prof
+		this.prof = typeof prof === 'string' ? prof : prof.value
 		return this
 	}
 
-	public defineActive(active: boolean): this {
+	public defineActive(active: boolean = true): this {
 		this.active = active
 		return this
 	}
 
 	public defineUnityId(unity_id: string): this {
 		this.unity_id = unity_id
+		return this
+	}
+
+	public defineGroupId(group_id: string): this {
+		this.group_id = group_id
+		return this
+	}
+
+	public defineIsRecurrent(is_recurrent: boolean = false): this {
+		if (this.group_id) is_recurrent = true
+
+		this.is_recurrent = is_recurrent
 		return this
 	}
 }

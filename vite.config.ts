@@ -24,8 +24,9 @@ export default defineConfig({
 	],
 	esbuild: false,
 	test: {
-		setupFiles: ['./setupTests.ts'],
+		setupFiles: ['./setupTests.ts', './setupMocks.ts'],
 		coverage: {
+			enabled: true,
 			provider: 'istanbul',
 			all: true,
 			include: ['app/Core/**/*.ts'],

@@ -5,8 +5,8 @@ describe('OptsQuery (Unit)', () => {
 	it('should build an OptsQuery object with default values', () => {
 		const optsQuery = OptsQuery.build();
 
-		expect(optsQuery.sort).toBe('--name');
-		expect(optsQuery.limit).toBe(100);
+		expect(optsQuery.sort).toBe('--created_at');
+		expect(optsQuery.limit).toBe(20);
 		expect(optsQuery.skip).toBe(0);
 		expect(optsQuery.active).toBe(true);
 	});

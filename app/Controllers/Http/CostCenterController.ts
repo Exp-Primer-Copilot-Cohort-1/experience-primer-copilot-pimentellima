@@ -1,4 +1,8 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { adaptRoute } from 'App/Core/adapters'
+import {
+	makeCounts, makeFindAll
+} from 'App/Core/composers'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import CostCenter, { COLLECTION_NAME } from 'App/Models/CostCenter'
 
@@ -9,6 +13,8 @@ import CostCenter, { COLLECTION_NAME } from 'App/Models/CostCenter'
  *   description: Endpoints para gerenciar os centros de custo
  */
 
+// ! AVISO
+// ! refatorar para usar o padrão da nossa arquitetura
 class CostCenterController {
 	/**
 	 * @swagger
@@ -28,15 +34,8 @@ class CostCenterController {
 	 *               items:
 	 *                 $ref: '#/components/schemas/CostCenter'
 	 */
-	async index({ auth }: HttpContextContract) {
-		const userLogged = auth.user
-
-		const costCenters = await CostCenter.find({
-			unity_id: userLogged?.unity_id,
-			active: true,
-		})
-
-		return costCenters
+	async index(ctx: HttpContextContract) {
+		return adaptRoute(makeFindAll(ctx, COLLECTION_NAME), ctx)
 	}
 
 	/**
@@ -181,6 +180,10 @@ class CostCenterController {
 	async destroy({ params }: HttpContextContract) {
 		const costCenters = await CostCenter.findByIdAndDelete(params.id).orFail()
 		return costCenters
+	}
+
+	async counts(ctx: HttpContextContract) {
+		return adaptRoute(makeCounts(ctx, COLLECTION_NAME), ctx)
 	}
 }
 

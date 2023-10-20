@@ -1,38 +1,40 @@
 import { isValidObjectId } from '@ioc:Mongoose'
+import { HealthInsuranceEntity } from 'App/Core/domain/entities/health-insurances/health-insurance'
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import HealthInsurance, { COLLECTIONS } from 'App/Models/HealthInsurance'
 import { HealthInsuranceParams, IHealthInsurance } from 'App/Types/IHealthInsurance'
-import { HealthInsuranceEntity } from '../../entities/health-insurances/health-insurance'
-import { OptsQuery } from '../../entities/helpers/opts-query'
+import { inject, injectable, registry } from 'tsyringe'
 import { HealthInsuranceNotFoundError } from '../../errors/health-insurance-not-found'
 import { MissingParamsError } from '../../errors/missing-params'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
 import { HealthInsuranceManagerInterface } from '../interface/health-insurance-manager.interface'
 
+@injectable()
+@registry([{ token: HealthInsuranceMongoRepository, useClass: HealthInsuranceMongoRepository }])
 export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInterface {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
-	constructor(private readonly opts: OptsQuery = OptsQuery.build()) { }
-	async findAllByUnityId(
-		unity_id: string,
-	): PromiseEither<AbstractError, IHealthInsurance[]> {
-		if (!unity_id) return left(new UnitNotFoundError())
+	constructor(
+		@inject(OptsQuery) private readonly opts: OptsQuery
+	) { }
+
+	async findAll(): PromiseEither<AbstractError, IHealthInsurance[]> {
 
 		const doc = await HealthInsurance.find({
-			unity_id,
+			unity_id: this.opts.unity_id,
 			active: this.opts.active,
 		})
 			.populate(COLLECTIONS.PROFS, PROJECTION_DEFAULT)
-			.sort(this.opts.sort)
 			.limit(this.opts.limit)
 			.skip(this.opts.skip)
 			.exec()
 
+
 		return right(doc)
 	}
 
-	async findAllByName(
+	async search(
 		name: string,
 		unity_id: string,
 	): PromiseEither<AbstractError, IHealthInsurance[]> {

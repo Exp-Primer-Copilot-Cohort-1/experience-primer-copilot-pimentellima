@@ -1,14 +1,16 @@
+import FormEntity from 'App/Core/domain/entities/form/form'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import Form from 'App/Models/Form'
 import { IForm } from 'App/Types/IForm'
-import FormEntity from '../../entities/form/form'
 import { FormNotFoundError } from '../../errors/form-not-found-error'
 import { MissingParamsError } from '../../errors/missing-params'
 import { FormManagerInterface } from '../interface/form-manager-interface'
 
 export class FormMongoRepository implements FormManagerInterface {
-	async createForm(form: IForm): PromiseEither<AbstractError, FormEntity> {
+	updateFormById: (form: IForm, id: string) => PromiseEither<AbstractError, FormEntity>
+	findById: (id: string) => PromiseEither<AbstractError, FormEntity>
+	async create(form: IForm): PromiseEither<AbstractError, FormEntity> {
 		const newFormOrErr = await FormEntity.build({
 			...form,
 		})
@@ -20,7 +22,7 @@ export class FormMongoRepository implements FormManagerInterface {
 		return right(newForm)
 	}
 
-	async findAllForms(unity_id: string): PromiseEither<AbstractError, FormEntity[]> {
+	async findAll(unity_id: string): PromiseEither<AbstractError, FormEntity[]> {
 		if (!unity_id) return left(new MissingParamsError('unity id'))
 
 		const data = await Form.find({ unity_id })
@@ -37,7 +39,7 @@ export class FormMongoRepository implements FormManagerInterface {
 		return right(forms)
 	}
 
-	async updateFormById(
+	async update(
 		form: IForm,
 		id: string,
 	): PromiseEither<AbstractError, FormEntity> {

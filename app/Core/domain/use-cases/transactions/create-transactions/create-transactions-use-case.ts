@@ -5,16 +5,22 @@ import { PromiseEither, left, right } from 'App/Core/shared'
 import { IActivity } from 'App/Types/IActivity'
 import { addMonths } from 'date-fns'
 
-import { ISessionTransaction } from 'App/Core/infra/session-transaction'
+import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
 import type { ITransaction } from 'App/Types/ITransaction'
 import divideCurrencyByInteger from 'App/utils/divide-currency'
 import { Types } from 'mongoose'
-import { UnitNotFoundError } from '../../../errors/unit-not-found'
+import { inject, injectable, registry } from 'tsyringe'
+import { UnityNotFoundError } from '../../../errors/unity-not-found'
+import { UpdateActivityPaymentUseCase } from '../../activities'
 import { TransactionWithProcedure, TransactionWithoutProcedure } from '../helpers'
+import { CreateOnlyOneTransactionUseCase } from './create-only-one-transaction-use-case'
+import { CreateWithProceduresTransactionUseCase } from './create-with-procedures-transaction'
 
 /**
  * Classe responsável por criar transações.
  */
+@injectable()
+@registry([{ token: CreateTransactionUseCase, useClass: CreateTransactionUseCase }])
 export class CreateTransactionUseCase implements UseCase<ITransaction, ITransaction> {
 	/**
 	 * Construtor da classe.
@@ -24,13 +30,13 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 	 * @param session Sessão de transação.
 	 */
 	constructor(
-		private readonly withoutProcedure: UseCase<
+		@inject(CreateOnlyOneTransactionUseCase) private readonly withoutProcedure: UseCase<
 			TransactionWithoutProcedure,
 			ITransaction
 		>,
-		private readonly withProcedures: UseCase<TransactionWithProcedure, ITransaction>,
-		private readonly withActivity: UseCase<TransactionWithoutProcedure, IActivity>,
-		private readonly session: ISessionTransaction,
+		@inject(CreateWithProceduresTransactionUseCase) private readonly withProcedures: UseCase<TransactionWithProcedure, ITransaction>,
+		@inject(UpdateActivityPaymentUseCase) private readonly withActivity: UseCase<TransactionWithoutProcedure, IActivity>,
+		@inject(SessionTransaction) private readonly session: ISessionTransaction,
 	) { } // eslint-disable-line
 
 	/**
@@ -97,7 +103,7 @@ export class CreateTransactionUseCase implements UseCase<ITransaction, ITransact
 		activity_id,
 		...transaction
 	}: ITransaction): PromiseEither<AbstractError, ITransaction> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityNotFoundError())
 		await this.session.startSession()
 		try {
 			const total = divideCurrencyByInteger(transaction.amount, installments)

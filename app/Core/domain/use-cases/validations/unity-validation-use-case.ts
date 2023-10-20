@@ -1,33 +1,33 @@
+import { UnitiesManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import { IUnity } from 'App/Types/IUnity'
-import { MissingParamsError } from '../../errors/missing-params'
-import { UnitDateExpiredError } from '../../errors/unit-date-expired'
-import { UnitiesManagerInterface } from '../../repositories/interface'
+import { inject, injectable, registry } from 'tsyringe'
+import { UnityIdNotProvidedError } from '../../errors'
+import { UnityDateExpiredError } from '../../errors/unity-date-expired'
+import { UnitiesMongooseRepository } from '../../repositories'
 
+@injectable()
+@registry([{ token: UnityValidationUseCase, useClass: UnityValidationUseCase }])
 export class UnityValidationUseCase implements UseCase<IUnity, IUnity> {
-	constructor(private readonly manager: UnitiesManagerInterface) { }
+	constructor(
+		@inject(UnitiesMongooseRepository) private readonly manager: UnitiesManagerInterface
+	) { }
 
-	public async execute(unity: IUnity): PromiseEither<AbstractError, IUnity> {
+	public async execute({ _id }: IUnity): PromiseEither<AbstractError, IUnity> {
+
+		if (!_id) return left(new UnityIdNotProvidedError())
+
+		const unityExists = await this.manager.findOne(_id as string)
+
+		if (unityExists.isLeft()) return unityExists
+
+		const unity = unityExists.extract()
+
 		const dateNow = new Date()
-
-		if (!unity || !unity._id) {
-			return left(
-				new MissingParamsError()
-					.addParam('unity', unity)
-					.addParam('unity._id', unity?._id),
-			)
-		}
-
-		const unityExists = await this.manager.findOne(unity._id)
-
-		if (unityExists.isLeft()) {
-			return unityExists
-		}
-
 		if (unity.date_expiration && new Date(unity.date_expiration) < dateNow) {
-			return left(new UnitDateExpiredError())
+			return left(new UnityDateExpiredError())
 		}
 
 		return right(unity)

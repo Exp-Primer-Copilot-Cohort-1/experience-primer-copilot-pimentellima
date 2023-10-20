@@ -38,7 +38,7 @@ export class SessionUser extends SystemUser {
 
 	public static async build(data: IUser): PromiseEither<AbstractError, SessionUser> {
 		try {
-			const daysOfTradeOrErr = await DaysOfTrade.build(data)
+			const daysOfTradeOrErr = await DaysOfTrade.build(data as any)
 
 			const user = new SessionUser()
 				.defineId(data._id)

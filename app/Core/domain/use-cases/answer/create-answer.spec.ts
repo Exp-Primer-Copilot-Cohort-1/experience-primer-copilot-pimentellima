@@ -1,6 +1,6 @@
+import { AnswerInMemoryRepository } from "App/Core/domain/repositories/answer/answer-in-memory-repository";
 import { describe, expect, it } from "vitest";
 import { CreateAnswerUseCase } from "./create-answer-use-case";
-import { AnswerInMemoryRepository } from "../../repositories/answer/answer-in-memory-repository";
 
 const answer = {
     name: 'EXAME CLÍNICO/FÍSICO',

@@ -1,9 +1,9 @@
+import { FormInMemoryRepository } from "App/Core/domain/repositories/form/form-in-memory-repository";
 import { describe, expect, it } from "vitest";
 import { FindAllFormsUseCase } from "./find-all-forms-use-case";
-import { FormInMemoryRepository } from "../../repositories/form/form-in-memory-repository";
 import { FindFormByCategoryIdUseCase } from "./find-form-by-category-id-use-case";
-import { FindFormByProfIdUseCase } from "./find-form-by-prof-id-use-case";
 import { FindFormByIdUseCase } from "./find-form-by-id-use-case";
+import { FindFormByProfIdUseCase } from "./find-form-by-prof-id-use-case";
 
 const form = {
     name: 'PLANO TERAPÊUTICO',
@@ -60,7 +60,7 @@ describe("Find all forms (Unit)", () => {
             ...form,
             _id: '1',
             unity_id: '1'
-        }, 
+        },
         {
             ...form,
             _id: '2',
@@ -82,7 +82,7 @@ describe("Find all forms by category_id (Unit)", () => {
             _id: '1',
             unity_id: '1',
             category_id: '1'
-        }, 
+        },
         {
             ...form,
             _id: '2',
@@ -106,7 +106,7 @@ describe("Find all forms by prof_id (Unit)", () => {
             _id: '1',
             unity_id: '1',
             prof_id: '1'
-        }, 
+        },
         {
             ...form,
             _id: '2',
@@ -130,7 +130,7 @@ describe("Find form by id (Unit)", () => {
             _id: '1',
             unity_id: '1',
             prof_id: '1'
-        }, 
+        },
         {
             ...form,
             _id: '2',

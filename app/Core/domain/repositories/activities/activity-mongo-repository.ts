@@ -1,27 +1,37 @@
 import { Document } from '@ioc:Mongoose'
+import ActivityEntity from 'App/Core/domain/entities/activities/activity'
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import { ClientNotFoundError, UserNotFoundError } from 'App/Core/domain/errors'
+import { ActivityNotFoundError } from 'App/Core/domain/errors/activity-not-found'
+import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
+import { UnityIdNotProvidedError } from 'App/Core/domain/errors/unity-not-id-provider'
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction } from 'App/Core/infra/session-transaction'
+import { ISessionTransaction } from 'App/Core/infra/infra'
+import { SessionTransaction } from 'App/Core/infra/session-transaction'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import Activity, { COLLECTIONS_REFS } from 'App/Models/Activity'
 import { STATUS_ACTIVITY, type IActivity } from 'App/Types/IActivity'
-import ActivityEntity from '../../entities/activities/activity'
-import { ClientNotFoundError, UserNotFoundError } from '../../errors'
-import { ActivityNotFoundError } from '../../errors/activity-not-found'
-import { MissingParamsError } from '../../errors/missing-params'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { inject, injectable, registry } from 'tsyringe'
 import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
 import { ActivitiesManagerInterface } from '../interface/activity-manager.interface'
 
+@injectable()
+@registry([{ token: ActivityMongoRepository, useClass: ActivityMongoRepository }])
 export class ActivityMongoRepository implements ActivitiesManagerInterface {
-	constructor(private readonly session?: ISessionTransaction) {} // eslint-disable-line
+	constructor(
+		@inject(SessionTransaction) private readonly session: ISessionTransaction,
+		@inject(OptsQuery) private readonly opts?: OptsQuery,
+	) { } // eslint-disable-line
 
 	async findAllActivities(unity_id: string): PromiseEither<AbstractError, IActivity[]> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityNotFoundError())
 
 		const activities = await Activity.find({
 			unity_id,
 			type: STATUS_ACTIVITY.MARKED,
 		})
+			.where(this.opts?.where || {})
 			.populate(COLLECTIONS_REFS.CLIENTS, PROJECTION_CLIENT)
 			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
 			.populate(COLLECTIONS_REFS.PROCEDURES, PROJECTION_DEFAULT)
@@ -35,7 +45,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		unity_id: string,
 		prof_id: string,
 	): PromiseEither<AbstractError, IActivity[]> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityNotFoundError())
 		if (!prof_id) return left(new UserNotFoundError())
 
 		const activities = await Activity.find({
@@ -56,7 +66,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		unity_id: string,
 		client_id: string,
 	): PromiseEither<AbstractError, IActivity[]> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityNotFoundError())
 		if (!client_id) return left(new ClientNotFoundError())
 
 		const activities = await Activity.find({
@@ -80,7 +90,8 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			...params
 		}: IActivity,
 	): PromiseEither<AbstractError, IActivity> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityIdNotProvidedError())
+
 		const activityOrErr = await ActivityEntity.build(params)
 
 		if (activityOrErr.isLeft()) return left(activityOrErr.extract())
@@ -141,7 +152,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 		return right(updated.toObject())
 	}
 
-	async updateActivyStatus(
+	async updateActivityStatus(
 		id: string,
 		values: IActivity,
 	): PromiseEither<AbstractError, IActivity> {

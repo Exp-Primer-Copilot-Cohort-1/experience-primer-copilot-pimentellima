@@ -1,28 +1,21 @@
-import { Controller } from 'App/Core/adapters/controller'
+import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { Controller, ControllerInjection } from 'App/Core/adapters/controller'
 import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
-import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { HealthInsuranceMongoRepository } from 'App/Core/domain/repositories'
+
+import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import {
 	CreateHealthInsuranceUseCase,
-	FindAllHealthInsuranceByNameUseCase,
-	FindAllHealthInsuranceByUnityUseCase,
-	FindAllHealthInsuranceUseCase,
+	FindAllHealthInsuranceUseCaseV2,
 	FindHealthInsuranceByIdUseCase,
 	UpdateHealthInsuranceUseCase,
 } from 'App/Core/domain/use-cases'
 
 export const makeHealthInsuranceFindAllByUnityIdComposer = (
-	opts: OptsQuery,
+	ctx: HttpContextContract,
 ): ControllerGeneric => {
-	const manager = new HealthInsuranceMongoRepository(opts)
-
-	const findAllByNameUseCase = new FindAllHealthInsuranceByNameUseCase(manager)
-
-	const findAllByUnityUseCase = new FindAllHealthInsuranceByUnityUseCase(manager)
-
-	return new Controller(
-		new FindAllHealthInsuranceUseCase(findAllByNameUseCase, findAllByUnityUseCase),
-	)
+	const opts = getterOptInRequest(ctx)
+	return ControllerInjection.resolve(FindAllHealthInsuranceUseCaseV2, opts)
 }
 
 export const makeHealthInsuranceFindByIdComposer = (): ControllerGeneric => {

@@ -1,10 +1,12 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
+import { makeCounts } from 'App/Core/composers'
 import {
 	makeClientCreateComposer,
-	makeClientUpdateComposer,
+	makeClientFindAllComposer,
+	makeClientUpdateComposer
 } from 'App/Core/composers/clients/make'
-import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import { PROJECTION_DEFAULT } from 'App/Core/domain/repositories/helpers/projections'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { left } from 'App/Core/shared'
@@ -21,6 +23,8 @@ function generateHash() {
 	return hash
 }
 
+// ! AVISO
+// ! refatorar para usar o padrão da nossa arquitetura
 class ClientController {
 	async putTreatmentPictures({ request, response, auth }: HttpContextContract) {
 		const { user } = auth
@@ -159,16 +163,15 @@ class ClientController {
 		})
 	}
 
-	async findAllUsersClients({ auth, request }) {
-		const userLogged = auth.user
-		const opts = OptsQuery.build(request.qs())
+	async counts(ctx: HttpContextContract) {
+		return adaptRoute(makeCounts(ctx, COLLECTION_NAME), ctx)
+	}
 
-		const clients = await Client.find({
-			unity_id: userLogged?.unity_id.toString(),
-			active: opts.active,
-		}).populate(COLLECTIONS_REFS.PARTNERS, PROJECTION_DEFAULT)
-
-		return clients
+	async index(ctx: HttpContextContract) {
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeClientFindAllComposer(opts), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		})
 	}
 
 	async findUserClientByID({ params }) {
@@ -188,7 +191,7 @@ class ClientController {
 		})
 	}
 
-	public async getAnswers(ctx: HttpContextContract) {
+	async getAnswers(ctx: HttpContextContract) {
 		try {
 			const clientId = ctx.params.id
 			const user = ctx.auth.user
@@ -215,7 +218,7 @@ class ClientController {
 		}
 	}
 
-	public async putAnswer(ctx: HttpContextContract) {
+	async putAnswer(ctx: HttpContextContract) {
 		try {
 			const user = ctx.auth.user
 			if (!user) throw new Error()
@@ -251,7 +254,7 @@ class ClientController {
 		}
 	}
 
-	public async putProfAccess(ctx: HttpContextContract) {
+	async putProfAccess(ctx: HttpContextContract) {
 		try {
 			const user = ctx.auth.user
 			if (!user) throw new Error()

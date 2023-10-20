@@ -1,31 +1,31 @@
 import { isValidObjectId } from '@ioc:Mongoose'
+import AccountEntity from 'App/Core/domain/entities/account/account'
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import { AccountNotFoundError, UnityNotFoundError } from 'App/Core/domain/errors'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import Account from 'App/Models/Account'
 import { IAccount } from 'App/Types/IAccount'
-import { autoInjectable, inject } from "tsyringe"
-import AccountEntity from '../../entities/account/account'
-import { OptsQuery } from '../../entities/helpers/opts-query'
-import { AccountNotFoundError, UnitNotFoundError } from '../../errors'
-import { AccountManagerInterface } from '../interface/account-manager-interface'
-@autoInjectable()
+import { inject, injectable, registry } from "tsyringe"
+import { AccountManagerInterface } from './account-manager.interface'
+@injectable()
+@registry([{ token: AccountMongoRepository, useClass: AccountMongoRepository }])
 export class AccountMongoRepository implements AccountManagerInterface {
 
 	constructor(
-		@inject(OptsQuery) private readonly opts?: OptsQuery
+		@inject(OptsQuery) private readonly opts: OptsQuery
 	) { } // eslint-disable-line
 
-
 	async findAll(unity_id: string): PromiseEither<AbstractError, IAccount[]> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityNotFoundError())
 
 		const data = await Account.find({
 			unity_id,
-			active: this.opts?.active,
+			active: this.opts.active,
 		})
-			.sort(this.opts?.sort)
-			.limit(this.opts?.limit as number)
-			.skip(this.opts?.skip as number)
+			.sort(this.opts.sort)
+			.skip(this.opts.skip)
+			.limit(this.opts.limit)
 			.exec()
 
 		return right(data)
@@ -57,7 +57,7 @@ export class AccountMongoRepository implements AccountManagerInterface {
 		return right(doc?.toObject())
 	}
 
-	async findByID(id: string): PromiseEither<AbstractError, AccountEntity> {
+	async findById(id: string): PromiseEither<AbstractError, AccountEntity> {
 		if (!id || !isValidObjectId(id)) return left(new AccountNotFoundError())
 
 		const item = await Account.findById(id).orFail(new AccountNotFoundError())
@@ -65,7 +65,7 @@ export class AccountMongoRepository implements AccountManagerInterface {
 		return right(item.toObject())
 	}
 
-	async deleteByID(id: string): PromiseEither<AbstractError, AccountEntity> {
+	async deleteById(id: string): PromiseEither<AbstractError, AccountEntity> {
 		if (!id) return left(new AccountNotFoundError())
 
 		const doc = await Account.findByIdAndDelete(id).orFail(new AccountNotFoundError())

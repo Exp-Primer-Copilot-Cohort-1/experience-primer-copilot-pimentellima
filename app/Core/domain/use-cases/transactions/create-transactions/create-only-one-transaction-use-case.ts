@@ -1,16 +1,20 @@
 import { InappropriateUseCase } from 'App/Core/domain/errors/inappropriate-use-case'
+import { TransactionsMongooseRepository } from 'App/Core/domain/repositories'
+import { TransactionsManagerInterface } from 'App/Core/domain/repositories/interface/transactions-manager-interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import { ITransaction } from 'App/Types/ITransaction'
-import { UnitNotFoundError } from '../../../errors/unit-not-found'
-import { TransactionsManagerInterface } from '../../../repositories/interface/transactions-manager-interface'
+import { inject, injectable, registry } from 'tsyringe'
+import { UnityNotFoundError } from '../../../errors/unity-not-found'
 import { TransactionWithoutProcedure } from '../helpers'
 
 /**
  * Use case responsible for creating only one transaction without procedures.
  * @implements {UseCase}
  */
+@injectable()
+@registry([{ token: CreateOnlyOneTransactionUseCase, useClass: CreateOnlyOneTransactionUseCase }])
 export class CreateOnlyOneTransactionUseCase
 	implements UseCase<TransactionWithoutProcedure, ITransaction>
 {
@@ -18,7 +22,9 @@ export class CreateOnlyOneTransactionUseCase
 	 * Creates an instance of CreateOnlyOneTransactionUseCase.
 	 * @param {TransactionsManagerInterface} manager - The manager for transactions.
 	 */
-	constructor(private readonly manager: TransactionsManagerInterface) { } // eslint-disable-line
+	constructor(
+		@inject(TransactionsMongooseRepository) private readonly manager: TransactionsManagerInterface
+	) { } // eslint-disable-line
 
 	/**
 	 * Executes the use case.
@@ -30,7 +36,7 @@ export class CreateOnlyOneTransactionUseCase
 		...transaction
 	}: TransactionWithoutProcedure): PromiseEither<AbstractError, ITransaction> {
 		if (procedures && procedures?.length > 0) return left(new InappropriateUseCase())
-		if (!transaction.unity_id) return left(new UnitNotFoundError())
+		if (!transaction.unity_id) return left(new UnityNotFoundError())
 
 		const docOrErr = await this.manager.create(
 			transaction,

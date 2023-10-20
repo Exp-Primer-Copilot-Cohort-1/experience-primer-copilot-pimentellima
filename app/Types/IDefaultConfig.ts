@@ -1,22 +1,9 @@
-import { Document, ObjectId } from '@ioc:Mongoose'
+import { ObjectId } from '@ioc:Mongoose'
+import { Generic } from './ITransaction'
 
-export interface IDefaultConfig extends Document {
-	_id: ObjectId
-	bank: {
-		value: string
-		label: string
-	}
-	cost_center: {
-		value: string
-		label: string
-	}
-	payment_form: {
-		label: string
-		value: string
-		key: string
-	}
-	active: boolean
-	unity_id: ObjectId
-	created_at: Date
-	updated_at: Date
+export interface IDefaultConfig {
+	_id: ObjectId | string
+	bank: Generic | string
+	cost_center: Generic | string
+	payment_form: Generic | string
 }

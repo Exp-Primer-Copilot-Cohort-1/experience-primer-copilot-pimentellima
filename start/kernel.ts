@@ -24,6 +24,7 @@ import Server from '@ioc:Adonis/Core/Server'
 Server.middleware.register([
 	() => import('@ioc:Adonis/Core/BodyParser'),
 	() => import('@ioc:Adonis/Addons/Shield'),
+	() => import('App/Middleware/Log'),
 ])
 
 /*
@@ -47,4 +48,6 @@ Server.middleware.registerNamed({
 	role: 'App/Middleware/Role',
 	statusPermission: 'App/Middleware/PermissionStatus',
 	successNoContent: 'App/Middleware/SuccessNoContent',
+	cache: 'App/Middleware/Cache',
+	throttle: () => import('@adonisjs/limiter/build/throttle'),
 })

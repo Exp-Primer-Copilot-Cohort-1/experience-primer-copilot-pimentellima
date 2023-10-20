@@ -1,0 +1,30 @@
+import { UnityIdNotProvidedError } from "App/Core/domain/errors";
+import { ClientsMongooseRepository } from "App/Core/domain/repositories";
+import { ICount } from "App/Core/domain/repositories/helpers/count";
+import { ClientManagerInterface } from "App/Core/domain/repositories/interface";
+import { AbstractError } from "App/Core/errors/error.interface";
+import { UseCase } from "App/Core/interfaces/use-case.interface";
+import { PromiseEither, left } from "App/Core/shared";
+import { inject, injectable, registry } from "tsyringe";
+
+type In = {
+	unity_id: string
+}
+
+@injectable()
+@registry([{ token: CountClientsUseCase, useClass: CountClientsUseCase }])
+export class CountClientsUseCase
+	implements UseCase<In, ICount>
+{
+	constructor(
+		@inject(ClientsMongooseRepository) private readonly manager: ClientManagerInterface
+	) { }
+
+	public async execute(
+		{ unity_id }: In
+	): PromiseEither<AbstractError, ICount> {
+		if (!unity_id) return left(new UnityIdNotProvidedError())
+
+		return await this.manager.getCount(unity_id)
+	}
+}

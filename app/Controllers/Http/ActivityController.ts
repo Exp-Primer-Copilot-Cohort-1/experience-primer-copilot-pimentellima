@@ -1,22 +1,19 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import {
-	makeCreateActivityAwaitComposer,
 	makeCreateActivityComposer,
 	makeCreateRecurrentActivityComposer,
 	makeDeleteActivityByIdComposer,
 	makeFindActivitiesByProfIdComposer,
 	makeFindActivityByClientIdComposer,
 	makeFindActivityByIdComposer,
-	makeFindAllActivitiesAwaitComposer,
 	makeFindAllActivitiesComposer,
 	makeFindAllActivitiesPendingComposer,
 	makeFindDayActivitiesComposer,
 	makeUpdateActivityByIdComposer,
-	makeUpdateActivityFinishedAtComposer,
-	makeUpdateActivityStartedAtComposer,
-	makeUpdateActivityStatusComposer,
+	makeUpdateActivityStatusComposer
 } from 'App/Core/composers/activities/make'
+import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/Activity'
 import { ROLES } from 'App/Roles/types'
@@ -26,13 +23,6 @@ import { ROLES } from 'App/Roles/types'
  * tags:
  *   name: Atividades
  *   description: Endpoints para gerenciar as atividades (Consultas).
- */
-
-/**
- * @swagger
- * tags:
- *   name: Atividades em Espera
- *   description: Endpoints para gerenciar as atividades em espera (Consultas).
  */
 
 /**
@@ -71,18 +61,10 @@ class ActivityController {
 	 * @returns Uma lista de atividades.
 	 */
 	async findAllActivities(ctx: HttpContextContract) {
-		switch (ctx.auth.user?.type) {
-			case ROLES.PROF:
-				return adaptRoute(makeFindActivitiesByProfIdComposer(), ctx, {
-					unity_id: ctx.auth.user?.unity_id,
-					prof_id: ctx.auth.user?._id,
-				})
-
-			default:
-				return adaptRoute(makeFindAllActivitiesComposer(), ctx, {
-					unity_id: ctx.auth.user?.unity_id,
-				})
-		}
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeFindAllActivitiesComposer(opts), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		})
 	}
 
 	async findDayActivities(ctx: HttpContextContract) {
@@ -95,43 +77,6 @@ class ActivityController {
 
 			default:
 				return adaptRoute(makeFindDayActivitiesComposer(), ctx, {
-					unity_id: ctx.auth.user?.unity_id,
-				})
-		}
-	}
-
-	/**
-	 * Retorna todas as atividades aguardando aprovação.
-	 * @swagger
-	 * /activities/await:
-	 *   get:
-	 *     summary: Retorna todas as atividades aguardando aprovação.
-	 *     tags:
-	 *       - Atividades em Espera
-	 *     security:
-	 *       - jwt: []
-	 *     responses:
-	 *       200:
-	 *         description: Lista de atividades aguardando aprovação.
-	 *         content:
-	 *           application/json:
-	 *             schema:
-	 *               type: array
-	 *               items:
-	 *                 $ref: '#/components/schemas/ActivityAwait'
-	 *       401:
-	 *         $ref: '#/components/responses/UnauthorizedError'
-	 */
-	async findAllActivitiesAwait(ctx: HttpContextContract) {
-		switch (ctx.auth.user?.type) {
-			case ROLES.PROF:
-				return adaptRoute(makeFindAllActivitiesAwaitComposer(), ctx, {
-					unity_id: ctx.auth.user?.unity_id,
-					prof: ctx.auth.user?._id,
-				})
-
-			default:
-				return adaptRoute(makeFindAllActivitiesAwaitComposer(), ctx, {
 					unity_id: ctx.auth.user?.unity_id,
 				})
 		}
@@ -162,129 +107,12 @@ class ActivityController {
 	 *         $ref: '#/components/responses/InternalServerError'
 	 */
 	async findAllActivitiesPending(ctx: HttpContextContract) {
-		switch (ctx.auth.user?.type) {
-			case ROLES.PROF:
-				return adaptRoute(makeFindAllActivitiesPendingComposer(), ctx, {
-					unity_id: ctx.auth.user?.unity_id,
-					prof: ctx.auth.user?._id,
-				})
-
-			default:
-				return adaptRoute(makeFindAllActivitiesPendingComposer(), ctx, {
-					unity_id: ctx.auth.user?.unity_id,
-				})
-		}
-	}
-
-	/**
-	 * Atualiza o status de uma atividade pelo ID.
-	 *
-	 * @swagger
-	 * /activities/status/{id}:
-	 *   put:
-	 *     summary: Atualiza o status de uma atividade pelo ID.
-	 *     security:
-	 *       - bearerAuth: []
-	 *     tags:
-	 *       - Atividades
-	 *     parameters:
-	 *       - name: id
-	 *         in: path
-	 *         description: ID da atividade a ser atualizada.
-	 *         required: true
-	 *         schema:
-	 *           type: integer
-	 *     requestBody:
-	 *       description: Objeto contendo o novo status da atividade.
-	 *       required: true
-	 *       content:
-	 *         application/json:
-	 *           schema:
-	 *             $ref: '#/components/schemas/UpdateActivityStatus'
-	 *     responses:
-	 *       '204':
-	 *         description: Atividade atualizada com sucesso.
-	 *       '401':
-	 *         $ref: '#/components/responses/Unauthorized'
-	 *       '404':
-	 *         $ref: '#/components/responses/NotFound'
-	 *       '500':
-	 *         $ref: '#/components/responses/InternalServerError'
-	 */
-	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	async updateActivityStatusById(ctx: HttpContextContract) {
-		return adaptRoute(makeUpdateActivityStatusComposer(), ctx, {
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeFindAllActivitiesPendingComposer(opts), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
 
-	/**
-	 * Atualiza a data de início de uma atividade.
-	 * @swagger
-	 * /activities/started_at/{id}:
-	 *   put:
-	 *     security:
-	 *       - bearerAuth: []
-	 *     tags:
-	 *       - Atividades
-	 *     summary: Atualiza a data de início de uma atividade.
-	 *     parameters:
-	 *       - name: id
-	 *         in: path
-	 *         description: ID da atividade a ser atualizada.
-	 *         required: true
-	 *         schema:
-	 *           type: integer
-	 *     responses:
-	 *       200:
-	 *         description: Atividade atualizada com sucesso.
-	 *       401:
-	 *         $ref: '#/components/responses/UnauthorizedError'
-	 *       404:
-	 *         $ref: '#/components/responses/NotFoundError'
-	 *       500:
-	 *         $ref: '#/components/responses/InternalServerError'
-	 */
-	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	async updateActivityStartedAt(ctx: HttpContextContract) {
-		return adaptRoute(makeUpdateActivityStartedAtComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
-	}
-
-	/**
-	 * Atualiza a data de finalização de uma atividade.
-	 * @swagger
-	 * /activities/finished_at/{id}:
-	 *   put:
-	 *     summary: Atualiza a data de finalização de uma atividade.
-	 *     security:
-	 *       - bearerAuth: []
-	 *     tags:
-	 *       - Atividades
-	 *     parameters:
-	 *       - name: id
-	 *         in: path
-	 *         description: ID da atividade a ser atualizada.
-	 *         required: true
-	 *         schema:
-	 *           type: integer
-	 *     responses:
-	 *       200:
-	 *         description: Atividade atualizada com sucesso.
-	 *       401:
-	 *         description: Não autorizado.
-	 *       404:
-	 *         description: Atividade não encontrada.
-	 *       500:
-	 *         description: Erro interno do servidor.
-	 */
-	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	async updateActivityFinishedAt(ctx: HttpContextContract) {
-		return adaptRoute(makeUpdateActivityFinishedAtComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
-	}
 
 	/**
 	 * Retorna as atividades de um profissional pelo seu ID.
@@ -442,42 +270,7 @@ class ActivityController {
 		})
 	}
 
-	/**
-	 * Cria uma nova atividade aguardando aprovação.
-	 * @param ctx O contexto HTTP da requisição.
-	 * @returns Uma Promise que resolve com a resposta HTTP.
-	 * @swagger
-	 * /activities/await:
-	 *   post:
-	 *     summary: Cria uma nova atividade aguardando aprovação.
-	 *     tags: [Atividades em Espera]
-	 *     security:
-	 *       - bearerAuth: []
-	 *     requestBody:
-	 *       required: true
-	 *       content:
-	 *         application/json:
-	 *           schema:
-	 *             $ref: '#/components/schemas/ActivityAwait'
-	 *     responses:
-	 *       '200':
-	 *         description: Atividade em Espera criada com sucesso.
-	 *         content:
-	 *           application/json:
-	 *             schema:
-	 *               $ref: '#/components/schemas/ActivityAwait'
-	 *       '401':
-	 *         $ref: '#/components/responses/UnauthorizedError'
-	 *       '422':
-	 *         $ref: '#/components/responses/UnprocessableEntityError'
-	 */
 	@LogDecorator(COLLECTION_NAME, ACTION.POST)
-	async createActivityAwait(ctx: HttpContextContract) {
-		return adaptRoute(makeCreateActivityAwaitComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
-	}
-
 	async createRecurrentActivity(ctx: HttpContextContract) {
 		return adaptRoute(makeCreateRecurrentActivityComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
@@ -529,6 +322,48 @@ class ActivityController {
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async updateActivityById(ctx: HttpContextContract) {
 		return adaptRoute(makeUpdateActivityByIdComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		})
+	}
+
+	/**
+	 * Atualiza o status de uma atividade pelo ID.
+	 *
+	 * @swagger
+	 * /activities/status/{id}:
+	 *   put:
+	 *     summary: Atualiza o status de uma atividade pelo ID.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     tags:
+	 *       - Atividades
+	 *     parameters:
+	 *       - name: id
+	 *         in: path
+	 *         description: ID da atividade a ser atualizada.
+	 *         required: true
+	 *         schema:
+	 *           type: integer
+	 *     requestBody:
+	 *       description: Objeto contendo o novo status da atividade.
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             $ref: '#/components/schemas/UpdateActivityStatus'
+	 *     responses:
+	 *       '204':
+	 *         description: Atividade atualizada com sucesso.
+	 *       '401':
+	 *         $ref: '#/components/responses/Unauthorized'
+	 *       '404':
+	 *         $ref: '#/components/responses/NotFound'
+	 *       '500':
+	 *         $ref: '#/components/responses/InternalServerError'
+	 */
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
+	async start(ctx: HttpContextContract) {
+		return adaptRoute(makeUpdateActivityStatusComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}

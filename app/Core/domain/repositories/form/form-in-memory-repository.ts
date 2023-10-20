@@ -1,7 +1,7 @@
+import FormEntity from "App/Core/domain/entities/form/form";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import { IForm } from "App/Types/IForm";
-import FormEntity from "../../entities/form/form";
 import { FormNotFoundError } from "../../errors/form-not-found-error";
 import { MissingParamsError } from "../../errors/missing-params";
 import { FormManagerInterface } from "../interface/form-manager-interface";

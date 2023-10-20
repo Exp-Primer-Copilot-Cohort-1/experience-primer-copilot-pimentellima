@@ -4,7 +4,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { left, right } from 'App/Core/shared'
 import { ITransaction } from 'App/Types/ITransaction'
 import { Mock, SpyInstance, describe, expect, it, vi } from 'vitest'
-import { UnitNotFoundError } from '../../../errors/unit-not-found'
+import { UnityNotFoundError } from '../../../errors/unity-not-found'
 import { TransactionWithoutProcedure } from '../helpers'
 import { CreateTransactionUseCase } from './create-transactions-use-case'
 
@@ -77,7 +77,7 @@ describe('Create Transaction Use Case (Unit)', () => {
 
 		const result = await sut.execute(transaction)
 
-		expect(result).toEqual(left(new UnitNotFoundError()))
+		expect(result).toEqual(left(new UnityNotFoundError()))
 	})
 
 	it('should call startSession on the session object', async () => {

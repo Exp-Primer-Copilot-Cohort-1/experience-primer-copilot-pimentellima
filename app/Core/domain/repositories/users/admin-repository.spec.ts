@@ -1,9 +1,9 @@
+import DaysOfTrade from 'App/Core/domain/entities/helpers/days-of-trade'
+import AdminUser from 'App/Core/domain/entities/user/admin'
 import { IAdminUser } from 'App/Types/IAdminUser'
 import { Model } from '__mocks__/model'
 import { cpf } from 'cpf-cnpj-validator'
 import { beforeAll, describe, expect, it, vi } from 'vitest'
-import DaysOfTrade from '../../entities/helpers/days-of-trade'
-import AdminUser from '../../entities/user/admin'
 import { AdminMongooseRepository } from './admin-mongo-repository'
 
 const makeSut = () => {

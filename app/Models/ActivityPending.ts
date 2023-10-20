@@ -81,6 +81,11 @@ interface IActivityPendingModel extends Omit<IActivityPending, 'prof' | 'client'
  */
 const ActivityPendingSchema = new Schema<IActivityPendingModel>(
 	{
+		is_recurrent: {
+			type: Boolean,
+			required: true,
+			default: true,
+		},
 		group_id: {
 			type: String,
 			required: true,

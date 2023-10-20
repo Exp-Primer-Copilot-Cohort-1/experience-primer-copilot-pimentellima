@@ -22,14 +22,14 @@ const mountTransaction = () => ({
 
 const makeMocks = () => {
 	const proceduresManager = {
-		findByProcedureId: vi.fn(),
+		findById: vi.fn(),
 	} as unknown as ProceduresManagerInterface
 
 	const participationManager = {
 		findCurrentPaymentParticipation: vi.fn(),
 	} as unknown as PaymentProfManagerInterface
 
-	const mockProceduresManager = proceduresManager.findByProcedureId as Mock
+	const mockProceduresManager = proceduresManager.findById as Mock
 	const mockParticipationsManager =
 		participationManager.findCurrentPaymentParticipation as Mock
 

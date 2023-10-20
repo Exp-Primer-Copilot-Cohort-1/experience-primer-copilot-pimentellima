@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
+import { HolidaysMongoRepository } from 'App/Core/domain/repositories'
 import Unity from 'App/Models/Unity'
-import { HolidaysMongoRepository } from '../../repositories/holidays/holiday-mongo-repository'
 import { AddHolidaysByUnityUseCase } from './add-holidays-by-unity'
 
 const makeSut = () => {
@@ -13,7 +13,7 @@ const makeSut = () => {
 	}
 }
 
-describe('Add Holidays By Unity Use Case (Integration)', () => {
+describe('Add Holidays Use Case (Integration)', () => {
 	beforeAll(async () => {
 		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})

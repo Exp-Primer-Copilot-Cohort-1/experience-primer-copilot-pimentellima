@@ -1,8 +1,13 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import type { ICategory } from 'App/Types/ICategory'
-
+import { COLLECTION_NAME as COLLECTION_NAME_USER } from './User'
 interface ICategoryModel extends Omit<ICategory, 'prof'> {
 	prof: Schema.Types.ObjectId
+}
+
+export enum COLLECTIONS_REFS {
+	PROF = 'prof',
+	UNITY = 'unity_id',
 }
 
 export const COLLECTION_NAME = 'categories'
@@ -45,7 +50,7 @@ const CategorySchema = new Schema<ICategoryModel>(
 		prof: {
 			type: Schema.Types.ObjectId,
 			required: true,
-			ref: 'users',
+			ref: COLLECTION_NAME_USER,
 		},
 		active: {
 			type: Boolean,

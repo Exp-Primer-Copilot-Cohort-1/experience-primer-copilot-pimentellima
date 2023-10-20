@@ -1,6 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import {
+	makeCounts,
 	makeMedicalCertificateCreateComposer,
 	makeMedicalCertificateDeleteByIdComposer,
 	makeMedicalCertificateFindByNameComposer,
@@ -102,6 +103,10 @@ class MedicalCertificateController {
 	@LogDecorator(COLLECTION_NAME, ACTION.DELETE)
 	async destroy(ctx: HttpContextContract) {
 		return adaptRoute(makeMedicalCertificateDeleteByIdComposer(), ctx)
+	}
+
+	async counts(ctx: HttpContextContract) {
+		return adaptRoute(makeCounts(ctx, COLLECTION_NAME), ctx)
 	}
 }
 

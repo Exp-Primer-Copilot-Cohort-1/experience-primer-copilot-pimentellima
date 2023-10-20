@@ -1,21 +1,28 @@
+import { ClientEntity } from 'App/Core/domain/entities/clients/client'
+import { ClientsMongooseRepository } from 'App/Core/domain/repositories'
+import { ClientManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
-import { PromiseEither, right } from 'App/Core/shared'
+import { PromiseEither } from 'App/Core/shared'
 import { IUserClient } from 'App/Types/IClient'
-import { ClientEntity } from '../../entities/clients/client'
-import { ClientManagerInterface } from '../../repositories/interface'
+import { inject, injectable, registry } from 'tsyringe'
 
-type TypeParams = {
+type In = {
 	id: string
 } & IUserClient
 
-export class UpdateClientsByIdUseCase implements UseCase<TypeParams, IUserClient> {
-	constructor(private readonly manager: ClientManagerInterface) { } // eslint-disable-line
+@injectable()
+@registry([{ token: UpdateClientsByIdUseCase, useClass: UpdateClientsByIdUseCase }])
+export class UpdateClientsByIdUseCase implements UseCase<In, IUserClient> {
+
+	constructor(
+		@inject(ClientsMongooseRepository) readonly manager: ClientManagerInterface,
+	) { } // eslint-disable-line
 
 	public async execute({
 		id,
 		...data
-	}: TypeParams): PromiseEither<AbstractError, IUserClient> {
+	}: In): PromiseEither<AbstractError, IUserClient> {
 		const clientEntity = await ClientEntity.build(data)
 
 		if (clientEntity.isLeft()) return clientEntity
@@ -24,10 +31,6 @@ export class UpdateClientsByIdUseCase implements UseCase<TypeParams, IUserClient
 
 		const clientOrErr = await this.manager.updateById(client, id)
 
-		if (clientOrErr.isLeft()) return clientOrErr
-
-		const doc = clientOrErr.extract()
-
-		return right(doc)
+		return clientOrErr
 	}
 }

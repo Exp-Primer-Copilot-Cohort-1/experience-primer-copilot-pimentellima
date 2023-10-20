@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { MedicalCertificateManagerInterface } from '../interface'
 
 export class MedicalCertificateInMemoryRepository
@@ -18,7 +18,7 @@ export class MedicalCertificateInMemoryRepository
 		)
 
 		if (medicalCertificate.length === 0) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(this.items)
@@ -29,7 +29,7 @@ export class MedicalCertificateInMemoryRepository
 		const medicalCertificate = this.items.find((item) => item._id.toString() === id)
 
 		if (!medicalCertificate) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(this.items)
@@ -40,7 +40,7 @@ export class MedicalCertificateInMemoryRepository
 		const medicalCertificate = this.items.find((item) => item._id.toString() === id)
 
 		if (!medicalCertificate) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(medicalCertificate)
@@ -51,7 +51,7 @@ export class MedicalCertificateInMemoryRepository
 		const medicalCertificate = this.items.find((item) => item._id.toString() === id)
 
 		if (!medicalCertificate) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(medicalCertificate)

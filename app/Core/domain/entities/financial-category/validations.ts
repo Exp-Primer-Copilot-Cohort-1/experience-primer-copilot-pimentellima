@@ -5,7 +5,6 @@ const validationsSchema = () =>
 	z.object({
 		name: z.string(),
 		active: z.boolean(),
-		unity_id: z.string(),
 		type: z.string().refine((val) => {
 			if (val !== FinancialCategoryType.Expense && val !== FinancialCategoryType.Revenue) {
 				return false

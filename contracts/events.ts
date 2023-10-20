@@ -7,6 +7,7 @@
 
 import { ISessionTransaction } from "App/Core/infra/session-transaction";
 import { IAdminUser } from "App/Types/IAdminUser";
+import { TypeForms } from "App/Types/IBusinessFranchises";
 import { IUnity } from "App/Types/IUnity";
 
 declare module '@ioc:Adonis/Core/Event' {
@@ -14,5 +15,7 @@ declare module '@ioc:Adonis/Core/Event' {
 		'new:user': { id: string; email: string, label?: string, name?: string };
 		'new:password': { password: string; email: string };
 		'new:unity': { unity: IUnity, user: IAdminUser, session: ISessionTransaction }
+		'new:reply-form-standard-franchise': { group_id: string; type: TypeForms; }
+		'new:email-current-reply-in-greater-previous': { group_id: string; }
 	}
 }

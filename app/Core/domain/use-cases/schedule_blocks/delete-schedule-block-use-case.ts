@@ -1,8 +1,8 @@
+import { ScheduleBlockManagerInterface } from "App/Core/domain/repositories/interface/schedule-block-manager-interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import { IScheduleBlock } from "App/Types/IScheduleBlock";
-import { ScheduleBlockManagerInterface } from "../../repositories/interface/schedule-block-manager-interface";
 
 type Props = {
 	id: string;

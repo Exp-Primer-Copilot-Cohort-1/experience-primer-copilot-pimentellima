@@ -15,6 +15,6 @@ export default class ViewActivitiesPolicy extends BasePolicy {
 		return general.includes(user.type as ROLES)
 	}
 	public async view(user: IUser, activity: IActivity) {
-		return user._id === activity.prof
+		return user._id.toString() === activity.prof.toString()
 	}
 }

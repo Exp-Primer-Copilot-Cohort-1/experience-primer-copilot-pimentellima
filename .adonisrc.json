@@ -25,7 +25,8 @@
 			"environment": [
 				"web"
 			]
-		}
+		},
+		"./start/limiter"
 	],
 	"providers": [
 		"./providers/AppProvider",
@@ -38,7 +39,8 @@
 		"adonis5-swagger",
 		"@adonisjs/view",
 		"@adonisjs/shield",
-		"@adonisjs/bouncer"
+		"@adonisjs/bouncer",
+		"@adonisjs/limiter"
 	],
 	"aceProviders": [
 		"@adonisjs/repl"
@@ -60,6 +62,26 @@
 	"metaFiles": [
 		{
 			"pattern": "resources/views/**/*.edge",
+			"reloadServer": false
+		},
+		{
+			"pattern": "public/*",
+			"reloadServer": false
+		},
+		{
+			"pattern": ".env",
+			"reloadServer": false
+		},
+		{
+			"pattern": "certs/*",
+			"reloadServer": false
+		},
+		{
+			"pattern": "ecosystem.config.js",
+			"reloadServer": false
+		},
+		{
+			"pattern": "docs/*",
 			"reloadServer": false
 		}
 	]

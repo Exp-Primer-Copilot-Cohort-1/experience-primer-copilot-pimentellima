@@ -3,7 +3,7 @@ import { PromiseEither, left, right } from "App/Core/shared";
 import { Genders, ISponsor, IUserClient, ProfWithAccess } from "App/Types/IClient";
 import { IFormAnswer } from "App/Types/IFormAnswer";
 import { Generic } from "App/Types/ITransaction";
-import { UnitNotFoundError } from "../../errors";
+import { UnityNotFoundError } from "../../errors";
 import { Entity } from "../abstract/entity.abstract";
 import { ClientNotSponsorError } from "../errors/client-not-sponsor";
 import { calcAge } from "../helpers/calc-age";
@@ -271,7 +271,7 @@ export class ClientEntity extends Entity implements IUserClient {
 	 * @returns Instância da classe Client.
 	 */
 	defineUnityId(unity_id: string): this {
-		if (!unity_id && !this._id) throw new UnitNotFoundError();
+		if (!unity_id && !this._id) throw new UnityNotFoundError();
 
 		this.unity_id = unity_id;
 		return this;

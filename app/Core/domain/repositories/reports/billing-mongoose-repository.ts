@@ -4,7 +4,7 @@ import Transactions from 'App/Models/Transactions'
 import Unity from 'App/Models/Unity'
 import { IBilling } from 'App/Types/IBilling'
 import { Types } from 'mongoose'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { ReportsUnitiesManagerInterface } from '../interface/reports-unities-manager.interface'
 
 const ObjectId = Types.ObjectId
@@ -19,7 +19,7 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 		const unity = await Unity.findById(unity_id).select('revenue_reports')
 
 		if (!unity) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		const revenueReports = unity.revenue_reports?.get(year.toString())
@@ -47,7 +47,7 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 		).select('revenue_reports')
 
 		if (!unity) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		const revenueReports = unity.revenue_reports?.get(year.toString())
@@ -76,7 +76,7 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerInterface
 		).select('revenue_reports')
 
 		if (!unity) {
-			return left(new UnitNotFoundError())
+			return left(new UnityNotFoundError())
 		}
 
 		return right(unity.revenue_reports?.[year] as any)

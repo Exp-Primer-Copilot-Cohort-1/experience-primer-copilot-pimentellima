@@ -1,31 +1,33 @@
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import { ActivityNotGroupIdProvider } from 'App/Core/domain/errors/activity-not-group-id-provider'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
+import { UnityIdNotProvidedError } from 'App/Core/domain/errors/unity-not-id-provider'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import Activity, { COLLECTIONS_REFS } from 'App/Models/Activity'
+import { COLLECTIONS_REFS } from 'App/Models/Activity'
 import ActivityPending from 'App/Models/ActivityPending'
 import {
-	IActivity,
 	IActivityPending,
-	RecurrentActivityValues,
-	STATUS_ACTIVITY,
+	STATUS_ACTIVITY
 } from 'App/Types/IActivity'
-import mongoose from 'mongoose'
-import ActivityEntity from '../../entities/activities/activity'
-import { MissingParamsError } from '../../errors/missing-params'
-import { UnitNotFoundError } from '../../errors/unit-not-found'
+import { inject, injectable, registry } from 'tsyringe'
 import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
 import { ActivitiesRecurrentManagerInterface } from '../interface/activity-recurrent-manager.interface'
 
+@injectable()
+@registry([{ token: ActivityRecurrentMongoRepository, useClass: ActivityRecurrentMongoRepository }])
 export class ActivityRecurrentMongoRepository
-	implements ActivitiesRecurrentManagerInterface
-{
+	implements ActivitiesRecurrentManagerInterface {
 	// eslint-disable-line
-	constructor() {} // eslint-disable-line
+	constructor(
+		@inject(OptsQuery) private readonly opts?: OptsQuery,
+	) { } // eslint-disable-line
 
-	async findAllActivitiesPending(
+	async findAll(
 		unity_id: string,
 		...args: unknown[]
 	): PromiseEither<AbstractError, IActivityPending[]> {
-		if (!unity_id) return left(new UnitNotFoundError())
+		if (!unity_id) return left(new UnityNotFoundError())
 
 		const attrs = (args[0] as { [key: string]: string }) || {}
 
@@ -34,6 +36,7 @@ export class ActivityRecurrentMongoRepository
 			unity_id,
 			type: STATUS_ACTIVITY.PENDING,
 		})
+			.where(this.opts?.where || {})
 			.populate(COLLECTIONS_REFS.CLIENTS, PROJECTION_CLIENT)
 			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
 			.populate(COLLECTIONS_REFS.PROCEDURES, PROJECTION_DEFAULT)
@@ -42,53 +45,15 @@ export class ActivityRecurrentMongoRepository
 		return right(activities)
 	}
 
-	async createRecurrentActivity(
+	async create(
 		unity_id: string,
-		{ dates, ...values }: RecurrentActivityValues,
-	): PromiseEither<AbstractError, IActivity[]> {
-		try {
-			if (!unity_id) return left(new MissingParamsError('unity_id'))
+		activity: IActivityPending,
+	): PromiseEither<AbstractError, IActivityPending> {
+		if (!unity_id) return left(new UnityIdNotProvidedError())
+		if (!activity.group_id) return left(new ActivityNotGroupIdProvider())
 
-			const validatedActivities: IActivity[] = []
+		const doc = await ActivityPending.create({ ...activity, unity_id })
 
-			for (let i = 0; i < dates.length; i++) {
-				const date = dates[i]
-				const activityOrErr = await ActivityEntity.build({
-					...date,
-					...values,
-					unity_id,
-				})
-				if (activityOrErr.isLeft()) {
-					return left(activityOrErr.extract())
-				}
-
-				validatedActivities.push(activityOrErr.extract())
-			}
-
-			const group_id = new mongoose.Types.ObjectId().toString()
-			const pendingActivity = {
-				...values,
-				unity_id,
-				group_id,
-				type: STATUS_ACTIVITY.PENDING,
-			}
-
-			await Promise.all(
-				new Array(values.recurrences - values.schedulings).map(async () => {
-					const act = await ActivityPending.create(pendingActivity)
-					return act
-				}),
-			)
-
-			const scheduledActivities = await Promise.all(
-				validatedActivities.map(
-					async (activity) => await Activity.create(activity),
-				),
-			)
-			return right(scheduledActivities)
-		} catch (err) {
-			console.log(err)
-			return left(err)
-		}
+		return right(doc)
 	}
 }

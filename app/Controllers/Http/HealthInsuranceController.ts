@@ -1,12 +1,12 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import {
+	makeCounts,
 	makeHealthInsuranceCreateComposer,
 	makeHealthInsuranceFindAllByUnityIdComposer,
 	makeHealthInsuranceFindByIdComposer,
-	makeHealthInsuranceUpdateComposer,
+	makeHealthInsuranceUpdateComposer
 } from 'App/Core/composers'
-import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import HealthInsurance, { COLLECTION_NAME } from 'App/Models/HealthInsurance'
 
@@ -42,11 +42,7 @@ class HealthInsuranceController {
 	 *         $ref: '#/components/responses/InternalServerError'
 	 */
 	async index(ctx: HttpContextContract) {
-		const unity_id = ctx.auth.user?.unity_id
-		const opts = OptsQuery.build(ctx.request.qs())
-		return adaptRoute(makeHealthInsuranceFindAllByUnityIdComposer(opts), ctx, {
-			unity_id,
-		})
+		return adaptRoute(makeHealthInsuranceFindAllByUnityIdComposer(ctx), ctx)
 	}
 
 	/**
@@ -207,6 +203,10 @@ class HealthInsuranceController {
 		return healthInsurances
 	}
 
+
+	async counts(ctx: HttpContextContract) {
+		return adaptRoute(makeCounts(ctx, COLLECTION_NAME), ctx)
+	}
 }
 
 export default HealthInsuranceController

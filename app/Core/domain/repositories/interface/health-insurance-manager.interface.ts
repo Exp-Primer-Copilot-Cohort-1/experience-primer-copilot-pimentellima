@@ -3,10 +3,8 @@ import { PromiseEither } from 'App/Core/shared/either'
 import { HealthInsuranceParams, IHealthInsurance } from 'App/Types/IHealthInsurance'
 
 export interface HealthInsuranceManagerInterface {
-	findAllByUnityId: (
-		unity_id: string,
-	) => PromiseEither<AbstractError, IHealthInsurance[]>
-	findAllByName: (
+	findAll: () => PromiseEither<AbstractError, IHealthInsurance[]>
+	search: (
 		name: string,
 		unity_id: string,
 	) => PromiseEither<AbstractError, IHealthInsurance[]>

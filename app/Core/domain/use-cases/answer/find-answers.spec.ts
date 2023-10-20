@@ -1,7 +1,7 @@
+import { AnswerInMemoryRepository } from "App/Core/domain/repositories/answer/answer-in-memory-repository";
 import { describe, expect, it } from "vitest";
-import { AnswerInMemoryRepository } from "../../repositories/answer/answer-in-memory-repository";
-import { FindAllAnswersUseCase } from "./find-all-answers-use-case";
 import { MissingParamsError } from "../../errors/missing-params";
+import { FindAllAnswersUseCase } from "./find-all-answers-use-case";
 import { FindAnswersByFormIdUseCase } from "./find-answers-by-form-id-use-case";
 
 const answer = {
@@ -151,31 +151,31 @@ describe("Find all answers (Unit)", () => {
 		expect(respOrErr.extract()).toHaveLength(2);
 	});
 
-    it("should find all answers that matches unity_id and form_id", async () => {
+	it("should find all answers that matches unity_id and form_id", async () => {
 		const repo = new AnswerInMemoryRepository();
 		repo.answers = [
 			{
 				...answer,
 				_id: "1",
 				unity_id: "1",
-                form_id: '1'
+				form_id: '1'
 			},
 			{
 				...answer,
 				_id: "2",
 				unity_id: "1",
-                form_id: '2'
+				form_id: '2'
 			},
 			{
 				...answer,
 				_id: "3",
 				unity_id: "2",
-                form_id: '1'
+				form_id: '1'
 			},
 		];
 		const respOrErr = await new FindAnswersByFormIdUseCase(repo).execute({
 			unity_id: "1",
-            form_id: '1'
+			form_id: '1'
 		});
 
 		expect(respOrErr.isRight()).toBeTruthy();
@@ -188,6 +188,6 @@ describe("Find all answers (Unit)", () => {
 		).execute({} as any);
 
 		expect(respOrErr.isLeft()).toBeTruthy();
-        expect(respOrErr.extract()).toBeInstanceOf(MissingParamsError);
+		expect(respOrErr.extract()).toBeInstanceOf(MissingParamsError);
 	});
 });

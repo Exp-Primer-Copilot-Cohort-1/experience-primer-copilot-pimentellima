@@ -1,12 +1,13 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import {
+	makeCategoriesCreateComposer,
 	makeCategoriesDeleteByIdComposer,
 	makeCategoriesFindByUnityComposer,
 	makeCategoriesShowByIdComposer,
 	makeCategoriesUpdateByIdComposer,
+	makeCounts
 } from 'App/Core/composers'
-import { makeCategoriesCreateComposer } from 'App/Core/composers/categories/make-categories-create-composer'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/Category'
 
@@ -43,8 +44,7 @@ export class CategoryController {
 	 *         $ref: '#/components/responses/UnauthorizedError'
 	 */
 	async index(ctx: HttpContextContract) {
-		const unity_id = ctx.auth.user?.unity_id
-		return adaptRoute(makeCategoriesFindByUnityComposer(), ctx, { unity_id })
+		return adaptRoute(makeCategoriesFindByUnityComposer(ctx), ctx)
 	}
 
 	/**
@@ -174,6 +174,10 @@ export class CategoryController {
 	@LogDecorator(COLLECTION_NAME, ACTION.DELETE)
 	async destroy(ctx: HttpContextContract) {
 		return adaptRoute(makeCategoriesDeleteByIdComposer(), ctx)
+	}
+
+	async counts(ctx: HttpContextContract) {
+		return adaptRoute(makeCounts(ctx, COLLECTION_NAME), ctx)
 	}
 }
 

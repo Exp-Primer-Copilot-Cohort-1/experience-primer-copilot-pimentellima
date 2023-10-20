@@ -1,13 +1,11 @@
 import { ObjectId } from '@ioc:Mongoose';
+import { Generic } from './ITransaction';
 
 export interface IMedicalCertificate {
-	_id: ObjectId;
+	_id?: ObjectId | string;
 	name: string;
 	description: string;
-	prof: {
-		value: string;
-		label: string;
-	};
+	prof: Generic;
 	active: boolean;
 	unity_id: ObjectId;
 	created_at: Date;

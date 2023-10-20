@@ -1,7 +1,6 @@
 'use strict'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeUpdateAccountByIdComposer } from 'App/Core/composers/accounts/make-update-account-by-id-composer'
 import { makeCreateAnswerComposer } from 'App/Core/composers/answer/make-create-answer-composer'
 import { makeDeleteAnswerByIdComposer } from 'App/Core/composers/answer/make-delete-answer-by-id-composer'
 import { makeFindAllAnswersComposer } from 'App/Core/composers/answer/make-find-all-answers-composer'
@@ -42,9 +41,6 @@ class AnswerController {
 		return adaptRoute(makeDeleteAnswerByIdComposer(), ctx)
 	}
 
-	async updateAnswerById(ctx: HttpContextContract) {
-		return adaptRoute(makeUpdateAccountByIdComposer(), ctx)
-	}
 }
 
 export default AnswerController

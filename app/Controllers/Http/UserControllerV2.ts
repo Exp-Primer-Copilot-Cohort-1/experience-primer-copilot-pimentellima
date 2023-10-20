@@ -1,7 +1,8 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { adaptRoute } from 'App/Core/adapters'
+import { makeFindAllProfsComposers } from 'App/Core/composers'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import User from 'App/Models/User'
-
 import { ROLES } from 'App/Roles/types'
 
 const fetchUserByType = async (type, unityId, active = true) =>
@@ -14,25 +15,8 @@ const fetchUserByType = async (type, unityId, active = true) =>
 	}).select('-payment_participations -password')
 
 class UserControllerV2 {
-	async findAllUsersProfs({ auth, request }: HttpContextContract) {
-		const userLogged = auth.user
-		const opts = OptsQuery.build(request.qs())
-		switch (userLogged?.type) {
-			case ROLES.PROF:
-				return await User.find({
-					_id: userLogged?._id,
-					unity_id: userLogged?.unity_id,
-					active: opts.active,
-				}).select('-payment_participations -password')
-			default:
-				return await User.find({
-					unity_id: userLogged?.unity_id,
-					active: opts.active,
-					type: {
-						$in: [ROLES.ADMIN_PROF, ROLES.PROF],
-					},
-				}).select('-payment_participations -password')
-		}
+	async findAllUsersProfs(ctx: HttpContextContract) {
+		return adaptRoute(makeFindAllProfsComposers(ctx), ctx)
 	}
 
 	async findAllUsersPerformsMedicalAppointments({ auth, request }: HttpContextContract) {

@@ -1,24 +1,29 @@
+import { PaymentProfMongoRepository } from 'App/Core/domain/repositories'
+import { PaymentProfManagerInterface } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
-import { PromiseEither, left, right } from 'App/Core/shared'
+import { PromiseEither, left } from 'App/Core/shared'
 import { IPaymentProf } from 'App/Types/IPaymentProf'
-import { PaymentProfManagerInterface } from '../../repositories/interface/payment-prof-manager-interface'
+import { inject, injectable } from 'tsyringe'
+import { UnityNotFoundError } from '../../errors'
 
 type TypeParams = {
 	unity_id: string
 }
 
+@injectable()
 export class FindAllPaymentProfsUseCase implements UseCase<TypeParams, IPaymentProf[]> {
-	constructor(private readonly paymentProfManager: PaymentProfManagerInterface) { }
+	constructor(
+		@inject(PaymentProfMongoRepository) private readonly manager: PaymentProfManagerInterface) {
+	}
 
 	public async execute(
-		params: TypeParams,
+		{ unity_id }: TypeParams,
 	): PromiseEither<AbstractError, IPaymentProf[]> {
-		const paymentProfsOrErr = await this.paymentProfManager.findAllPaymentProfs(
-			params.unity_id,
-		)
+		if (!unity_id) return left(new UnityNotFoundError())
 
-		if (paymentProfsOrErr.isLeft()) return left(paymentProfsOrErr.extract())
-		return right(paymentProfsOrErr.extract())
+		return await this.manager.findAllPaymentProfs(
+			unity_id,
+		)
 	}
 }
