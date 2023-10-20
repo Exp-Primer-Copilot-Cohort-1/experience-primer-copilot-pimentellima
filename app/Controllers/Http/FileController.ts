@@ -1,6 +1,6 @@
 import Drive from '@ioc:Adonis/Core/Drive'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { bucket } from '../../../gcs'
+import { bucket } from 'App/Core/infra/gcs'
 import crypto from 'crypto'
 
 const path = require('path')
@@ -12,16 +12,15 @@ function generateHashedFileName() {
 }
 
 class FileController {
-	async createClientPicture({ request, response, auth }: HttpContextContract) {
+	async createClientPicture({ request, auth }: HttpContextContract) {
 		const { user } = auth
-		if (!user) return response.status(401).send({ error: 'User not found' })
 
 		try {
 			const promises: Promise<string>[] = []
 			request.multipart.onFile('files', {}, async (file) => {
 				const promise = new Promise<string>((resolve, reject) => {
 					const fileName = generateHashedFileName()
-					const filePath = user._id + '/' + fileName
+					const filePath = user?._id + '/' + fileName
 					const publicUrl = `http://storage.googleapis.com/${bucket.name}/${filePath}`
 
 					const bucketFile = bucket.file(filePath)
@@ -49,12 +48,9 @@ class FileController {
 		}
 	}
 
-	// 	async downloadClientPictures({ request, response, auth }: HttpContextContract) {}
-
 	async uploadProfilePicture({ request, response, auth }: HttpContextContract) {
 		try {
 			const { user } = auth
-			if (!user) return response.status(401).send({ error: 'User not found' })
 
 			const fileNamePromise = new Promise<string>((resolve, reject) => {
 				request.multipart.onFile('file', {}, async (file) => {
@@ -68,8 +64,8 @@ class FileController {
 							metadata: { contentType: file.headers['content-type'] },
 						}),
 					).on('finish', async () => {
-						if (user.avatar) {
-							const oldFilename = user.avatar.split('/').pop()
+						if (user?.avatar) {
+							const oldFilename = user?.avatar.split('/').pop()
 							if (!oldFilename) return
 							const oldBucketFile = bucket.file(oldFilename)
 							const isExist = await oldBucketFile.exists()
@@ -91,7 +87,7 @@ class FileController {
 		}
 	}
 
-	async downloadClientModel({ request, response }: HttpContextContract) {
+	async downloadClientModel({ response }: HttpContextContract) {
 		const filePath = 'clientDataModel.csv'
 		const isExist = await Drive.exists(filePath)
 		if (isExist) {

@@ -9,13 +9,13 @@ import {
 import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import { PROJECTION_DEFAULT } from 'App/Core/domain/repositories/helpers/projections'
 import { AbstractError } from 'App/Core/errors/error.interface'
+import { baseGCSUrl, bucket } from 'App/Core/infra/gcs'
 import { left } from 'App/Core/shared'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import Client, { COLLECTIONS_REFS, COLLECTION_NAME } from 'App/Models/Client'
 import { IUserClient, TreatmentPicture } from 'App/Types/IClient'
 import { IFormAnswer } from 'Types/IFormAnswer'
 import crypto from 'crypto'
-import { baseGCSUrl, bucket } from '../../../gcs'
 
 function generateHash() {
 	const randomValue = Math.random().toString(36).substring(2, 15)
@@ -26,9 +26,7 @@ function generateHash() {
 // ! AVISO
 // ! refatorar para usar o padrão da nossa arquitetura
 class ClientController {
-	async putTreatmentPictures({ request, response, auth }: HttpContextContract) {
-		const { user } = auth
-		if (!user) return response.status(401).send({ error: 'User not found' })
+	async putTreatmentPictures({ request, auth }: HttpContextContract) {
 		const clientId = request.params().client_id
 
 		try {
