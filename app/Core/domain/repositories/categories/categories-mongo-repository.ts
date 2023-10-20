@@ -24,15 +24,14 @@ export class CategoriesMongooseRepository implements CategoriesManagerInterface 
 	}
 
 	async findByID(id: string): PromiseEither<AbstractError, ICategory> {
-		const categories = await Category.findById(id).populate('prof', {
-			_id: 0,
-			label: '$name',
-			value: '$_id',
-		})
+		const categories = await Category
+			.findById(id)
+			.populate(COLLECTIONS_REFS.PROF, PROJECTION_DEFAULT)
 
 		if (!categories) {
 			return left(new AbstractError('Categoria não encontrada', 404))
 		}
+
 		return right(categories as unknown as ICategory)
 	}
 	async findAll(): PromiseEither<AbstractError, ICategory[]> {
@@ -54,32 +53,15 @@ export class CategoriesMongooseRepository implements CategoriesManagerInterface 
 		_id, // eslint-disable-line @typescript-eslint/no-unused-vars
 		...data
 	}: Partial<ICategory>): PromiseEither<AbstractError, ICategory> {
-		const category = await (
-			await Category.create({
-				...data,
-				prof: data.prof?.value,
-			})
-		).populate('prof', {
-			_id: 0,
-			label: '$name',
-			value: '$_id',
-		})
+		const category = await Category.create(data)
 
-		return right(category.toObject() as unknown as ICategory)
+		return right(category.toObject())
 	}
 	async update(
 		data: Partial<ICategory>,
 		id: string,
 	): PromiseEither<AbstractError, ICategory> {
-		const categories = await Category.findByIdAndUpdate(id, data).populate('prof', {
-			_id: 0,
-			label: '$name',
-			value: '$_id',
-		})
-
-		if (!categories) {
-			return left(new AbstractError('Categoria não encontrada', 404))
-		}
+		const categories = await Category.findByIdAndUpdate(id, data).orFail()
 
 		return right(categories.toObject())
 	}

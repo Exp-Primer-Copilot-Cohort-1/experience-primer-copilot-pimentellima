@@ -5,7 +5,6 @@ const validation = () => z.object({
 	unity_id: z.string(),
 	name: z.string().min(3).max(255),
 	celphone: z.string(),
-	email: z.string().email().max(255),
 })
 
 export const validateUnity = () => z.object({

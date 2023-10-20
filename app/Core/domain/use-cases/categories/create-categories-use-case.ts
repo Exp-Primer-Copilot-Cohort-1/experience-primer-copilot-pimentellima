@@ -16,7 +16,6 @@ export class CreateCategoriesUseCase implements UseCase<Partial<ICategory>, ICat
 		categories: Partial<ICategory>,
 	): PromiseEither<AbstractError, ICategory> {
 
-
 		return await this.manager.create(categories)
 	}
 }
