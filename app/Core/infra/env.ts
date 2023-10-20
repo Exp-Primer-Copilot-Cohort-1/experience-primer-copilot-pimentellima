@@ -1,9 +1,5 @@
 import EnvAdonis from '@ioc:Adonis/Core/Env';
-
-export interface IEvn {
-	isProd: boolean
-	get: (key: string) => string | undefined
-}
+import { IEvn } from './infra';
 
 export class Env implements IEvn {
 

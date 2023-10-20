@@ -1,8 +1,5 @@
 import MailAdonis, { MessageComposeCallback } from '@ioc:Adonis/Addons/Mail';
-
-export interface IMail {
-	send: (message: MessageComposeCallback) => Promise<any>
-}
+import { IMail } from './infra';
 
 export class Mail implements IMail {
 	async send(message: MessageComposeCallback) {

@@ -1,5 +1,6 @@
 import { AbstractError } from "App/Core/errors/error.interface";
-import { Env, IEvn } from "App/Core/infra/env";
+import { Env } from "App/Core/infra/env";
+import { IEvn } from "App/Core/infra/infra";
 import logger from 'App/Core/infra/logger';
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";

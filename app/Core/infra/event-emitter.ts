@@ -1,12 +1,6 @@
-import Event, { EventsList } from '@ioc:Adonis/Core/Event'
+import Event from '@ioc:Adonis/Core/Event'
 import { injectable, registry } from 'tsyringe'
-
-type KeysEvents = keyof EventsList
-
-export interface IEventEmitter {
-	emit(event: KeysEvents, item?: Object): Promise<unknown>
-}
-
+import { IEventEmitter, KeysEvents } from './infra'
 
 @injectable()
 @registry([{
@@ -23,15 +17,3 @@ export class EventEmitter implements IEventEmitter {
 	}
 }
 
-@injectable()
-@registry([{
-	token: EventEmitterTest,
-	useClass: EventEmitterTest
-}])
-export class EventEmitterTest implements IEventEmitter {
-	emit(event: KeysEvents, item: Object = {}): Promise<unknown> {
-		return new Promise((resolve, reject) => {
-			setTimeout(() => resolve(item), 1000)
-		})
-	}
-}

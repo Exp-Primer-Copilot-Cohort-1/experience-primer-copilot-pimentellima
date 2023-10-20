@@ -1,18 +1,9 @@
 import db, { ClientSession } from '@ioc:Mongoose'
 import { Lifecycle, registry, scoped } from 'tsyringe'
-
-export interface ISessionTransaction {
-	manager?: any
-	options?: any
-	startSession(): Promise<void>
-	commitTransaction(): Promise<void>
-	abortTransaction(): Promise<void>
-	endSession(): Promise<void>
-}
-
+import { ISessionTransaction } from './infra'
 @scoped(Lifecycle.ResolutionScoped)
 @registry([{ token: SessionTransaction, useClass: SessionTransaction }])
-export class SessionTransaction {
+export class SessionTransaction implements ISessionTransaction {
 	manager?: ClientSession
 	options?: any = {}
 

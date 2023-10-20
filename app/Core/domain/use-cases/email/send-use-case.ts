@@ -1,11 +1,12 @@
+import { SendEmailError } from "App/Core/domain/errors/send-email.err";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { LOGO } from 'App/Core/infra/constants';
-import { Env, IEvn } from 'App/Core/infra/env';
-import { ILogger, Logger } from 'App/Core/infra/logger';
-import { IMail, Mail } from "App/Core/infra/mail";
+import { Env } from 'App/Core/infra/env';
+import { IEvn, ILogger, IMail } from "App/Core/infra/infra";
+import { Logger } from 'App/Core/infra/logger';
+import { Mail } from "App/Core/infra/mail";
 import { PromiseEither, left, right } from "App/Core/shared";
 import { inject, injectable, registry } from 'tsyringe';
-import { SendEmailError } from "../../errors/send-email.err";
 import { ISendEmailUseCase, MailParams } from "../helpers/edge";
 /**
  * Classe responsável por enviar emails.
