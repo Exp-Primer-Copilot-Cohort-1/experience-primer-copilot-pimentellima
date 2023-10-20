@@ -3,6 +3,7 @@ import { FormManagerInterface } from 'App/Core/domain/repositories/interface/for
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
+import { IdNotProvidedError } from '../../errors/id-not-provided'
 
 type TypeParams = {
 	id: string
@@ -11,8 +12,10 @@ type TypeParams = {
 export class DeleteFormByIdUseCase implements UseCase<TypeParams, FormEntity> {
 	constructor(private readonly formManager: FormManagerInterface) { } // eslint-disable-line
 
-	public async execute(params: TypeParams): PromiseEither<AbstractError, FormEntity> {
-		const formOrErr = await this.formManager.deleteFormById(params.id)
+
+	public async execute({ id }): PromiseEither<AbstractError, FormEntity> {
+		if (!id) return left(new IdNotProvidedError())
+		const formOrErr = await this.formManager.deleteFormById(id)
 
 		if (formOrErr.isLeft()) return left(formOrErr.extract())
 		const form = formOrErr.extract()
