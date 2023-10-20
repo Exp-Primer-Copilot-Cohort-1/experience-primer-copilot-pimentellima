@@ -25,9 +25,6 @@ const MedicalCertificateManager: MedicalCertificateManagerInterface = {
 	create: vi.fn(async (partner) => {
 		return right(partner as IPartner) as any
 	}),
-	findAll: vi.fn(async () => {
-		return right([]) as any
-	}),
 	deleteById: vi.fn(async (id) => {
 		return right(id) as any
 	}),
@@ -36,6 +33,12 @@ const MedicalCertificateManager: MedicalCertificateManagerInterface = {
 	}),
 	update: vi.fn(async (_id, partner) => {
 		return right(partner) as any
+	}),
+	findById: vi.fn(async (_id) => {
+		return right(_id) as any
+	}),
+	updateMedicalCertificateActive: vi.fn(async (_id, active) => {
+		return right(active) as any
 	})
 }
 
@@ -60,7 +63,7 @@ const makeSutUpdate = () => {
 	return { sut, }
 }
 
-describe('Use cases ref Medical Certificate (Only)', () => {
+describe('Use cases ref Medical Certificate (Unit)', () => {
 
 	describe('Create partner Use Case', () => {
 

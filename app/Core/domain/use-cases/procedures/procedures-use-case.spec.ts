@@ -75,7 +75,7 @@ const makeSutUpdate = () => {
 	return { sut, }
 }
 
-describe('Use cases ref procedures (Only)', () => {
+describe('Use cases ref procedures (Unit)', () => {
 	describe('Create procedure Use Case', () => {
 		it('should create procedure', async () => {
 			const { sut } = makeSutCreate()

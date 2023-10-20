@@ -1,14 +1,14 @@
 import { faker } from "@faker-js/faker";
+import { ActivityNotGroupIdProvider } from "App/Core/domain/errors/activity-not-group-id-provider";
+import { CurrentNotSmallerError } from "App/Core/domain/errors/current-not-smaller-error";
+import { FormNotTypeProvider } from "App/Core/domain/errors/form-not-type-provider";
+import { QuestionNotFound } from "App/Core/domain/errors/question-not-found";
 import { RFormSFManagerInterface } from "App/Core/domain/repositories/interface/reply-form-standard-franchise-manager.interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { left, right } from "App/Core/shared";
 import { TypeForms } from "App/Types/IBusinessFranchises";
 import { subWeeks } from 'date-fns';
 import { describe, expect, it, vi } from "vitest";
-import { ActivityNotGroupIdProvider } from "../../errors/activity-not-group-id-provider";
-import { CurrentNotSmallerError } from "../../errors/current-not-smaller-error";
-import { FormNotTypeProvider } from "../../errors/form-not-type-provider";
-import { QuestionNotFound } from "../../errors/question-not-found";
 import { VerifyCurrentReplyInLessThanPreviousUseCase } from './verify-current-reply-is-less-than-previous-use-case';
 
 const makeQuestion = (id: number, sentence: string, min = 1, max = 5) => {
@@ -66,7 +66,7 @@ const makeSut = () => {
 	return { sut, spyFindAll }
 }
 
-describe("Verify current reply in less than previous (Only)", async () => {
+describe("Verify current reply in less than previous (Unit)", async () => {
 	it("should verify current reply in less than previous", async () => {
 		const { sut } = makeSut();
 		const msgOrError = await sut.execute(params);

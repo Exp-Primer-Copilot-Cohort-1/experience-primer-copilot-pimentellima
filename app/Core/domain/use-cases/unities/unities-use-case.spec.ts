@@ -86,7 +86,7 @@ const makeSutUpdate = () => {
 	return { sut, }
 }
 
-describe('Use cases ref unities (Only)', () => {
+describe('Use cases ref unities (Unit)', () => {
 
 	describe('Create unities Use Case', () => {
 
