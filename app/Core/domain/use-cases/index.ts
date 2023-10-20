@@ -1,5 +1,6 @@
 export * from './activities'
 export * from './activities-awaits'
+export * from './attendance'
 export * from './auth'
 export * from './auth/sign-up'
 export * from './categories'

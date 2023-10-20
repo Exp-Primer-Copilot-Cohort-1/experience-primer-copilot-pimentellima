@@ -9,11 +9,11 @@ export interface ActivitiesManagerAttendanceInterface {
 		id: string,
 		status: AppointmentStatus,
 	) => PromiseEither<AbstractError, IActivity>
-	updateActivityStartedAt: (
+	startActivity: (
 		id: string,
 		started_at: Date,
 	) => PromiseEither<AbstractError, IActivity>
-	updateActivityFinishedAt: (
+	stopActivity: (
 		id: string,
 		finished_at: Date,
 	) => PromiseEither<AbstractError, IActivity>

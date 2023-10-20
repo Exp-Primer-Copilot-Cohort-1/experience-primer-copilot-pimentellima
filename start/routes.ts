@@ -208,10 +208,10 @@ Route.group(() => {
 				'activity.status',
 			)
 
-			Route.put('started_at/:id', 'ActivityController.updateActivityStartedAt').as(
+			Route.put('started_at/:id', 'AttendanceController.start').as(
 				'activity.startedAt',
 			)
-			Route.put('finished_at/:id', 'ActivityController.updateActivityFinishedAt').as(
+			Route.put('finished_at/:id', 'AttendanceController.stop').as(
 				'activity.finishedAt',
 			)
 		}).as('attendance')

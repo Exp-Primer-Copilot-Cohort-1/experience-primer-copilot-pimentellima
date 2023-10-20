@@ -13,9 +13,7 @@ import { FindActivityByIdUseCase } from 'App/Core/domain/use-cases/activities/fi
 import { FindAllActivitiesPendingUseCase } from 'App/Core/domain/use-cases/activities/find-all-activities-pending-use-case'
 import { FindDayActivitiesUseCase } from 'App/Core/domain/use-cases/activities/find-day-activities-use-case'
 import { CreateRecurrentActivityUseCase } from 'App/Core/domain/use-cases/activities/recurrents'
-import { UpdateActivityFinishedAtUseCase } from 'App/Core/domain/use-cases/activities/update-activity-finished-at-use-case'
 import { UpdateActivityPaymentUseCase } from 'App/Core/domain/use-cases/activities/update-activity-payment-use-case'
-import { UpdateActivityStartedAtUseCase } from 'App/Core/domain/use-cases/activities/update-activity-started-at-use-case'
 import { UpdateActivityStatusByIdUseCase } from 'App/Core/domain/use-cases/activities/update-activity-status-by-use-case'
 import { UpdateActivityByIdUseCase } from 'App/Core/domain/use-cases/activities/update-activity-use-case'
 import { SessionTransaction } from 'App/Core/infra/session-transaction'
@@ -91,20 +89,5 @@ export const makeUpdateActivityByIdComposer = (): ControllerGeneric => {
 export const makeUpdateActivityStatusComposer = (): ControllerGeneric => {
 	return new Controller(
 		new UpdateActivityStatusByIdUseCase(new ActivityAttendanceMongoRepository()),
-	)
-}
-
-export const makeUpdateActivityStartedAtComposer = (): ControllerGeneric => {
-	return new Controller(
-		new UpdateActivityStartedAtUseCase(new ActivityAttendanceMongoRepository()),
-	)
-}
-
-export const makeUpdateActivityFinishedAtComposer = (): ControllerGeneric => {
-	return new Controller(
-		new UpdateActivityFinishedAtUseCase(
-			new ActivityAttendanceMongoRepository(),
-			new ActivityMongoRepository(new SessionTransaction()),
-		),
 	)
 }

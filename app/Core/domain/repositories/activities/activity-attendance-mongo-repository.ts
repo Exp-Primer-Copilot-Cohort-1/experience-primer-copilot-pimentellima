@@ -1,15 +1,16 @@
 import { ActivityPaymentEntity } from 'App/Core/domain/entities/activity-payment/ActivityPaymentEntity'
+import { ActivityNotFoundError } from 'App/Core/domain/errors'
+import { PaymentAlreadyError } from 'App/Core/domain/errors/payment-already-error'
+import { UpdateStatusActivityError } from 'App/Core/domain/errors/update-status-activity'
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
+import { ISessionTransaction } from 'App/Core/infra/infra'
+import { SessionTransaction } from 'App/Core/infra/session-transaction'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
 import Activity from 'App/Models/Activity'
 import { IActivity } from 'App/Types/IActivity'
 import { ITransaction } from 'App/Types/ITransaction'
 import { inject, injectable, registry } from 'tsyringe'
-import { ActivityNotFoundError } from '../../errors'
-import { PaymentAlreadyError } from '../../errors/payment-already-error'
-import { UpdateStatusActivityError } from '../../errors/update-status-activity'
 import { ActivitiesManagerAttendanceInterface } from '../interface/activity-manager-attendance.interface'
 
 @injectable()
@@ -21,7 +22,7 @@ export class ActivityAttendanceMongoRepository
 		@inject(SessionTransaction) private readonly session?: ISessionTransaction
 	) { } // eslint-disable-line
 
-	async updateActivityStartedAt(
+	async startActivity(
 		id: string,
 		started_at: Date,
 	): PromiseEither<AbstractError, IActivity> {
@@ -42,7 +43,7 @@ export class ActivityAttendanceMongoRepository
 		return right(activity.toObject())
 	}
 
-	async updateActivityFinishedAt(
+	async stopActivity(
 		id: string,
 		finished_at: Date,
 	): PromiseEither<AbstractError, IActivity> {

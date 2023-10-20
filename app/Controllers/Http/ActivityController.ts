@@ -11,9 +11,7 @@ import {
 	makeFindAllActivitiesPendingComposer,
 	makeFindDayActivitiesComposer,
 	makeUpdateActivityByIdComposer,
-	makeUpdateActivityFinishedAtComposer,
-	makeUpdateActivityStartedAtComposer,
-	makeUpdateActivityStatusComposer,
+	makeUpdateActivityStatusComposer
 } from 'App/Core/composers/activities/make'
 import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
@@ -115,115 +113,6 @@ class ActivityController {
 		})
 	}
 
-	/**
-	 * Atualiza o status de uma atividade pelo ID.
-	 *
-	 * @swagger
-	 * /activities/status/{id}:
-	 *   put:
-	 *     summary: Atualiza o status de uma atividade pelo ID.
-	 *     security:
-	 *       - bearerAuth: []
-	 *     tags:
-	 *       - Atividades
-	 *     parameters:
-	 *       - name: id
-	 *         in: path
-	 *         description: ID da atividade a ser atualizada.
-	 *         required: true
-	 *         schema:
-	 *           type: integer
-	 *     requestBody:
-	 *       description: Objeto contendo o novo status da atividade.
-	 *       required: true
-	 *       content:
-	 *         application/json:
-	 *           schema:
-	 *             $ref: '#/components/schemas/UpdateActivityStatus'
-	 *     responses:
-	 *       '204':
-	 *         description: Atividade atualizada com sucesso.
-	 *       '401':
-	 *         $ref: '#/components/responses/Unauthorized'
-	 *       '404':
-	 *         $ref: '#/components/responses/NotFound'
-	 *       '500':
-	 *         $ref: '#/components/responses/InternalServerError'
-	 */
-	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	async updateActivityStatusById(ctx: HttpContextContract) {
-		return adaptRoute(makeUpdateActivityStatusComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
-	}
-
-	/**
-	 * Atualiza a data de início de uma atividade.
-	 * @swagger
-	 * /activities/started_at/{id}:
-	 *   put:
-	 *     security:
-	 *       - bearerAuth: []
-	 *     tags:
-	 *       - Atividades
-	 *     summary: Atualiza a data de início de uma atividade.
-	 *     parameters:
-	 *       - name: id
-	 *         in: path
-	 *         description: ID da atividade a ser atualizada.
-	 *         required: true
-	 *         schema:
-	 *           type: integer
-	 *     responses:
-	 *       200:
-	 *         description: Atividade atualizada com sucesso.
-	 *       401:
-	 *         $ref: '#/components/responses/UnauthorizedError'
-	 *       404:
-	 *         $ref: '#/components/responses/NotFoundError'
-	 *       500:
-	 *         $ref: '#/components/responses/InternalServerError'
-	 */
-	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	async updateActivityStartedAt(ctx: HttpContextContract) {
-		return adaptRoute(makeUpdateActivityStartedAtComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
-	}
-
-	/**
-	 * Atualiza a data de finalização de uma atividade.
-	 * @swagger
-	 * /activities/finished_at/{id}:
-	 *   put:
-	 *     summary: Atualiza a data de finalização de uma atividade.
-	 *     security:
-	 *       - bearerAuth: []
-	 *     tags:
-	 *       - Atividades
-	 *     parameters:
-	 *       - name: id
-	 *         in: path
-	 *         description: ID da atividade a ser atualizada.
-	 *         required: true
-	 *         schema:
-	 *           type: integer
-	 *     responses:
-	 *       200:
-	 *         description: Atividade atualizada com sucesso.
-	 *       401:
-	 *         description: Não autorizado.
-	 *       404:
-	 *         description: Atividade não encontrada.
-	 *       500:
-	 *         description: Erro interno do servidor.
-	 */
-	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	async updateActivityFinishedAt(ctx: HttpContextContract) {
-		return adaptRoute(makeUpdateActivityFinishedAtComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
-		})
-	}
 
 	/**
 	 * Retorna as atividades de um profissional pelo seu ID.
@@ -433,6 +322,48 @@ class ActivityController {
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async updateActivityById(ctx: HttpContextContract) {
 		return adaptRoute(makeUpdateActivityByIdComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		})
+	}
+
+	/**
+	 * Atualiza o status de uma atividade pelo ID.
+	 *
+	 * @swagger
+	 * /activities/status/{id}:
+	 *   put:
+	 *     summary: Atualiza o status de uma atividade pelo ID.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     tags:
+	 *       - Atividades
+	 *     parameters:
+	 *       - name: id
+	 *         in: path
+	 *         description: ID da atividade a ser atualizada.
+	 *         required: true
+	 *         schema:
+	 *           type: integer
+	 *     requestBody:
+	 *       description: Objeto contendo o novo status da atividade.
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             $ref: '#/components/schemas/UpdateActivityStatus'
+	 *     responses:
+	 *       '204':
+	 *         description: Atividade atualizada com sucesso.
+	 *       '401':
+	 *         $ref: '#/components/responses/Unauthorized'
+	 *       '404':
+	 *         $ref: '#/components/responses/NotFound'
+	 *       '500':
+	 *         $ref: '#/components/responses/InternalServerError'
+	 */
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
+	async start(ctx: HttpContextContract) {
+		return adaptRoute(makeUpdateActivityStatusComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}

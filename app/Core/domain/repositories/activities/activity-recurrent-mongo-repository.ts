@@ -1,4 +1,7 @@
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import { ActivityNotGroupIdProvider } from 'App/Core/domain/errors/activity-not-group-id-provider'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
+import { UnityIdNotProvidedError } from 'App/Core/domain/errors/unity-not-id-provider'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { COLLECTIONS_REFS } from 'App/Models/Activity'
@@ -8,9 +11,6 @@ import {
 	STATUS_ACTIVITY
 } from 'App/Types/IActivity'
 import { inject, injectable, registry } from 'tsyringe'
-import { ActivityNotGroupIdProvider } from '../../errors/activity-not-group-id-provider'
-import { UnityNotFoundError } from '../../errors/unity-not-found'
-import { UnityIdNotProvidedError } from '../../errors/unity-not-id-provider'
 import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
 import { ActivitiesRecurrentManagerInterface } from '../interface/activity-recurrent-manager.interface'
 

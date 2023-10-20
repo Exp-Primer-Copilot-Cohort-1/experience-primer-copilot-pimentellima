@@ -71,4 +71,5 @@ export const { policies } = Bouncer.registerPolicies({
 	BusinessFranchisesPolicy: () => import('App/Policies/BusinessFranchisesPolicy'),
 	UnitiesPolicy: () => import('App/Policies/UnitiesPolicy'),
 	UsersPolicy: () => import('App/Policies/UsersPolicy'),
+	AttendancePolicy: () => import('App/Policies/AttendancePolicy'),
 })
