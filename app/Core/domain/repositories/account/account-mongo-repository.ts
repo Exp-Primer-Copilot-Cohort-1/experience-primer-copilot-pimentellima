@@ -1,12 +1,12 @@
 import { isValidObjectId } from '@ioc:Mongoose'
 import AccountEntity from 'App/Core/domain/entities/account/account'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import { AccountNotFoundError, UnityNotFoundError } from 'App/Core/domain/errors'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import Account from 'App/Models/Account'
 import { IAccount } from 'App/Types/IAccount'
 import { inject, injectable, registry } from "tsyringe"
-import { AccountNotFoundError, UnityNotFoundError } from '../../errors'
 import { AccountManagerInterface } from './account-manager.interface'
 @injectable()
 @registry([{ token: AccountMongoRepository, useClass: AccountMongoRepository }])

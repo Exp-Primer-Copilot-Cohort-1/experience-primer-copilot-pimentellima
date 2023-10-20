@@ -1,6 +1,5 @@
 import { SendEmailError } from "App/Core/domain/errors/send-email.err";
 import { AbstractError } from "App/Core/errors/error.interface";
-import { LOGO } from 'App/Core/infra/constants';
 import { Env } from 'App/Core/infra/env';
 import { IEvn, ILogger, IMail } from "App/Core/infra/infra";
 import { Logger } from 'App/Core/infra/logger';
@@ -35,13 +34,12 @@ export class SendEmailUseCase implements ISendEmailUseCase {
 	async execute({ edge, props, email, title }: MailParams): PromiseEither<AbstractError, Message> {
 		try {
 			const from = this.env.get('SMTP_USERNAME') as string
-			await this.mail.send((message) => {
-				message.embed(LOGO, 'logo')
-				message
-					.from(from, 'DP System')
-					.to(email)
-					.subject(title)
-					.htmlView(edge, props)
+			await this.mail.send({
+				from,
+				email,
+				title,
+				edge,
+				props
 			})
 			this.logger.emit(`Email enviado para ${email}`)
 			return right({ message: 'Email enviado com sucesso' })

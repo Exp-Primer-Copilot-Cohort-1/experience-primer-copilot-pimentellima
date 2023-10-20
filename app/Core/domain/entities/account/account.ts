@@ -59,11 +59,15 @@ export class AccountEntity extends Entity implements IAccount {
 
 	/**
 	 * Define o valor em dinheiro da conta.
-	 * @param value Valor em dinheiro da conta.
+	 * @param cash Valor em dinheiro da conta.
 	 * @returns A instância da entidade de conta.
 	 */
-	defineCash(value: number): AccountEntity {
-		this.cash = value
+	defineCash(cash: number | string): AccountEntity {
+		if (typeof cash === 'string') {
+			cash = parseFloat(cash.replace(',', '.'))
+		}
+
+		this.cash = cash
 		return this
 	}
 

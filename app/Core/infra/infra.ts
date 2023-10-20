@@ -1,5 +1,5 @@
-import { MessageComposeCallback } from '@ioc:Adonis/Addons/Mail'
 import { EventsList } from '@ioc:Adonis/Core/Event'
+import { EdgeValues } from '../domain/use-cases/helpers/edge'
 
 export type KeysEvents = keyof EventsList
 
@@ -35,6 +35,13 @@ export interface ISessionTransaction {
 	endSession(): Promise<void>
 }
 
+type Message = {
+	from: string
+	email: string,
+	title: string,
+	edge: EdgeValues,
+	props: Record<string, any>
+}
 export interface IMail {
-	send: (message: MessageComposeCallback) => Promise<any>
+	send: (message: Message) => Promise<any>
 }
