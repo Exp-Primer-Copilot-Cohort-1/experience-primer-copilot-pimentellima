@@ -19,3 +19,4 @@ pid.txt
 certs
 
 .turbo
+keys/*

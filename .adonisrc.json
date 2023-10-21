@@ -83,6 +83,10 @@
 		{
 			"pattern": "docs/*",
 			"reloadServer": false
+		},
+		{
+			"pattern": "keys/*",
+			"reloadServer": false
 		}
 	]
 }

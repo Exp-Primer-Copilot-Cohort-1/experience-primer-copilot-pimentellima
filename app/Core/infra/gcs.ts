@@ -1,8 +1,34 @@
-import { Storage } from '@google-cloud/storage'
+import { Storage } from '@google-cloud/storage';
+import { existsSync, readFileSync, writeFileSync } from "fs";
+import { join } from "path";
 
-const credentials = JSON.parse(
-	Buffer.from(process.env.GOOGLE_SERVICE_KEY!, 'base64').toString(),
-)
+const pathJson = join(process.cwd(), 'keys', 'google_service.json')
+
+const createJsonCredentials = () => {
+	const path = join(process.cwd(), 'keys', 'google_service.key')
+
+	const key = readFileSync(path, 'utf8')
+
+	const credentials = JSON.parse(
+		Buffer.from(key, 'base64').toString(),
+	)
+
+	writeFileSync(pathJson, JSON.stringify(credentials, null, 2))
+
+	return credentials
+}
+
+const makeCredentials = () => {
+
+	const existsPath = existsSync(pathJson)
+
+	if (!existsPath) return createJsonCredentials()
+
+	const credentials = require(pathJson)
+	return credentials
+}
+
+const credentials = makeCredentials()
 
 export const storage = new Storage({
 	projectId: credentials.project_id,
