@@ -21,6 +21,7 @@
 		"test:integration": "cross-env NODE_ENV=test vitest --ui  --watch --t Integration",
 		"test:only": "cross-env NODE_ENV=test vitest --ui --watch --t Only",
 		"test-ci": "vitest run --coverage.enabled --coverage.reporter='text-summary'",
+		"test-only": "cross-env NODE_ENV=test vitest --t Only",
 		"test": "cross-env NODE_ENV=test vitest && node ace test",
 		"coverage": "vitest run --coverage",
 		"start": "node server.js",
