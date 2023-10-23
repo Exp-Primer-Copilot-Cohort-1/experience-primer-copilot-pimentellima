@@ -6,11 +6,15 @@ import { faker } from '@faker-js/faker';
 import { UserAlreadyExistsError } from 'App/Core/domain/errors/user-already-exists-error';
 import { UserNotFoundError } from 'App/Core/domain/errors/user-not-found';
 import { AbstractError } from 'App/Core/errors/error.interface';
+import { IAdminUser } from 'App/Types/IAdminUser';
 
 export class AdminInMemoryRepository implements AdminManagerInterface {
 	private items: AdminEntity[] = [];
 
 	constructor() { }
+	async activation(id: string): PromiseEither<AbstractError, IAdminUser> {
+		return right({} as IAdminUser)
+	}
 
 	public async create(
 		data: AdminEntity,

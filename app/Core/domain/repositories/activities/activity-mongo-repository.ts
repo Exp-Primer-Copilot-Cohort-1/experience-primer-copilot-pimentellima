@@ -74,6 +74,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			client: client_id,
 			type: STATUS_ACTIVITY.MARKED,
 		})
+			.where(this.opts?.only_prof)
 			.populate(COLLECTIONS_REFS.CLIENTS, PROJECTION_CLIENT)
 			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
 			.populate(COLLECTIONS_REFS.PROCEDURES, PROJECTION_DEFAULT)

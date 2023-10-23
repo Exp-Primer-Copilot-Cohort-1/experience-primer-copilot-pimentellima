@@ -9,7 +9,7 @@ import { FormManagerInterface } from "../interface/form-manager-interface";
 export class FormInMemoryRepository implements FormManagerInterface {
 	public forms: any[] = [];
 
-	async createForm(form: IForm): PromiseEither<AbstractError, FormEntity> {
+	async create(form: IForm): PromiseEither<AbstractError, FormEntity> {
 		const newFormOrErr = await FormEntity.build(form);
 		if (newFormOrErr.isLeft()) return left(newFormOrErr.extract());
 
@@ -17,7 +17,7 @@ export class FormInMemoryRepository implements FormManagerInterface {
 		return right(newForm);
 	}
 
-	async findAllForms(
+	async findAll(
 		unity_id: string
 	): PromiseEither<AbstractError, FormEntity[]> {
 		if (!unity_id) return left(new MissingParamsError("unity id"));
@@ -35,7 +35,7 @@ export class FormInMemoryRepository implements FormManagerInterface {
 		return right(forms);
 	}
 
-	async updateFormById(
+	async update(
 		form: IForm,
 		id: string
 	): PromiseEither<AbstractError, FormEntity> {
@@ -95,7 +95,7 @@ export class FormInMemoryRepository implements FormManagerInterface {
 		);
 		return right(forms);
 	}
-	async findFormById(id: string): PromiseEither<AbstractError, FormEntity> {
+	async findById(id: string): PromiseEither<AbstractError, FormEntity> {
 		if (!id) return left(new MissingParamsError("id"));
 
 		const item = this.forms.find(form => form._id === id);

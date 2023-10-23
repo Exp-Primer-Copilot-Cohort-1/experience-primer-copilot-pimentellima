@@ -5,9 +5,9 @@ import { AdminInMemoryRepository } from 'App/Core/domain/repositories'
 import { CreatePasswordUseCase } from '../create-password/create-password-use-case'
 
 import { faker } from '@faker-js/faker'
-import { EventEmitterTest } from 'App/Core/infra/event-emitter'
 import { ROLES } from 'App/Roles/types'
 import { IAdminUser } from 'App/Types/IAdminUser'
+import { EventEmitterMock } from '__mocks__'
 import { cpf } from 'cpf-cnpj-validator'
 
 const user: IAdminUser = {
@@ -30,7 +30,7 @@ const makeSut = () => {
 	const sut = new CreateUserUseCase(
 		new AdminInMemoryRepository(),
 		new CreatePasswordUseCase(
-			new EventEmitterTest()
+			new EventEmitterMock()
 		),
 	)
 

@@ -1,12 +1,11 @@
 import { faker } from '@faker-js/faker'
-import { AuthContract } from '@ioc:Adonis/Addons/Auth'
 import { ROLES } from 'App/Roles/types'
 import { IUser } from 'App/Types/IUser'
 import { cpf } from 'cpf-cnpj-validator'
 import { describe, expect, it } from 'vitest'
 import { CreateSessionUseCase } from './create-session-use-case'
 
-class Auth implements AuthContract {
+class Auth {
 	private user: IUser = {
 		_id: '1',
 		name: 'test',
@@ -46,7 +45,7 @@ class Auth implements AuthContract {
 		this.user = user
 	}
 
-	public use(a: any): this {
+	use(a: any): this {
 		return this
 	}
 
@@ -59,6 +58,10 @@ class Auth implements AuthContract {
 			user: this.user,
 			type: 'test',
 		}
+	}
+
+	logout() {
+		return this
 	}
 }
 
