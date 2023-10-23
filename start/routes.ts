@@ -213,7 +213,7 @@ Route.group(() => {
 
 
 		Route.group(() => {
-			Route.put('status/:id', 'ActivityController.updateActivityStatusById').as(
+			Route.put('status/:id', 'ActivityController.updateStatus').as(
 				'activity.status',
 			)
 

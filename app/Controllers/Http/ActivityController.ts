@@ -362,7 +362,7 @@ class ActivityController {
 	 *         $ref: '#/components/responses/InternalServerError'
 	 */
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	async start(ctx: HttpContextContract) {
+	async updateStatus(ctx: HttpContextContract) {
 		return adaptRoute(makeUpdateActivityStatusComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
