@@ -1,4 +1,4 @@
-import { ActivityAwaitManagerInterface } from 'App/Core/domain/repositories/interface'
+import { ActivityAwaitManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
@@ -15,7 +15,7 @@ export class FindAllActivitiesAwaitUseCase
 {
 	constructor(
 		@inject(ActivityAwaitMongoRepository)
-		private readonly manager: ActivityAwaitManagerInterface
+		private readonly manager: ActivityAwaitManagerContract
 	) { }
 
 	public async execute(): PromiseEither<AbstractError, IActivityAwait[]> {

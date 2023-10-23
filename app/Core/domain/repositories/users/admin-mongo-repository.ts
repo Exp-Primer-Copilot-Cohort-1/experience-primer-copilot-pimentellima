@@ -1,17 +1,18 @@
 import AdminEntity from 'App/Core/domain/entities/user/admin'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
-import { AdminManagerInterface } from '../interface/admin-manager.interface'
+import { AdminManagerContract } from './admin-manager.interface'
 
+import { UserNotFoundError } from 'App/Core/domain/errors'
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
+import { ISessionTransaction } from 'App/Core/infra/infra'
+import { SessionTransaction } from 'App/Core/infra/session-transaction'
 import User from 'App/Models/User'
 import { IAdminUser } from 'App/Types/IAdminUser'
 import { inject, injectable, registry } from 'tsyringe'
-import { UserNotFoundError } from '../../errors/user-not-found'
 
 @injectable()
 @registry([{ token: AdminMongooseRepository, useClass: AdminMongooseRepository }])
-export class AdminMongooseRepository implements AdminManagerInterface {
+export class AdminMongooseRepository implements AdminManagerContract {
 
 	constructor(
 		@inject(SessionTransaction) private readonly session: ISessionTransaction

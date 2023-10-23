@@ -4,7 +4,7 @@ import { AppointmentStatus } from 'App/Helpers'
 import { IActivity } from 'App/Types/IActivity'
 import { ITransaction } from 'App/Types/ITransaction'
 
-export interface ActivitiesManagerAttendanceInterface {
+export interface ActivitiesManagerAttendanceContract {
 	updateStatusById: (
 		id: string,
 		status: AppointmentStatus,

@@ -5,11 +5,11 @@ import ReplyFormStandardFranchises from 'App/Models/ReplyFormStandardFranchises'
 import { TypeForms } from 'App/Types/IBusinessFranchises'
 import { IInfoReplyFormStandardFranchises, IReplyFormStandardFranchises } from 'App/Types/IReplyFormStandardFranchises'
 import { injectable, registry } from 'tsyringe'
-import { RFormSFManagerInterface } from '../interface/reply-form-standard-franchise-manager.interface'
+import { RFormSFManagerContract } from '../interface/reply-form-standard-franchise-manager.interface'
 
 @injectable()
 @registry([{ token: RFormSFMongooseManager, useClass: RFormSFMongooseManager }])
-export class RFormSFMongooseManager implements RFormSFManagerInterface {
+export class RFormSFMongooseManager implements RFormSFManagerContract {
 	async findAllByGroupId(
 		group_id: string,
 		type: TypeForms,

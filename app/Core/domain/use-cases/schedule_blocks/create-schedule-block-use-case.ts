@@ -1,4 +1,4 @@
-import { ScheduleBlockManagerInterface } from 'App/Core/domain/repositories/interface/schedule-block-manager-interface'
+import { ScheduleBlockManagerContract } from 'App/Core/domain/repositories/interface/schedule-block-manager-interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -9,7 +9,7 @@ type Props = ScheduleBlockParams & {
 }
 
 export class CreateScheduleBlockUseCase implements UseCase<Props, IScheduleBlock> {
-	constructor(private readonly scheduleBlockManager: ScheduleBlockManagerInterface) { }
+	constructor(private readonly scheduleBlockManager: ScheduleBlockManagerContract) { }
 
 	public async execute(params: Props): PromiseEither<AbstractError, IScheduleBlock> {
 		const newScheduleBlockOrErr = await this.scheduleBlockManager.createScheduleBlock(

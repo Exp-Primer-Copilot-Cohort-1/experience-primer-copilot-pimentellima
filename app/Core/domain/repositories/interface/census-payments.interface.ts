@@ -6,7 +6,7 @@ import {
 	ICensusPaymentForm,
 } from 'App/Types/ICensus'
 
-export interface CensusPaymentsManagerInterface {
+export interface CensusPaymentsManagerContract {
 	findPaymentsByHealthInsurance: (
 		unity_id: string,
 		date_start: string,

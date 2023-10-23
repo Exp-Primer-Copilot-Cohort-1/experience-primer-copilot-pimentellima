@@ -6,10 +6,10 @@ import { ICategory } from 'App/Types/ICategory'
 import { inject, injectable, registry } from 'tsyringe'
 import { ICount } from '../helpers/count'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
-import { CategoriesManagerInterface } from './categories-manager.interface'
+import { CategoriesManagerContract } from './categories-manager.interface'
 @injectable()
 @registry([{ token: CategoriesMongooseRepository, useClass: CategoriesMongooseRepository }])
-export class CategoriesMongooseRepository implements CategoriesManagerInterface {
+export class CategoriesMongooseRepository implements CategoriesManagerContract {
 
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery

@@ -7,10 +7,10 @@ import { PromiseEither, left, right } from 'App/Core/shared'
 import Account from 'App/Models/Account'
 import { IAccount } from 'App/Types/IAccount'
 import { inject, injectable, registry } from "tsyringe"
-import { AccountManagerInterface } from './account-manager.interface'
+import { AccountManagerContract } from './account-manager.interface'
 @injectable()
 @registry([{ token: AccountMongoRepository, useClass: AccountMongoRepository }])
-export class AccountMongoRepository implements AccountManagerInterface {
+export class AccountMongoRepository implements AccountManagerContract {
 
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery

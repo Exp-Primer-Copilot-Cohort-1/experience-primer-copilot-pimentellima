@@ -14,11 +14,11 @@ import Activity, { COLLECTIONS_REFS } from 'App/Models/Activity'
 import { STATUS_ACTIVITY, type IActivity } from 'App/Types/IActivity'
 import { inject, injectable, registry } from 'tsyringe'
 import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
-import { ActivitiesManagerInterface } from '../interface/activity-manager.interface'
+import { ActivitiesManagerContract } from '../interface/activity-manager.interface'
 
 @injectable()
 @registry([{ token: ActivityMongoRepository, useClass: ActivityMongoRepository }])
-export class ActivityMongoRepository implements ActivitiesManagerInterface {
+export class ActivityMongoRepository implements ActivitiesManagerContract {
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery,
 		@inject(SessionTransaction) private readonly session: ISessionTransaction,

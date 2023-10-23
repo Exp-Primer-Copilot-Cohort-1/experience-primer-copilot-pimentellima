@@ -1,4 +1,4 @@
-import { ProfManagerInterface } from 'App/Core/domain/repositories/interface/prof-manage-interface'
+import { ProfManagerContract } from 'App/Core/domain/repositories/interface/prof-manage-interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -89,7 +89,7 @@ export class DayTradesIntervalDatesByProfUseCase
 	implements UseCase<DaysTradesIntervalDatesParams, ICensusIdlenessByProf>
 {
 	constructor(
-		private readonly managerProfs: ProfManagerInterface,
+		private readonly managerProfs: ProfManagerContract,
 		private readonly holidaysUseCase: UseCase<
 			FindAllHolidaysByUnityParams,
 			IHoliday[]

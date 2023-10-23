@@ -1,8 +1,8 @@
-import { AbstractError, InterfaceError } from 'App/Core/errors/error.interface';
+import { AbstractError, ContractError } from 'App/Core/errors/error.interface';
 
 export class UserAlreadyExistsError
 	extends AbstractError
-	implements InterfaceError {
+	implements ContractError {
 	public readonly statusCode = 401;
 
 	constructor() {

@@ -6,11 +6,11 @@ import Prof from 'App/Models/Prof'
 import { IUser as IProf } from 'App/Types/IUser'
 import { inject, injectable, registry } from 'tsyringe'
 import { ICount } from '../helpers/count'
-import { ProfsManagerInterface } from './profs-manage.interface'
+import { ProfsManagerContract } from './profs-manage.interface'
 
 @injectable()
 @registry([{ token: ProfsMongooseRepository, useClass: ProfsMongooseRepository }])
-export class ProfsMongooseRepository implements ProfsManagerInterface {
+export class ProfsMongooseRepository implements ProfsManagerContract {
 
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery

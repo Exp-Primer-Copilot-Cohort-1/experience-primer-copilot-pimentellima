@@ -1,6 +1,6 @@
 import { SecsMongooseRepository } from "App/Core/domain/repositories";
 import { ICount } from "App/Core/domain/repositories/helpers/count";
-import { SecsManagerInterface } from "App/Core/domain/repositories/interface";
+import { SecsManagerContract } from "App/Core/domain/repositories/interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither } from "App/Core/shared";
@@ -14,7 +14,7 @@ export class SecsCountsUseCase
 	implements UseCase<In, ICount>
 {
 	constructor(
-		@inject(SecsMongooseRepository) private readonly manager: SecsManagerInterface
+		@inject(SecsMongooseRepository) private readonly manager: SecsManagerContract
 	) { }
 
 	public async execute(): PromiseEither<AbstractError, ICount> {

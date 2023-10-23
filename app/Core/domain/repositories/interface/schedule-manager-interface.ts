@@ -1,7 +1,7 @@
 import { AbstractError } from "App/Core/errors/error.interface";
 import { PromiseEither } from "App/Core/shared";
 
-export interface ScheduleManagerInterface {
+export interface ScheduleManagerContract {
 	getWorkHours(prof_id: string): PromiseEither<
 		AbstractError,
 		{

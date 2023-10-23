@@ -1,6 +1,6 @@
 import { InappropriateUseCase } from 'App/Core/domain/errors/inappropriate-use-case'
 import { TransactionsMongooseRepository } from 'App/Core/domain/repositories'
-import { TransactionsManagerInterface } from 'App/Core/domain/repositories/interface/transactions-manager-interface'
+import { TransactionsManagerContract } from 'App/Core/domain/repositories/interface/transactions-manager-interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -20,10 +20,10 @@ export class CreateOnlyOneTransactionUseCase
 {
 	/**
 	 * Creates an instance of CreateOnlyOneTransactionUseCase.
-	 * @param {TransactionsManagerInterface} manager - The manager for transactions.
+	 * @param {TransactionsManagerContract} manager - The manager for transactions.
 	 */
 	constructor(
-		@inject(TransactionsMongooseRepository) private readonly manager: TransactionsManagerInterface
+		@inject(TransactionsMongooseRepository) private readonly manager: TransactionsManagerContract
 	) { } // eslint-disable-line
 
 	/**

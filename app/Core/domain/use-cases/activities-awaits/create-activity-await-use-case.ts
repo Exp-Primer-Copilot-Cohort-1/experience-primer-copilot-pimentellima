@@ -1,7 +1,7 @@
 import ActivityAwaitEntity from 'App/Core/domain/entities/activity-await/activity-await'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { ActivityAwaitMongoRepository } from 'App/Core/domain/repositories'
-import { ActivityAwaitManagerInterface } from 'App/Core/domain/repositories/interface'
+import { ActivityAwaitManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -15,7 +15,7 @@ export class CreateActivityAwaitUseCase
 {
 	constructor(
 		@inject(ActivityAwaitMongoRepository)
-		private readonly manager: ActivityAwaitManagerInterface,
+		private readonly manager: ActivityAwaitManagerContract,
 		@inject(OptsQuery) private readonly opts: OptsQuery
 	) { } // eslint-disable-line
 

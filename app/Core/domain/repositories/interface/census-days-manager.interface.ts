@@ -6,7 +6,7 @@ import {
 	ICensusWorkedHoursByProf,
 } from 'App/Types/ICensus'
 
-export interface CensusDaysManagerInterface {
+export interface CensusDaysManagerContract {
 	findActivitiesByDaysOfWeek: (
 		unity_id: string,
 		date_start: string,

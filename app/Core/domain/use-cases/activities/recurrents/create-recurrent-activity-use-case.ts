@@ -2,7 +2,7 @@ import ActivityEntity from 'App/Core/domain/entities/activities/activity'
 import { ActivityPendingEntity } from 'App/Core/domain/entities/activity-pending'
 import { UnityIdNotProvidedError } from 'App/Core/domain/errors/unity-not-id-provider'
 import { ActivityMongoRepository, ActivityRecurrentMongoRepository } from 'App/Core/domain/repositories'
-import { ActivitiesManagerInterface, ActivitiesRecurrentManagerInterface } from 'App/Core/domain/repositories/interface'
+import { ActivitiesManagerContract, ActivitiesRecurrentManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -14,9 +14,9 @@ import { inject, injectable, registry } from 'tsyringe'
 export class CreateRecurrentActivityUseCase implements UseCase<RecurrentActivityValues, IActivity[]> {
 	constructor(
 		@inject(ActivityRecurrentMongoRepository)
-		private readonly managerRecurrent: ActivitiesRecurrentManagerInterface,
+		private readonly managerRecurrent: ActivitiesRecurrentManagerContract,
 		@inject(ActivityMongoRepository)
-		private readonly managerMarked: ActivitiesManagerInterface,
+		private readonly managerMarked: ActivitiesManagerContract,
 	) { } // eslint-disable-line
 
 	public async execute({ unity_id, dates, ...activity }: RecurrentActivityValues): PromiseEither<AbstractError, IActivity[]> {

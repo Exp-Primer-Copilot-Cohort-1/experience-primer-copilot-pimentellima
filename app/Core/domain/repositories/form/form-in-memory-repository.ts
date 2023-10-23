@@ -4,9 +4,9 @@ import { PromiseEither, left, right } from "App/Core/shared";
 import { IForm } from "App/Types/IForm";
 import { FormNotFoundError } from "../../errors/form-not-found-error";
 import { MissingParamsError } from "../../errors/missing-params";
-import { FormManagerInterface } from "../interface/form-manager-interface";
+import { FormManagerContract } from "../interface/form-manager-interface";
 
-export class FormInMemoryRepository implements FormManagerInterface {
+export class FormInMemoryRepository implements FormManagerContract {
 	public forms: any[] = [];
 
 	async create(form: IForm): PromiseEither<AbstractError, FormEntity> {

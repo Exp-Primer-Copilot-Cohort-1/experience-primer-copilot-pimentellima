@@ -5,7 +5,7 @@ import { PromiseEither, left, right } from 'App/Core/shared'
 import ActivityAwait, { COLLECTION_REFS } from 'App/Models/ActivityAwait'
 import { IActivityAwait } from 'App/Types/IActivity'
 import { generateScores } from '../helpers/scores'
-import { ActivityAwaitManagerInterface } from './activity-await-manager-interface'
+import { ActivityAwaitManagerContract } from './activity-await-manager-interface'
 
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { Generic } from 'App/Types/ITransaction'
@@ -13,7 +13,7 @@ import { inject, injectable, registry } from 'tsyringe'
 import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
 @injectable()
 @registry([{ token: ActivityAwaitMongoRepository, useClass: ActivityAwaitMongoRepository }])
-export class ActivityAwaitMongoRepository implements ActivityAwaitManagerInterface {
+export class ActivityAwaitMongoRepository implements ActivityAwaitManagerContract {
 
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery

@@ -1,11 +1,11 @@
 import Redis from "@ioc:Adonis/Addons/Redis";
 import { container, singleton } from "tsyringe";
-import { CacheInterface } from "./infra";
+import { CacheContract } from "./infra";
 
 const DAY = 60 * 60 * 24 // 1 day
 
 @singleton()
-class Cache implements CacheInterface {
+class Cache implements CacheContract {
 	private static time = DAY // 1 day in seconds
 
 	async set(key: string, value: Object, seconds: number = Cache.time) {

@@ -1,7 +1,7 @@
 import { ProcedureEntity } from 'App/Core/domain/entities'
 import { IdNotProvidedError } from 'App/Core/domain/errors/id-not-provided'
 import { ProceduresMongooseRepository } from 'App/Core/domain/repositories'
-import { ProceduresManagerInterface } from 'App/Core/domain/repositories/interface'
+import { ProceduresManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -14,7 +14,7 @@ export class UpdateProceduresByIdUseCase
 	implements UseCase<Partial<IProcedure>, IProcedure>
 {
 	constructor(
-		@inject(ProceduresMongooseRepository) private readonly manager: ProceduresManagerInterface
+		@inject(ProceduresMongooseRepository) private readonly manager: ProceduresManagerContract
 	) { }
 
 	public async execute(

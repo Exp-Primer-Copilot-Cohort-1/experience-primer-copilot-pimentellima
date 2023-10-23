@@ -1,7 +1,7 @@
 import { ObjectId } from '@ioc:Mongoose'
 
 /**
- * Interface que representa um feriado.
+ * Contract que representa um feriado.
  * @interface
  * @swagger
  * components:

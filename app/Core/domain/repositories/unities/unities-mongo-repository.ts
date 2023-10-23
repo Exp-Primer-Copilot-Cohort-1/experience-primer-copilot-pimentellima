@@ -7,10 +7,10 @@ import { inject, injectable, registry } from 'tsyringe'
 import { UnityCreatedError } from '../../errors/unity-not-created-error'
 import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
-import { UnitiesManagerInterface } from '../interface/unities-manager.interface'
+import { UnitiesManagerContract } from '../interface/unities-manager.interface'
 @injectable()
 @registry([{ token: UnitiesMongooseRepository, useClass: UnitiesMongooseRepository }])
-export class UnitiesMongooseRepository implements UnitiesManagerInterface {
+export class UnitiesMongooseRepository implements UnitiesManagerContract {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
 		@inject(SessionTransaction) private readonly session: ISessionTransaction

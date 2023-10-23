@@ -11,12 +11,12 @@ import Activity from 'App/Models/Activity'
 import { IActivity } from 'App/Types/IActivity'
 import { ITransaction } from 'App/Types/ITransaction'
 import { inject, injectable, registry } from 'tsyringe'
-import { ActivitiesManagerAttendanceInterface } from '../interface/activity-manager-attendance.interface'
+import { ActivitiesManagerAttendanceContract } from '../interface/activity-manager-attendance.interface'
 
 @injectable()
 @registry([{ token: ActivityAttendanceMongoRepository, useClass: ActivityAttendanceMongoRepository }])
 export class ActivityAttendanceMongoRepository
-	implements ActivitiesManagerAttendanceInterface { // eslint-disable-line
+	implements ActivitiesManagerAttendanceContract { // eslint-disable-line
 	// eslint-disable-line
 	constructor(
 		@inject(SessionTransaction) private readonly session: ISessionTransaction

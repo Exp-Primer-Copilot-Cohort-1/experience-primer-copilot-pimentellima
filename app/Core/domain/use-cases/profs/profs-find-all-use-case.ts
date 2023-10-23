@@ -1,5 +1,5 @@
 import { ProfsMongooseRepository } from "App/Core/domain/repositories";
-import { ProfsManagerInterface } from "App/Core/domain/repositories/interface";
+import { ProfsManagerContract } from "App/Core/domain/repositories/interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither } from "App/Core/shared";
@@ -14,7 +14,7 @@ export class ProfsFindAllUseCase
 	implements UseCase<In, IUser[]>
 {
 	constructor(
-		@inject(ProfsMongooseRepository) private readonly manager: ProfsManagerInterface
+		@inject(ProfsMongooseRepository) private readonly manager: ProfsManagerContract
 	) { }
 
 	public async execute(): PromiseEither<AbstractError, IUser[]> {

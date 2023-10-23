@@ -1,5 +1,5 @@
 import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
-import { CensusRevenuesManagerInterface } from 'App/Core/domain/repositories/interface'
+import { CensusRevenuesManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -20,7 +20,7 @@ type ICensusRevenues = {
 export class FindRevenuesActivitiesUseCase
 	implements UseCase<FindRevenuesActivitiesProps, ICensusRevenues>
 {
-	constructor(private readonly managerRevenues: CensusRevenuesManagerInterface) { }
+	constructor(private readonly managerRevenues: CensusRevenuesManagerContract) { }
 
 	public async execute({
 		unity_id,

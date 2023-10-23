@@ -2,10 +2,10 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
 import { UnityNotFoundError } from '../../errors/unity-not-found'
-import { MedicalCertificateManagerInterface } from '../interface'
+import { MedicalCertificateManagerContract } from '../interface'
 
 export class MedicalCertificateInMemoryRepository
-	implements MedicalCertificateManagerInterface {
+	implements MedicalCertificateManagerContract {
 	public items: IMedicalCertificate[] = []
 
 	constructor() { }

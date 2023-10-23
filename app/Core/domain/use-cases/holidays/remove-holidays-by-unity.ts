@@ -1,4 +1,4 @@
-import { HolidaysManagerInterface } from 'App/Core/domain/repositories/interface/holidays.interface'
+import { HolidaysManagerContract } from 'App/Core/domain/repositories/interface/holidays.interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -12,7 +12,7 @@ type DeleteHoliday = {
 }
 
 export class RemoveHolidaysByUnityUseCase implements UseCase<DeleteHoliday, IHoliday[]> {
-	constructor(private readonly holidaysRepository: HolidaysManagerInterface) { }
+	constructor(private readonly holidaysRepository: HolidaysManagerContract) { }
 
 	public async execute({
 		unity_id,

@@ -1,4 +1,4 @@
-import { ProceduresManagerInterface } from 'App/Core/domain/repositories/interface'
+import { ProceduresManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -9,7 +9,7 @@ type In = {
 }
 
 export class DeleteProceduresByIdUseCase implements UseCase<In, any> {
-	constructor(private readonly manager: ProceduresManagerInterface) { }
+	constructor(private readonly manager: ProceduresManagerContract) { }
 
 	public async execute({ id }: In): PromiseEither<AbstractError, any> {
 

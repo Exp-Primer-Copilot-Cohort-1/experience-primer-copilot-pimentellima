@@ -1,7 +1,7 @@
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 
-import { RFormSFManagerInterface } from 'App/Core/domain/repositories/interface/reply-form-standard-franchise-manager.interface'
+import { RFormSFManagerContract } from 'App/Core/domain/repositories/interface/reply-form-standard-franchise-manager.interface'
 import { RFormSFMongooseManager } from 'App/Core/domain/repositories/reply-form-standard-franchise/reply-form-standard-franchise-mongoose-repository'
 import { EventEmitter, IEventEmitter } from 'App/Core/infra/event-emitter'
 import { TypeForms } from 'App/Types/IBusinessFranchises'
@@ -21,7 +21,7 @@ type Out = { message: string }
 export class VerifyCurrentReplyInLessThanPreviousUseCase implements UseCase<In, Out> {
 
 	constructor(
-		@inject(RFormSFMongooseManager) private readonly manager: RFormSFManagerInterface,
+		@inject(RFormSFMongooseManager) private readonly manager: RFormSFManagerContract,
 		@inject(EventEmitter) private readonly eventEmitter?: IEventEmitter
 	) { } // eslint-disable-line
 

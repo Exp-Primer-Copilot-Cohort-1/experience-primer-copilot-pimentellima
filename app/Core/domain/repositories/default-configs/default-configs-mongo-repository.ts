@@ -6,10 +6,10 @@ import DefaultConfig, { COLLECTION_REFS } from 'App/Models/DefaultConfig'
 import { IDefaultConfig } from 'App/Types/IDefaultConfig'
 import { inject, injectable, registry } from 'tsyringe'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
-import { DefaultConfigsManagerInterface } from '../interface'
+import { DefaultConfigsManagerContract } from '../interface'
 @injectable()
 @registry([{ token: DefaultConfigsMongooseRepository, useClass: DefaultConfigsMongooseRepository }])
-export class DefaultConfigsMongooseRepository implements DefaultConfigsManagerInterface {
+export class DefaultConfigsMongooseRepository implements DefaultConfigsManagerContract {
 	constructor(
 		@inject(OptsQuery) private readonly optsQuery: OptsQuery
 	) { }

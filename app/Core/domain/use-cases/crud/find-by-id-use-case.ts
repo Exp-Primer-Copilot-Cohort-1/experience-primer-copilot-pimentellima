@@ -1,6 +1,6 @@
 import { IdNotProvidedError } from "App/Core/domain/errors/id-not-provided";
 import { CRUDRepository } from "App/Core/domain/repositories";
-import { CRUDManagerInterface } from "App/Core/domain/repositories/interface";
+import { CRUDManagerContract } from "App/Core/domain/repositories/interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left } from "App/Core/shared";
@@ -16,7 +16,7 @@ export class FindByIdUseCase<T>
 	implements UseCase<In, T>
 {
 	constructor(
-		@inject(CRUDRepository) private readonly manager: CRUDManagerInterface<T>
+		@inject(CRUDRepository) private readonly manager: CRUDManagerContract<T>
 	) { }
 
 	public async execute({ id }): PromiseEither<AbstractError, T> {

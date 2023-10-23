@@ -4,9 +4,9 @@ import { IBusinessFranchises } from 'App/Types/IBusinessFranchises'
 import { UnityNotFranchise } from '../../errors/unity-not-franchise'
 
 /**
- * Interface que define o contrato para o gerenciador de franquias de negócios.
+ * Contract que define o contrato para o gerenciador de franquias de negócios.
  */
-export interface BusinessFranchisesManagerInterface {
+export interface BusinessFranchisesManagerContract {
 	/**
 	 * Busca a franquia pelo ID da unidade.
 	 * @param unity_id O ID da unidade da franquia de negócio a ser buscada.

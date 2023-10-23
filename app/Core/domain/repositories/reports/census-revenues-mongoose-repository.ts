@@ -3,10 +3,10 @@ import { PromiseEither, right } from 'App/Core/shared'
 import Activity from 'App/Models/Activity'
 import Transactions from 'App/Models/Transactions'
 import { ICensusRevenuesOfYearByUnityByProf } from 'App/Types/ICensus'
-import { CensusRevenuesManagerInterface } from '../interface/census-revenues-manager.interface'
+import { CensusRevenuesManagerContract } from '../interface/census-revenues-manager.interface'
 import generateMatch from './generate-match-census'
 
-export class CensusRevenuesMongooseRepository implements CensusRevenuesManagerInterface {
+export class CensusRevenuesMongooseRepository implements CensusRevenuesManagerContract {
 	async findRevenuesAccrualRegimeActivities(
 		unity_id: string,
 		date_start: string,

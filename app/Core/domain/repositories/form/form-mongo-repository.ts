@@ -5,9 +5,9 @@ import Form from 'App/Models/Form'
 import { IForm } from 'App/Types/IForm'
 import { FormNotFoundError } from '../../errors/form-not-found-error'
 import { MissingParamsError } from '../../errors/missing-params'
-import { FormManagerInterface } from '../interface/form-manager-interface'
+import { FormManagerContract } from '../interface/form-manager-interface'
 
-export class FormMongoRepository implements FormManagerInterface {
+export class FormMongoRepository implements FormManagerContract {
 	updateFormById: (form: IForm, id: string) => PromiseEither<AbstractError, FormEntity>
 	findById: (id: string) => PromiseEither<AbstractError, FormEntity>
 	async create(form: IForm): PromiseEither<AbstractError, FormEntity> {

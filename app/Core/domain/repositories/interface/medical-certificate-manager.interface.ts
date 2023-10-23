@@ -2,7 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
 import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
 
-export interface MedicalCertificateManagerInterface {
+export interface MedicalCertificateManagerContract {
 	findByName: (
 		name: string,
 		unity_id: string,

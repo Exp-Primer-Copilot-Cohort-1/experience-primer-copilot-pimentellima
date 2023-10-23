@@ -1,4 +1,4 @@
-import { ActivitiesManagerInterface } from 'App/Core/domain/repositories/interface'
+import { ActivitiesManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -17,7 +17,7 @@ export class FindActivitiesByProfIdUseCase
 	implements UseCase<In, IActivity[]>
 {
 	constructor(
-		@inject(ActivityMongoRepository) private readonly manager: ActivitiesManagerInterface
+		@inject(ActivityMongoRepository) private readonly manager: ActivitiesManagerContract
 	) { }
 
 	public async execute(

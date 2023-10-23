@@ -3,7 +3,7 @@ import { AbstractError } from 'App/Core/errors/error.interface';
 import { PromiseEither } from 'App/Core/shared/either';
 import { IForm } from 'App/Types/IForm';
 
-export interface FormManagerInterface {
+export interface FormManagerContract {
 	create: (form: IForm) => PromiseEither<AbstractError, FormEntity>;
 	findAll: (unity_id: string) => PromiseEither<AbstractError, FormEntity[]>;
 	update: (form: IForm, id: string) => PromiseEither<AbstractError, FormEntity>;

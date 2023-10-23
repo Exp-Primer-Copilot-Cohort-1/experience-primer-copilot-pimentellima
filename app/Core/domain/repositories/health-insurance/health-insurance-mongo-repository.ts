@@ -9,11 +9,11 @@ import { inject, injectable, registry } from 'tsyringe'
 import { HealthInsuranceNotFoundError } from '../../errors/health-insurance-not-found'
 import { MissingParamsError } from '../../errors/missing-params'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
-import { HealthInsuranceManagerInterface } from '../interface/health-insurance-manager.interface'
+import { HealthInsuranceManagerContract } from '../interface/health-insurance-manager.interface'
 
 @injectable()
 @registry([{ token: HealthInsuranceMongoRepository, useClass: HealthInsuranceMongoRepository }])
-export class HealthInsuranceMongoRepository implements HealthInsuranceManagerInterface {
+export class HealthInsuranceMongoRepository implements HealthInsuranceManagerContract {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery

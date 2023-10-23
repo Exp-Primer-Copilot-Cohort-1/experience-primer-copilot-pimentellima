@@ -1,11 +1,11 @@
 import mongoose from 'mongoose'
 import { beforeAll, describe, expect, it } from 'vitest'
 
-import { CensusClientsManagerInterface } from '../interface/census-clients-manager.interface'
+import { CensusClientsManagerContract } from '../interface/census-clients-manager.interface'
 import { CensusClientsMongooseRepository } from './census-clients-mongoose-repository'
 
 const makeSut = () => {
-	const sut: CensusClientsManagerInterface = new CensusClientsMongooseRepository()
+	const sut: CensusClientsManagerContract = new CensusClientsMongooseRepository()
 	return {
 		sut,
 	}

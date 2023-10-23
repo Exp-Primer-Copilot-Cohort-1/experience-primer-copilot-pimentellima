@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { HealthInsuranceMongoRepository } from 'App/Core/domain/repositories'
-import { HealthInsuranceManagerInterface } from 'App/Core/domain/repositories/interface'
+import { HealthInsuranceManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
@@ -13,7 +13,7 @@ type In = never
 @registry([{ token: FindAllHealthInsuranceUseCaseV2, useClass: FindAllHealthInsuranceUseCaseV2 }])
 export class FindAllHealthInsuranceUseCaseV2 implements UseCase<In, IHealthInsurance[]> {
 	constructor(
-		@inject(HealthInsuranceMongoRepository) private readonly manager: HealthInsuranceManagerInterface,
+		@inject(HealthInsuranceMongoRepository) private readonly manager: HealthInsuranceManagerContract,
 	) { }
 
 	public async execute(): PromiseEither<AbstractError, IHealthInsurance[]> {

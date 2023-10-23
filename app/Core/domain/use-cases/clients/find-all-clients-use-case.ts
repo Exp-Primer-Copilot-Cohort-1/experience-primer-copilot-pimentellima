@@ -1,6 +1,6 @@
 import { UnityIdNotProvidedError } from "App/Core/domain/errors";
 import { ClientsMongooseRepository } from "App/Core/domain/repositories";
-import { ClientManagerInterface } from "App/Core/domain/repositories/interface";
+import { ClientManagerContract } from "App/Core/domain/repositories/interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left } from "App/Core/shared";
@@ -17,7 +17,7 @@ export class FindAllClientsUseCase
 	implements UseCase<In, IUserClient[]>
 {
 	constructor(
-		@inject(ClientsMongooseRepository) private readonly manager: ClientManagerInterface
+		@inject(ClientsMongooseRepository) private readonly manager: ClientManagerContract
 	) { }
 
 	public async execute(

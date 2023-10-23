@@ -1,11 +1,11 @@
 import mongoose from 'mongoose'
 import { beforeAll, describe, expect, it } from 'vitest'
 
-import { ReportsUnitiesManagerInterface } from '../interface/reports-unities-manager.interface'
+import { ReportsUnitiesManagerContract } from '../interface/reports-unities-manager.interface'
 import { BillingMongooseRepository } from './billing-mongoose-repository'
 
 const makeSut = () => {
-	const sut: ReportsUnitiesManagerInterface = new BillingMongooseRepository()
+	const sut: ReportsUnitiesManagerContract = new BillingMongooseRepository()
 	return {
 		sut,
 	}

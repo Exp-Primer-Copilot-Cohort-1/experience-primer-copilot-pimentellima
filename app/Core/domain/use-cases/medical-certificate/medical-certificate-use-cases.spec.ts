@@ -1,4 +1,4 @@
-import { MedicalCertificateManagerInterface } from 'App/Core/domain/repositories/interface'
+import { MedicalCertificateManagerContract } from 'App/Core/domain/repositories/interface'
 import { left, right } from 'App/Core/shared'
 import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
 import { IPartner } from 'App/Types/IPartner'
@@ -21,7 +21,7 @@ const medicalCertificate: Partial<IMedicalCertificate> = {
 }
 
 
-const MedicalCertificateManager: MedicalCertificateManagerInterface = {
+const MedicalCertificateManager: MedicalCertificateManagerContract = {
 	create: vi.fn(async (partner) => {
 		return right(partner as IPartner) as any
 	}),

@@ -2,7 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared'
 import { IPaymentProf, ParticipationPrice } from 'App/Types/IPaymentProf'
 
-export interface PaymentProfManagerInterface {
+export interface PaymentProfManagerContract {
 	createOrUpdatePaymentProf: (
 		paymentProf: IPaymentProf,
 	) => PromiseEither<AbstractError, IPaymentProf>

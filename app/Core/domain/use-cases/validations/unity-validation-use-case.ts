@@ -1,4 +1,4 @@
-import { UnitiesManagerInterface } from 'App/Core/domain/repositories/interface'
+import { UnitiesManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
@@ -12,7 +12,7 @@ import { UnitiesMongooseRepository } from '../../repositories'
 @registry([{ token: UnityValidationUseCase, useClass: UnityValidationUseCase }])
 export class UnityValidationUseCase implements UseCase<IUnity, IUnity> {
 	constructor(
-		@inject(UnitiesMongooseRepository) private readonly manager: UnitiesManagerInterface
+		@inject(UnitiesMongooseRepository) private readonly manager: UnitiesManagerContract
 	) { }
 
 	public async execute({ _id }: IUnity): PromiseEither<AbstractError, IUnity> {

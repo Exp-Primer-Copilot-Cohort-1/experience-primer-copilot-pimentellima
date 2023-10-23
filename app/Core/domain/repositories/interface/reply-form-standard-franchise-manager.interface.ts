@@ -4,10 +4,10 @@ import { TypeForms } from 'App/Types/IBusinessFranchises';
 import { IInfoReplyFormStandardFranchises, IReplyFormStandardFranchises } from 'App/Types/IReplyFormStandardFranchises';
 
 /**
- * Interface que define os métodos para manipulação de respostas padrão de formulários de franquias.
+ * Contract que define os métodos para manipulação de respostas padrão de formulários de franquias.
  */
 
-export interface RFormSFManagerInterface {
+export interface RFormSFManagerContract {
 	/**
 	 * Busca todas as respostas padrão de formulários de franquias de um grupo específico.
 	 * @param group_id O ID do grupo de respostas.

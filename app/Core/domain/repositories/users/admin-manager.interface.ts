@@ -2,7 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
 import { IAdminUser } from 'App/Types/IAdminUser'
 
-export interface AdminManagerInterface {
+export interface AdminManagerContract {
 	findById: (id: string) => PromiseEither<AbstractError, IAdminUser>
 	findByEmail: (email: string) => PromiseEither<AbstractError, IAdminUser>
 	findAll: () => PromiseEither<AbstractError, IAdminUser[]>

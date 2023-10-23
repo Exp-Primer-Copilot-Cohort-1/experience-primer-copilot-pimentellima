@@ -1,5 +1,5 @@
 import { ActivityAttendanceMongoRepository } from 'App/Core/domain/repositories'
-import { ActivitiesManagerAttendanceInterface } from 'App/Core/domain/repositories/interface'
+import { ActivitiesManagerAttendanceContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
@@ -17,7 +17,7 @@ export class UpdateActivityStatusByIdUseCase implements UseCase<Props, IActivity
 
 	constructor(
 		@inject(ActivityAttendanceMongoRepository)
-		private readonly manager: ActivitiesManagerAttendanceInterface,
+		private readonly manager: ActivitiesManagerAttendanceContract,
 	) { } // eslint-disable-line
 
 	public async execute({ id, status }: Props): PromiseEither<AbstractError, IActivity> {

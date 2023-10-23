@@ -4,9 +4,9 @@ import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Partner from 'App/Models/Partner'
 import { IPartner } from 'App/Types/IPartner'
 import { UnityNotFoundError } from '../../errors/unity-not-found'
-import { PartnerManagerInterface } from '../interface/partner-manage-interface'
+import { PartnerManagerContract } from '../interface/partner-manage-interface'
 
-export class PartnerMongooseRepository implements PartnerManagerInterface {
+export class PartnerMongooseRepository implements PartnerManagerContract {
 	constructor(private readonly opts: OptsQuery = OptsQuery.build()) { }
 
 	public async findAll(unity_id: string): PromiseEither<AbstractError, IPartner[]> {

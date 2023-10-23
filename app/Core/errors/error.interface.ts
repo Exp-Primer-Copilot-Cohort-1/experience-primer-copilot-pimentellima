@@ -1,10 +1,10 @@
-export interface InterfaceError {
+export interface ContractError {
 	message: string;
 	statusCode: number;
 	cause?: Error;
 }
 
-export class AbstractError extends Error implements InterfaceError {
+export class AbstractError extends Error implements ContractError {
 	constructor(
 		message: string,
 		public readonly statusCode: number,

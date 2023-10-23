@@ -5,11 +5,11 @@ import Unity from 'App/Models/Unity'
 import { IBilling } from 'App/Types/IBilling'
 import { Types } from 'mongoose'
 import { UnityNotFoundError } from '../../errors/unity-not-found'
-import { ReportsUnitiesManagerInterface } from '../interface/reports-unities-manager.interface'
+import { ReportsUnitiesManagerContract } from '../interface/reports-unities-manager.interface'
 
 const ObjectId = Types.ObjectId
 
-export class BillingMongooseRepository implements ReportsUnitiesManagerInterface {
+export class BillingMongooseRepository implements ReportsUnitiesManagerContract {
 	constructor() { }
 
 	async findAllBillingByYear(

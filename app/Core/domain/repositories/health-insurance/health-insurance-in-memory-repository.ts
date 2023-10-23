@@ -3,9 +3,11 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IHealthInsurance } from 'App/Types/IHealthInsurance'
 import { MissingParamsError } from '../../errors/missing-params'
-import { HealthInsuranceManagerInterface } from '../interface/health-insurance-manager.interface'
+import { HealthInsuranceManagerContract } from '../interface/health-insurance-manager.interface'
 
-export class HealthInsuranceInMemoryManager implements HealthInsuranceManagerInterface {
+export class HealthInsuranceInMemoryManager implements HealthInsuranceManagerContract {
+	findAll: () => PromiseEither<AbstractError, IHealthInsurance[]>
+	search: (name: string, unity_id: string) => PromiseEither<AbstractError, IHealthInsurance[]>
 	private _items: HealtInsuranceEntity[] = []
 
 	async findAllByUnityId(

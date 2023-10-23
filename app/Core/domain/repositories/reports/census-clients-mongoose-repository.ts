@@ -6,11 +6,11 @@ import {
 	ICensusGenderClient,
 	ICensusNewAndOldClients,
 } from 'App/Types/ICensus'
-import { CensusClientsManagerInterface } from '../interface/census-clients-manager.interface'
+import { CensusClientsManagerContract } from '../interface/census-clients-manager.interface'
 
 import generateMatch from './generate-match-census'
 
-export class CensusClientsMongooseRepository implements CensusClientsManagerInterface {
+export class CensusClientsMongooseRepository implements CensusClientsManagerContract {
 	async findCensusGenderClientByUnityOrProf(
 		unity_id: string,
 		date_start: string,

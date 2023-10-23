@@ -1,5 +1,5 @@
 import { ActivityRecurrentMongoRepository } from 'App/Core/domain/repositories'
-import { ActivitiesRecurrentManagerInterface } from 'App/Core/domain/repositories/interface'
+import { ActivitiesRecurrentManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
@@ -16,7 +16,7 @@ export class FindAllActivitiesPendingUseCase
 	implements UseCase<In, IActivityPending[]>
 {
 	constructor(
-		@inject(ActivityRecurrentMongoRepository) private readonly manager: ActivitiesRecurrentManagerInterface,
+		@inject(ActivityRecurrentMongoRepository) private readonly manager: ActivitiesRecurrentManagerContract,
 	) { } // eslint-disable-line
 
 	public async execute({

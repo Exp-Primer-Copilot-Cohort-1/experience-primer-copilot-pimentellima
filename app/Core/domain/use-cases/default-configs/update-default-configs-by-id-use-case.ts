@@ -1,6 +1,6 @@
 import { DefaultConfigsEntity } from 'App/Core/domain/entities'
 import { DefaultConfigsMongooseRepository } from 'App/Core/domain/repositories'
-import { DefaultConfigsManagerInterface } from 'App/Core/domain/repositories/interface'
+import { DefaultConfigsManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
@@ -14,7 +14,7 @@ export class UpdateDefaultConfigsByIdUseCase
 {
 	constructor(
 		@inject(DefaultConfigsMongooseRepository)
-		private readonly manager: DefaultConfigsManagerInterface
+		private readonly manager: DefaultConfigsManagerContract
 	) { } // eslint-disable-line
 
 	public async execute(

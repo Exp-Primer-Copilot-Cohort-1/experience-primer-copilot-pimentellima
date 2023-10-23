@@ -1,5 +1,5 @@
 import { CategoriesMongooseRepository } from "App/Core/domain/repositories";
-import { CategoriesManagerInterface } from "App/Core/domain/repositories/interface";
+import { CategoriesManagerContract } from "App/Core/domain/repositories/interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither } from "App/Core/shared";
@@ -14,7 +14,7 @@ export class FindAllCategoriesUseCase
 	implements UseCase<In, ICategory[]>
 {
 	constructor(
-		@inject(CategoriesMongooseRepository) private readonly manager: CategoriesManagerInterface
+		@inject(CategoriesMongooseRepository) private readonly manager: CategoriesManagerContract
 	) { }
 
 	public async execute(): PromiseEither<AbstractError, ICategory[]> {

@@ -1,11 +1,11 @@
 import mongoose from 'mongoose'
 import { beforeAll, describe, expect, it } from 'vitest'
 
-import { ActivityAwaitManagerInterface } from './activity-await-manager-interface'
+import { ActivityAwaitManagerContract } from './activity-await-manager-interface'
 import { ActivityAwaitMongoRepository } from './activity-await-mongo-repository'
 
 const makeSut = () => {
-	const sut: ActivityAwaitManagerInterface = new ActivityAwaitMongoRepository()
+	const sut: ActivityAwaitManagerContract = new ActivityAwaitMongoRepository()
 	return {
 		sut,
 	}

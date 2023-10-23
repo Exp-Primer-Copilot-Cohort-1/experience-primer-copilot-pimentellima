@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { ProceduresManagerInterface } from 'App/Core/domain/repositories/interface'
+import { ProceduresManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { left, right } from 'App/Core/shared'
 import { IProcedure } from 'App/Types/IProcedure'
@@ -34,7 +34,7 @@ const procedure: IProcedure = {
 }
 
 
-const ProcedureManager: ProceduresManagerInterface = {
+const ProcedureManager: ProceduresManagerContract = {
 	create: vi.fn(async (procedure) => {
 		return right(procedure) as any
 	}),

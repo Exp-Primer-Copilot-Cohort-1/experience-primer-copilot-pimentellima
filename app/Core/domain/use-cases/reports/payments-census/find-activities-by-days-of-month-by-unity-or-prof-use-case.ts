@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable indent */
 import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
-import { CensusDaysManagerInterface } from 'App/Core/domain/repositories/interface'
+import { CensusDaysManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -17,7 +17,7 @@ type FindActivitiesByUnityOrProfProps = {
 export class findActivitiesByDaysOfMonthUseCase
 	implements UseCase<FindActivitiesByUnityOrProfProps, ICensusActivitiesByDaysOfMonth[]>
 {
-	constructor(private readonly manager: CensusDaysManagerInterface) { }
+	constructor(private readonly manager: CensusDaysManagerContract) { }
 
 	public async execute({
 		unity_id,

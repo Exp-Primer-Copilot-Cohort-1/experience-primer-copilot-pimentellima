@@ -1,5 +1,5 @@
 import FormEntity from 'App/Core/domain/entities/form/form'
-import { FormManagerInterface } from 'App/Core/domain/repositories/interface/form-manager-interface'
+import { FormManagerContract } from 'App/Core/domain/repositories/interface/form-manager-interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -16,7 +16,7 @@ type TypeParams = {
 @injectable()
 @registry([{ token: UpdateFormByIdUseCase, useClass: UpdateFormByIdUseCase }])
 export class UpdateFormByIdUseCase implements UseCase<TypeParams, FormEntity> {
-	constructor(@inject(FormMongoRepository) private readonly manager: FormManagerInterface) { } // eslint-disable-line
+	constructor(@inject(FormMongoRepository) private readonly manager: FormManagerContract) { } // eslint-disable-line
 
 	public async execute(params: TypeParams): PromiseEither<AbstractError, FormEntity> {
 		if (!params.id) return left(new IdNotProvidedError())

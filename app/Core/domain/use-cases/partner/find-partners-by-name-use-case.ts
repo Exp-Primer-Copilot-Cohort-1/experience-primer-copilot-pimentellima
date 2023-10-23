@@ -1,5 +1,5 @@
 import { PartnerMongooseRepository } from 'App/Core/domain/repositories'
-import { PartnerManagerInterface } from 'App/Core/domain/repositories/interface'
+import { PartnerManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -13,7 +13,7 @@ type FindAllProps = {
 @injectable()
 @registry([{ token: FindPartnersByNameUseCase, useClass: FindPartnersByNameUseCase }])
 export class FindPartnersByNameUseCase implements UseCase<FindAllProps, any[]> {
-	constructor(@inject(PartnerMongooseRepository) private readonly manager: PartnerManagerInterface) { }
+	constructor(@inject(PartnerMongooseRepository) private readonly manager: PartnerManagerContract) { }
 
 	public async execute({ name, unity_id }: FindAllProps): PromiseEither<AbstractError, any[]> {
 		if (!name) {

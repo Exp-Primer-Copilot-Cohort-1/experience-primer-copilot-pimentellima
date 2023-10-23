@@ -1,5 +1,5 @@
 import AdminUser from 'App/Core/domain/entities/user/admin'
-import { AdminManagerInterface } from 'App/Core/domain/repositories/interface'
+import { AdminManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -17,7 +17,7 @@ import { ICreatePasswordUseCase } from '../type'
 @registry([{ token: CreateUserUseCase, useClass: CreateUserUseCase }])
 export class CreateUserUseCase implements UseCase<IAdminUser, IAdminUser> {
 	constructor(
-		@inject(AdminMongooseRepository) private readonly adminManager: AdminManagerInterface,
+		@inject(AdminMongooseRepository) private readonly adminManager: AdminManagerContract,
 		@inject(CreatePasswordUseCase) private readonly createPasswordUseCase: ICreatePasswordUseCase,
 	) { } // eslint-disable-line
 

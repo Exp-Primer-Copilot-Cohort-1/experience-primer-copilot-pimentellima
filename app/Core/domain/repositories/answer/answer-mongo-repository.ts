@@ -5,9 +5,9 @@ import Answer from 'App/Models/FormAnswer'
 import { IAnswer } from 'Types/IFormSubmission'
 import { AnswerNotFoundError } from '../../errors/answer-not-found-error'
 import { MissingParamsError } from '../../errors/missing-params'
-import { AnswerManagerInterface } from '../interface/answer-manager-interface'
+import { AnswerManagerContract } from '../interface/answer-manager-interface'
 
-export class AnswerMongoRepository implements AnswerManagerInterface {
+export class AnswerMongoRepository implements AnswerManagerContract {
 	async findAnswerById(id: string): PromiseEither<AbstractError, IAnswer> {
 		if (!id) return left(new MissingParamsError('id'))
 

@@ -1,7 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { left, right } from 'App/Core/shared'
 import { describe, expect, it, vi } from 'vitest'
-import { FormManagerInterface } from '../../repositories/interface/form-manager-interface'
+import { FormManagerContract } from '../../repositories/interface/form-manager-interface'
 import { CreateFormUseCase } from './create-form-use-case'
 import { DeleteFormByIdUseCase } from './delete-form-by-id-use-case'
 import { FindAllFormsUseCase } from './find-all-forms-use-case'
@@ -60,7 +60,7 @@ const form = {
 
 
 
-const FormManager: FormManagerInterface = {
+const FormManager: FormManagerContract = {
 	create: vi.fn(async (form) => {
 		return right(form) as any
 	}),

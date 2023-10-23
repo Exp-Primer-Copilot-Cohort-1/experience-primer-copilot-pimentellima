@@ -4,7 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import PaymentParticipations from 'App/Models/PaymentParticipations'
 import { IPaymentProf } from 'App/Types/IPaymentProf'
 import { Types } from 'mongoose'
-import { PaymentProfManagerInterface } from '../interface/payment-prof-manager-interface'
+import { PaymentProfManagerContract } from '../interface/payment-prof-manager-interface'
 import { PaymentProfMongoRepository } from './payment-prof-mongo-repository'
 
 const ObjectId = Types.ObjectId
@@ -29,7 +29,7 @@ const obj: IPaymentProf = {
 }
 
 const makeSut = () => {
-	const sut: PaymentProfManagerInterface = new PaymentProfMongoRepository()
+	const sut: PaymentProfManagerContract = new PaymentProfMongoRepository()
 	return {
 		sut,
 	}

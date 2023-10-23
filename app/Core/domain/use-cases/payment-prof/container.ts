@@ -1,12 +1,12 @@
 import { PaymentProfMongoRepository } from "App/Core/domain/repositories";
-import { PaymentProfManagerInterface } from "App/Core/domain/repositories/interface";
+import { PaymentProfManagerContract } from "App/Core/domain/repositories/interface";
 import container from 'App/Core/shared/container';
 import {
 	CreatePaymentProfUseCase,
 	FindAllPaymentProfsUseCase
 } from "./index";
 
-container.registerSingleton<PaymentProfManagerInterface>(
+container.registerSingleton<PaymentProfManagerContract>(
 	PaymentProfMongoRepository,
 	PaymentProfMongoRepository
 );

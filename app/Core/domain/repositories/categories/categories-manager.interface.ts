@@ -3,7 +3,7 @@ import { PromiseEither } from 'App/Core/shared/either'
 import { ICategory } from 'App/Types/ICategory'
 import { ICount } from '../helpers/count'
 
-export interface CategoriesManagerInterface {
+export interface CategoriesManagerContract {
 	getCount: (unity_id: string) => PromiseEither<AbstractError, ICount>
 	findByID: (id: string) => PromiseEither<AbstractError, ICategory>
 	findAll: () => PromiseEither<AbstractError, ICategory[]>

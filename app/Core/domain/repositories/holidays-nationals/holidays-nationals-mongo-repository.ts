@@ -2,10 +2,10 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import HolidaysNationals from 'App/Models/HolidaysNationals'
 import { IHoliday } from 'App/Types/IHoliday'
-import { HolidaysNationalsManagerInterface } from '../interface/holidays-nationals.interface'
+import { HolidaysNationalsManagerContract } from '../interface/holidays-nationals.interface'
 
 export class HolidaysNationalsMongoRepository
-	implements HolidaysNationalsManagerInterface {
+	implements HolidaysNationalsManagerContract {
 	constructor() { }
 	async findAllHolidays(year: number): PromiseEither<AbstractError, IHoliday[]> {
 		const holidaysNationals = await HolidaysNationals.findOne({

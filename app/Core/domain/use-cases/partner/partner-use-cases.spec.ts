@@ -1,4 +1,4 @@
-import { PartnerManagerInterface } from 'App/Core/domain/repositories/interface'
+import { PartnerManagerContract } from 'App/Core/domain/repositories/interface'
 import { left, right } from 'App/Core/shared'
 import { IPartner } from 'App/Types/IPartner'
 import { describe, expect, it, vi } from 'vitest'
@@ -17,7 +17,7 @@ const partner: IPartner = {
 }
 
 
-const PartnerManager: PartnerManagerInterface = {
+const PartnerManager: PartnerManagerContract = {
 	create: vi.fn(async (partner) => {
 		return right(partner as IPartner) as any
 	}),

@@ -1,4 +1,4 @@
-import { HealthInsuranceManagerInterface } from 'App/Core/domain/repositories/interface'
+import { HealthInsuranceManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -9,7 +9,7 @@ type Props = HealthInsuranceParams & {
 }
 
 export class CreateHealthInsuranceUseCase implements UseCase<Props, IHealthInsurance> {
-	constructor(private readonly manager: HealthInsuranceManagerInterface) { }
+	constructor(private readonly manager: HealthInsuranceManagerContract) { }
 
 	public async execute(params: Props): PromiseEither<AbstractError, IHealthInsurance> {
 		const healthInsuranceOrErr = await this.manager.create(params.unity_id, params)

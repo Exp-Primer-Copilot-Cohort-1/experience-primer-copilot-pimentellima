@@ -2,7 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared'
 import { IAnswer } from 'App/Types/IAnswer'
 
-export interface AnswerManagerInterface {
+export interface AnswerManagerContract {
 	createAnswer: (answer: IAnswer) => PromiseEither<AbstractError, IAnswer>
 	updateAnswerById: (
 		answer: IAnswer,

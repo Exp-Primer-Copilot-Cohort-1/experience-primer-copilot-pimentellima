@@ -4,9 +4,9 @@ import { PromiseEither, left, right } from 'App/Core/shared'
 import { IAnswer } from 'Types/IFormSubmission'
 import { AnswerNotFoundError } from '../../errors/answer-not-found-error'
 import { MissingParamsError } from '../../errors/missing-params'
-import { AnswerManagerInterface } from '../interface/answer-manager-interface'
+import { AnswerManagerContract } from '../interface/answer-manager-interface'
 
-export class AnswerInMemoryRepository implements AnswerManagerInterface {
+export class AnswerInMemoryRepository implements AnswerManagerContract {
 	public answers: any[] = []
 	findAnswersByClientId: (
 		unity_id: string,

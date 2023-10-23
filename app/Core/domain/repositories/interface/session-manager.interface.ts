@@ -10,6 +10,6 @@ export type ISession = {
 	user: SystemUser
 }
 
-export interface SessionManagerInterface {
+export interface SessionManagerContract {
 	signIn: (email: string, password: string) => PromiseEither<AbstractError, ISession>
 }

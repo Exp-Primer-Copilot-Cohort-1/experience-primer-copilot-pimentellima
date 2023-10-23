@@ -12,7 +12,7 @@ export interface IEvn {
 	get: (key: string) => string | undefined
 }
 
-export interface CacheInterface {
+export interface CacheContract {
 	set(key: string, value: Object, seconds?: number): Promise<string>
 	get(key: string): Promise<Object | null>
 	delete(key: string | string[]): Promise<number>

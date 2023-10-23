@@ -1,6 +1,6 @@
 import { IdNotProvidedError } from 'App/Core/domain/errors'
 import { ActivityMongoRepository } from 'App/Core/domain/repositories'
-import { ActivitiesManagerInterface } from 'App/Core/domain/repositories/interface'
+import { ActivitiesManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -15,7 +15,7 @@ type In = {
 @registry([{ token: FindActivityByIdUseCase, useClass: FindActivityByIdUseCase }])
 export class FindActivityByIdUseCase implements UseCase<In, IActivity> {
 	constructor(
-		@inject(ActivityMongoRepository) private readonly manager: ActivitiesManagerInterface
+		@inject(ActivityMongoRepository) private readonly manager: ActivitiesManagerContract
 	) { }
 
 	public async execute({ id }: In): PromiseEither<AbstractError, IActivity> {

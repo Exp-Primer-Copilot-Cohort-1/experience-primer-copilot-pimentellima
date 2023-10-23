@@ -3,7 +3,7 @@ import { PromiseEither, left, right } from 'App/Core/shared'
 import User from 'App/Models/User'
 import { IUser } from 'App/Types/IUser'
 import { MissingParamsError } from '../../errors/missing-params'
-import { ScheduleManagerInterface } from '../interface/schedule-manager-interface'
+import { ScheduleManagerContract } from '../interface/schedule-manager-interface'
 
 type Schedule = {
 	hourStartDay: string
@@ -12,7 +12,7 @@ type Schedule = {
 	hourEndLunch: string
 }
 
-export class ScheduleMongoRepository implements ScheduleManagerInterface {
+export class ScheduleMongoRepository implements ScheduleManagerContract {
 	async getWorkHours(prof_id: string): PromiseEither<AbstractError, Schedule> {
 		if (!prof_id) return left(new MissingParamsError('prof_id'))
 		const prof = (await User.findById(prof_id)) as IUser

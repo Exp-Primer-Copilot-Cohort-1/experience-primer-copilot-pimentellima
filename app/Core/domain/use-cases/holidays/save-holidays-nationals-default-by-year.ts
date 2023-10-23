@@ -1,4 +1,4 @@
-import { HolidaysNationalsManagerInterface } from 'App/Core/domain/repositories/interface/holidays-nationals.interface'
+import { HolidaysNationalsManagerContract } from 'App/Core/domain/repositories/interface/holidays-nationals.interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -9,7 +9,7 @@ type Year = number
 
 export class SaveHolidaysNationalsDefaultUseCase implements UseCase<Year, IHoliday[]> {
 	constructor(
-		private readonly holidaysNationalsRepository: HolidaysNationalsManagerInterface,
+		private readonly holidaysNationalsRepository: HolidaysNationalsManagerContract,
 	) { }
 
 	public async execute(year: Year): PromiseEither<AbstractError, IHoliday[]> {

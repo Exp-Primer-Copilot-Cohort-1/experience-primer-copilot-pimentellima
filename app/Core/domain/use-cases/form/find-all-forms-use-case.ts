@@ -1,5 +1,5 @@
 import FormEntity from "App/Core/domain/entities/form/form";
-import { FormManagerInterface } from "App/Core/domain/repositories/interface/form-manager-interface";
+import { FormManagerContract } from "App/Core/domain/repositories/interface/form-manager-interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left } from "App/Core/shared";
@@ -17,7 +17,7 @@ export class FindAllFormsUseCase
 	implements UseCase<TypeParams, FormEntity[]>
 {
 	constructor(
-		@inject(FormMongoRepository) private readonly manager: FormManagerInterface
+		@inject(FormMongoRepository) private readonly manager: FormManagerContract
 	) { }
 
 	public async execute(

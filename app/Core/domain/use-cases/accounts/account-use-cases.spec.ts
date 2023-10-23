@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { AccountManagerInterface } from 'App/Core/domain/repositories/interface'
+import { AccountManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { left, right } from 'App/Core/shared'
 import { IAccount } from 'App/Types/IAccount'
@@ -22,7 +22,7 @@ const account: IAccount = {
 }
 
 
-const AccountManager: AccountManagerInterface = {
+const AccountManager: AccountManagerContract = {
 	create: vi.fn(async (account) => {
 		return right(account as IAccount) as any
 	}),

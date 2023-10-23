@@ -2,7 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared'
 import { ICensusParticipationPaymentByProf } from 'App/Types/ICensus'
 
-export interface CensusPaymentParticipationsManagerInterface {
+export interface CensusPaymentParticipationsManagerContract {
 	findPaymentsParticipation: (
 		unity_id: string,
 		date_start: string,

@@ -1,5 +1,5 @@
 import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
-import { CensusDaysManagerInterface } from 'App/Core/domain/repositories/interface'
+import { CensusDaysManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -17,7 +17,7 @@ type UseCaseFindIdlenessByProf = UseCase<FinIdlenessIn, ICensusIdlenessByProf[]>
 
 export class FindIdlenessByProfUseCase implements UseCaseFindIdlenessByProf {
 	constructor(
-		private readonly count: CensusDaysManagerInterface,
+		private readonly count: CensusDaysManagerContract,
 		private readonly hoursTrades: UseCase<
 			DaysTradesIntervalDatesParams,
 			ICensusIdlenessByProf

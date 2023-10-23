@@ -8,7 +8,7 @@ import {
 	ICensusScheduledEvent,
 } from 'App/Types/ICensus'
 
-export interface CensusUnitiesManagerInterface {
+export interface CensusUnitiesManagerContract {
 	findCensusActivitiesOfScheduledByUnityOrProf: (
 		unity_id: string,
 		date_start: string,

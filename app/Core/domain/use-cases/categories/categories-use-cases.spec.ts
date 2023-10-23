@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { CategoriesManagerInterface } from 'App/Core/domain/repositories/interface'
+import { CategoriesManagerContract } from 'App/Core/domain/repositories/interface'
 import { left, right } from 'App/Core/shared'
 import { ICategory } from 'App/Types/ICategory'
 import {
@@ -22,7 +22,7 @@ const category: ICategory = {
 }
 
 
-const CategoryManager: CategoriesManagerInterface = {
+const CategoryManager: CategoriesManagerContract = {
 	create: vi.fn(async (category) => {
 		return right(category) as any
 	}),

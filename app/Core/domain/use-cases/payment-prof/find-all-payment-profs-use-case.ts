@@ -1,5 +1,5 @@
 import { PaymentProfMongoRepository } from 'App/Core/domain/repositories'
-import { PaymentProfManagerInterface } from 'App/Core/domain/repositories/interface'
+import { PaymentProfManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -14,7 +14,7 @@ type TypeParams = {
 @injectable()
 export class FindAllPaymentProfsUseCase implements UseCase<TypeParams, IPaymentProf[]> {
 	constructor(
-		@inject(PaymentProfMongoRepository) private readonly manager: PaymentProfManagerInterface) {
+		@inject(PaymentProfMongoRepository) private readonly manager: PaymentProfManagerContract) {
 	}
 
 	public async execute(

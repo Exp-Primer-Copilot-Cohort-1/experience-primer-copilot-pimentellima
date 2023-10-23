@@ -1,5 +1,5 @@
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
-import { MedicalCertificateManagerInterface } from 'App/Core/domain/repositories/interface'
+import { MedicalCertificateManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -14,7 +14,7 @@ type Input = {
 @injectable()
 @registry([{ token: ShowMedicalCertificateByIdUseCase, useClass: ShowMedicalCertificateByIdUseCase }])
 export class ShowMedicalCertificateByIdUseCase implements UseCase<Input, IMedicalCertificate> {
-	constructor(@inject(MedicalCertificateMongooseRepository) private readonly manager: MedicalCertificateManagerInterface) { }
+	constructor(@inject(MedicalCertificateMongooseRepository) private readonly manager: MedicalCertificateManagerContract) { }
 
 	public async execute(input: Input): PromiseEither<AbstractError, IMedicalCertificate> {
 		if (!input?.id) {

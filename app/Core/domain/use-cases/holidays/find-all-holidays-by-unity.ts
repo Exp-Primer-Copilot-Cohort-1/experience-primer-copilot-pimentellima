@@ -1,4 +1,4 @@
-import { HolidaysManagerInterface } from 'App/Core/domain/repositories/interface/holidays.interface'
+import { HolidaysManagerContract } from 'App/Core/domain/repositories/interface/holidays.interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -9,7 +9,7 @@ export class FindAllHolidaysByUnityUseCase
 	implements UseCase<FindAllHolidaysByUnityParams, IHoliday[]>
 {
 	constructor(
-		private readonly holidaysRepository: HolidaysManagerInterface,
+		private readonly holidaysRepository: HolidaysManagerContract,
 		private readonly SaveHolidayNationalsUseCase: UseCase<number, IHoliday[]>,
 	) { }
 

@@ -5,11 +5,11 @@ import Sec from 'App/Models/Sec'
 import { IUser as ISecs } from 'App/Types/IUser'
 import { inject, injectable, registry } from 'tsyringe'
 import { ICount } from '../helpers/count'
-import { SecsManagerInterface } from './secs-manage.interface'
+import { SecsManagerContract } from './secs-manage.interface'
 
 @injectable()
 @registry([{ token: SecsMongooseRepository, useClass: SecsMongooseRepository }])
-export class SecsMongooseRepository implements SecsManagerInterface {
+export class SecsMongooseRepository implements SecsManagerContract {
 
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery

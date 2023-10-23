@@ -8,7 +8,7 @@ import {
 	ParticipationPaymentsNotFoundError,
 	UnityNotFoundError,
 } from '../../errors'
-import { PaymentProfManagerInterface } from '../interface/payment-prof-manager-interface'
+import { PaymentProfManagerContract } from '../interface/payment-prof-manager-interface'
 
 import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
 import PaymentParticipations from 'App/Models/PaymentParticipations'
@@ -84,7 +84,7 @@ const createFilter = (participation: IPaymentProf) => ({
 })
 @injectable()
 @registry([{ token: PaymentProfMongoRepository, useClass: PaymentProfMongoRepository }])
-export class PaymentProfMongoRepository implements PaymentProfManagerInterface {
+export class PaymentProfMongoRepository implements PaymentProfManagerContract {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
 		@inject(SessionTransaction) private readonly session?: ISessionTransaction,

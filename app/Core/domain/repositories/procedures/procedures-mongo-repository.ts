@@ -7,11 +7,11 @@ import { inject, injectable, registry } from 'tsyringe'
 import { ProcedureNotFoundError } from '../../errors/procedure-not-found'
 import { ICount } from '../helpers/count'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
-import { ProceduresManagerInterface } from './procedures-manager.interface'
+import { ProceduresManagerContract } from './procedures-manager.interface'
 
 @injectable()
 @registry([{ token: ProceduresMongooseRepository, useClass: ProceduresMongooseRepository }])
-export class ProceduresMongooseRepository implements ProceduresManagerInterface {
+export class ProceduresMongooseRepository implements ProceduresManagerContract {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery
