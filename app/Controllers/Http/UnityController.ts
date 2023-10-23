@@ -1,6 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeUnityFindAllByNameComposer, makeUnityShowByIdComposer, makeUnityUpdateByIdComposer } from 'App/Core/composers/unities/make'
+import { makeUnityFindAllByNameComposer, makeUnityShowByIdComposer, makeUnityUpdateByIdComposer } from 'App/Core/composers/users/unities/make'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import Unity, { COLLECTION_NAME } from 'App/Models/Unity'
 

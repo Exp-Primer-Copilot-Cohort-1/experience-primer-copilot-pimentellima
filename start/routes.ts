@@ -43,8 +43,6 @@ Route.get('unities/:email', 'UnityController.findByName')
 
 Route.get('activity/single/:id', 'ActivityController.findActivityById')
 
-Route.get('permissions-default', 'PermissionController.defaultPermissions')
-
 Route.post('recover', 'RecoverController.store')
 
 Route.group(() => {
@@ -87,6 +85,11 @@ Route.group(() => {
 		Route.get('profs/:id', 'UserController.show').as('users.prof.show')
 		Route.put(':id', 'UserController.update').as('users.update')
 	}).prefix('users')
+
+	Route.group(() => {
+		Route.get(':id', 'PermissionController.show').as('permission.show')
+		Route.put(':id', 'PermissionController.update').as('permission.update')
+	}).prefix('permissions')
 
 	Route.group(() => {
 		Route.get('', 'SecsController.index').as('users.secs.index')

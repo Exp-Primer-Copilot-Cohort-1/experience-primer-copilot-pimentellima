@@ -4,5 +4,5 @@ import { IPermission } from 'App/Types/IPermission'
 
 export interface PermissionManagerContract {
 	find: (id: string) => PromiseEither<AbstractError, IPermission>
-	update: (id: string, data: IPermission) => PromiseEither<AbstractError, IPermission>
+	update: (id: string, data: Partial<IPermission>) => PromiseEither<AbstractError, IPermission>
 }
