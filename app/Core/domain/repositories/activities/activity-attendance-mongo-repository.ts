@@ -19,7 +19,7 @@ export class ActivityAttendanceMongoRepository
 	implements ActivitiesManagerAttendanceInterface { // eslint-disable-line
 	// eslint-disable-line
 	constructor(
-		@inject(SessionTransaction) private readonly session?: ISessionTransaction
+		@inject(SessionTransaction) private readonly session: ISessionTransaction
 	) { } // eslint-disable-line
 
 	async startActivity(
@@ -63,7 +63,7 @@ export class ActivityAttendanceMongoRepository
 		return right(activity.toObject())
 	}
 
-	async updateActivityStatusById(
+	async updateStatusById(
 		id: string,
 		status: AppointmentStatus,
 	): PromiseEither<AbstractError, IActivity> {
@@ -87,7 +87,7 @@ export class ActivityAttendanceMongoRepository
 		return right(activity)
 	}
 
-	async updateActivityPayment(
+	async updatePayment(
 		id: string,
 		values: Partial<ITransaction>,
 	): PromiseEither<AbstractError, IActivity> {

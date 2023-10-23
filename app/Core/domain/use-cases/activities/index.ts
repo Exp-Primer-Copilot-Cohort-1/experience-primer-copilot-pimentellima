@@ -1,3 +1,13 @@
+export * from './create-activity-use-case'
+export * from './delete-activity-by-id-use-case'
+export * from './find-activities-by-client-use-case'
+export * from './find-activities-by-prof-use-case'
+export * from './find-activity-by-id-use-case'
+export * from './find-all-activities-pending-use-case'
 export * from './find-all-activities-use-case'
+export * from './find-day-activities-use-case'
+export * from './recurrents'
 export * from './update-activity-payment-use-case'
+export * from './update-activity-status-by-use-case'
+export * from './update-activity-use-case'
 

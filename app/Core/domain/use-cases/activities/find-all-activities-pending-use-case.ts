@@ -6,14 +6,14 @@ import { PromiseEither } from 'App/Core/shared'
 import { IActivityPending } from 'App/Types/IActivity'
 import { inject, injectable, registry } from 'tsyringe'
 
-type Params = {
+type In = {
 	unity_id: string
 }
 
 @injectable()
 @registry([{ token: FindAllActivitiesPendingUseCase, useClass: FindAllActivitiesPendingUseCase }])
 export class FindAllActivitiesPendingUseCase
-	implements UseCase<Params, IActivityPending[]>
+	implements UseCase<In, IActivityPending[]>
 {
 	constructor(
 		@inject(ActivityRecurrentMongoRepository) private readonly manager: ActivitiesRecurrentManagerInterface,
@@ -21,7 +21,7 @@ export class FindAllActivitiesPendingUseCase
 
 	public async execute({
 		unity_id,
-	}: Params): PromiseEither<AbstractError, IActivityPending[]> {
+	}: In): PromiseEither<AbstractError, IActivityPending[]> {
 
 		return await this.manager.findAll(unity_id)
 	}

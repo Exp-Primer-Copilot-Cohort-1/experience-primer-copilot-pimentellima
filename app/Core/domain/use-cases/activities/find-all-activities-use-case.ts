@@ -6,13 +6,13 @@ import { PromiseEither } from 'App/Core/shared'
 import { IActivity } from 'App/Types/IActivity'
 import { inject, injectable, registry } from 'tsyringe'
 
-type ActivityProps = {
+type In = {
 	unity_id: string
 }
 
 @injectable()
 @registry([{ token: FindAllActivitiesUseCase, useClass: FindAllActivitiesUseCase }])
-export class FindAllActivitiesUseCase implements UseCase<ActivityProps, IActivity[]> {
+export class FindAllActivitiesUseCase implements UseCase<In, IActivity[]> {
 
 	constructor(
 		@inject(ActivityMongoRepository) private readonly manager: ActivitiesManagerInterface
@@ -20,7 +20,7 @@ export class FindAllActivitiesUseCase implements UseCase<ActivityProps, IActivit
 
 	public async execute({
 		unity_id
-	}: ActivityProps): PromiseEither<AbstractError, IActivity[]> {
+	}: In): PromiseEither<AbstractError, IActivity[]> {
 		return await this.manager.findAll(unity_id)
 	}
 }

@@ -64,7 +64,7 @@ export class CreateRecurrentActivityUseCase implements UseCase<RecurrentActivity
 		const promiseScheduled = Promise.all(
 			validatedActivities.map(
 				async (activity) => {
-					const doc = await this.managerMarked.createActivity(unity_id, {
+					const doc = await this.managerMarked.create(unity_id, {
 						...activity,
 						group_id,
 					})

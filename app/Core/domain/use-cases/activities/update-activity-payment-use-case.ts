@@ -23,7 +23,7 @@ export class UpdateActivityPaymentUseCase
 	}: TransactionWithActivity): PromiseEither<AbstractError, IActivity> {
 		if (!activity_id) return left(new ActivityNotFoundError())
 
-		return await this.manager.updateActivityPayment(
+		return await this.manager.updatePayment(
 			activity_id,
 			transaction,
 		)
