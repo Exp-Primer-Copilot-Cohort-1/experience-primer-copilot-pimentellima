@@ -1,13 +1,14 @@
 import AdminUser from 'App/Core/domain/entities/user/admin'
+import { CreateUnityUseCase } from 'App/Core/domain/use-cases'
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { EventEmitter, IEventEmitter } from 'App/Core/infra/event-emitter'
-import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
+import { EventEmitter } from 'App/Core/infra/event-emitter'
+import { IEventEmitter, ISessionTransaction } from 'App/Core/infra/infra'
+import { SessionTransaction } from 'App/Core/infra/session-transaction'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import type { IAdminUser } from 'App/Types/IAdminUser'
 import type { IUnity } from 'App/Types/IUnity'
 import { inject, injectable, registry } from 'tsyringe'
-import { CreateUnityUseCase } from '../../../unities'
 import {
 	CreateFranchiseDrPerformanceUseCase,
 	INewDrPerformanceUseCase

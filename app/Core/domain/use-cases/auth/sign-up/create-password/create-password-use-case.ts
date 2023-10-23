@@ -1,5 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { EventEmitter, IEventEmitter } from 'App/Core/infra/event-emitter'
+import { EventEmitter } from 'App/Core/infra/event-emitter'
+import { IEventEmitter } from 'App/Core/infra/infra'
 import { PromiseEither, right } from 'App/Core/shared'
 import { ROLES } from 'App/Roles/types'
 import { inject, injectable, registry } from 'tsyringe'
