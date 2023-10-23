@@ -1,8 +1,8 @@
+import { UserNotValidError } from 'App/Core/domain/errors/user-not-valid'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { ROLES } from 'App/Roles/types'
 import type { IUser } from 'App/Types/IUser'
-import { UserNotValidError } from '../../errors/user-not-valid'
 import { SystemUser } from '../abstract/system-user.abstract'
 import DaysOfTrade from '../helpers/days-of-trade'
 

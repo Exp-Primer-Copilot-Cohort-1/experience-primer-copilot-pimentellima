@@ -1,9 +1,9 @@
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Partner from 'App/Models/Partner'
 import { IPartner } from 'App/Types/IPartner'
-import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { PartnerManagerContract } from '../interface/partner-manage-interface'
 
 export class PartnerMongooseRepository implements PartnerManagerContract {

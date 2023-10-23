@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { InvalidParamsError } from 'App/Core/domain/errors/invalid-params-error'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IAccount } from 'App/Types/IAccount'
 import { Generic } from 'App/Types/ITransaction'
-import { InvalidParamsError } from '../../errors/invalid-params-error'
 import { Entity } from '../abstract/entity.abstract'
 
 /**

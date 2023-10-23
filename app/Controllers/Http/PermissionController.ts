@@ -8,7 +8,7 @@ import {
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/User'
 
-class PermissionsController {
+class PermissionController {
 
 	async show(ctx: HttpContextContract) {
 		return adaptRoute(makeFindPermissionsComposers(ctx), ctx)
@@ -20,4 +20,4 @@ class PermissionsController {
 	}
 }
 
-export default PermissionsController
+export default PermissionController

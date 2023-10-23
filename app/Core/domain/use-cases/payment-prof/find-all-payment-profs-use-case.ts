@@ -1,3 +1,4 @@
+import { UnityNotFoundError } from 'App/Core/domain/errors'
 import { PaymentProfMongoRepository } from 'App/Core/domain/repositories'
 import { PaymentProfManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
@@ -5,7 +6,6 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import { IPaymentProf } from 'App/Types/IPaymentProf'
 import { inject, injectable } from 'tsyringe'
-import { UnityNotFoundError } from '../../errors'
 
 type TypeParams = {
 	unity_id: string

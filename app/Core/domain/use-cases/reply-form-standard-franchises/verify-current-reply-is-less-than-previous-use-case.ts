@@ -1,15 +1,15 @@
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 
+import { ActivityNotGroupIdProvider } from 'App/Core/domain/errors/activity-not-group-id-provider'
+import { CurrentNotSmallerError } from 'App/Core/domain/errors/current-not-smaller-error'
+import { FormNotTypeProvider } from 'App/Core/domain/errors/form-not-type-provider'
+import { QuestionNotFound } from 'App/Core/domain/errors/question-not-found'
 import { RFormSFManagerContract } from 'App/Core/domain/repositories/interface/reply-form-standard-franchise-manager.interface'
 import { RFormSFMongooseManager } from 'App/Core/domain/repositories/reply-form-standard-franchise/reply-form-standard-franchise-mongoose-repository'
 import { EventEmitter, IEventEmitter } from 'App/Core/infra/event-emitter'
 import { TypeForms } from 'App/Types/IBusinessFranchises'
 import { inject, injectable, registry } from 'tsyringe'
-import { ActivityNotGroupIdProvider } from '../../errors/activity-not-group-id-provider'
-import { CurrentNotSmallerError } from '../../errors/current-not-smaller-error'
-import { FormNotTypeProvider } from '../../errors/form-not-type-provider'
-import { QuestionNotFound } from '../../errors/question-not-found'
 type In = { group_id: string, type: TypeForms }
 type Out = { message: string }
 

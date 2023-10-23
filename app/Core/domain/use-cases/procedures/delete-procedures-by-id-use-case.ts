@@ -1,8 +1,8 @@
+import { IdNotProvidedError } from 'App/Core/domain/errors/id-not-provided'
 import { ProceduresManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
-import { IdNotProvidedError } from '../../errors/id-not-provided'
 
 type In = {
 	id: string

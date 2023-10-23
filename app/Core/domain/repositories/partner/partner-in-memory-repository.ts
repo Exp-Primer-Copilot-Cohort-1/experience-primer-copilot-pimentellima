@@ -1,7 +1,7 @@
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IPartner } from 'App/Types/IPartner'
-import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { PartnerManagerContract } from '../interface'
 
 export class PartnerInMemoryRepository implements PartnerManagerContract {

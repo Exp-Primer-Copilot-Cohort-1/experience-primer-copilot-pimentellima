@@ -1,10 +1,10 @@
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import Transactions from 'App/Models/Transactions'
 import Unity from 'App/Models/Unity'
 import { IBilling } from 'App/Types/IBilling'
 import { Types } from 'mongoose'
-import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { ReportsUnitiesManagerContract } from '../interface/reports-unities-manager.interface'
 
 const ObjectId = Types.ObjectId

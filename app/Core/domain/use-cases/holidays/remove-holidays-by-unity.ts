@@ -1,10 +1,10 @@
+import { InvalidParamsError } from 'App/Core/domain/errors/invalid-params-error'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { HolidaysManagerContract } from 'App/Core/domain/repositories/interface/holidays.interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IHoliday } from 'App/Types/IHoliday'
-import { InvalidParamsError } from '../../errors/invalid-params-error'
-import { UnityNotFoundError } from '../../errors/unity-not-found'
 
 type DeleteHoliday = {
 	unity_id: string

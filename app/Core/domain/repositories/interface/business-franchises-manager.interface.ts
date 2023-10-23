@@ -1,7 +1,7 @@
+import { UnityNotFranchise } from 'App/Core/domain/errors/unity-not-franchise'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
 import { IBusinessFranchises } from 'App/Types/IBusinessFranchises'
-import { UnityNotFranchise } from '../../errors/unity-not-franchise'
 
 /**
  * Contract que define o contrato para o gerenciador de franquias de negócios.

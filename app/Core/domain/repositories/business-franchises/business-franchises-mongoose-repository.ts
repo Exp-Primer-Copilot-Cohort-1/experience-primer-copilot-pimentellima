@@ -1,9 +1,9 @@
+import { UnityNotFranchise } from 'App/Core/domain/errors/unity-not-franchise'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import BusinessFranchises from 'App/Models/BusinessFranchises'
 import { IBusinessFranchises } from 'App/Types/IBusinessFranchises'
 import { injectable, registry } from "tsyringe"
-import { UnityNotFranchise } from '../../errors/unity-not-franchise'
 import { BusinessFranchisesManagerContract } from '../interface/business-franchises-manager.interface'
 
 @injectable()

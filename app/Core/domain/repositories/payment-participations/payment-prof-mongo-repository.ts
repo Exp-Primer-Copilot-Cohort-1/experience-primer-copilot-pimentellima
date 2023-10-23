@@ -1,13 +1,13 @@
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
-import { AbstractError } from 'App/Core/errors/error.interface'
-import { PromiseEither, left, right } from 'App/Core/shared'
-import { IPaymentProf, ParticipationPrice } from 'App/Types/IPaymentProf'
-import { Types } from 'mongoose'
 import {
 	MissingParamsError,
 	ParticipationPaymentsNotFoundError,
 	UnityNotFoundError,
-} from '../../errors'
+} from 'App/Core/domain/errors'
+import { AbstractError } from 'App/Core/errors/error.interface'
+import { PromiseEither, left, right } from 'App/Core/shared'
+import { IPaymentProf, ParticipationPrice } from 'App/Types/IPaymentProf'
+import { Types } from 'mongoose'
 import { PaymentProfManagerContract } from '../interface/payment-prof-manager-interface'
 
 import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'

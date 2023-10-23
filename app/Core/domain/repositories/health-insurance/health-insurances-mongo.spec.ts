@@ -1,6 +1,6 @@
+import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { Model } from '__mocks__/model'
 import { beforeAll, describe, expect, it, vi } from 'vitest'
-import { MissingParamsError } from '../../errors/missing-params'
 import { HealthInsuranceMongoRepository } from './health-insurance-mongo-repository'
 
 const makeSut = () => {

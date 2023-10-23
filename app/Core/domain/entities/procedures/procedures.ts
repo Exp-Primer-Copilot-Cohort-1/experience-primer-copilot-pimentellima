@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { InvalidParamsError } from 'App/Core/domain/errors/invalid-params-error'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IHealthInsuranceInProcedure, IProcedure } from 'App/Types/IProcedure'
@@ -14,7 +15,6 @@ import {
 	MinLength,
 	validateSync
 } from 'class-validator'
-import { InvalidParamsError } from '../../errors/invalid-params-error'
 import { Entity } from '../abstract/entity.abstract'
 
 /**

@@ -1,8 +1,8 @@
+import { ProfNotIdProvidedError } from 'App/Core/domain/errors/prof-not-id-provider'
 import { ROLES } from 'App/Roles/types'
 import { IOptsQuery } from 'App/Types/IOptsQuery'
 import { IsBoolean, IsEnum, IsNumber, IsString } from 'class-validator'
 import { Lifecycle, scoped } from 'tsyringe'
-import { ProfNotIdProvidedError } from '../../errors/prof-not-id-provider'
 @scoped(Lifecycle.ContainerScoped)
 export class OptsQuery implements IOptsQuery {
 	@IsString() sort: string

@@ -1,8 +1,8 @@
+import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import User from 'App/Models/User'
 import { IUser } from 'App/Types/IUser'
-import { MissingParamsError } from '../../errors/missing-params'
 import { ScheduleManagerContract } from '../interface/schedule-manager-interface'
 
 type Schedule = {

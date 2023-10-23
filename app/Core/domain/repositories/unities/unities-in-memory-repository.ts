@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import { IUnity } from 'App/Types/IUnity'
 import { cnpj } from 'cpf-cnpj-validator'
-import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { UnitiesManagerContract } from '../interface/unities-manager.interface'
 
 const fabricateUnity = (qtd: number): IUnity[] => {

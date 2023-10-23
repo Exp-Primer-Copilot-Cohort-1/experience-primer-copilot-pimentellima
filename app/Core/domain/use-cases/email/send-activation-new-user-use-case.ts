@@ -1,3 +1,4 @@
+import { SendEmailError } from 'App/Core/domain/errors/send-email.err';
 import { AbstractError } from "App/Core/errors/error.interface";
 import { Env } from "App/Core/infra/env";
 import { IEvn } from "App/Core/infra/infra";
@@ -7,7 +8,6 @@ import { PromiseEither, left, right } from "App/Core/shared";
 import { encrypt } from 'App/Helpers/encrypt';
 import { retry } from 'ts-retry-promise';
 import { inject, injectable, registry } from 'tsyringe';
-import { SendEmailError } from '../../errors/send-email.err';
 import EDGE, { ISendEmailUseCase } from "../helpers/edge";
 import { SendEmailUseCase } from './send-use-case';
 /**

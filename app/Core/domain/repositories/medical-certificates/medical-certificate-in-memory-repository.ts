@@ -1,7 +1,7 @@
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
-import { UnityNotFoundError } from '../../errors/unity-not-found'
 import { MedicalCertificateManagerContract } from '../interface'
 
 export class MedicalCertificateInMemoryRepository

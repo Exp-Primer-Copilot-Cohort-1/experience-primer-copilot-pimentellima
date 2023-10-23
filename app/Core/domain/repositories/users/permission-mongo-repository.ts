@@ -20,6 +20,7 @@ export class PermissionMongoRepository implements PermissionManagerContract {
 	async find(id: string): PromiseEither<AbstractError, IPermission> {
 		const doc = await Permissions
 			.findById(id)
+			.select({ blacklist: 1, permissions: 1, type: 1 })
 			.orFail(new UserNotFoundError())
 
 		return right(doc.toJSON())
@@ -28,6 +29,7 @@ export class PermissionMongoRepository implements PermissionManagerContract {
 	async update(id: string, data: IPermission): PromiseEither<AbstractError, IPermission> {
 		const doc = await Permissions
 			.findByIdAndUpdate(id, data, { new: true })
+			.select({ blacklist: 1, permissions: 1, type: 1 })
 			.orFail(new UserNotFoundError())
 
 		return right(doc.toJSON())

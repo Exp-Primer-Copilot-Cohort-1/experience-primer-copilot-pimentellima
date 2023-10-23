@@ -1,11 +1,11 @@
+import { IdNotProvidedError, UnityIdNotProvidedError } from 'App/Core/domain/errors'
+import { ActivityMongoRepository } from 'App/Core/domain/repositories'
 import { ActivitiesManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import { IActivity } from 'App/Types/IActivity'
 import { inject, injectable, registry } from 'tsyringe'
-import { IdNotProvidedError, UnityIdNotProvidedError } from '../../errors'
-import { ActivityMongoRepository } from '../../repositories'
 
 type In = {
 	unity_id: string
