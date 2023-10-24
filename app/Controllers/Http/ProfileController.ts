@@ -1,5 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ProfileEntity from 'App/Core/domain/entities/profile/profile'
+import { decrypt } from 'App/Helpers/encrypt'
 import Profile from 'App/Models/Profile'
 import { ROLES } from 'App/Roles/types'
 import { IProfile } from 'App/Types/IUser'
@@ -10,7 +11,10 @@ class ProfileController {
 
 		const user = await Profile.findById(userLogger?._id).select('-password').orFail()
 
-		return user
+		return {
+			...user?.toJSON(),
+			document: await decrypt(user?.document as string),
+		}
 	}
 
 	async update({ auth, request, response }: HttpContextContract) {
