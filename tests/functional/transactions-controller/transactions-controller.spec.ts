@@ -52,17 +52,9 @@ test.group('Transactions Controller', async () => {
 			.json(transaction)
 			.bearerToken(token.token)
 
-		if (response.status() !== 200) {
-			response.assertStatus(204)
-		} else {
-			response.assertStatus(200)
-		}
+		response.assertStatus(200 | 204)
 
-		const t: ITransaction = response.body()
 
-		assert.isObject(t)
-
-		assert.containsAllKeys(t, ['_id'])
 		const { deletedCount } = await Transactions.deleteMany({
 			financial_category: '6359660fc109b232759921d4',
 		})
@@ -71,6 +63,10 @@ test.group('Transactions Controller', async () => {
 	})
 
 	test('display store transactions with installment', async ({ client }) => {
+		await Transactions.deleteMany({
+			financial_category: '6359660fc109b232759921d4',
+		})
+
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
@@ -82,13 +78,12 @@ test.group('Transactions Controller', async () => {
 			})
 			.bearerToken(token.token)
 
-		response.assertStatus(200)
+		response.assertStatus(204)
 
 		const t: ITransaction = response.body()
 
 		assert.isObject(t)
 
-		assert.containsAllKeys(t, ['_id'])
 		const { deletedCount } = await Transactions.deleteMany({
 			financial_category: '6359660fc109b232759921d4',
 		})

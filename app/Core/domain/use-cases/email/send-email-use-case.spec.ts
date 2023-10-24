@@ -3,7 +3,7 @@ import { EnvMock, LoggerMock, MailMock } from '__mocks__'
 import { describe, expect, it, vi } from 'vitest'
 import {
 	SendEmailUseCase
-} from './send-use-case'
+} from './send-email-use-case'
 
 const makeSutSendEmail = () => {
 	const mail = new MailMock()
@@ -25,7 +25,7 @@ const makeSutSendEmail = () => {
 	}
 }
 
-describe('Use cases - Send Email Use Case (Only)', () => {
+describe('Use cases - Send Email Use Case (Unit)', () => {
 	it('should send email', async () => {
 		const { sut } = makeSutSendEmail()
 		const respOrErr = await sut.execute({

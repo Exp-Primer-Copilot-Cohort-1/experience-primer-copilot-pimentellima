@@ -6,7 +6,7 @@ import { PromiseEither, left, right } from "App/Core/shared";
 import { retry } from 'ts-retry-promise';
 import { inject, injectable, registry } from 'tsyringe';
 import EDGE, { ISendEmailUseCase } from "../helpers/edge";
-import { SendEmailUseCase } from './send-use-case';
+import { SendEmailUseCase } from './send-email-use-case';
 
 /**
  * Entrada esperada pelo caso de uso de envio de email de aviso que as

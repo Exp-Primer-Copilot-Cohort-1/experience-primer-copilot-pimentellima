@@ -1,15 +1,15 @@
 import { SendEmailError } from 'App/Core/domain/errors/send-email.err';
 import { AbstractError } from "App/Core/errors/error.interface";
 import { Env } from "App/Core/infra/env";
-import { IEvn } from "App/Core/infra/infra";
-import logger from 'App/Core/infra/logger';
+import { IEvn, ILogger } from "App/Core/infra/infra";
+import { Logger } from 'App/Core/infra/logger';
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import { encrypt } from 'App/Helpers/encrypt';
 import { retry } from 'ts-retry-promise';
 import { inject, injectable, registry } from 'tsyringe';
 import EDGE, { ISendEmailUseCase } from "../helpers/edge";
-import { SendEmailUseCase } from './send-use-case';
+import { SendEmailUseCase } from './send-email-use-case';
 /**
  * Entrada esperada pelo caso de uso de envio de email de ativação de novo usuário.
  */
@@ -35,6 +35,7 @@ export class SendActivationNewUserUseCase implements UseCase<In, Message> {
 	constructor(
 		@inject(SendEmailUseCase) private readonly send: ISendEmailUseCase,
 		@inject(Env) private readonly env: IEvn,
+		@inject(Logger) private readonly logger: ILogger,
 	) { }
 
 	/**
@@ -63,7 +64,7 @@ export class SendActivationNewUserUseCase implements UseCase<In, Message> {
 			title: 'Ative sua conta na DPSystem',
 		}),
 			{
-				logger: (msg) => logger.emit(msg),
+				logger: (msg) => this.logger.emit(msg),
 				retries: 5
 			})
 
