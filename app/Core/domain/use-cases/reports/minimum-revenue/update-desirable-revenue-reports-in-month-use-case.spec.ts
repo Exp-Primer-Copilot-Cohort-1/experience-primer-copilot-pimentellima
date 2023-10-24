@@ -27,6 +27,7 @@ describe('Update Desirable Revenue Reports in Month Use Case (Integration)', () 
 			month: 1,
 		})
 
+
 		expect(revenueOrErr.isRight()).toBeTruthy()
 	})
 })

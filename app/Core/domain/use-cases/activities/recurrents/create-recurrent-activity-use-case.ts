@@ -4,10 +4,10 @@ import { UnityIdNotProvidedError } from 'App/Core/domain/errors/unity-not-id-pro
 import { ActivityMongoRepository, ActivityRecurrentMongoRepository } from 'App/Core/domain/repositories'
 import { ActivitiesManagerContract, ActivitiesRecurrentManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
+import { makeObjectId } from 'App/Core/infra/create-id'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IActivity, RecurrentActivityValues } from 'App/Types/IActivity'
-import mongoose from 'mongoose'
 import { inject, injectable, registry } from 'tsyringe'
 @injectable()
 @registry([{ token: CreateRecurrentActivityUseCase, useClass: CreateRecurrentActivityUseCase }])
@@ -22,8 +22,7 @@ export class CreateRecurrentActivityUseCase implements UseCase<RecurrentActivity
 	public async execute({ unity_id, dates, ...activity }: RecurrentActivityValues): PromiseEither<AbstractError, IActivity[]> {
 		if (!unity_id) return left(new UnityIdNotProvidedError())
 
-		const group_id = new mongoose.Types.ObjectId().toString()
-
+		const group_id = makeObjectId()
 
 		const validatedActivities: IActivity[] = []
 
@@ -36,7 +35,6 @@ export class CreateRecurrentActivityUseCase implements UseCase<RecurrentActivity
 				group_id,
 				unity_id,
 			})
-
 
 			if (activityOrErr.isLeft()) throw left(activityOrErr.extract())
 

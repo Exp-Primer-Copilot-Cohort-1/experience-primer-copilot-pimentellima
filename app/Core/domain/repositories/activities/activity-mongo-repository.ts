@@ -1,7 +1,7 @@
 import { Document } from '@ioc:Mongoose'
 import ActivityEntity from 'App/Core/domain/entities/activities/activity'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
-import { ClientNotFoundError, UserNotFoundError } from 'App/Core/domain/errors'
+import { ClientNotFoundError, IdNotProvidedError, UserNotFoundError } from 'App/Core/domain/errors'
 import { ActivityNotFoundError } from 'App/Core/domain/errors/activity-not-found'
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
@@ -121,7 +121,7 @@ export class ActivityMongoRepository implements ActivitiesManagerContract {
 	}
 
 	async deleteById(id: string): PromiseEither<AbstractError, IActivity> {
-		if (!id) return left(new MissingParamsError('id'))
+		if (!id) return left(new IdNotProvidedError())
 
 		const activity = await Activity.findByIdAndDelete(id)
 			.populate(COLLECTIONS_REFS.CLIENTS, PROJECTION_CLIENT)

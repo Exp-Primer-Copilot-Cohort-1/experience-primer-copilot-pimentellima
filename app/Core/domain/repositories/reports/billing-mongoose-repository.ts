@@ -16,7 +16,10 @@ export class BillingMongooseRepository implements ReportsUnitiesManagerContract 
 		unity_id: string,
 		year: number,
 	): PromiseEither<AbstractError, IBilling> {
+		console.log(unity_id, year)
 		const unity = await Unity.findById(unity_id).select('revenue_reports')
+
+
 
 		if (!unity) {
 			return left(new UnityNotFoundError())
