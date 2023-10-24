@@ -19,7 +19,7 @@ export class ShowCategoriesByIdUseCase implements UseCase<Input, any> {
 			return left(new MissingParamsError('id'))
 		}
 
-		return await this.manager.findByID(input.id)
+		return await this.manager.findById(input.id)
 
 	}
 }

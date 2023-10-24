@@ -60,33 +60,36 @@ const mountRecurrentActivity = ({
 
 describe('Activity Recurrent Use Cases (Integration)', () => {
 
-	vi.mock('App/Core/domain/entities/activities/validations-activity', () => ({
-		__esModule: true,
-		default: vi.fn().mockImplementation(() => {
-			return {
-				parse: () => {
-					return true
-				},
-			}
-		}),
-	}));
 
-	vi.mock('App/Core/domain/entities/helpers/fetch-user-and-schedule-blocks', () => ({
-		__esModule: true,
-		default: vi.fn().mockImplementation(() => {
-			return {
-				parse: () => {
-					return true
-				},
-			}
-		}),
-	}));
 
 	beforeAll(async () => {
+		vi.mock('App/Core/domain/entities/activities/validations-activity', () => ({
+			__esModule: true,
+			default: vi.fn().mockImplementation(() => {
+				return {
+					parse: () => {
+						return true
+					},
+				}
+			}),
+		}));
+
+		vi.mock('App/Core/domain/entities/helpers/fetch-user-and-schedule-blocks', () => ({
+			__esModule: true,
+			default: vi.fn().mockImplementation(() => {
+				return {
+					parse: () => {
+						return true
+					},
+				}
+			}),
+		}));
+
 		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})
 
 	afterAll(async () => {
+		vi.resetAllMocks()
 		await mongoose.disconnect()
 	})
 

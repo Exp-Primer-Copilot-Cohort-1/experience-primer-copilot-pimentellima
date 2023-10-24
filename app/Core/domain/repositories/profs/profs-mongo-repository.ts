@@ -16,13 +16,13 @@ export class ProfsMongooseRepository implements ProfsManagerContract {
 		@inject(OptsQuery) private readonly opts: OptsQuery
 	) { } // eslint-disable-line
 
-	async findByID(id: string, unity_id: string): PromiseEither<AbstractError, IProf> {
+	async findById(id: string): PromiseEither<AbstractError, IProf> {
 		const prof = await Prof.findOne({
 			_id: id,
-			unity_id,
-			type: ['prof', 'admin_prof', 'admin'],
 		})
+
 		if (!prof) return left(new UserNotFoundError())
+
 		return right(prof)
 	}
 

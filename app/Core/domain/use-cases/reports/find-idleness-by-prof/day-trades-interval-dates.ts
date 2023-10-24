@@ -1,4 +1,4 @@
-import { ProfManagerContract } from 'App/Core/domain/repositories/interface/prof-manage-interface'
+import { ProfsManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -6,9 +6,9 @@ import { ICensusIdlenessByProf } from 'App/Types/ICensus'
 import { IHoliday } from 'App/Types/IHoliday'
 import { IUser } from 'App/Types/IUser'
 import { isWithinInterval } from 'date-fns'
+import { injectable, registry } from 'tsyringe'
 import { FindAllHolidaysByUnityParams } from '../../helpers/holidays'
 
-export type HoursWorked = number
 
 export type DaysTradesIntervalDatesParams = {
 	id: string
@@ -70,7 +70,7 @@ const filterHolidays = (holidays: IHoliday[], date_start: Date, date_end: Date) 
 	})
 }
 
-const minutesWorked = (schedule: IUser): HoursWorked => {
+const minutesWorked = (schedule: IUser): Hours => {
 	// converter o horário em milissegundos
 	const hour_end_ms = new Date(schedule.hour_end).getTime()
 	const hour_end_lunch_ms = new Date(schedule.hour_end_lunch).getTime()
@@ -85,11 +85,13 @@ const minutesWorked = (schedule: IUser): HoursWorked => {
 	return work_ms / (1000 * 60)
 }
 
+@injectable()
+@registry([{ token: DayTradesIntervalDatesByProfUseCase, useClass: DayTradesIntervalDatesByProfUseCase }])
 export class DayTradesIntervalDatesByProfUseCase
 	implements UseCase<DaysTradesIntervalDatesParams, ICensusIdlenessByProf>
 {
 	constructor(
-		private readonly managerProfs: ProfManagerContract,
+		private readonly manager: ProfsManagerContract,
 		private readonly holidaysUseCase: UseCase<
 			FindAllHolidaysByUnityParams,
 			IHoliday[]
@@ -117,7 +119,7 @@ export class DayTradesIntervalDatesByProfUseCase
 			? new Date(date_end)
 			: new Date(now.getFullYear(), now.getMonth() + 1, 0)
 
-		const profOrErr = await this.managerProfs.findByID(id, unity_id)
+		const profOrErr = await this.manager.findById(id)
 		const holidaysOrErr = await this.holidaysUseCase.execute({
 			unity_id,
 			year: startDate.getFullYear(),

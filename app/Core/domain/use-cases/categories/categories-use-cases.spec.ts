@@ -32,7 +32,7 @@ const CategoryManager: CategoriesManagerContract = {
 	delete: vi.fn(async (id) => {
 		return right(id) as any
 	}),
-	findByID: vi.fn(async (id) => {
+	findById: vi.fn(async (id) => {
 		return right(id) as any
 	}),
 	update: vi.fn(async (_id, category) => {
@@ -120,7 +120,7 @@ describe('Use cases ref categories (Unit)', () => {
 
 		it('should return error when find category by id', async () => {
 			const { sut } = makeSutFindById()
-			vi.spyOn(CategoryManager, 'findByID').mockImplementationOnce(async () => {
+			vi.spyOn(CategoryManager, 'findById').mockImplementationOnce(async () => {
 				return left(undefined) as any
 			})
 			const respOrErr = await sut.execute({ id: 'id-invalid' })

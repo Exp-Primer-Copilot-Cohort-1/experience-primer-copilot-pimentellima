@@ -124,6 +124,6 @@ export type ICensusWorkedHoursByProf = {
 
 export type ICensusIdlenessByProf = {
 	label: string
-	idleness: number
+	idleness: Hours
 	value: string
 }

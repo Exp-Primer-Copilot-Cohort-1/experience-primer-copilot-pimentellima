@@ -1,14 +1,15 @@
-import { ProfManagerContract } from 'App/Core/domain/repositories/interface/prof-manage-interface'
+import { ProfsMongooseRepository } from 'App/Core/domain/repositories'
+import { ProfsManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IHoliday } from 'App/Types/IHoliday'
 import { IUser } from 'App/Types/IUser'
+import { inject, injectable, registry } from 'tsyringe'
 import { FindAllHolidaysByUnityParams } from '../../helpers/holidays'
+import { FindAllHolidaysByUnityUseCase } from '../../holidays'
 
-type workedDays = number
-
-export type DaysTradeParams = {
+export type In = {
 	_id: string
 	unity_id: string
 	day: number
@@ -75,10 +76,13 @@ const hoursToDays = (schedule: IUser) => {
 	return work_ms / (1000 * 60 * 60)
 }
 
-export class DayTradesByProfUseCase implements UseCase<DaysTradeParams, workedDays> {
+@injectable()
+@registry([{ token: DayTradesByProfUseCase, useClass: DayTradesByProfUseCase }])
+export class DayTradesByProfUseCase implements UseCase<In, Hours> {
+
 	constructor(
-		private readonly managerProfs: ProfManagerContract,
-		private readonly holidaysUseCase: UseCase<
+		@inject(ProfsMongooseRepository) private readonly manager: ProfsManagerContract,
+		@inject(FindAllHolidaysByUnityUseCase) private readonly holidaysUseCase: UseCase<
 			FindAllHolidaysByUnityParams,
 			IHoliday[]
 		>,
@@ -90,18 +94,21 @@ export class DayTradesByProfUseCase implements UseCase<DaysTradeParams, workedDa
 		day = new Date().getDate(),
 		year = new Date().getFullYear(),
 		month = new Date().getMonth(),
-	}: DaysTradeParams): PromiseEither<AbstractError, number> {
+	}: In): PromiseEither<AbstractError, Hours> {
 		// const data = await getHolidayByMonth(prof.month, prof.year.toLocaleString())
 
-		const profOrErr = await this.managerProfs.findByID(_id, unity_id)
-		const holidaysOrErr = await this.holidaysUseCase.execute({
-			unity_id,
-			year,
-		})
+		const [profOrErr, holidaysOrErr] = await Promise.all(
+			[
+				this.manager.findById(_id),
+				this.holidaysUseCase.execute({
+					unity_id,
+					year,
+				})
+			]
+		)
 
-		if (profOrErr.isLeft() || holidaysOrErr.isLeft()) {
-			return left(new AbstractError('Error to find holidays or prof Id', 400))
-		}
+		if (profOrErr.isLeft()) return left(profOrErr.extract())
+		if (holidaysOrErr.isLeft()) return left(holidaysOrErr.extract())
 
 		const holidays = filterHolidays(holidaysOrErr.extract(), month)
 		const prof = profOrErr.extract()

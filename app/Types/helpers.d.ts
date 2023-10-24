@@ -6,3 +6,7 @@ type Nullable<T> = {
 type Message = {
 	message: string
 }
+
+type Hours = number
+
+type Year = number

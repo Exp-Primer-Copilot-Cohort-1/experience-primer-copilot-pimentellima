@@ -1,29 +1,34 @@
-import {
-	HolidaysMongoRepository,
-	HolidaysNationalsMongoRepository,
-	ProfsMongooseRepository,
-} from 'App/Core/domain/repositories'
 import mongoose from 'mongoose'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
-import {
-	FindAllHolidaysByUnityUseCase,
-	SaveHolidaysNationalsDefaultUseCase,
-} from '../../holidays'
+import { ProfsManagerContract } from 'App/Core/domain/repositories/interface'
+import { right } from 'App/Core/shared'
+import container from 'App/Core/shared/container'
+import { IUser } from 'App/Types/IUser'
+import { FindAllHolidaysByUnityUseCase } from '../../holidays'
 import { DayTradesByProfUseCase } from './day-trades-by-prof'
 
+class ProfsMongooseRepositoryMock implements ProfsManagerContract {
+	findAll = vi.fn().mockResolvedValue([])
+	findById = vi.fn().mockResolvedValue(right({
+		is_friday: true,
+		is_monday: true,
+		is_saturday: true,
+		is_sunday: true,
+		is_thursday: true,
+		is_tuesday: true,
+		is_wednesday: true,
+	} as IUser))
+	findByUnityId = vi.fn().mockResolvedValue([])
+	getCount = vi.fn().mockResolvedValue(0)
+}
+
 const makeSut = () => {
-	const repo = new ProfsMongooseRepository()
-	const repoHoliday = new HolidaysMongoRepository()
-	const repoHolidayNationals = new HolidaysNationalsMongoRepository()
-	const nationalsHolidayUseCase = new SaveHolidaysNationalsDefaultUseCase(
-		repoHolidayNationals,
+	const findAllHolidaysByUnityUseCase = container.resolve(FindAllHolidaysByUnityUseCase)
+	const sut = new DayTradesByProfUseCase(
+		new ProfsMongooseRepositoryMock(),
+		findAllHolidaysByUnityUseCase,
 	)
-	const holidayUseCase = new FindAllHolidaysByUnityUseCase(
-		repoHoliday,
-		nationalsHolidayUseCase,
-	)
-	const sut = new DayTradesByProfUseCase(repo, holidayUseCase)
 	return {
 		sut,
 	}
@@ -37,14 +42,21 @@ describe('Day Trade By Prof Use Case (Integration)', () => {
 		await mongoose.connection.close()
 	})
 	it('should be day trades by prof', async () => {
+
 		const { sut } = makeSut()
-		const resultOrErr = await sut.execute({
+		const params = {
 			unity_id: process.env.TEST_INTEGRATION_UNITY_ID as string,
 			month: 1,
 			year: 2021,
 			_id: process.env.TEST_INTEGRATION_USER_ID as string,
 			day: 1,
-		})
+		}
+
+		const resultOrErr = await sut.execute(params)
+
+		if (resultOrErr.isLeft()) {
+			console.log(resultOrErr.extract())
+		}
 
 		expect(resultOrErr.isRight()).toBeTruthy()
 	})

@@ -23,7 +23,7 @@ export class CategoriesMongooseRepository implements CategoriesManagerContract {
 		return right({ count })
 	}
 
-	async findByID(id: string): PromiseEither<AbstractError, ICategory> {
+	async findById(id: string): PromiseEither<AbstractError, ICategory> {
 		const categories = await Category
 			.findById(id)
 			.populate(COLLECTIONS_REFS.PROF, PROJECTION_DEFAULT)

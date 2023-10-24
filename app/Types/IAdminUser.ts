@@ -17,7 +17,7 @@ export type IAdminUser = {
 	dayOfTrade?: IDaysOffice
 	franchised?: boolean
 	type: ROLES.ADMIN | ROLES.ADMIN_PROF | ROLES.FRANCHISEE_ADMIN
-	avatar: string
-	created_at: Date
-	updated_at: Date
+	avatar?: string
+	created_at?: Date
+	updated_at?: Date
 }
