@@ -1,13 +1,13 @@
 import mongoose from 'mongoose'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
-import { HolidaysMongoRepository } from 'App/Core/domain/repositories'
+import container from 'App/Core/shared/container'
 import Unity from 'App/Models/Unity'
+import { HolidayType } from 'App/Types/IHoliday'
 import { AddHolidaysByUnityUseCase } from './add-holidays-by-unity'
 
 const makeSut = () => {
-	const sut = new AddHolidaysByUnityUseCase(new HolidaysMongoRepository())
-
+	const sut = container.resolve(AddHolidaysByUnityUseCase)
 	return {
 		sut,
 	}
@@ -28,7 +28,7 @@ describe('Add Holidays Use Case (Integration)', () => {
 			unity_id: process.env.TEST_INTEGRATION_UNITY_ID as string,
 			date: new Date().toISOString(),
 			name: 'Teste',
-			type: 'municipal',
+			type: HolidayType.Municipal,
 		})
 
 		if (holidayOrErr.isLeft()) {
