@@ -148,7 +148,6 @@ export class ActivityMongoRepository implements ActivitiesManagerContract {
 
 		if (entityOrErr.isLeft()) return left(entityOrErr.extract())
 
-		console.log(values.date, values.hour_end, values.hour_start)
 		const entity = entityOrErr.extract().update(values)
 
 		const updated = (await Activity.findByIdAndUpdate(id, entity, {
