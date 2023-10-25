@@ -52,11 +52,8 @@ test.group('Transactions Controller', async () => {
 			.json(transaction)
 			.bearerToken(token.token)
 
-		if (response.status() !== 200) {
-			response.assertStatus(204)
-		} else {
-			response.assertStatus(200)
-		}
+		response.assertStatus(200 | 204)
+
 
 		const t: ITransaction = response.body()
 
@@ -82,7 +79,7 @@ test.group('Transactions Controller', async () => {
 			})
 			.bearerToken(token.token)
 
-		response.assertStatus(200)
+		response.assertStatus(200 | 204)
 
 		const t: ITransaction = response.body()
 
@@ -107,11 +104,8 @@ test.group('Transactions Controller', async () => {
 			.json(newTransaction)
 			.bearerToken(token.token)
 
-		if (response.status() !== 200) {
-			response.assertStatus(204)
-		} else {
-			response.assertStatus(200)
-		}
+		response.assertStatus(200 | 204)
+
 
 		const t: ITransaction = response.body()
 

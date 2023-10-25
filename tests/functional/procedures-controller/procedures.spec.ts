@@ -68,11 +68,10 @@ test.group('Procedure Controller', async () => {
 			})
 			.headers({ Authorization: `Bearer ${token.token}` })
 
-		if (response.status() !== 200) {
-			response.assertStatus(204)
-		} else {
-			response.assertStatus(200)
-		}
+		// console.log(response.body())
+
+		response.assertStatus(204 | 200)
+
 
 		const { deletedCount } = await Procedure.deleteMany({
 			name: 'teste',
@@ -94,12 +93,8 @@ test.group('Procedure Controller', async () => {
 			.put(`procedure/${procedure._id}`)
 			.json({ ...updatedData })
 			.headers({ Authorization: `Bearer ${token.token}` })
-		if (response.status() !== 200) {
-			response.assertStatus(204)
-		} else {
-			response.assertStatus(200)
-		}
-		console.log(response.body())
+		// console.log(response.body())
+		response.assertStatus(204 | 200)
 		const updatedProcedure: any = await Procedure.findById(procedure._id)
 
 		assert.equal(updatedProcedure?.name, updatedData.name)

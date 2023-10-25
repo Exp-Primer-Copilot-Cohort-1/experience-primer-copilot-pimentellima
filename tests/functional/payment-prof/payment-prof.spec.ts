@@ -39,11 +39,8 @@ test.group('PaymentProf Controller', () => {
 			.json(paymentProf)
 			.bearerToken(token.token)
 
-		if (response.status() !== 200) {
-			response.assertStatus(204)
-		} else {
-			response.assertStatus(200)
-		}
+		response.assertStatus(204 | 200)
+
 		const prof_id: any = paymentProf.prof.value.toString()
 
 		const updatedDocument = await PaymentParticipations.findOneAndUpdate(

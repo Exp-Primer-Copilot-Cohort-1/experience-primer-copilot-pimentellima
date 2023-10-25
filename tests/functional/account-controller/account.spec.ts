@@ -13,7 +13,7 @@ const newAccount = {
 	date: faker.date.future(),
 	bank: 'SANTANDER',
 	active: true,
-	unity_id: '63528c11c109b232759921d1',
+	unity_id: '652f062efe130421abf65b37',
 }
 
 test.group('Account Controller', () => {
@@ -26,7 +26,7 @@ test.group('Account Controller', () => {
 	})
 
 	test('create account', async ({ client }) => {
-		await Account.deleteMany({ unity_id: '63528c11c109b232759921d1' })
+		await Account.deleteMany({ unity_id: '652f062efe130421abf65b37' })
 
 		const { token } = await loginAndGetToken(client)
 
@@ -37,19 +37,19 @@ test.group('Account Controller', () => {
 
 		assert.exists(newAccount.name)
 
-		if (response.status() !== 200) {
-			response.assertStatus(204)
-		} else {
-			response.assertStatus(200)
-		}
+
+		response.assertStatus(200 | 204)
+
 
 		const { deletedCount } = await Account.deleteOne({ name: newAccount.name })
 		expect(deletedCount).to.greaterThan(0)
 	})
 
 	test('display account by id', async ({ client }) => {
-		const account = await Account.create(newAccount)
 		const { token } = await loginAndGetToken(client)
+		await Account.deleteMany({ unity_id: '652f062efe130421abf65b36' })
+		const account = await Account.create({ ...newAccount, unity_id: '652f062efe130421abf65b36' })
+
 		const id = account._id.toString()
 
 		const response = await client.get('accounts/' + id).bearerToken(token.token)
@@ -84,7 +84,7 @@ test.group('Account Controller', () => {
 	})
 
 	test('update account', async ({ client }) => {
-		await Account.deleteMany({ unity_id: '63528c11c109b232759921d1' })
+		await Account.deleteMany({ unity_id: '652f062efe130421abf65b37' })
 
 		const account = await Account.create(newAccount)
 		const { token } = await loginAndGetToken(client)
