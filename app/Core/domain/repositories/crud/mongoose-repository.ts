@@ -4,11 +4,11 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, right } from 'App/Core/shared/either'
 import { inject, injectable, registry } from 'tsyringe'
 import { ICount } from '../helpers/count'
-import { CRUDManagerInterface } from './crud-manager.interface'
+import { CRUDManagerContract } from './crud-manager.interface'
 
 @injectable()
 @registry([{ token: CRUDRepository, useClass: CRUDRepository }])
-export class CRUDRepository<T> implements CRUDManagerInterface<T> {
+export class CRUDRepository<T> implements CRUDManagerContract<T> {
 
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery,

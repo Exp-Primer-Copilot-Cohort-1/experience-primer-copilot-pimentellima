@@ -2,10 +2,10 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, right } from 'App/Core/shared'
 import Transactions from 'App/Models/Transactions'
 import { ICensusCost } from 'App/Types/ICensus'
-import { CensusCostManagerInterface } from '../interface/census-cost.interface'
+import { CensusCostManagerContract } from '../interface/census-cost.interface'
 import generateMatch from './generate-match-census'
 
-export class CensusCostMongooseRepository implements CensusCostManagerInterface {
+export class CensusCostMongooseRepository implements CensusCostManagerContract {
 	async findCost(
 		unity_id: string,
 		date_start: string,

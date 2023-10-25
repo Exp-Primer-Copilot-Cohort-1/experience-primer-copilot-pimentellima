@@ -2,7 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
 import { IProcedure } from 'App/Types/IProcedure'
 
-export interface ProceduresManagerInterface {
+export interface ProceduresManagerContract {
 	findByName: (
 		name: string,
 		unity_id: string,

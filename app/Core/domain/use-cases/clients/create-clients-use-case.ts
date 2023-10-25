@@ -1,7 +1,7 @@
 import { ClientEntity } from 'App/Core/domain/entities/clients/client'
 import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { ClientsMongooseRepository } from 'App/Core/domain/repositories'
-import { ClientManagerInterface } from 'App/Core/domain/repositories/interface'
+import { ClientManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -13,7 +13,7 @@ import { inject, injectable, registry } from 'tsyringe'
 export class CreateClientsUseCase implements UseCase<IUserClient, IUserClient> {
 
 	constructor(
-		@inject(ClientsMongooseRepository) private readonly manager: ClientManagerInterface
+		@inject(ClientsMongooseRepository) private readonly manager: ClientManagerContract
 	) { } // eslint-disable-line
 
 	public async execute(data: IUserClient): PromiseEither<AbstractError, IUserClient> {

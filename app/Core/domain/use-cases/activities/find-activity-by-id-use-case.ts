@@ -1,21 +1,26 @@
-import { ActivitiesManagerInterface } from 'App/Core/domain/repositories/interface'
+import { IdNotProvidedError } from 'App/Core/domain/errors'
+import { ActivityMongoRepository } from 'App/Core/domain/repositories'
+import { ActivitiesManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
-import { PromiseEither, left, right } from 'App/Core/shared'
+import { PromiseEither, left } from 'App/Core/shared'
 import { IActivity } from 'App/Types/IActivity'
+import { inject, injectable, registry } from 'tsyringe'
 
-type ActivityProps = {
+type In = {
 	id: string
 }
 
-export class FindActivityByIdUseCase implements UseCase<ActivityProps, IActivity> {
-	constructor(private readonly activitiesManager: ActivitiesManagerInterface) { }
+@injectable()
+@registry([{ token: FindActivityByIdUseCase, useClass: FindActivityByIdUseCase }])
+export class FindActivityByIdUseCase implements UseCase<In, IActivity> {
+	constructor(
+		@inject(ActivityMongoRepository) private readonly manager: ActivitiesManagerContract
+	) { }
 
-	public async execute(params: ActivityProps): PromiseEither<AbstractError, IActivity> {
-		const activityOrErr = await this.activitiesManager.find(params?.id)
+	public async execute({ id }: In): PromiseEither<AbstractError, IActivity> {
+		if (!id) return left(new IdNotProvidedError())
 
-		if (activityOrErr.isLeft()) return left(activityOrErr.extract())
-		const activity = activityOrErr.extract()
-		return right(activity)
+		return await this.manager.find(id)
 	}
 }

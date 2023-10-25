@@ -1,7 +1,7 @@
 import { IdNotProvidedError } from 'App/Core/domain/errors/id-not-provided'
 import { ActivityAttendanceMongoRepository } from 'App/Core/domain/repositories'
 import {
-	ActivitiesManagerAttendanceInterface
+	ActivitiesManagerAttendanceContract
 } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
@@ -20,7 +20,7 @@ export class FinishedActivityUseCase implements UseCase<In, IActivity> {
 
 	constructor(
 		@inject(ActivityAttendanceMongoRepository)
-		private readonly manager: ActivitiesManagerAttendanceInterface,
+		private readonly manager: ActivitiesManagerAttendanceContract,
 	) { } // eslint-disable-line
 
 	public async execute({ finished_at, id }: In): PromiseEither<AbstractError, IActivity> {

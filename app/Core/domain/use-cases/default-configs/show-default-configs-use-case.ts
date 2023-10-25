@@ -1,10 +1,10 @@
-import { DefaultConfigsManagerInterface } from 'App/Core/domain/repositories/interface'
+import { DefaultConfigsMongooseRepository } from 'App/Core/domain/repositories'
+import { DefaultConfigsManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
 import { IDefaultConfig } from 'App/Types/IDefaultConfig'
 import { inject, injectable, registry } from 'tsyringe'
-import { DefaultConfigsMongooseRepository } from '../../repositories'
 
 type Input = never
 
@@ -14,7 +14,7 @@ export class ShowDefaultConfigsByUnitIdUseCase implements UseCase<Input, IDefaul
 
 	constructor(
 		@inject(DefaultConfigsMongooseRepository)
-		private readonly manager: DefaultConfigsManagerInterface
+		private readonly manager: DefaultConfigsManagerContract
 	) { }
 
 	public async execute(): PromiseEither<AbstractError, IDefaultConfig> {

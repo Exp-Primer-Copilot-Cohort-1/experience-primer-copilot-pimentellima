@@ -12,12 +12,12 @@ import {
 } from 'App/Types/IActivity'
 import { inject, injectable, registry } from 'tsyringe'
 import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
-import { ActivitiesRecurrentManagerInterface } from '../interface/activity-recurrent-manager.interface'
+import { ActivitiesRecurrentManagerContract } from '../interface/activity-recurrent-manager.interface'
 
 @injectable()
 @registry([{ token: ActivityRecurrentMongoRepository, useClass: ActivityRecurrentMongoRepository }])
 export class ActivityRecurrentMongoRepository
-	implements ActivitiesRecurrentManagerInterface {
+	implements ActivitiesRecurrentManagerContract {
 	// eslint-disable-line
 	constructor(
 		@inject(OptsQuery) private readonly opts?: OptsQuery,

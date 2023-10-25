@@ -4,8 +4,8 @@ import { AppointmentStatus } from 'App/Helpers'
 import { IActivity } from 'App/Types/IActivity'
 import { ITransaction } from 'App/Types/ITransaction'
 
-export interface ActivitiesManagerAttendanceInterface {
-	updateActivityStatusById: (
+export interface ActivitiesManagerAttendanceContract {
+	updateStatusById: (
 		id: string,
 		status: AppointmentStatus,
 	) => PromiseEither<AbstractError, IActivity>
@@ -17,7 +17,7 @@ export interface ActivitiesManagerAttendanceInterface {
 		id: string,
 		finished_at: Date,
 	) => PromiseEither<AbstractError, IActivity>
-	updateActivityPayment: (
+	updatePayment: (
 		id: string,
 		values: Partial<ITransaction>,
 	) => PromiseEither<AbstractError, IActivity>

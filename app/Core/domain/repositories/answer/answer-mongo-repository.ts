@@ -1,13 +1,13 @@
 import { AnswerEntity } from 'App/Core/domain/entities/answer/answer'
+import { AnswerNotFoundError } from 'App/Core/domain/errors/answer-not-found-error'
+import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import Answer from 'App/Models/FormAnswer'
 import { IAnswer } from 'Types/IFormSubmission'
-import { AnswerNotFoundError } from '../../errors/answer-not-found-error'
-import { MissingParamsError } from '../../errors/missing-params'
-import { AnswerManagerInterface } from '../interface/answer-manager-interface'
+import { AnswerManagerContract } from '../interface/answer-manager-interface'
 
-export class AnswerMongoRepository implements AnswerManagerInterface {
+export class AnswerMongoRepository implements AnswerManagerContract {
 	async findAnswerById(id: string): PromiseEither<AbstractError, IAnswer> {
 		if (!id) return left(new MissingParamsError('id'))
 

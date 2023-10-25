@@ -8,11 +8,11 @@ import { IUserClient } from 'App/Types/IClient'
 import { inject, injectable, registry } from 'tsyringe'
 import { ICount } from '../helpers/count'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
-import { ClientManagerInterface } from './client-manager.interface'
+import { ClientManagerContract } from './client-manager.interface'
 
 @injectable()
 @registry([{ token: ClientsMongooseRepository, useClass: ClientsMongooseRepository }])
-export class ClientsMongooseRepository implements ClientManagerInterface {
+export class ClientsMongooseRepository implements ClientManagerContract {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery

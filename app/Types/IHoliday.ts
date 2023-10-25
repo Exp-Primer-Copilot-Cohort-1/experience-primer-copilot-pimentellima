@@ -1,7 +1,13 @@
 import { ObjectId } from '@ioc:Mongoose'
 
+export enum HolidayType {
+	Nacional = 'nacional',
+	Estadual = 'estadual',
+	Municipal = 'municipal',
+}
+
 /**
- * Interface que representa um feriado.
+ * Contract que representa um feriado.
  * @interface
  * @swagger
  * components:
@@ -28,5 +34,5 @@ export interface IHoliday {
 	_id?: ObjectId | string
 	date: string
 	name: string
-	type: 'nacional' | 'estadual' | 'municipal'
+	type: HolidayType
 }

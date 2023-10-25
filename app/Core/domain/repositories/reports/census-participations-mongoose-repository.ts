@@ -2,11 +2,11 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, right } from 'App/Core/shared'
 import Transactions from 'App/Models/Transactions'
 import { ICensusParticipationPaymentByProf } from 'App/Types/ICensus'
-import { CensusPaymentParticipationsManagerInterface } from '../interface/census-payment-participations.interface'
+import { CensusPaymentParticipationsManagerContract } from '../interface/census-payment-participations.interface'
 import generateMatch from './generate-match-census'
 
 export class CensusPaymentParticipationsMongooseRepository
-	implements CensusPaymentParticipationsManagerInterface { // eslint-disable-line
+	implements CensusPaymentParticipationsManagerContract { // eslint-disable-line
 	async findPaymentsParticipation(
 		unity_id: string,
 		date_start: string,

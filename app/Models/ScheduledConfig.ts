@@ -157,7 +157,6 @@ const ScheduledConfigSchema = new Schema<IDaysOffice>(
 		},
 		receive_email_in_the_new_appointment: {
 			type: Boolean,
-
 		},
 	},
 	{

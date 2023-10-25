@@ -4,13 +4,13 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 
 import {
-	CensusDaysManagerInterface,
-	CensusPaymentParticipationsManagerInterface,
-	CensusPaymentsManagerInterface,
-	CensusRevenuesManagerInterface,
-	CensusUnitiesManagerInterface,
+	CensusDaysManagerContract,
+	CensusPaymentParticipationsManagerContract,
+	CensusPaymentsManagerContract,
+	CensusRevenuesManagerContract,
+	CensusUnitiesManagerContract,
 } from 'App/Core/domain/repositories/interface'
-import { CensusCostManagerInterface } from 'App/Core/domain/repositories/interface/census-cost.interface'
+import { CensusCostManagerContract } from 'App/Core/domain/repositories/interface/census-cost.interface'
 import { ICensusPayments } from '../../helpers/census'
 
 type PaymentsCensusByDateProps = {
@@ -24,12 +24,12 @@ export class PaymentsCensusByDateUseCase
 	implements UseCase<PaymentsCensusByDateProps, ICensusPayments>
 {
 	constructor(
-		private readonly manager: CensusPaymentsManagerInterface,
-		private readonly count: CensusUnitiesManagerInterface,
-		private readonly managerDays: CensusDaysManagerInterface,
-		private readonly managerRevenues: CensusRevenuesManagerInterface,
-		private readonly managerParticipation: CensusPaymentParticipationsManagerInterface,
-		private readonly managerCost: CensusCostManagerInterface,
+		private readonly manager: CensusPaymentsManagerContract,
+		private readonly count: CensusUnitiesManagerContract,
+		private readonly managerDays: CensusDaysManagerContract,
+		private readonly managerRevenues: CensusRevenuesManagerContract,
+		private readonly managerParticipation: CensusPaymentParticipationsManagerContract,
+		private readonly managerCost: CensusCostManagerContract,
 	) { }
 
 	public async execute({

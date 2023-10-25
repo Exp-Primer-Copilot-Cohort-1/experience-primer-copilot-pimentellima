@@ -1,5 +1,5 @@
 import { ActivityMongoRepository } from 'App/Core/domain/repositories'
-import { ActivitiesManagerInterface } from 'App/Core/domain/repositories/interface'
+import { ActivitiesManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
@@ -14,7 +14,7 @@ type Props = ActivityValues & {
 @registry([{ token: UpdateActivityByIdUseCase, useClass: UpdateActivityByIdUseCase }])
 export class UpdateActivityByIdUseCase implements UseCase<Props, IActivity> {
 	constructor(
-		@inject(ActivityMongoRepository) private readonly manager: ActivitiesManagerInterface,
+		@inject(ActivityMongoRepository) private readonly manager: ActivitiesManagerContract,
 	) { } // eslint-disable-line
 
 	public async execute(params: Props): PromiseEither<AbstractError, IActivity> {

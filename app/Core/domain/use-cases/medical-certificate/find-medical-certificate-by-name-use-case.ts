@@ -1,9 +1,9 @@
-import { MedicalCertificateManagerInterface } from 'App/Core/domain/repositories/interface'
+import { MedicalCertificateMongooseRepository } from 'App/Core/domain/repositories'
+import { MedicalCertificateManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { inject, injectable, registry } from 'tsyringe'
-import { MedicalCertificateMongooseRepository } from '../../repositories'
 
 type FindAllProps = {
 	name?: string
@@ -13,7 +13,7 @@ type FindAllProps = {
 @registry([{ token: FindMedicalCertificateByNameUseCase, useClass: FindMedicalCertificateByNameUseCase }])
 
 export class FindMedicalCertificateByNameUseCase implements UseCase<FindAllProps, any[]> {
-	constructor(@inject(MedicalCertificateMongooseRepository) private readonly manager: MedicalCertificateManagerInterface) { }
+	constructor(@inject(MedicalCertificateMongooseRepository) private readonly manager: MedicalCertificateManagerContract) { }
 
 	public async execute(input: FindAllProps): PromiseEither<AbstractError, any[]> {
 

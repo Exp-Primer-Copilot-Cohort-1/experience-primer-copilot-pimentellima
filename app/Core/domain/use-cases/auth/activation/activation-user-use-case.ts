@@ -1,7 +1,7 @@
 import { CodeNotProvidedError, CodeNotValidError } from 'App/Core/domain/errors/code-not-provider.err'
 import { UserAlreadyActiveError } from 'App/Core/domain/errors/user-already-active'
 import { AdminMongooseRepository } from 'App/Core/domain/repositories'
-import { AdminManagerInterface } from 'App/Core/domain/repositories/interface'
+import { AdminManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -29,7 +29,7 @@ const decryptCode = async (code: string): PromiseEither<AbstractError, Decrypted
 export class ActivationUserUseCase implements UseCase<In, Message> {
 
 	constructor(
-		@inject(AdminMongooseRepository) private readonly manager: AdminManagerInterface,
+		@inject(AdminMongooseRepository) private readonly manager: AdminManagerContract,
 	) { }
 
 	public async execute({

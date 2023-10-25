@@ -1,11 +1,11 @@
-import { EventEmitterTest } from 'App/Core/infra/event-emitter'
 import { ROLES } from 'App/Roles/types'
+import { EventEmitterMock } from '__mocks__'
 import { describe, expect, it } from 'vitest'
 import { CreatePasswordUseCase } from './create-password-use-case'
 
 const makeSut = () => {
 	const sut = new CreatePasswordUseCase(
-		new EventEmitterTest()
+		new EventEmitterMock()
 	)
 
 	return { sut }

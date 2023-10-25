@@ -2,7 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
 import { IPartner } from 'App/Types/IPartner'
 
-export interface PartnerManagerInterface {
+export interface PartnerManagerContract {
 	findAll: (unity_id: string) => PromiseEither<AbstractError, IPartner[]>
 	findByName: (
 		name: string,

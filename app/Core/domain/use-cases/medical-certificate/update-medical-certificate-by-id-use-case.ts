@@ -3,10 +3,10 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
-import { MedicalCertificateManagerInterface } from 'App/Core/domain/repositories/interface'
+import { MedicalCertificateMongooseRepository } from 'App/Core/domain/repositories'
+import { MedicalCertificateManagerContract } from 'App/Core/domain/repositories/interface'
 import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
 import { inject, injectable, registry } from 'tsyringe'
-import { MedicalCertificateMongooseRepository } from '../../repositories'
 
 
 @injectable()
@@ -15,7 +15,7 @@ export class UpdateMedicalCertificateByIdUseCase
 	implements UseCase<Partial<IMedicalCertificate>, IMedicalCertificate>
 {
 	constructor(
-		@inject(MedicalCertificateMongooseRepository) private readonly manager: MedicalCertificateManagerInterface
+		@inject(MedicalCertificateMongooseRepository) private readonly manager: MedicalCertificateManagerContract
 	) { } // eslint-disable-line
 
 	public async execute(

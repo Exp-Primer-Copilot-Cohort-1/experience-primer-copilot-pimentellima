@@ -6,7 +6,7 @@ import {
 	ICensusNewAndOldClients,
 } from 'App/Types/ICensus'
 
-export interface CensusClientsManagerInterface {
+export interface CensusClientsManagerContract {
 	findCensusGenderClientByUnityOrProf: (
 		unity_id: string,
 		date_start: string,

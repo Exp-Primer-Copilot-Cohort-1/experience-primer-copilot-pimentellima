@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { faker } from '@faker-js/faker'
 import Activity from 'App/Models/Activity'
@@ -60,19 +60,37 @@ const mountRecurrentActivity = ({
 
 describe('Activity Recurrent Use Cases (Integration)', () => {
 
-	vi.mock('App/Core/domain/entities/activities/validations-activity', () => ({
-		__esModule: true,
-		default: vi.fn().mockImplementation(() => {
-			return {
-				parse: () => {
-					return true
-				},
-			}
-		}),
-	}));
+
 
 	beforeAll(async () => {
+		vi.mock('App/Core/domain/entities/activities/validations-activity', () => ({
+			__esModule: true,
+			default: vi.fn().mockImplementation(() => {
+				return {
+					parse: () => {
+						return true
+					},
+				}
+			}),
+		}));
+
+		vi.mock('App/Core/domain/entities/helpers/fetch-user-and-schedule-blocks', () => ({
+			__esModule: true,
+			default: vi.fn().mockImplementation(() => {
+				return {
+					parse: () => {
+						return true
+					},
+				}
+			}),
+		}));
+
 		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
+	})
+
+	afterAll(async () => {
+		vi.resetAllMocks()
+		await mongoose.disconnect()
 	})
 
 	describe('Create Recurrent Activity Use Case', () => {
@@ -84,9 +102,12 @@ describe('Activity Recurrent Use Cases (Integration)', () => {
 		it('should be new recurrent activity', async () => {
 			const { sut } = makeSut()
 			const recurrentActivity = mountRecurrentActivity({})
+
 			const activityOrErr = await sut.execute(recurrentActivity)
 
-			if (activityOrErr.isLeft()) throw activityOrErr.extract()
+			if (activityOrErr.isLeft()) {
+				throw activityOrErr.extract()
+			}
 
 			expect(activityOrErr.isRight()).toBeTruthy()
 

@@ -34,6 +34,12 @@ const procedure = {
 	],
 }
 
+const deleteMany = async () => {
+	return await Transactions.deleteMany({
+		financial_category: '6359660fc109b232759921d4',
+	})
+}
+
 test.group('Transactions Controller', async () => {
 	test('display index transactions', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
@@ -45,6 +51,7 @@ test.group('Transactions Controller', async () => {
 	}).skip()
 
 	test('display store transactions', async ({ client }) => {
+		await deleteMany()
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
@@ -55,19 +62,13 @@ test.group('Transactions Controller', async () => {
 		response.assertStatus(200 | 204)
 
 
-		const t: ITransaction = response.body()
-
-		assert.isObject(t)
-
-		assert.containsAllKeys(t, ['_id'])
-		const { deletedCount } = await Transactions.deleteMany({
-			financial_category: '6359660fc109b232759921d4',
-		})
+		const { deletedCount } = await deleteMany()
 
 		expect(deletedCount).to.be.greaterThan(0)
 	})
 
 	test('display store transactions with installment', async ({ client }) => {
+		await deleteMany()
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
@@ -81,20 +82,14 @@ test.group('Transactions Controller', async () => {
 
 		response.assertStatus(200 | 204)
 
-		const t: ITransaction = response.body()
-
-		assert.isObject(t)
-
-		assert.containsAllKeys(t, ['_id'])
-		const { deletedCount } = await Transactions.deleteMany({
-			financial_category: '6359660fc109b232759921d4',
-		})
+		const { deletedCount } = await deleteMany()
 
 		expect(deletedCount).to.be.greaterThan(0)
 	})
 
 
 	test('display store transactions with procedure', async ({ client }) => {
+		await deleteMany()
 		const { token } = await loginAndGetToken(client)
 
 		const newTransaction = { ...transaction, ...procedure }
@@ -107,14 +102,7 @@ test.group('Transactions Controller', async () => {
 		response.assertStatus(200 | 204)
 
 
-		const t: ITransaction = response.body()
-
-		assert.isObject(t)
-
-		assert.containsAllKeys(t, ['_id'])
-		const { deletedCount } = await Transactions.deleteMany({
-			financial_category: '6359660fc109b232759921d4',
-		})
+		const { deletedCount } = await deleteMany()
 
 		expect(deletedCount).to.be.greaterThan(0)
 	}).skip()

@@ -1,11 +1,11 @@
 import mongoose from 'mongoose'
 import { beforeAll, describe, expect, it } from 'vitest'
 
-import { CensusPaymentParticipationsManagerInterface } from '../interface/census-payment-participations.interface'
+import { CensusPaymentParticipationsManagerContract } from '../interface/census-payment-participations.interface'
 import { CensusPaymentParticipationsMongooseRepository } from './census-participations-mongoose-repository'
 
 const makeSut = () => {
-	const sut: CensusPaymentParticipationsManagerInterface =
+	const sut: CensusPaymentParticipationsManagerContract =
 		new CensusPaymentParticipationsMongooseRepository()
 	return {
 		sut,

@@ -1,4 +1,4 @@
-import { HealthInsuranceManagerInterface } from 'App/Core/domain/repositories/interface'
+import { HealthInsuranceManagerContract } from 'App/Core/domain/repositories/interface'
 import { OptsQueryDefault } from 'App/Core/domain/use-cases/helpers/opts-query'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
@@ -7,7 +7,7 @@ import { PromiseEither } from 'App/Core/shared'
 export class FindAllHealthInsuranceByUnityUseCase
 	implements UseCase<OptsQueryDefault, any[]>
 {
-	constructor(private readonly manager: HealthInsuranceManagerInterface) { }
+	constructor(private readonly manager: HealthInsuranceManagerContract) { }
 
 	public async execute({
 		unity_id,

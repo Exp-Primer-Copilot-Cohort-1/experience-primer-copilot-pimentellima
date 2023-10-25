@@ -6,10 +6,10 @@ import { ICategory } from 'App/Types/ICategory'
 import { inject, injectable, registry } from 'tsyringe'
 import { ICount } from '../helpers/count'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
-import { CategoriesManagerInterface } from './categories-manager.interface'
+import { CategoriesManagerContract } from './categories-manager.interface'
 @injectable()
 @registry([{ token: CategoriesMongooseRepository, useClass: CategoriesMongooseRepository }])
-export class CategoriesMongooseRepository implements CategoriesManagerInterface {
+export class CategoriesMongooseRepository implements CategoriesManagerContract {
 
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery
@@ -23,7 +23,7 @@ export class CategoriesMongooseRepository implements CategoriesManagerInterface 
 		return right({ count })
 	}
 
-	async findByID(id: string): PromiseEither<AbstractError, ICategory> {
+	async findById(id: string): PromiseEither<AbstractError, ICategory> {
 		const categories = await Category
 			.findById(id)
 			.populate(COLLECTIONS_REFS.PROF, PROJECTION_DEFAULT)

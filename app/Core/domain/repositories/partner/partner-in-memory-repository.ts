@@ -1,13 +1,17 @@
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IPartner } from 'App/Types/IPartner'
-import { UnityNotFoundError } from '../../errors/unity-not-found'
-import { PartnerManagerInterface } from '../interface'
+import { PartnerManagerContract } from '../interface'
 
-export class PartnerInMemoryRepository implements PartnerManagerInterface {
+export class PartnerInMemoryRepository implements PartnerManagerContract {
 	public items: IPartner[] = []
 
 	constructor() { }
+	findAll: (unity_id: string) => PromiseEither<AbstractError, IPartner[]>
+	create: (data: Partial<IPartner>) => PromiseEither<AbstractError, IPartner>
+	deleteByID: (id: string) => PromiseEither<AbstractError, IPartner>
+	update: (id: string, data: Partial<IPartner>) => PromiseEither<AbstractError, IPartner>
 
 	createPartner: (data: Partial<IPartner>) => PromiseEither<AbstractError, IPartner>
 

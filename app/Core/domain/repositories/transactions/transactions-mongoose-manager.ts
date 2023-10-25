@@ -4,11 +4,11 @@ import { PromiseEither, right } from 'App/Core/shared/either'
 import Transactions from 'App/Models/Transactions'
 import { ITransaction } from 'App/Types/ITransaction'
 import { inject, injectable, registry } from 'tsyringe'
-import { TransactionsManagerInterface } from '../interface/transactions-manager-interface'
+import { TransactionsManagerContract } from '../interface/transactions-manager-interface'
 
 @injectable()
 @registry([{ token: TransactionsMongooseRepository, useClass: TransactionsMongooseRepository }])
-export class TransactionsMongooseRepository implements TransactionsManagerInterface {
+export class TransactionsMongooseRepository implements TransactionsManagerContract {
 	constructor(
 		@inject(SessionTransaction) private readonly session: ISessionTransaction
 	) { } // eslint-disable-line

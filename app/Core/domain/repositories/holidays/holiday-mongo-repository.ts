@@ -1,10 +1,14 @@
+import { HolidayNotCreatedError } from 'App/Core/domain/errors/holiday-not-created'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import Unity from 'App/Models/Unity'
 import { IHoliday } from 'App/Types/IHoliday'
-import { HolidaysManagerInterface } from '../interface/holidays.interface'
+import { injectable, registry } from 'tsyringe'
+import { HolidaysManagerContract } from '../interface/holidays.interface'
 
-export class HolidaysMongoRepository implements HolidaysManagerInterface {
+@injectable()
+@registry([{ token: HolidaysMongoRepository, useClass: HolidaysMongoRepository }])
+export class HolidaysMongoRepository implements HolidaysManagerContract {
 	constructor() { }
 	async findAllHolidays(unity_id: string): PromiseEither<AbstractError, IHoliday[]> {
 		const unity = await Unity.findById(unity_id).select('holidays')
@@ -30,16 +34,19 @@ export class HolidaysMongoRepository implements HolidaysManagerInterface {
 
 		return right(unity?.holidays || [])
 	}
+
 	async addHoliday(
 		unity_id: string,
 		holiday: IHoliday,
 	): PromiseEither<AbstractError, IHoliday> {
+
 		const unity = await Unity.findByIdAndUpdate(
 			unity_id,
 			{
 				$push: { holidays: holiday },
 			},
-			{ new: true, useFindAndModify: false },
+			{ new: true, upsert: true },
+
 		).select('holidays')
 
 		const holidayId = unity?.holidays?.find(
@@ -47,7 +54,7 @@ export class HolidaysMongoRepository implements HolidaysManagerInterface {
 		)
 
 		if (!holidayId) {
-			return left(new AbstractError('Holiday not added', 400))
+			return left(new HolidayNotCreatedError())
 		}
 
 		return right(holidayId)

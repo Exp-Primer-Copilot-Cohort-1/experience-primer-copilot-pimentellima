@@ -2,7 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
 import { ActivityValues, IActivity } from 'App/Types/IActivity'
 
-export interface ActivitiesManagerInterface {
+export interface ActivitiesManagerContract {
 	create: (
 		unity_id: string,
 		values: IActivity,

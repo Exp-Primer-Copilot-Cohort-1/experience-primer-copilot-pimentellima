@@ -1,13 +1,20 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
 import { AppointmentStatus } from 'App/Helpers'
-import { IActivity } from 'App/Types/IActivity'
-import { ActivitiesManagerInterface } from '../interface'
+import { ActivityValues, IActivity } from 'App/Types/IActivity'
+import { ActivitiesManagerContract } from '../interface'
 
-export class ActivityInMemoryRepository implements ActivitiesManagerInterface {
+export class ActivityInMemoryRepository implements ActivitiesManagerContract {
 	public activities: any[] = []
 
 	constructor() { }
+	create: (unity_id: string, values: IActivity) => PromiseEither<AbstractError, IActivity>
+	findAll: (unity_id: string, ...args: unknown[]) => PromiseEither<AbstractError, IActivity[]>
+	findByProf: (unity_id: string, prof_id: string) => PromiseEither<AbstractError, IActivity[]>
+	findByClient: (unity_id: string, client_id: string) => PromiseEither<AbstractError, IActivity[]>
+	find: (id: string) => PromiseEither<AbstractError, IActivity>
+	updateById: (id: string, values: ActivityValues) => PromiseEither<AbstractError, IActivity>
+	deleteById: (id: string) => PromiseEither<AbstractError, IActivity>
 	createActivity: (activity: IActivity) => PromiseEither<AbstractError, IActivity>
 	createActivityInAwait: (
 		activity: IActivity,

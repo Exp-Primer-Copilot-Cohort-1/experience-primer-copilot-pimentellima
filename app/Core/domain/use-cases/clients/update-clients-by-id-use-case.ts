@@ -1,6 +1,6 @@
 import { ClientEntity } from 'App/Core/domain/entities/clients/client'
 import { ClientsMongooseRepository } from 'App/Core/domain/repositories'
-import { ClientManagerInterface } from 'App/Core/domain/repositories/interface'
+import { ClientManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
@@ -16,7 +16,7 @@ type In = {
 export class UpdateClientsByIdUseCase implements UseCase<In, IUserClient> {
 
 	constructor(
-		@inject(ClientsMongooseRepository) readonly manager: ClientManagerInterface,
+		@inject(ClientsMongooseRepository) readonly manager: ClientManagerContract,
 	) { } // eslint-disable-line
 
 	public async execute({

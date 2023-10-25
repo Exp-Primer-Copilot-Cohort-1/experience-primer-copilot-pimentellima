@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
-import { CensusPaymentParticipationsManagerInterface } from 'App/Core/domain/repositories/interface'
+import { CensusPaymentParticipationsManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -19,7 +19,7 @@ export class FindPaymentsParticipationByProfUseCase
 		ICensusParticipationPaymentByProf[]
 	>
 {
-	constructor(private readonly manager: CensusPaymentParticipationsManagerInterface) { }
+	constructor(private readonly manager: CensusPaymentParticipationsManagerContract) { }
 
 	public async execute({
 		unity_id,

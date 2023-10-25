@@ -1,4 +1,4 @@
-import { ReportsUnitiesManagerInterface } from 'App/Core/domain/repositories/interface/reports-unities-manager.interface'
+import { ReportsUnitiesManagerContract } from 'App/Core/domain/repositories/interface/reports-unities-manager.interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, right } from 'App/Core/shared'
@@ -12,7 +12,7 @@ type RevenueReportsByYear = {
 export class FindAllByYearRevenueReportsUseCase
 	implements UseCase<RevenueReportsByYear, IBilling>
 {
-	constructor(private readonly manager: ReportsUnitiesManagerInterface) { }
+	constructor(private readonly manager: ReportsUnitiesManagerContract) { }
 
 	public async execute({
 		unity_id,

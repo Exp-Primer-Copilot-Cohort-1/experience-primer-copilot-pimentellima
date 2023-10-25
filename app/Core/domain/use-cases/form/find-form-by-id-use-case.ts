@@ -1,11 +1,11 @@
 import FormEntity from "App/Core/domain/entities/form/form";
-import { FormManagerInterface } from "App/Core/domain/repositories/interface/form-manager-interface";
+import { IdNotProvidedError } from "App/Core/domain/errors/id-not-provided";
+import { FormMongoRepository } from "App/Core/domain/repositories/form/form-mongo-repository";
+import { FormManagerContract } from "App/Core/domain/repositories/interface/form-manager-interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
 import { inject, injectable, registry } from "tsyringe";
-import { IdNotProvidedError } from "../../errors/id-not-provided";
-import { FormMongoRepository } from "../../repositories/form/form-mongo-repository";
 
 type TypeParams = {
 	id: string
@@ -16,7 +16,7 @@ export class FindFormByIdUseCase
 	implements UseCase<TypeParams, FormEntity>
 {
 	constructor(
-		@inject(FormMongoRepository) private readonly manager: FormManagerInterface) { }
+		@inject(FormMongoRepository) private readonly manager: FormManagerContract) { }
 
 	public async execute(
 		{ id }

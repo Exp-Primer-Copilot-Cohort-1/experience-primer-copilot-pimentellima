@@ -1,75 +1,51 @@
-import { Controller, ControllerInjection } from 'App/Core/adapters/controller'
+import { ControllerInjection } from 'App/Core/adapters/controller'
 import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
 import {
-	ActivityAttendanceMongoRepository,
-	ActivityMongoRepository
-} from 'App/Core/domain/repositories'
-import { FindAllActivitiesUseCase } from 'App/Core/domain/use-cases'
-import { CreateActivityUseCase } from 'App/Core/domain/use-cases/activities/create-activity-use-case'
-import { DeleteActivityByIdUseCase } from 'App/Core/domain/use-cases/activities/delete-activity-by-id-use-case'
-import { FindActivitiesByClientIdUseCase } from 'App/Core/domain/use-cases/activities/find-activities-by-client-use-case'
-import { FindActivitiesByProfIdUseCase } from 'App/Core/domain/use-cases/activities/find-activities-by-prof-use-case'
-import { FindActivityByIdUseCase } from 'App/Core/domain/use-cases/activities/find-activity-by-id-use-case'
-import { FindAllActivitiesPendingUseCase } from 'App/Core/domain/use-cases/activities/find-all-activities-pending-use-case'
-import { FindDayActivitiesUseCase } from 'App/Core/domain/use-cases/activities/find-day-activities-use-case'
-import { CreateRecurrentActivityUseCase } from 'App/Core/domain/use-cases/activities/recurrents'
-import { UpdateActivityPaymentUseCase } from 'App/Core/domain/use-cases/activities/update-activity-payment-use-case'
-import { UpdateActivityStatusByIdUseCase } from 'App/Core/domain/use-cases/activities/update-activity-status-by-use-case'
-import { UpdateActivityByIdUseCase } from 'App/Core/domain/use-cases/activities/update-activity-use-case'
+	CreateActivityUseCase,
+	CreateRecurrentActivityUseCase,
+	DeleteActivityByIdUseCase,
+	FindActivitiesByClientIdUseCase,
+	FindActivitiesByProfIdUseCase,
+	FindActivityByIdUseCase,
+	FindAllActivitiesPendingUseCase,
+	FindAllActivitiesUseCase,
+	FindDayActivitiesUseCase,
+	UpdateActivityByIdUseCase,
+	UpdateActivityPaymentUseCase,
+	UpdateActivityStatusByIdUseCase,
+} from 'App/Core/domain/use-cases'
+
 import { IOptsQuery } from 'App/Types/IOptsQuery'
 
 export const makeCreateActivityComposer = (): ControllerGeneric => {
-	return new Controller(
-		new CreateActivityUseCase(new ActivityMongoRepository()),
-	)
+	return ControllerInjection.resolve(CreateActivityUseCase)
 }
 
 export const makeUpdateActivityPaymentComposer = (): ControllerGeneric => {
-	return new Controller(
-		new UpdateActivityPaymentUseCase(new ActivityAttendanceMongoRepository()),
-	)
+	return ControllerInjection.resolve(UpdateActivityPaymentUseCase)
 }
 export const makeCreateRecurrentActivityComposer = (): ControllerGeneric => {
 	return ControllerInjection.resolve(CreateRecurrentActivityUseCase)
 }
 
 export const makeDeleteActivityByIdComposer = (): ControllerGeneric => {
-	return new Controller(
-		new DeleteActivityByIdUseCase(
-			new ActivityMongoRepository(),
-		),
-	)
+	return ControllerInjection.resolve(DeleteActivityByIdUseCase)
 }
 export const makeFindActivityByClientIdComposer = (): ControllerGeneric => {
-	return new Controller(
-		new FindActivitiesByClientIdUseCase(
-			new ActivityMongoRepository(),
-		),
-	)
+	return ControllerInjection.resolve(FindActivitiesByClientIdUseCase)
 }
 export const makeFindActivityByIdComposer = (): ControllerGeneric => {
-	return new Controller(
-		new FindActivityByIdUseCase(
-			new ActivityMongoRepository(),
-		),
-	)
+	return ControllerInjection.resolve(FindActivityByIdUseCase)
 }
 
 export const makeFindDayActivitiesComposer = (): ControllerGeneric => {
-	return new Controller(
-		new FindDayActivitiesUseCase(
-			new ActivityMongoRepository(),
-		),
-	)
+	return ControllerInjection.resolve(FindDayActivitiesUseCase)
 }
 
 export const makeFindActivitiesByProfIdComposer = (): ControllerGeneric => {
-	return new Controller(
-		new FindActivitiesByProfIdUseCase(
-			new ActivityMongoRepository(),
-		),
-	)
+	return ControllerInjection.resolve(FindActivitiesByProfIdUseCase)
 }
+
 export const makeFindAllActivitiesComposer = (opts: IOptsQuery): ControllerGeneric => {
 	return ControllerInjection.resolve(FindAllActivitiesUseCase, opts)
 }
@@ -83,7 +59,5 @@ export const makeUpdateActivityByIdComposer = (): ControllerGeneric => {
 }
 
 export const makeUpdateActivityStatusComposer = (): ControllerGeneric => {
-	return new Controller(
-		new UpdateActivityStatusByIdUseCase(new ActivityAttendanceMongoRepository()),
-	)
+	return ControllerInjection.resolve(UpdateActivityStatusByIdUseCase)
 }

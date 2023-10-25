@@ -3,6 +3,7 @@ import { beforeAll, describe, expect, it, vi } from 'vitest'
 import { ActivityMongoRepository } from './activity-mongo-repository'
 
 import { faker } from '@faker-js/faker'
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { SessionTransaction } from 'App/Core/infra/session-transaction'
 import { AppointmentStatus } from 'App/Helpers'
 import Activity from 'App/Models/Activity'
@@ -13,7 +14,10 @@ const ObjectId = mongoose.Types.ObjectId
 
 const makeSut = () => {
 	const session = new SessionTransaction()
-	const sut = new ActivityMongoRepository(session)
+	const sut = new ActivityMongoRepository(
+		new OptsQuery(),
+		session
+	)
 	return { sut, session }
 }
 
@@ -55,6 +59,17 @@ describe('ActivityRepository (Integration)', () => {
 		}),
 	}));
 
+	vi.mock('App/Core/domain/entities/helpers/fetch-user-and-schedule-blocks', () => ({
+		__esModule: true,
+		default: vi.fn().mockImplementation(() => {
+			return {
+				parse: () => {
+					return true
+				},
+			}
+		}),
+	}));
+
 	beforeAll(async () => {
 		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
 	})
@@ -66,7 +81,7 @@ describe('ActivityRepository (Integration)', () => {
 	it('should be able to find all activities', async () => {
 		const { sut } = makeSut()
 		const id = new ObjectId()
-		const activitiesOrErr = await sut.findAllActivities(id.toString())
+		const activitiesOrErr = await sut.findAll(id.toString())
 		expect(activitiesOrErr.isRight()).toBeTruthy()
 	})
 
@@ -74,7 +89,7 @@ describe('ActivityRepository (Integration)', () => {
 		const { sut } = makeSut()
 		const unity_id = process.env.TEST_INTEGRATION_UNITY_ID as string
 		const activity = mountActivity({ unity_id })
-		const activityOrErr = await sut.createActivity(unity_id, activity)
+		const activityOrErr = await sut.create(unity_id, activity)
 
 		if (activityOrErr.isLeft()) {
 			throw activityOrErr.extract()
@@ -94,7 +109,7 @@ describe('ActivityRepository (Integration)', () => {
 		const { sut } = makeSut()
 		const activity = mountActivity({})
 		const { _id } = await Activity.create(activity)
-		const activityOrErr = await sut.findActivityById(_id.toString())
+		const activityOrErr = await sut.find(_id.toString())
 		expect(activityOrErr.isRight()).toBeTruthy()
 
 		const { deletedCount } = await Activity.deleteOne({ _id })
@@ -107,7 +122,7 @@ describe('ActivityRepository (Integration)', () => {
 
 		const activity = mountActivity({})
 		const { _id } = await Activity.create(activity)
-		const activityOrErr = await sut.updateActivityById(_id.toString(), {
+		const activityOrErr = await sut.updateById(_id.toString(), {
 			...activity,
 			scheduled: AppointmentStatus.AWAITING,
 			_id: _id.toString(),

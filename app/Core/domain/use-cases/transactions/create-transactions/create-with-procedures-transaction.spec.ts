@@ -2,9 +2,9 @@ import { ProcedureTransactionEntity } from 'App/Core/domain/entities/transaction
 import { TransactionEntity } from 'App/Core/domain/entities/transaction/TransactionEntity'
 import { ParticipationPaymentsNotFoundError } from 'App/Core/domain/errors/participation-payments-not-found'
 import { ProcedureNotFoundError } from 'App/Core/domain/errors/procedure-not-found'
-import { ProceduresManagerInterface } from 'App/Core/domain/repositories/interface'
-import { PaymentProfManagerInterface } from 'App/Core/domain/repositories/interface/payment-prof-manager-interface'
-import { TransactionsManagerInterface } from 'App/Core/domain/repositories/interface/transactions-manager-interface'
+import { ProceduresManagerContract } from 'App/Core/domain/repositories/interface'
+import { PaymentProfManagerContract } from 'App/Core/domain/repositories/interface/payment-prof-manager-interface'
+import { TransactionsManagerContract } from 'App/Core/domain/repositories/interface/transactions-manager-interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { left, right } from 'App/Core/shared'
 import { TransactionWithProcedure } from '../helpers'
@@ -23,11 +23,11 @@ const mountTransaction = () => ({
 const makeMocks = () => {
 	const proceduresManager = {
 		findById: vi.fn(),
-	} as unknown as ProceduresManagerInterface
+	} as unknown as ProceduresManagerContract
 
 	const participationManager = {
 		findCurrentPaymentParticipation: vi.fn(),
-	} as unknown as PaymentProfManagerInterface
+	} as unknown as PaymentProfManagerContract
 
 	const mockProceduresManager = proceduresManager.findById as Mock
 	const mockParticipationsManager =
@@ -68,7 +68,7 @@ const makeMocks = () => {
 }
 
 const makeSut = () => {
-	const manager: TransactionsManagerInterface = {
+	const manager: TransactionsManagerContract = {
 		create: vi.fn(),
 	}
 	const {
@@ -175,7 +175,7 @@ describe('Create with procedures transaction use case (Unit)', () => {
 	})
 
 	it('should throw an error if there is an error creating the transaction document ', async () => {
-		const { sut, transaction, manager, spyEntityProcedure, spyEntityTransaction } =
+		const { sut, transaction, manager, spyEntityTransaction } =
 			makeSut()
 
 		spyEntityTransaction.mockImplementationOnce(() => right(mountTransaction()))

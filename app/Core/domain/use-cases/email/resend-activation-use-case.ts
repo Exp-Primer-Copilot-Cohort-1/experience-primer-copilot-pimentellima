@@ -1,6 +1,6 @@
 import { IdNotProvidedError } from "App/Core/domain/errors/id-not-provided";
 import { AdminMongooseRepository } from "App/Core/domain/repositories";
-import { AdminManagerInterface } from "App/Core/domain/repositories/interface";
+import { AdminManagerContract } from "App/Core/domain/repositories/interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
@@ -33,7 +33,7 @@ export class ResendActivationUseCase implements IResendActivation {
 	constructor(
 		@inject(SendActivationNewUserUseCase) private readonly sendActivation: SendActivationNewUserUseCase,
 		@inject(CreatePasswordUseCase) private readonly createPassword: ICreatePasswordUseCase,
-		@inject(AdminMongooseRepository) private readonly manager: AdminManagerInterface,
+		@inject(AdminMongooseRepository) private readonly manager: AdminManagerContract,
 	) { }
 
 	/**

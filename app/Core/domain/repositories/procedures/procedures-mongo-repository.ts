@@ -1,17 +1,17 @@
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
+import { ProcedureNotFoundError } from 'App/Core/domain/errors/procedure-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, right } from 'App/Core/shared/either'
 import Procedure, { COLLECTIONS_REFS } from 'App/Models/Procedure'
 import { IProcedure } from 'App/Types/IProcedure'
 import { inject, injectable, registry } from 'tsyringe'
-import { ProcedureNotFoundError } from '../../errors/procedure-not-found'
 import { ICount } from '../helpers/count'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
-import { ProceduresManagerInterface } from './procedures-manager.interface'
+import { ProceduresManagerContract } from './procedures-manager.interface'
 
 @injectable()
 @registry([{ token: ProceduresMongooseRepository, useClass: ProceduresMongooseRepository }])
-export class ProceduresMongooseRepository implements ProceduresManagerInterface {
+export class ProceduresMongooseRepository implements ProceduresManagerContract {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery

@@ -1,6 +1,6 @@
 import { UnityEntity } from 'App/Core/domain/entities/user/unity'
 import { UnitiesMongooseRepository } from 'App/Core/domain/repositories'
-import { UnitiesManagerInterface } from 'App/Core/domain/repositories/interface'
+import { UnitiesManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither } from 'App/Core/shared'
@@ -12,7 +12,7 @@ import { inject, injectable, registry } from 'tsyringe'
 export class CreateUnityUseCase implements UseCase<IUnity, IUnity> {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
-		@inject(UnitiesMongooseRepository) private readonly manager: UnitiesManagerInterface
+		@inject(UnitiesMongooseRepository) private readonly manager: UnitiesManagerContract
 	) { }
 
 	public async execute(unity: IUnity): PromiseEither<AbstractError, IUnity> {

@@ -1,29 +1,36 @@
-import {
-	HolidaysMongoRepository,
-	HolidaysNationalsMongoRepository,
-	ProfsMongooseRepository,
-} from 'App/Core/domain/repositories'
 import mongoose from 'mongoose'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
+import { ProfsManagerContract } from 'App/Core/domain/repositories/interface'
+import { right } from 'App/Core/shared'
+import container from 'App/Core/shared/container'
+import { IUser } from 'App/Types/IUser'
 import {
-	FindAllHolidaysByUnityUseCase,
-	SaveHolidaysNationalsDefaultUseCase,
+	FindAllHolidaysByUnityUseCase
 } from '../../holidays'
 import { DayTradesIntervalDatesByProfUseCase } from './day-trades-interval-dates'
+class ProfsMongooseRepositoryMock implements ProfsManagerContract {
+	findAll = vi.fn().mockResolvedValue([])
+	findById = vi.fn().mockResolvedValue(right({
+		is_friday: true,
+		is_monday: true,
+		is_saturday: true,
+		is_sunday: true,
+		is_thursday: true,
+		is_tuesday: true,
+		is_wednesday: true,
+	} as IUser))
+	findByUnityId = vi.fn().mockResolvedValue([])
+	getCount = vi.fn().mockResolvedValue(0)
+}
 
 const makeSut = () => {
-	const repo = new ProfsMongooseRepository()
-	const repoHoliday = new HolidaysMongoRepository()
-	const repoHolidayNationals = new HolidaysNationalsMongoRepository()
-	const nationalsHolidayUseCase = new SaveHolidaysNationalsDefaultUseCase(
-		repoHolidayNationals,
+	const findAllHolidaysByUnityUseCase = container.resolve(FindAllHolidaysByUnityUseCase)
+
+	const sut = new DayTradesIntervalDatesByProfUseCase(
+		new ProfsMongooseRepositoryMock(),
+		findAllHolidaysByUnityUseCase,
 	)
-	const holidayUseCase = new FindAllHolidaysByUnityUseCase(
-		repoHoliday,
-		nationalsHolidayUseCase,
-	)
-	const sut = new DayTradesIntervalDatesByProfUseCase(repo, holidayUseCase)
 	return {
 		sut,
 	}

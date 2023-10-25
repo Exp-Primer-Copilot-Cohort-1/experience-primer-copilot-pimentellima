@@ -1,5 +1,5 @@
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
-import { MedicalCertificateManagerInterface } from 'App/Core/domain/repositories/interface'
+import { MedicalCertificateManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -13,7 +13,7 @@ export class DeleteMedicalCertificateByIdUseCase
 	implements UseCase<Input, IMedicalCertificate>
 {
 	constructor(
-		private readonly manager: MedicalCertificateManagerInterface,
+		private readonly manager: MedicalCertificateManagerContract,
 	) { } // eslint-disable-line
 
 	public async execute(

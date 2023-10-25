@@ -8,11 +8,11 @@ import {
 	ICensusMediaTimeAttendance,
 	ICensusScheduledEvent,
 } from 'App/Types/ICensus'
-import { CensusUnitiesManagerInterface } from '../interface/census-manager.interface'
+import { CensusUnitiesManagerContract } from '../interface/census-manager.interface'
 
 import generateMatch from './generate-match-census'
 
-export class CensusMongooseRepository implements CensusUnitiesManagerInterface {
+export class CensusMongooseRepository implements CensusUnitiesManagerContract {
 	async findCensusActivitiesOfScheduledByUnityOrProf(
 		unity_id: string,
 		date_start: string,

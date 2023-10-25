@@ -9,12 +9,12 @@ import { CreatePasswordUseCase } from '../create-password/create-password-use-ca
 
 import { faker } from '@faker-js/faker'
 import { DrPerformanceInMemory } from 'App/Core/domain/repositories/dr_performance/dr-performance.in-memory.repository'
-import { EventEmitterTest } from 'App/Core/infra/event-emitter'
+import { CreateUnityUseCase } from 'App/Core/domain/use-cases'
 import { SessionTransaction } from 'App/Core/infra/session-transaction'
 import { ROLES } from 'App/Roles/types'
 import { IAdminUser } from 'App/Types/IAdminUser'
+import { EventEmitterMock } from '__mocks__'
 import { cpf } from 'cpf-cnpj-validator'
-import { CreateUnityUseCase } from '../../../unities'
 import { CreateFranchiseDrPerformanceUseCase } from '../create-user-dr-performance/create-user-dr-performance-use-case'
 import { CreateUserUseCase } from '../create-user/create-user-use-case'
 
@@ -36,7 +36,7 @@ const user: IAdminUser = {
 
 const makeSut = () => {
 	const session = new SessionTransaction()
-	const event = new EventEmitterTest()
+	const event = new EventEmitterMock()
 
 	const sut = new CreateUserAdminUseCase(
 		new CreateUserUseCase(

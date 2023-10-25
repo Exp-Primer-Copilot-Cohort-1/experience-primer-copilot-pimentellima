@@ -6,23 +6,23 @@ import Prof from 'App/Models/Prof'
 import { IUser as IProf } from 'App/Types/IUser'
 import { inject, injectable, registry } from 'tsyringe'
 import { ICount } from '../helpers/count'
-import { ProfsManagerInterface } from './profs-manage.interface'
+import { ProfsManagerContract } from './profs-manage.interface'
 
 @injectable()
 @registry([{ token: ProfsMongooseRepository, useClass: ProfsMongooseRepository }])
-export class ProfsMongooseRepository implements ProfsManagerInterface {
+export class ProfsMongooseRepository implements ProfsManagerContract {
 
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery
 	) { } // eslint-disable-line
 
-	async findByID(id: string, unity_id: string): PromiseEither<AbstractError, IProf> {
+	async findById(id: string): PromiseEither<AbstractError, IProf> {
 		const prof = await Prof.findOne({
 			_id: id,
-			unity_id,
-			type: ['prof', 'admin_prof', 'admin'],
 		})
+
 		if (!prof) return left(new UserNotFoundError())
+
 		return right(prof)
 	}
 

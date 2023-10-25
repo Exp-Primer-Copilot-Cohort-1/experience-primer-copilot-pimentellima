@@ -3,7 +3,7 @@ import { AbstractError } from '../errors/error.interface';
 
 
 /**
- * Interface genérica para casos de uso.
+ * Contract genérica para casos de uso.
  * @template In Tipo de entrada para o caso de uso.
  * @template Out Tipo de saída para o caso de uso.
  */

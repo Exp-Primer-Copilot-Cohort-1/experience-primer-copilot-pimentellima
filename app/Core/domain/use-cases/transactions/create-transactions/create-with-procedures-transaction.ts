@@ -7,9 +7,9 @@ import {
 	ProceduresMongooseRepository,
 	TransactionsMongooseRepository
 } from 'App/Core/domain/repositories'
-import { ProceduresManagerInterface } from 'App/Core/domain/repositories/interface'
-import { PaymentProfManagerInterface } from 'App/Core/domain/repositories/interface/payment-prof-manager-interface'
-import { TransactionsManagerInterface } from 'App/Core/domain/repositories/interface/transactions-manager-interface'
+import { ProceduresManagerContract } from 'App/Core/domain/repositories/interface'
+import { PaymentProfManagerContract } from 'App/Core/domain/repositories/interface/payment-prof-manager-interface'
+import { TransactionsManagerContract } from 'App/Core/domain/repositories/interface/transactions-manager-interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
@@ -30,9 +30,9 @@ export class CreateWithProceduresTransactionUseCase
 	implements UseCase<TransactionWithProcedure, ITransaction>
 {
 	constructor(
-		@inject(TransactionsMongooseRepository) private readonly manager: TransactionsManagerInterface,
-		@inject(ProceduresMongooseRepository) private readonly proceduresManager: ProceduresManagerInterface,
-		@inject(PaymentProfMongoRepository) private readonly paymentParticipationsManager: PaymentProfManagerInterface,
+		@inject(TransactionsMongooseRepository) private readonly manager: TransactionsManagerContract,
+		@inject(ProceduresMongooseRepository) private readonly proceduresManager: ProceduresManagerContract,
+		@inject(PaymentProfMongoRepository) private readonly paymentParticipationsManager: PaymentProfManagerContract,
 	) { } // eslint-disable-line
 
 	/**

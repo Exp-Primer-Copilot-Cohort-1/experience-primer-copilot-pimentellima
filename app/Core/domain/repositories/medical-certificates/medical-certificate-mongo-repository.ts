@@ -1,13 +1,13 @@
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import MedicalCertificate from 'App/Models/MedicalCertificate'
 import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
-import { UnityNotFoundError } from '../../errors/unity-not-found'
-import { MedicalCertificateManagerInterface } from '../interface'
+import { MedicalCertificateManagerContract } from '../interface'
 
 export class MedicalCertificateMongooseRepository
 	// eslint-disable-next-line prettier/prettier
-	implements MedicalCertificateManagerInterface {
+	implements MedicalCertificateManagerContract {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor() { }
 	updateMedicalCertificateById: (id: string, data: Partial<IMedicalCertificate>) => PromiseEither<AbstractError, IMedicalCertificate>

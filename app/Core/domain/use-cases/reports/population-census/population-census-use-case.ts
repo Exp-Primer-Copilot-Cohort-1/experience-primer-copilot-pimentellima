@@ -4,8 +4,8 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 
 import {
-	CensusClientsManagerInterface,
-	CensusUnitiesManagerInterface,
+	CensusClientsManagerContract,
+	CensusUnitiesManagerContract,
 } from 'App/Core/domain/repositories/interface'
 import { ICensusCount } from '../../helpers/census'
 
@@ -20,8 +20,8 @@ export class PopulationCensusByDateUseCase
 	implements UseCase<PopulationCensusByDateProps, ICensusCount>
 {
 	constructor(
-		private readonly manager: CensusUnitiesManagerInterface,
-		private readonly managerClients: CensusClientsManagerInterface,
+		private readonly manager: CensusUnitiesManagerContract,
+		private readonly managerClients: CensusClientsManagerContract,
 	) { }
 
 	public async execute({

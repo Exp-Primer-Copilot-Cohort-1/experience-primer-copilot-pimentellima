@@ -6,13 +6,13 @@ import {
 	ICensusActivitiesByDaysOfMonth,
 	ICensusWorkedHoursByProf,
 } from 'App/Types/ICensus'
-import { CensusDaysManagerInterface } from '../interface/census-days-manager.interface'
+import { CensusDaysManagerContract } from '../interface/census-days-manager.interface'
 
 import Prof from 'App/Models/Prof'
 import { ROLES } from 'App/Roles/types'
 import generateMatch from './generate-match-census'
 
-export class CensusDaysMongooseRepository implements CensusDaysManagerInterface {
+export class CensusDaysMongooseRepository implements CensusDaysManagerContract {
 	async findActivitiesByDaysOfWeek(
 		unity_id: string,
 		date_start: string,

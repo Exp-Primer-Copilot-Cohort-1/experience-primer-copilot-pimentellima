@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { faker } from '@faker-js/faker'
 import { DrPerformanceInMemory } from 'App/Core/domain/repositories/dr_performance/dr-performance.in-memory.repository'
@@ -33,14 +33,7 @@ const unity: IUnity = {
 	franchised: false
 }
 
-vi.mock('App/Models/BusinessFranchises', () => ({
-	__esModule: false,
-	default: Model,
-}))
-vi.mock('App/Models/Unity', () => ({
-	__esModule: false,
-	default: Model,
-}))
+
 
 import { UnityNotFoundError } from 'App/Core/domain/errors'
 import { IdNotProvidedError } from 'App/Core/domain/errors/id-not-provided'
@@ -56,6 +49,22 @@ const makeSut = () => {
 	}
 }
 describe('Create User Dr Performance Use Case (Unit)', () => {
+
+	beforeAll(async () => {
+		vi.mock('App/Models/BusinessFranchises', () => ({
+			__esModule: false,
+			default: Model,
+		}))
+		vi.mock('App/Models/Unity', () => ({
+			__esModule: false,
+			default: Model,
+		}))
+	})
+
+	afterAll(async () => {
+		vi.resetAllMocks()
+	})
+
 	it('should return right with user created', async () => {
 		const { sut } = makeSut()
 		const userOrErr = await sut.execute({

@@ -4,10 +4,10 @@ import { PromiseEither, left, right } from "App/Core/shared";
 import ScheduleBlock from "App/Models/ScheduleBlock";
 import { IScheduleBlock, ScheduleBlockParams } from "App/Types/IScheduleBlock";
 import { MissingParamsError } from "../../errors/missing-params";
-import { ScheduleBlockManagerInterface } from "../interface/schedule-block-manager-interface";
+import { ScheduleBlockManagerContract } from "../interface/schedule-block-manager-interface";
 
 export class ScheduleBlockMongoRepository
-	implements ScheduleBlockManagerInterface {
+	implements ScheduleBlockManagerContract {
 	async createScheduleBlock(
 		unity_id: string,
 		schedule_block: ScheduleBlockParams

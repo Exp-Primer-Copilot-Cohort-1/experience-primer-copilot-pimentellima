@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { CategoriesManagerInterface } from 'App/Core/domain/repositories/interface'
+import { CategoriesManagerContract } from 'App/Core/domain/repositories/interface'
 import { left, right } from 'App/Core/shared'
 import { ICategory } from 'App/Types/ICategory'
 import {
@@ -22,7 +22,7 @@ const category: ICategory = {
 }
 
 
-const CategoryManager: CategoriesManagerInterface = {
+const CategoryManager: CategoriesManagerContract = {
 	create: vi.fn(async (category) => {
 		return right(category) as any
 	}),
@@ -32,7 +32,7 @@ const CategoryManager: CategoriesManagerInterface = {
 	delete: vi.fn(async (id) => {
 		return right(id) as any
 	}),
-	findByID: vi.fn(async (id) => {
+	findById: vi.fn(async (id) => {
 		return right(id) as any
 	}),
 	update: vi.fn(async (_id, category) => {
@@ -120,7 +120,7 @@ describe('Use cases ref categories (Unit)', () => {
 
 		it('should return error when find category by id', async () => {
 			const { sut } = makeSutFindById()
-			vi.spyOn(CategoryManager, 'findByID').mockImplementationOnce(async () => {
+			vi.spyOn(CategoryManager, 'findById').mockImplementationOnce(async () => {
 				return left(undefined) as any
 			})
 			const respOrErr = await sut.execute({ id: 'id-invalid' })

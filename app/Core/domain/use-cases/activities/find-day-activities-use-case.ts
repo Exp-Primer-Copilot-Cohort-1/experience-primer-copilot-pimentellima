@@ -1,24 +1,31 @@
-import { ActivitiesManagerInterface } from 'App/Core/domain/repositories/interface'
+import { ActivityMongoRepository } from 'App/Core/domain/repositories'
+import { ActivitiesManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { AppointmentStatus } from 'App/Helpers'
 import { Client, IActivity } from 'App/Types/IActivity'
 import { isAfter, isToday } from 'date-fns'
+import { inject, injectable, registry } from 'tsyringe'
 
-type ActivityProps = {
+type In = {
 	unity_id: string
 	prof_id: string
 }
 
-export class FindDayActivitiesUseCase implements UseCase<ActivityProps, IActivity[]> {
-	constructor(private readonly activitiesManager: ActivitiesManagerInterface) { }
+@injectable()
+@registry([{ token: FindDayActivitiesUseCase, useClass: FindDayActivitiesUseCase }])
+export class FindDayActivitiesUseCase implements UseCase<In, IActivity[]> {
+
+	constructor(
+		@inject(ActivityMongoRepository) private readonly manager: ActivitiesManagerContract
+	) { }
 
 	public async execute({
 		unity_id,
 		prof_id,
-	}: ActivityProps): PromiseEither<AbstractError, IActivity[]> {
-		const activitiesByProfOrErr = await this.activitiesManager.findByProf(
+	}: In): PromiseEither<AbstractError, IActivity[]> {
+		const activitiesByProfOrErr = await this.manager.findByProf(
 			unity_id,
 			prof_id,
 		)
@@ -56,7 +63,7 @@ export class FindDayActivitiesUseCase implements UseCase<ActivityProps, IActivit
 					})
 				}
 				const clientActivities =
-					await this.activitiesManager.findByClient(
+					await this.manager.findByClient(
 						unity_id,
 						clientId,
 					)

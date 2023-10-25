@@ -1,4 +1,4 @@
-import { UnitiesManagerInterface } from 'App/Core/domain/repositories/interface'
+import { UnitiesManagerContract } from 'App/Core/domain/repositories/interface'
 import { left, right } from 'App/Core/shared'
 import { IUnity } from 'App/Types/IUnity'
 import { cnpj } from 'cpf-cnpj-validator'
@@ -37,7 +37,7 @@ const unity: IUnity = {
 }
 
 
-const UnityManager: UnitiesManagerInterface = {
+const UnityManager: UnitiesManagerContract = {
 	create: vi.fn(async (unity) => {
 		return right(unity as IUnity) as any
 	}),

@@ -1,6 +1,6 @@
 import { IdNotProvidedError } from "App/Core/domain/errors/id-not-provided";
 import { AccountMongoRepository } from "App/Core/domain/repositories";
-import { AccountManagerInterface } from "App/Core/domain/repositories/account/account-manager.interface";
+import { AccountManagerContract } from "App/Core/domain/repositories/account/account-manager.interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left } from "App/Core/shared";
@@ -17,7 +17,7 @@ export class FindAccountByIdUseCase
 	implements UseCase<TypeParams, IAccount>
 {
 	constructor(
-		@inject(AccountMongoRepository) private readonly manager: AccountManagerInterface
+		@inject(AccountMongoRepository) private readonly manager: AccountManagerContract
 	) { }
 
 	public async execute(

@@ -87,11 +87,7 @@ ProfileSchema.post('find', async function (docs) {
 })
 
 ProfileSchema.post('findOne', async function (doc) {
-	const numbers = doc?.document?.replace(/\D/g, '')
-
-	if (doc?.document && !(numbers.length === 11 || numbers.length === 14)) {
-		doc.document = await decrypt(doc.document)
-	}
+	doc.document = await decrypt(doc.document)
 })
 
 ProfileSchema.index({ unity_id: 1, email: 1, document: 1 }, { unique: true })

@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { faker } from '@faker-js/faker'
+import { UnityDateExpiredError } from 'App/Core/domain/errors/unity-date-expired'
 import { UnitiesInMemoryRepository } from 'App/Core/domain/repositories'
 import { cnpj } from 'cpf-cnpj-validator'
-import { UnityDateExpiredError } from '../../errors/unity-date-expired'
 import { UnityValidationUseCase } from './unity-validation-use-case'
 
 const unit = {

@@ -6,7 +6,7 @@ export const COLLECTION_NAME = 'financial_categories'
 import mongoose, { Document } from 'mongoose'
 
 /**
- * Interface que representa a categoria financeira.
+ * Contract que representa a categoria financeira.
  */
 export interface IFinancialCategory extends Document {
 	name: string

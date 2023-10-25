@@ -4,8 +4,8 @@ import { PromiseEither, left } from 'App/Core/shared'
 
 import ReplyFormStandardFranchisesEntity from 'App/Core/domain/entities/reply-form-standard-franchises/reply-form-standard-franchises'
 import { BusinessFranchisesRepository } from 'App/Core/domain/repositories/business-franchises/business-franchises-mongoose-repository'
-import { BusinessFranchisesManagerInterface } from 'App/Core/domain/repositories/interface/business-franchises-manager.interface'
-import { RFormSFManagerInterface } from 'App/Core/domain/repositories/interface/reply-form-standard-franchise-manager.interface'
+import { BusinessFranchisesManagerContract } from 'App/Core/domain/repositories/interface/business-franchises-manager.interface'
+import { RFormSFManagerContract } from 'App/Core/domain/repositories/interface/reply-form-standard-franchise-manager.interface'
 import { RFormSFMongooseManager } from 'App/Core/domain/repositories/reply-form-standard-franchise/reply-form-standard-franchise-mongoose-repository'
 import EmitEventDecorator from 'App/Decorators/EmitEvent'
 import { IReplyFormStandardFranchises } from 'App/Types/IReplyFormStandardFranchises'
@@ -19,8 +19,8 @@ type Out = IReplyFormStandardFranchises
 export class CreateRFormsStandardFUseCase implements UseCase<In, Out> {
 
 	constructor(
-		@inject(RFormSFMongooseManager) private readonly manager: RFormSFManagerInterface,
-		@inject(BusinessFranchisesRepository) private readonly franchiseManager: BusinessFranchisesManagerInterface
+		@inject(RFormSFMongooseManager) private readonly manager: RFormSFManagerContract,
+		@inject(BusinessFranchisesRepository) private readonly franchiseManager: BusinessFranchisesManagerContract
 	) { } // eslint-disable-line
 
 	@EmitEventDecorator('new:reply-form-standard-franchise')

@@ -35,7 +35,7 @@ export type MailParams = {
 }
 
 /**
- * Interface que representa o caso de uso de envio de e-mail.
+ * Contract que representa o caso de uso de envio de e-mail.
  * @template MailParams Tipo dos parâmetros necessários para enviar o e-mail.
  * @template Message Tipo da mensagem que será enviada.
  */

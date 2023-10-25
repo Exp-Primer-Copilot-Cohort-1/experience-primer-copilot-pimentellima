@@ -3,7 +3,7 @@ import { ActivityNotGroupIdProvider } from "App/Core/domain/errors/activity-not-
 import { CurrentNotSmallerError } from "App/Core/domain/errors/current-not-smaller-error";
 import { FormNotTypeProvider } from "App/Core/domain/errors/form-not-type-provider";
 import { QuestionNotFound } from "App/Core/domain/errors/question-not-found";
-import { RFormSFManagerInterface } from "App/Core/domain/repositories/interface/reply-form-standard-franchise-manager.interface";
+import { RFormSFManagerContract } from "App/Core/domain/repositories/interface/reply-form-standard-franchise-manager.interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { left, right } from "App/Core/shared";
 import { TypeForms } from "App/Types/IBusinessFranchises";
@@ -43,7 +43,7 @@ const makeReply = (
 	}
 }
 
-const manager: RFormSFManagerInterface = {
+const manager: RFormSFManagerContract = {
 	create: vi.fn(),
 	findInfoThisReply: vi.fn(),
 	findAllByGroupId: vi.fn(async (group_id) => {

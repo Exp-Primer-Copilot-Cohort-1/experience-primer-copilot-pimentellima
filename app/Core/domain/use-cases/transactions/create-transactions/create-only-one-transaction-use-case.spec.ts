@@ -1,6 +1,6 @@
 import { InappropriateUseCase } from 'App/Core/domain/errors/inappropriate-use-case'
 import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
-import { TransactionsManagerInterface } from 'App/Core/domain/repositories/interface/transactions-manager-interface'
+import { TransactionsManagerContract } from 'App/Core/domain/repositories/interface/transactions-manager-interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { left, right } from 'App/Core/shared'
 import { ITransaction } from 'App/Types/ITransaction'
@@ -9,7 +9,7 @@ import { TransactionWithoutProcedure } from '../helpers'
 import { CreateOnlyOneTransactionUseCase } from './create-only-one-transaction-use-case'
 
 const makeSut = () => {
-	const manager: TransactionsManagerInterface = {
+	const manager: TransactionsManagerContract = {
 		create: vi.fn(),
 	}
 	const sut = new CreateOnlyOneTransactionUseCase(manager)

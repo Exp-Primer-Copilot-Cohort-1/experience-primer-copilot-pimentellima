@@ -8,13 +8,18 @@ import { TypeForms } from 'App/Types/IBusinessFranchises'
 class StandardFormFranchisesController {
 
 	async index(ctx: HttpContextContract) {
-		const unity_id = ctx.auth.user?.unity_id.toString()
+		try {
+			const unity_id = ctx.auth.user?.unity_id.toString()
 
-		const businessFranchise = await BusinessFranchises.findOne({ unities: unity_id }).exec()
+			const businessFranchise = await BusinessFranchises.findOne({ unities: unity_id }).exec()
 
-		if (!businessFranchise) throw new UnityNotFranchise()
+			if (!businessFranchise) throw new UnityNotFranchise()
 
-		return businessFranchise?.questions
+			return businessFranchise?.questions
+		} catch (error) {
+			console.log(error)
+			throw new UnityNotFranchise()
+		}
 	}
 
 	async store(ctx: HttpContextContract) {

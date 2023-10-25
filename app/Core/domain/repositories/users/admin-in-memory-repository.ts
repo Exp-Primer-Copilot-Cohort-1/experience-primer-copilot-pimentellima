@@ -1,16 +1,20 @@
 import AdminEntity from 'App/Core/domain/entities/user/admin';
 import { PromiseEither, left, right } from 'App/Core/shared/either';
-import { AdminManagerInterface } from '../interface/admin-manager.interface';
+import { AdminManagerContract } from './admin-manager.interface';
 
 import { faker } from '@faker-js/faker';
 import { UserAlreadyExistsError } from 'App/Core/domain/errors/user-already-exists-error';
 import { UserNotFoundError } from 'App/Core/domain/errors/user-not-found';
 import { AbstractError } from 'App/Core/errors/error.interface';
+import { IAdminUser } from 'App/Types/IAdminUser';
 
-export class AdminInMemoryRepository implements AdminManagerInterface {
+export class AdminInMemoryRepository implements AdminManagerContract {
 	private items: AdminEntity[] = [];
 
 	constructor() { }
+	async activation(id: string): PromiseEither<AbstractError, IAdminUser> {
+		return right({} as IAdminUser)
+	}
 
 	public async create(
 		data: AdminEntity,

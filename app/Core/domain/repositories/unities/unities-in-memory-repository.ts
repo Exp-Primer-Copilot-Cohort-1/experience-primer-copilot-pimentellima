@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker'
+import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import { IUnity } from 'App/Types/IUnity'
 import { cnpj } from 'cpf-cnpj-validator'
-import { UnityNotFoundError } from '../../errors/unity-not-found'
-import { UnitiesManagerInterface } from '../interface/unities-manager.interface'
+import { UnitiesManagerContract } from '../interface/unities-manager.interface'
 
 const fabricateUnity = (qtd: number): IUnity[] => {
 	return Array(qtd)
@@ -38,7 +38,7 @@ const fabricateUnity = (qtd: number): IUnity[] => {
 		}))
 }
 
-export class UnitiesInMemoryRepository implements UnitiesManagerInterface {
+export class UnitiesInMemoryRepository implements UnitiesManagerContract {
 	public items: IUnity[] = []
 
 	constructor() {

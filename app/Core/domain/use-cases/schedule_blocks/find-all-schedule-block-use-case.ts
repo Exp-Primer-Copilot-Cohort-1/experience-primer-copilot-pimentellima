@@ -1,4 +1,4 @@
-import { ScheduleBlockManagerInterface } from "App/Core/domain/repositories/interface/schedule-block-manager-interface";
+import { ScheduleBlockManagerContract } from "App/Core/domain/repositories/interface/schedule-block-manager-interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither, left, right } from "App/Core/shared";
@@ -12,7 +12,7 @@ export class FindAllScheduleBlockUseCase
 	implements UseCase<Props, IScheduleBlock[]>
 {
 	constructor(
-		private readonly scheduleBlockManager: ScheduleBlockManagerInterface
+		private readonly scheduleBlockManager: ScheduleBlockManagerContract
 	) { }
 
 	public async execute(

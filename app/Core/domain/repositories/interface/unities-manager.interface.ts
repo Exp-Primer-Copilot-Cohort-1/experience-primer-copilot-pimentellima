@@ -2,7 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
 import { IUnity } from 'App/Types/IUnity'
 
-export interface UnitiesManagerInterface {
+export interface UnitiesManagerContract {
 	create: (unity: IUnity, ...args: any) => PromiseEither<AbstractError, IUnity>
 	findById: (id: string) => PromiseEither<AbstractError, IUnity>
 	findAll: () => PromiseEither<AbstractError, IUnity[]>

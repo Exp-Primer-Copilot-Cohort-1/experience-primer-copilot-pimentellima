@@ -1,5 +1,5 @@
 import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
-import { CensusUnitiesManagerInterface } from 'App/Core/domain/repositories/interface'
+import { CensusUnitiesManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
@@ -19,7 +19,7 @@ type UseCaseFindActivitiesByProf = UseCase<
 
 export class FindActivitiesOfProfByProfByUnityUseCase
 	implements UseCaseFindActivitiesByProf {
-	constructor(private readonly count: CensusUnitiesManagerInterface) { }
+	constructor(private readonly count: CensusUnitiesManagerContract) { }
 
 	public async execute({
 		unity_id,

@@ -4,7 +4,7 @@ import { COLLECTION_NAME as COLLECTION_NAME_UNITIES } from './Unity'
 import { COLLECTION_NAME as COLLECTION_NAME_USER } from './User'
 
 /**
- * Interface que define as propriedades de uma prescrição.
+ * Contract que define as propriedades de uma prescrição.
  */
 interface IPrescriptionModel extends Omit<IPrescription, 'prof'> {
 	/**

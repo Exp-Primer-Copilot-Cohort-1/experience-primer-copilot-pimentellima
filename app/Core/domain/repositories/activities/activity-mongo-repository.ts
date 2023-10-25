@@ -1,7 +1,7 @@
 import { Document } from '@ioc:Mongoose'
 import ActivityEntity from 'App/Core/domain/entities/activities/activity'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
-import { ClientNotFoundError, UserNotFoundError } from 'App/Core/domain/errors'
+import { ClientNotFoundError, IdNotProvidedError, UserNotFoundError } from 'App/Core/domain/errors'
 import { ActivityNotFoundError } from 'App/Core/domain/errors/activity-not-found'
 import { MissingParamsError } from 'App/Core/domain/errors/missing-params'
 import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
@@ -14,11 +14,11 @@ import Activity, { COLLECTIONS_REFS } from 'App/Models/Activity'
 import { STATUS_ACTIVITY, type IActivity } from 'App/Types/IActivity'
 import { inject, injectable, registry } from 'tsyringe'
 import { PROJECTION_CLIENT, PROJECTION_DEFAULT } from '../helpers/projections'
-import { ActivitiesManagerInterface } from '../interface/activity-manager.interface'
+import { ActivitiesManagerContract } from '../interface/activity-manager.interface'
 
 @injectable()
 @registry([{ token: ActivityMongoRepository, useClass: ActivityMongoRepository }])
-export class ActivityMongoRepository implements ActivitiesManagerInterface {
+export class ActivityMongoRepository implements ActivitiesManagerContract {
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery,
 		@inject(SessionTransaction) private readonly session: ISessionTransaction,
@@ -74,6 +74,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 			client: client_id,
 			type: STATUS_ACTIVITY.MARKED,
 		})
+			.where(this.opts?.only_prof)
 			.populate(COLLECTIONS_REFS.CLIENTS, PROJECTION_CLIENT)
 			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
 			.populate(COLLECTIONS_REFS.PROCEDURES, PROJECTION_DEFAULT)
@@ -120,7 +121,7 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 	}
 
 	async deleteById(id: string): PromiseEither<AbstractError, IActivity> {
-		if (!id) return left(new MissingParamsError('id'))
+		if (!id) return left(new IdNotProvidedError())
 
 		const activity = await Activity.findByIdAndDelete(id)
 			.populate(COLLECTIONS_REFS.CLIENTS, PROJECTION_CLIENT)
@@ -147,7 +148,6 @@ export class ActivityMongoRepository implements ActivitiesManagerInterface {
 
 		if (entityOrErr.isLeft()) return left(entityOrErr.extract())
 
-		console.log(values.date, values.hour_end, values.hour_start)
 		const entity = entityOrErr.extract().update(values)
 
 		const updated = (await Activity.findByIdAndUpdate(id, entity, {

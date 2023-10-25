@@ -2,6 +2,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { AppointmentStatus } from 'App/Helpers'
 import { ActivityPayment, IActivity, STATUS_ACTIVITY } from 'App/Types/IActivity'
+import { Generic } from 'App/Types/ITransaction'
 import { AbstractActivity } from '../abstract/activity-abstract'
 import fetchUserAndScheduleBlocks from '../helpers/fetch-user-and-schedule-blocks'
 import validationActivity from './validations-activity'
@@ -89,7 +90,7 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 			.defineObs(params.obs || this.obs)
 			.defineProf(params.prof?.toString() || this.prof?.toString())
 			.defineActive(params.active || this.active)
-			.defineUnityId(params.unity_id as string)
+			.defineUnityId(params.unity_id?.toString() as string)
 			.defineId((params._id as string) || (this._id as string))
 	}
 
@@ -106,10 +107,10 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 				.defineHourEnd(params.hour_end)
 				.defineProcedures(params.procedures)
 				.defineScheduled(params.scheduled || AppointmentStatus.SCHEDULED)
-				.defineClient(params.client?.toString())
+				.defineClient(params.client as Generic)
 				.defineType(STATUS_ACTIVITY.MARKED)
 				.defineObs(params.obs)
-				.defineProf(params.prof.toString())
+				.defineProf(params.prof as Generic)
 				.defineActive(true)
 				.defineUnityId(params.unity_id?.toString() as string)
 

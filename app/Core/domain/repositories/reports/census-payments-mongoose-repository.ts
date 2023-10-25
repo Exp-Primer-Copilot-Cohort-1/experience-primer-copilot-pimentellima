@@ -6,10 +6,10 @@ import {
 	ICensusPaymentByProf,
 	ICensusPaymentForm,
 } from 'App/Types/ICensus'
-import { CensusPaymentsManagerInterface } from '../interface/census-payments.interface'
+import { CensusPaymentsManagerContract } from '../interface/census-payments.interface'
 import generateMatch from './generate-match-census'
 
-export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerInterface {
+export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerContract {
 	async findPaymentsByHealthInsurance(
 		unity_id: string,
 		date_start: string,

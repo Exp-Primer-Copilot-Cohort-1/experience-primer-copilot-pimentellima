@@ -1,6 +1,6 @@
-import { ProfsMongooseRepository } from "App/Core/domain/repositories";
+import { SecsMongooseRepository } from "App/Core/domain/repositories";
 import { ICount } from "App/Core/domain/repositories/helpers/count";
-import { ProfsManagerInterface } from "App/Core/domain/repositories/interface";
+import { SecsManagerContract } from "App/Core/domain/repositories/interface";
 import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither } from "App/Core/shared";
@@ -9,12 +9,12 @@ import { inject, injectable, registry } from "tsyringe";
 type In = never
 
 @injectable()
-@registry([{ token: ProfsCountsUseCase, useClass: ProfsCountsUseCase }])
-export class ProfsCountsUseCase
+@registry([{ token: SecsCountsUseCase, useClass: SecsCountsUseCase }])
+export class SecsCountsUseCase
 	implements UseCase<In, ICount>
 {
 	constructor(
-		@inject(ProfsMongooseRepository) private readonly manager: ProfsManagerInterface
+		@inject(SecsMongooseRepository) private readonly manager: SecsManagerContract
 	) { }
 
 	public async execute(): PromiseEither<AbstractError, ICount> {
