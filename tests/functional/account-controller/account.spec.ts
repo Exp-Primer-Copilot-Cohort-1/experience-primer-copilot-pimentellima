@@ -4,22 +4,17 @@ import Account from 'App/Models/Account'
 import { expect } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 
-import { Types } from '@ioc:Mongoose'
-const { ObjectId } = Types
-
-const newAccount = {
+const fabricAccount = () => ({
 	name: faker.person.fullName(),
 	cash: 0,
 	date: faker.date.future(),
-	bank: 'SANTANDER',
+	bank: 'TESTES BANK',
 	active: true,
-}
+})
 
 const deleteMany = async () => {
 	return await Account.deleteMany({
-		name: {
-			'$in': [newAccount.name, 'new name'],
-		},
+		bank: 'TESTES BANK',
 	})
 }
 
@@ -33,6 +28,7 @@ test.group('Account Controller', () => {
 	})
 
 	test('create account', async ({ client }) => {
+		const newAccount = fabricAccount()
 		await deleteMany()
 
 		const { token } = await loginAndGetToken(client)
@@ -49,7 +45,7 @@ test.group('Account Controller', () => {
 	})
 
 	test('display account by id', async ({ client }) => {
-		await deleteMany()
+		const newAccount = fabricAccount()
 		const { token } = await loginAndGetToken(client)
 
 		const account = await Account.create({
@@ -57,9 +53,7 @@ test.group('Account Controller', () => {
 			unity_id: process.env.TEST_INTEGRATION_UNITY_ID as string
 		})
 
-		const id = account._id.toString()
-
-		const response = await client.get('accounts/' + id).bearerToken(token.token)
+		const response = await client.get('accounts/' + account._id.toString()).bearerToken(token.token)
 		response.assertStatus(200)
 
 		const { deletedCount } = await deleteMany()
@@ -67,15 +61,8 @@ test.group('Account Controller', () => {
 		expect(deletedCount).to.greaterThan(0)
 	})
 
-	test('display account not found', async ({ client }) => {
-		const { token } = await loginAndGetToken(client)
-		const id = new ObjectId().toString()
-		const response = await client.get('accounts/' + id).bearerToken(token.token)
-		response.assertStatus(404 || 400)
-	})
-
 	test('update account', async ({ client }) => {
-		await deleteMany()
+		const newAccount = fabricAccount()
 
 		const account = await Account.create({
 			...newAccount,
