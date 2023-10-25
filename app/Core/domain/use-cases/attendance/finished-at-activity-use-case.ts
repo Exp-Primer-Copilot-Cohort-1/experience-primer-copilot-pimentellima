@@ -22,7 +22,7 @@ export class FinishedActivityUseCase implements UseCase<In, IActivity> {
 
 	constructor(
 		@inject(ActivityAttendanceMongoRepository)
-		private readonly manager: ActivitiesManagerAttendanceContract,
+		private readonly attendance: ActivitiesManagerAttendanceContract,
 		@inject(ProductStockDepletionUseCase)
 		private readonly stockDepletionUseCase: IProductStockDepletionUseCase,
 	) { } // eslint-disable-line
@@ -32,6 +32,6 @@ export class FinishedActivityUseCase implements UseCase<In, IActivity> {
 
 		await this.stockDepletionUseCase.execute({ id })
 
-		return await this.manager.stopActivity(id, finished_at)
+		return await this.attendance.stopActivity(id, finished_at)
 	}
 }

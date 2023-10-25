@@ -1,5 +1,5 @@
 import { ActivityNotFoundError, IdNotProvidedError } from 'App/Core/domain/errors'
-import { ActivityAttendanceMongoRepository } from 'App/Core/domain/repositories'
+import { ActivityMongoRepository } from 'App/Core/domain/repositories'
 import {
 	ActivitiesManagerContract
 } from 'App/Core/domain/repositories/interface'
@@ -8,6 +8,7 @@ import { PromiseEither, left, right } from 'App/Core/shared'
 import Procedure from 'App/Models/Procedure'
 import Stock from 'App/Models/Stock'
 import { IStock } from 'App/Types/IStock'
+import { Generic } from 'App/Types/ITransaction'
 import { inject, injectable, registry } from 'tsyringe'
 import { IProductStockDepletionUseCase } from './use-cases.contract'
 
@@ -20,22 +21,25 @@ type In = {
 export class ProductStockDepletionUseCase implements IProductStockDepletionUseCase {
 
 	constructor(
-		@inject(ActivityAttendanceMongoRepository)
+		@inject(ActivityMongoRepository)
 		private readonly manager: ActivitiesManagerContract,
 	) { } // eslint-disable-line
 
 	public async execute({ id }: In): PromiseEither<AbstractError, Message> {
 		if (!id) return left(new IdNotProvidedError())
-
 		const activityOrErr = await this.manager.find(id)
+
 		if (activityOrErr.isLeft()) return left(new ActivityNotFoundError())
 
 		const activity = activityOrErr.extract()
-		const stocksData = await Stock.find()
+
+		const stocksData = await Stock.find({
+			unity_id: activity.unity_id,
+		})
 
 		const proceduresData = await Procedure.find({
 			_id: {
-				$in: activity.procedures.map((p) => p._id),
+				$in: activity.procedures.map((p) => (p._id as Generic).value),
 			},
 		})
 
@@ -44,7 +48,7 @@ export class ProductStockDepletionUseCase implements IProductStockDepletionUseCa
 		activity.procedures.forEach((procedure) => {
 
 			const products = proceduresData.find(
-				(p) => p._id.toString() === procedure._id.toString(),
+				(p) => p._id.toString() === (procedure._id as Generic).value.toString(),
 			)?.products
 
 			if (!products) return
