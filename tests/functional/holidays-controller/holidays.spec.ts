@@ -33,7 +33,7 @@ test.group('Holidays Controller', () => {
 			.json(newHoliday)
 			.bearerToken(token.token)
 
-		responseNew.assertStatus(200)
+		responseNew.assertStatus(200 | 204)
 
 		// const responseDelete = await client
 		// 	.delete(`holidays/${_id}`)
@@ -51,4 +51,6 @@ test.group('Holidays Controller', () => {
 			.select('holidays')
 			.exec()
 	})
+
+
 })

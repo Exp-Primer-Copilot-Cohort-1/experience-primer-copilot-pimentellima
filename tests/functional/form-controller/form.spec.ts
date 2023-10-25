@@ -34,11 +34,8 @@ test.group('Form Controller', () => {
 			.bearerToken(token.token)
 		console.log(response.body())
 
-		if (response.status() !== 200) {
-			response.assertStatus(204)
-		} else {
-			response.assertStatus(200)
-		}
+		response.assertStatus(200 | 204)
+
 
 		const { deletedCount } = await Form.deleteMany({ name: 'teste' })
 		expect(deletedCount).to.greaterThan(0)
@@ -66,11 +63,8 @@ test.group('Form Controller', () => {
 			.json({ ...updatedForm })
 			.bearerToken(token.token)
 
-		if (response.status() !== 200) {
-			response.assertStatus(204)
-		} else {
-			response.assertStatus(200)
-		}
+		response.assertStatus(200 | 204)
+
 		const updatedForms = await Form.findById(form._id)
 
 		assert.equal(updatedForms?.name, updatedForm.name)

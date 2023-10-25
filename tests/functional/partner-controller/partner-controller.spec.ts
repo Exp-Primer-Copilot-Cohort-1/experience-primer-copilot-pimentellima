@@ -55,11 +55,8 @@ test.group('Partner Controller', async () => {
 			.json({ ...updatedData })
 			.bearerToken(token.token)
 
-		if (response.status() !== 200) {
-			response.assertStatus(204)
-		} else {
-			response.assertStatus(200)
-		}
+		response.assertStatus(200 | 204)
+
 		const updatedPartner = await Partner.findById(partner._id)
 
 		assert.equal(updatedPartner?.name, updatedData.name)

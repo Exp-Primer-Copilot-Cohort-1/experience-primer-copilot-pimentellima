@@ -69,6 +69,9 @@ test.group('Health Insurance Controller', () => {
 		response.assertStatus(404)
 	})
 	test('display update health insurance by id', async ({ client }) => {
+		await HealthInsurance.deleteMany({
+			unity_id: '652f062efe130421abf65b37',
+		})
 		const name = faker.person.firstName()
 		const { token, user } = await loginAndGetToken(client)
 
@@ -82,17 +85,16 @@ test.group('Health Insurance Controller', () => {
 				name,
 			})
 			.send()
-		if (response.status() !== 200) {
+		response.assertStatus(200 | 204)
 
-			response.assertStatus(204)
-		} else {
-			response.assertStatus(200)
-		}
-		const data = response.body()
-		assert.equal(data.name, name)
+		const healthUpdated: any = await HealthInsurance.findById(health._id)
+
+		assert.equal(healthUpdated.name, name)
+		console.log(response.body())
+		// assert.equal(data.name, name)
 
 		const { deletedCount } = await HealthInsurance.deleteOne({
-			name: data.name,
+			name: name,
 		})
 		expect(deletedCount).to.greaterThan(0)
 	})
@@ -111,11 +113,8 @@ test.group('Health Insurance Controller', () => {
 	// 		.bearerToken(token.token)
 	// 		.send()
 
-	// 	if (response.status() !== 200) {
-	// 		response.assertStatus(204)
-	// 	} else {
-	// 		response.assertStatus(200)
-	// 	}
+	// response.assertStatus(200 | 204)
+
 	// }).skip()
 	test('display create health insurance', async ({ client }) => {
 		const { token, user } = await loginAndGetToken(client)

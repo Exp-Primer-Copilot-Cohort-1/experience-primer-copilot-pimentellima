@@ -81,11 +81,8 @@ test.group('Unity Controller', () => {
 			.json({ ...updatedData })
 			.bearerToken(token.token)
 		//		console.log(response.body())
-		if (response.status() !== 200) {
-			response.assertStatus(204)
-		} else {
-			response.assertStatus(200)
-		}
+		response.assertStatus(200 | 204)
+
 
 		const updatedUnity = await Unity.findById(unity._id)
 
