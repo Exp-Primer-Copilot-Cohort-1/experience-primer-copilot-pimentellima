@@ -175,7 +175,7 @@ describe('Create with procedures transaction use case (Unit)', () => {
 	})
 
 	it('should throw an error if there is an error creating the transaction document ', async () => {
-		const { sut, transaction, manager, spyEntityProcedure, spyEntityTransaction } =
+		const { sut, transaction, manager, spyEntityTransaction } =
 			makeSut()
 
 		spyEntityTransaction.mockImplementationOnce(() => right(mountTransaction()))

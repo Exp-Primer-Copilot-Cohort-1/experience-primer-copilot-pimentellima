@@ -25,7 +25,7 @@ const obj: IPaymentProf = {
 		value: '6359660fc109b232759921d6',
 	},
 	unity_id: '6359660fc109b232759921d4',
-	value: 10,
+	abs: 10,
 }
 
 const makeSut = () => {

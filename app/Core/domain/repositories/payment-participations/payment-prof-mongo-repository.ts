@@ -92,6 +92,31 @@ export class PaymentProfMongoRepository implements PaymentProfManagerContract {
 		@inject(OptsQuery) private readonly opts: OptsQuery = OptsQuery.build()
 	) { } // eslint-disable-line
 
+	private async createDefaultParticipation({ health_insurance_id, prof_id, unity_id, procedure_id }): PromiseEither<AbstractError, IPaymentProf> {
+		const defaultParticipationOrErr = await this.createOrUpdatePaymentProf({
+			abs: 0,
+			active: true,
+			health_insurance: {
+				label: '',
+				value: health_insurance_id,
+			},
+			prof: {
+				label: '',
+				value: prof_id,
+
+			},
+			unity_id,
+			percent: 0,
+			procedure: {
+				label: '',
+				value: procedure_id,
+			}
+		})
+
+
+		return defaultParticipationOrErr
+	}
+
 	async createOrUpdatePaymentProf(
 		participation: IPaymentProf,
 	): PromiseEither<AbstractError, IPaymentProf> {
@@ -193,7 +218,24 @@ export class PaymentProfMongoRepository implements PaymentProfManagerContract {
 
 		const data = await PaymentParticipations.aggregate(pipeline)
 
-		if (!data?.length) return left(new ParticipationPaymentsNotFoundError())
+		if (!data?.length) {
+			const defaultParticipationOrErr = await this.createDefaultParticipation({
+				health_insurance_id,
+				prof_id,
+				unity_id,
+				procedure_id
+			})
+
+			if (defaultParticipationOrErr.isLeft()) return left(defaultParticipationOrErr.extract())
+
+			return right({
+				_id: defaultParticipationOrErr.extract()._id,
+				abs: defaultParticipationOrErr.extract().abs,
+				percent: defaultParticipationOrErr.extract().percent,
+				active: defaultParticipationOrErr.extract().active,
+				date_start: new Date(),
+			})
+		}
 
 		return right(data[0])
 	}
