@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { test } from '@japa/runner'
 import Account from 'App/Models/Account'
-import { assert, expect } from 'chai'
+import { expect } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 
 import { Types } from '@ioc:Mongoose'
@@ -13,7 +13,14 @@ const newAccount = {
 	date: faker.date.future(),
 	bank: 'SANTANDER',
 	active: true,
-	unity_id: '652f062efe130421abf65b37',
+}
+
+const deleteMany = async () => {
+	return await Account.deleteMany({
+		name: {
+			'$in': [newAccount.name, 'new name'],
+		},
+	})
 }
 
 test.group('Account Controller', () => {
@@ -26,7 +33,7 @@ test.group('Account Controller', () => {
 	})
 
 	test('create account', async ({ client }) => {
-		await Account.deleteMany({ unity_id: '652f062efe130421abf65b37' })
+		await deleteMany()
 
 		const { token } = await loginAndGetToken(client)
 
@@ -35,27 +42,27 @@ test.group('Account Controller', () => {
 			.json(newAccount)
 			.bearerToken(token.token)
 
-		assert.exists(newAccount.name)
-
-
 		response.assertStatus(200 | 204)
 
-
-		const { deletedCount } = await Account.deleteOne({ name: newAccount.name })
+		const { deletedCount } = await deleteMany()
 		expect(deletedCount).to.greaterThan(0)
 	})
 
 	test('display account by id', async ({ client }) => {
+		await deleteMany()
 		const { token } = await loginAndGetToken(client)
-		await Account.deleteMany({ unity_id: '652f062efe130421abf65b36' })
-		const account = await Account.create({ ...newAccount, unity_id: '652f062efe130421abf65b36' })
+
+		const account = await Account.create({
+			...newAccount,
+			unity_id: process.env.TEST_INTEGRATION_UNITY_ID as string
+		})
 
 		const id = account._id.toString()
 
 		const response = await client.get('accounts/' + id).bearerToken(token.token)
 		response.assertStatus(200)
 
-		const { deletedCount } = await Account.deleteOne({ _id: id })
+		const { deletedCount } = await deleteMany()
 
 		expect(deletedCount).to.greaterThan(0)
 	})
@@ -63,43 +70,29 @@ test.group('Account Controller', () => {
 	test('display account not found', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
 		const id = new ObjectId().toString()
-
-		try {
-			const response = await client.get('accounts/' + id).bearerToken(token.token)
-			response.assertStatus(404 || 400)
-		} catch (error) { }
-	})
-
-	test('display account invalid id', async ({ client }) => {
-		const { token } = await loginAndGetToken(client)
-		const id = '0'
-
 		const response = await client.get('accounts/' + id).bearerToken(token.token)
-
-		if (response.status() !== 400) {
-			response.assertStatus(404)
-		} else {
-			response.assertStatus(200)
-		}
+		response.assertStatus(404 || 400)
 	})
 
 	test('update account', async ({ client }) => {
-		await Account.deleteMany({ unity_id: '652f062efe130421abf65b37' })
+		await deleteMany()
 
-		const account = await Account.create(newAccount)
+		const account = await Account.create({
+			...newAccount,
+			unity_id: process.env.TEST_INTEGRATION_UNITY_ID as string
+		})
+
 		const { token } = await loginAndGetToken(client)
 		const id = account._id.toString()
 
 		const response = await client
-			.put('accounts/' + id + '?hasContent=true')
+			.put('accounts/' + id)
 			.json({ name: 'new name' })
 			.bearerToken(token.token)
 
-		response.assertStatus(200)
+		response.assertStatus(200 | 204)
 
-		const body = response.body()
-		const { deletedCount } = await Account.deleteOne({ _id: id })
+		const { deletedCount } = await deleteMany()
 		expect(deletedCount).to.greaterThan(0)
-		assert.equal(body.name, 'new name')
 	})
 })

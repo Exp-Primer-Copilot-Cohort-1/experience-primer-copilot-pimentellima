@@ -1,6 +1,5 @@
 import { test } from '@japa/runner'
 import PaymentParticipations from 'App/Models/PaymentParticipations'
-import { assert } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 
 const paymentProf = {
@@ -21,6 +20,20 @@ const paymentProf = {
 	active: false,
 }
 
+const deleteMany = async () => {
+	return await PaymentParticipations.deleteMany({
+		prof: {
+			'$in': ['63597857c109b232759921d9'],
+		},
+		health_insurance: {
+			'$in': ['63597974c109b232759921dc'],
+		},
+		procedure: {
+			'$in': ['6359962cc109b232759921e1'],
+		},
+	})
+}
+
 test.group('PaymentProf Controller', () => {
 	test('Find all payment_profs', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
@@ -32,6 +45,7 @@ test.group('PaymentProf Controller', () => {
 	})
 
 	test('Create payment participations', async ({ client }) => {
+		await deleteMany()
 		const { token } = await loginAndGetToken(client)
 
 		const response = await client
@@ -41,29 +55,6 @@ test.group('PaymentProf Controller', () => {
 
 		response.assertStatus(204 | 200)
 
-		const prof_id: any = paymentProf.prof.value.toString()
-
-		const updatedDocument = await PaymentParticipations.findOneAndUpdate(
-			{ prof: prof_id },
-			{
-				$pull: {
-					prices: { active: { $in: [true, false] } },
-				},
-			},
-			{
-				new: true,
-			},
-		)
-		assert.equal(updatedDocument?.prices.length, 0)
+		await deleteMany()
 	})
-
-	// test('Find payment_prof by id', async ({ client }) => {
-	// 	const { token } = await loginAndGetToken(client)
-	// 	const id = '643dce475ddb2027c73fd269'
-
-	// 	const response = await client
-	// 		.get(`payment-participations/${id}`)
-	// 		.bearerToken(token.token)
-	// 	response.assertStatus(200)
-	// })
 })

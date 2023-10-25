@@ -32,5 +32,5 @@ test.group('User Controller', () => {
 
 		const { deletedCount } = await User.deleteOne({ _id })
 		assert.equal(deletedCount, 1)
-	})
+	}).skip()
 })

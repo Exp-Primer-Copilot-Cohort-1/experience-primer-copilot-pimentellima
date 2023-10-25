@@ -1,5 +1,6 @@
 import { test } from '@japa/runner'
 import Unity from 'App/Models/Unity'
+import { HolidayType } from 'App/Types/IHoliday'
 import { loginAndGetToken } from '../helpers/login'
 
 test.group('Holidays Controller', () => {
@@ -23,33 +24,28 @@ test.group('Holidays Controller', () => {
 		const newHoliday = {
 			date: new Date().toISOString(),
 			name: 'Feriado',
-			type: 'teste',
+			type: HolidayType.Municipal,
 		}
 
 		const { token } = await loginAndGetToken(client)
 
-		const responseNew = await client
+		const response = await client
 			.post('holidays')
 			.json(newHoliday)
 			.bearerToken(token.token)
 
-		responseNew.assertStatus(200 | 204)
-
-		// const responseDelete = await client
-		// 	.delete(`holidays/${_id}`)
-		// 	.bearerToken(token.token)
-
-		// responseDelete.assertStatus(200)
+		response.assertStatus(200 | 204)
 
 		await Unity.findByIdAndUpdate(
 			'6359660fc109b232759921d4',
 			{
-				$pull: { holidays: { name: 'Feriado', type: 'teste' } },
+				$pull: { holidays: { name: 'Feriado', type: HolidayType.Municipal } },
 			},
-			{ new: true, useFindAndModify: false },
+			{ new: true },
 		)
 			.select('holidays')
 			.exec()
+
 	})
 
 

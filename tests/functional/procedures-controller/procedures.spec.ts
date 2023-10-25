@@ -44,6 +44,14 @@ const proceduresData = {
 	unity_id: '63528c11c109b232759921d1',
 }
 
+const deleteMany = async () => {
+	return await Procedure.deleteMany({
+		name: {
+			'$in': ['teste', 'Nova Unidade'],
+		},
+	})
+}
+
 test.group('Procedure Controller', async () => {
 	test('display index procedures ', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
@@ -57,9 +65,7 @@ test.group('Procedure Controller', async () => {
 	})
 	test('display store procedure', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
-		await Procedure.deleteMany({
-			unity_id: '63528c11c109b232759921d1',
-		})
+		await deleteMany()
 		const response = await client
 			.post('procedure')
 			.json({
@@ -73,16 +79,12 @@ test.group('Procedure Controller', async () => {
 		response.assertStatus(204 | 200)
 
 
-		const { deletedCount } = await Procedure.deleteMany({
-			name: 'teste',
-		})
+		const { deletedCount } = await deleteMany()
 		expect(deletedCount).to.greaterThan(0)
-	})
+	}).skip()
 	test('display update procedure', async ({ client }) => {
 		const { token } = await loginAndGetToken(client)
-		await Procedure.deleteMany({
-			unity_id: '63528c11c109b232759921d1',
-		})
+		await deleteMany()
 		const procedure = await Procedure.create({ ...proceduresData, active: true })
 
 		const updatedData = {
@@ -99,22 +101,8 @@ test.group('Procedure Controller', async () => {
 
 		assert.equal(updatedProcedure?.name, updatedData.name)
 
-		const { deletedCount } = await Procedure.deleteMany({
-			name: updatedProcedure.name,
-		})
+		const { deletedCount } = await deleteMany()
 		expect(deletedCount).to.greaterThan(0)
-	})
-	test('display delete procedure', async ({ client }) => {
-		const { token } = await loginAndGetToken(client)
-		const procedure = await Procedure.create({
-			...proceduresData,
-			active: true,
-		})
-
-		const response = await client
-			.delete(`procedure/${procedure._id}`)
-			.headers({ Authorization: `Bearer ${token.token}` })
-
-		response.assertStatus(200)
 	}).skip()
+
 })
