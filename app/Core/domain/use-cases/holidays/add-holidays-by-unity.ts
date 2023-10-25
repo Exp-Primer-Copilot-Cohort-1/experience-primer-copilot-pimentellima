@@ -5,15 +5,19 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { IHoliday } from 'App/Types/IHoliday'
 import { format, parseISO } from 'date-fns'
+import { inject, injectable, registry } from 'tsyringe'
 import { InvalidParamsError } from '../../errors/invalid-params-error'
 import { UnityNotFoundError } from '../../errors/unity-not-found'
+import { HolidaysMongoRepository } from '../../repositories'
 
 type NewHoliday = {
 	unity_id: string
 } & IHoliday
 
+@injectable()
+@registry([{ token: AddHolidaysByUnityUseCase, useClass: AddHolidaysByUnityUseCase }])
 export class AddHolidaysByUnityUseCase implements UseCase<NewHoliday, IHoliday> {
-	constructor(private readonly holidaysRepository: HolidaysManagerInterface) { }
+	constructor(@inject(HolidaysMongoRepository) private readonly manager: HolidaysManagerInterface) { }
 
 	public async execute({
 		unity_id,
@@ -38,7 +42,7 @@ export class AddHolidaysByUnityUseCase implements UseCase<NewHoliday, IHoliday> 
 			return left(holidayOrErr.extract())
 		}
 
-		const newHolidayOrErr = await this.holidaysRepository.addHoliday(
+		const newHolidayOrErr = await this.manager.addHoliday(
 			unity_id,
 			holidayOrErr.extract().params(),
 		)

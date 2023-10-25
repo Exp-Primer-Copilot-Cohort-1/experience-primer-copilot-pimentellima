@@ -1,4 +1,4 @@
-import { Controller } from 'App/Core/adapters/controller'
+import { Controller, ControllerInjection } from 'App/Core/adapters/controller'
 import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
 import {
 	HolidaysMongoRepository,
@@ -21,11 +21,10 @@ export const makeHolidaysFindAllByUnityIdComposer = (): ControllerGeneric => {
 		),
 	)
 }
+export const makeHolidaysAddByUnityComposer = (): ControllerGeneric =>
+	ControllerInjection.resolve(AddHolidaysByUnityUseCase)
 
-export const makeHolidaysAddByUnityComposer = (): ControllerGeneric => {
-	return new Controller(new AddHolidaysByUnityUseCase(new HolidaysMongoRepository()))
-}
+export const makeHolidaysRemoveByUnityComposer = (): ControllerGeneric =>
+	ControllerInjection.resolve(RemoveHolidaysByUnityUseCase)
 
-export const makeHolidaysRemoveByUnityComposer = (): ControllerGeneric => {
-	return new Controller(new RemoveHolidaysByUnityUseCase(new HolidaysMongoRepository()))
-}
+
