@@ -10,7 +10,8 @@ import { IPaymentProf, ParticipationPrice } from 'App/Types/IPaymentProf'
 import { Types } from 'mongoose'
 import { PaymentProfManagerContract } from '../interface/payment-prof-manager-interface'
 
-import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
+import { ISessionTransaction } from 'App/Core/infra/infra'
+import { SessionTransaction } from 'App/Core/infra/session-transaction'
 import PaymentParticipations from 'App/Models/PaymentParticipations'
 import { inject, injectable, registry } from 'tsyringe'
 

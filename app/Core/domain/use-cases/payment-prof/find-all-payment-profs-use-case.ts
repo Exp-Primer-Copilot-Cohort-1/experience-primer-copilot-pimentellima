@@ -5,13 +5,14 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import { IPaymentProf } from 'App/Types/IPaymentProf'
-import { inject, injectable } from 'tsyringe'
+import { inject, injectable, registry } from 'tsyringe'
 
 type TypeParams = {
 	unity_id: string
 }
 
 @injectable()
+@registry([{ token: FindAllPaymentProfsUseCase, useClass: FindAllPaymentProfsUseCase }])
 export class FindAllPaymentProfsUseCase implements UseCase<TypeParams, IPaymentProf[]> {
 	constructor(
 		@inject(PaymentProfMongoRepository) private readonly manager: PaymentProfManagerContract) {
