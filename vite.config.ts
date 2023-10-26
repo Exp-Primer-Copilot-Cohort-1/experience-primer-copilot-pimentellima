@@ -26,7 +26,7 @@ export default defineConfig({
 	test: {
 		setupFiles: ['./setupTests.ts', './setupMocks.ts'],
 		coverage: {
-			enabled: true,
+			enabled: false,
 			provider: 'istanbul',
 			all: true,
 			include: ['app/Core/**/*.ts'],
