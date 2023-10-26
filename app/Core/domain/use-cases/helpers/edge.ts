@@ -6,6 +6,8 @@ const EDGE = {
 	confirm: 'emails/confirm',
 	forgot_password: 'emails/forgot-password',
 	create_password: 'emails/create-password',
+	forgot_password_text: 'emails/forgot-password-text',
+	password_recovery_url: 'emails/password_recovery_url',
 	new_account: 'emails/new-account',
 	reply_current_greater_previous: 'emails/reply-current-greater-previous',
 }
