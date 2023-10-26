@@ -5,7 +5,7 @@ import { CacheContract } from "./infra";
 const DAY = 60 * 60 * 24 // 1 day
 
 @singleton()
-class Cache implements CacheContract {
+export class Cache implements CacheContract {
 	private static time = DAY // 1 day in seconds
 
 	async set(key: string, value: Object, seconds: number = Cache.time) {

@@ -286,6 +286,10 @@ const UserSchema = new Schema<IUser>(
 )
 
 UserSchema.pre('save', async function (next) {
+	if (this.isModified('password')) {
+		console.log('hashing password-----------')
+		this.password = await Hash.make(this.password)
+	  }
 	if (this.isNew) {
 		this.password = await Hash.make(this?.password)
 		this.document = await encrypt(this.document.replace(/\D/g, ''))

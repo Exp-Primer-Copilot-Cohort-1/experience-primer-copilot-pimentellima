@@ -43,7 +43,7 @@ Route.get('unities/:email', 'UnityController.findByName')
 
 Route.get('activity/single/:id', 'ActivityController.findActivityById')
 
-Route.post('recover', 'RecoverController.store')
+Route.post('send-recovery-email', 'RecoverController.sendRecoveryEmail')
 
 Route.group(() => {
 	Route.post('user', 'SignUpAdminController.store')
@@ -58,6 +58,7 @@ Route.group(() => {
 
 Route.post('sessions/logout', 'SessionController.logout')
 
+Route.post('users/redefine-password', 'UserControllerV2.redefinePassword')
 Route.group(() => {
 	Route.post('users', 'UserController.store')
 
