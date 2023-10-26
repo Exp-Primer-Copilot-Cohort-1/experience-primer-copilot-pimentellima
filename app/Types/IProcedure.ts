@@ -20,3 +20,11 @@ export interface IProcedure {
 	created_at: Date | string
 	updated_at: Date | string
 }
+
+export interface BasicProcedure {
+	price: number
+	name: string
+	health_insurance: string
+	color: string
+	minutes: number
+}

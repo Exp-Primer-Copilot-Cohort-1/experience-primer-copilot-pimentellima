@@ -1,12 +1,12 @@
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { ProcedureNotFoundError } from 'App/Core/domain/errors/procedure-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { PromiseEither, right } from 'App/Core/shared/either'
+import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Procedure, { COLLECTIONS_REFS } from 'App/Models/Procedure'
-import { IProcedure } from 'App/Types/IProcedure'
+import { BasicProcedure, IProcedure } from 'App/Types/IProcedure'
 import { inject, injectable, registry } from 'tsyringe'
-import { ICount } from '../helpers/count'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
+import { makePipelineBasicProcedure } from './pipelines'
 import { ProceduresManagerContract } from './procedures-manager.interface'
 
 @injectable()
@@ -16,8 +16,19 @@ export class ProceduresMongooseRepository implements ProceduresManagerContract {
 	constructor(
 		@inject(OptsQuery) private readonly opts: OptsQuery
 	) { }
-	getCount: (unity_id: string) => PromiseEither<AbstractError, ICount>
 
+	async findBasic(
+		id: string,
+		health_insurance_id: string
+	): PromiseEither<AbstractError, BasicProcedure> {
+		const pipeline = makePipelineBasicProcedure(id, health_insurance_id)
+
+		const [procedure] = await Procedure.aggregate(pipeline)
+
+		if (!procedure) return left(new ProcedureNotFoundError())
+
+		return right(procedure as BasicProcedure)
+	}
 
 	async findAll(unity_id: string): PromiseEither<AbstractError, IProcedure[]> {
 

@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
-import { IProcedure } from 'App/Types/IProcedure'
+import { BasicProcedure, IProcedure } from 'App/Types/IProcedure'
 
 export interface ProceduresManagerContract {
 	findByName: (
@@ -15,4 +15,8 @@ export interface ProceduresManagerContract {
 		id: string,
 		data: Partial<IProcedure>,
 	) => PromiseEither<AbstractError, IProcedure>
+	findBasic(
+		id: string,
+		health_insurance_id: string
+	): PromiseEither<AbstractError, BasicProcedure>
 }
