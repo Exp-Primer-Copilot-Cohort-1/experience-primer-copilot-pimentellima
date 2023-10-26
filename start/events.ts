@@ -18,3 +18,5 @@ Event.on(
 	'new:email-current-reply-in-greater-previous',
 	'ReplyStandardForm.onNewEmailCurrentReplyInGreaterPrevious'
 )
+
+Event.on('new:appointment', 'Appointment.onNewAppointment')
