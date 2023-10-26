@@ -7,15 +7,6 @@ const SELECTS_USER = ['_id', 'email', 'active', 'unity_id', 'name', 'type']
 const SELECTS_UNITY = ['_id', 'name', 'active', 'date_expiration']
 
 class AdminController {
-	public async activeUser({ params }) {
-		const user = await User.findOne({ _id: params._id }).orFail()
-
-		user.active = true
-
-		await user.save()
-
-		return user
-	}
 
 	public async findAllUnities() {
 		const unities = await Unity.find()
