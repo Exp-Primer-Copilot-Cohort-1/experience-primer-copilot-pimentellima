@@ -1,4 +1,3 @@
-import { ActivityPaymentEntity } from 'App/Core/domain/entities/activity-payment/ActivityPaymentEntity'
 import { ActivityNotFoundError } from 'App/Core/domain/errors'
 import { PaymentAlreadyError } from 'App/Core/domain/errors/payment-already-error'
 import { UpdateStatusActivityError } from 'App/Core/domain/errors/update-status-activity'
@@ -89,24 +88,19 @@ export class ActivityAttendanceMongoRepository
 
 	async updatePayment(
 		id: string,
-		values: Partial<ITransaction>,
+		{ amount, date, paymentForm }: Partial<ITransaction>,
 	): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new ActivityNotFoundError())
 
-		const paymentOrErr = await ActivityPaymentEntity.build(values as ITransaction)
-
-		if (paymentOrErr.isLeft()) return left(paymentOrErr.extract())
-
-		const payments = paymentOrErr.extract()
 
 		const updatedActivity = await Activity.findOneAndUpdate(
-			{ _id: id, 'payment.price': { $exists: false } },
+			{ _id: id, 'payment.amount': { $exists: false } },
 			{
 				$set: {
 					payment: {
-						amount: payments.amount,
-						date: payments.date,
-						paymentForm: payments.paymentForm,
+						amount: amount,
+						date: date,
+						paymentForm: paymentForm,
 					},
 					status: PaymentStatus.PAID,
 				},
@@ -117,6 +111,6 @@ export class ActivityAttendanceMongoRepository
 			},
 		).orFail(new PaymentAlreadyError())
 
-		return right(updatedActivity as unknown as IActivity)
+		return right(updatedActivity)
 	}
 }

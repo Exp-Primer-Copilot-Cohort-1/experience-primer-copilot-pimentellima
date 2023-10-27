@@ -6,6 +6,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import { IActivity } from 'App/Types/IActivity'
 import { inject, injectable, registry } from 'tsyringe'
+import { ActivityPaymentEntity } from '../../entities/activity-payment/ActivityPaymentEntity'
 import { TransactionWithActivity } from '../transactions/helpers'
 
 @injectable()
@@ -14,7 +15,8 @@ export class UpdateActivityPaymentUseCase
 	implements UseCase<TransactionWithActivity, IActivity>
 {
 	constructor(
-		@inject(ActivityAttendanceMongoRepository) private readonly manager: ActivitiesManagerAttendanceContract,
+		@inject(ActivityAttendanceMongoRepository)
+		private readonly manager: ActivitiesManagerAttendanceContract,
 	) { } // eslint-disable-line
 
 	public async execute({
@@ -23,9 +25,15 @@ export class UpdateActivityPaymentUseCase
 	}: TransactionWithActivity): PromiseEither<AbstractError, IActivity> {
 		if (!activity_id) return left(new ActivityNotFoundError())
 
+		const paymentOrErr = await ActivityPaymentEntity.build(transaction)
+
+		if (paymentOrErr.isLeft()) return left(paymentOrErr.extract())
+
+		const payments = paymentOrErr.extract()
+
 		return await this.manager.updatePayment(
 			activity_id,
-			transaction,
+			payments,
 		)
 	}
 }

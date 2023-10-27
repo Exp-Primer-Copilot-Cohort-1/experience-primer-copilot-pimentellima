@@ -52,7 +52,7 @@ const makeSut = () => {
 }
 
 
-describe("Send Email for new appointments (Only)", () => {
+describe("Send Email for new appointments (Unit)", () => {
 	it("should be defined", async () => {
 		const { sut, params } = makeSut()
 

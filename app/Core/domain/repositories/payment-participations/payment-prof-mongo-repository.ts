@@ -88,8 +88,8 @@ const createFilter = (participation: IPaymentProf) => ({
 export class PaymentProfMongoRepository implements PaymentProfManagerContract {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
-		@inject(SessionTransaction) private readonly session?: ISessionTransaction,
-		@inject(OptsQuery) private readonly opts: OptsQuery = OptsQuery.build()
+		@inject(SessionTransaction) private readonly session: ISessionTransaction,
+		@inject(OptsQuery) private readonly opts: OptsQuery,
 	) { } // eslint-disable-line
 
 	private async createDefaultParticipation({ health_insurance_id, prof_id, unity_id, procedure_id }): PromiseEither<AbstractError, IPaymentProf> {

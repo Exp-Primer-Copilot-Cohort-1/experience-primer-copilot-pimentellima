@@ -4,6 +4,7 @@ import { STATUS_ACTIVITY, type IActivity } from 'App/Types/IActivity'
 import { COLLECTION_NAME as COLLECTION_CLIENT_NAME } from './Client'
 import { COLLECTION_NAME as COLLECTION_HEALTH_INSURANCE_NAME } from './HealthInsurance'
 import { COLLECTION_NAME as COLLECTION_PROCEDURE_NAME } from './Procedure'
+import { COLLECTION_NAME as COLLECTION_NAME_TRANSACTIONS } from './Transactions'
 import { COLLECTION_NAME as COLLECTION_UNITY_NAME } from './Unity'
 import { COLLECTION_NAME as COLLECTION_USER_NAME } from './User'
 interface IActivityModel extends Omit<IActivity, 'prof' | 'client'> {
@@ -196,6 +197,10 @@ const ActivitySchema = new Schema<IActivityModel>(
 		],
 		payment: {
 			type: {
+				_id: {
+					type: Schema.Types.ObjectId,
+					ref: COLLECTION_NAME_TRANSACTIONS,
+				},
 				amount: {
 					type: Number,
 				},

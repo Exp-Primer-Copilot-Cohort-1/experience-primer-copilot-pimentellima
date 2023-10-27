@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
-import { beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
-import { CensusPaymentsManagerContract } from '../interface/census-manager.interface'
+import { CensusPaymentsManagerContract } from '../interface'
 import { CensusPaymentsMongooseRepository } from './census-payments-mongoose-repository'
 
 const makeSut = () => {
@@ -11,9 +11,13 @@ const makeSut = () => {
 	}
 }
 
-describe('Census Payments Mongoose Repository (Integration)', () => {
+describe('Census Payments Mongoose Repository (Only)', () => {
 	beforeAll(async () => {
 		await mongoose.connect(process.env.DB_CONNECTION_STRING as string)
+	})
+
+	afterAll(async () => {
+		await mongoose.disconnect()
 	})
 
 	it('should be find payments by health insurance', async () => {

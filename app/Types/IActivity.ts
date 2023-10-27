@@ -34,15 +34,10 @@ export type Prof = {
 }
 
 export type ActivityPayment = {
-	cost_center: string | ObjectId
-	financial_category: string | ObjectId
-	account: string | ObjectId
 	amount: number
 	date: Date
-	description?: string
 	paymentForm: string
-	installment: boolean
-	installments?: number
+	installments: number
 }
 
 export interface IAbstractActivity {

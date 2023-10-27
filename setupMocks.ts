@@ -32,3 +32,14 @@ vi.mock('@ioc:Adonis/Addons/Mail', async () => {
 		},
 	}
 })
+
+vi.mock('@ioc:Adonis/Addons/Redis', async () => {
+	return {
+		default: {
+			get: () => { },
+			set: () => { },
+			del: () => { },
+		},
+	}
+})
+
