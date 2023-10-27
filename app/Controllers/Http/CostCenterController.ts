@@ -1,6 +1,8 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import {
+	makeCostCenterCreateComposer,
+	makeCostCenterShowComposer,
 	makeCounts, makeFindAll
 } from 'App/Core/composers'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
@@ -67,15 +69,10 @@ class CostCenterController {
 	 *               $ref: '#/components/schemas/CostCenter'
 	 */
 	@LogDecorator(COLLECTION_NAME, ACTION.POST)
-	async store({ request, auth }: HttpContextContract) {
-		const userLogged = auth.user
-		const data = request.only(['name'])
-		const costCenters = await CostCenter.create({
-			...data,
-			active: true,
-			unity_id: userLogged?.unity_id,
+	async store(ctx: HttpContextContract) {
+		return adaptRoute(makeCostCenterCreateComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
 		})
-		return costCenters
 	}
 
 	/**
@@ -147,11 +144,10 @@ class CostCenterController {
 	 *             schema:
 	 *               $ref: '#/components/schemas/CostCenter'
 	 */
-	async show({ params }: HttpContextContract) {
-		const costCenters = await CostCenter.findById(params.id).orFail()
-
-		return costCenters
+	async show(ctx: HttpContextContract) {
+		return adaptRoute(makeCostCenterShowComposer(), ctx)
 	}
+
 
 	/**
 	 * @swagger
