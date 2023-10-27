@@ -6,8 +6,14 @@ import { UserNotFoundError } from 'App/Core/domain/errors'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { Cache } from 'App/Core/infra/cache'
 import { left, right } from 'App/Core/shared'
+import { decrypt } from 'App/Helpers/encrypt'
 import User from 'App/Models/User'
 import { ROLES } from 'App/Roles/types'
+
+async function uriComponentToData(uriComponent: string) {
+	const hash = decodeURIComponent(uriComponent.replace('-', '.'))
+	return decrypt(hash)
+}
 
 const fetchUserByType = async (type, unityId, active = true) =>
 	await User.where({
@@ -24,17 +30,31 @@ class UserControllerV2 {
 	}
 
 	async redefinePassword(ctx: HttpContextContract) {
-		const params = ctx.request.only(['user_id', 'password'])
-		const user_id = params.user_id
+		const params = ctx.request.only(['password', 'encoded_uri'])
+		const encodedUri = params.encoded_uri
 		const password = params.password
-		console.log(params)
 		try {
-			if (!user_id) return new UserNotFoundError()
-			const cache = new Cache()
-			const passwordUrlCache = await cache.get(`${user_id}-redefine-password-url`)
-			if (!passwordUrlCache) return new AbstractError('Link expirado', 400)
+			const hash = await uriComponentToData(encodedUri)
 
-			const user = await User.findById(user_id).orFail()
+			const recoveryKey = await decrypt(hash)
+			if (!recoveryKey) return new AbstractError('Chave inválida', 401)
+			const recoveryKeyObj = JSON.parse(recoveryKey)
+			const userId = recoveryKeyObj.userId
+			if (!userId) return new UserNotFoundError()
+
+			const cache = new Cache()
+
+			const identifierString = await cache.get(`${userId}-redefine-password-key`)
+			if (!identifierString)
+				return new AbstractError('Link expirado ou inexistente', 400)
+
+			if (identifierString !== recoveryKeyObj.identifierString) {
+				return new AbstractError('Chave inválida', 401)
+			}
+
+			await cache.delete(`${userId}-redefine-password-key`)
+
+			const user = await User.findById(userId).orFail()
 			user.password = password
 			await user.save()
 

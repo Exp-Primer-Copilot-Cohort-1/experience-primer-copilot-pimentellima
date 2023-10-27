@@ -12,8 +12,13 @@ import { UserNotFoundError } from '../../errors'
 import EDGE, { ISendEmailUseCase, MailParams } from '../helpers/edge'
 import { SendEmailUseCase } from './send-email-use-case'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
-import { encrypt } from 'App/Helpers/encrypt'
+import { decrypt, encrypt } from 'App/Helpers/encrypt'
 import { randomBytes } from 'crypto'
+
+async function dataToUriComponent(data: { userId: string; identifierString: string }) {
+	const hash = await encrypt(JSON.stringify(data))
+	return encodeURIComponent(hash).replace('.','-')
+}
 
 type In = {
 	id: string
@@ -60,15 +65,16 @@ export class SendPasswordRecoveryEmailUseCase implements ISendEmailUseCase {
 		const URL = this.env.isProd ? this.env.get('URL') : 'http://localhost:5173'
 
 		const bytes = randomBytes(8)
-		const randomString = bytes.toString('hex')
+		const identifierString = bytes.toString('base64')
 
-		const password_recovery_url = `${URL}/redefine-password/${user._id}/${randomString}`
+		const safeUrlHash = await dataToUriComponent({
+			userId: user._id,
+			identifierString,
+		})
 
-		this.cache.set(
-			`${user._id}-redefine-password-url`,
-			password_recovery_url,
-			60 * 60,
-		)
+		const password_recovery_url = `${URL}/redefine-password/${safeUrlHash}`
+
+		this.cache.set(`${user._id}-redefine-password-key`, identifierString, 60 * 60)
 
 		const successOrErr = await retry(
 			async () =>
