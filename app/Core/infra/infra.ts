@@ -44,4 +44,5 @@ type Message = {
 }
 export interface IMail {
 	send: (message: Message) => Promise<any>
+	sendLater: (message: Message) => Promise<any>
 }

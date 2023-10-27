@@ -203,6 +203,10 @@ const ProfSchema = new Schema<IUser>(
 		blacklist: {
 			type: Array,
 		},
+		receive_email_in_the_new_appointment: {
+			type: Boolean,
+			default: false,
+		}
 	},
 	{
 		timestamps: {

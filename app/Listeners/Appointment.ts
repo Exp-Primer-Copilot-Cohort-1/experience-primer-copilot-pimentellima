@@ -1,5 +1,5 @@
 import type { EventsList } from '@ioc:Adonis/Core/Event';
-import { SendNewAppointment } from 'App/Core/domain/use-cases/email/send-new-appointment';
+import { SendNewAppointment } from 'App/Core/domain/use-cases/email';
 import container from 'App/Core/shared/container';
 
 export default class Appointment {

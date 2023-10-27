@@ -11,6 +11,18 @@ export class Mail implements IMail {
 				.to(email)
 				.subject(title)
 				.htmlView(edge, props)
+
+		})
+	}
+
+	async sendLater({ from, email, title, edge, props }) {
+		return await MailAdonis.sendLater((message) => {
+			message.embed(LOGO, 'logo')
+			message
+				.from(from, 'DP System')
+				.to(email)
+				.subject(title)
+				.htmlView(edge, props)
 		})
 	}
 }

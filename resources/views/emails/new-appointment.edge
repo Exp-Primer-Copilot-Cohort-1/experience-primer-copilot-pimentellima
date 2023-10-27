@@ -41,12 +41,12 @@
 				color: #fff;
 				text-align: center;
 			">
-				<strong>Olá, {{ label }}!</strong>
+				<strong>Olá, {{ from }}!</strong>
 			</p>
 
 			<div style="font-size: smaller;">
 				<p style="text-align: justify; text-indent: 2rem;">
-					Recebemos uma nova consulta marcada para o dia <strong>01/10/2023</strong>.
+					Recebemos uma nova consulta marcada para <strong>{{ date }}</strong>.
 				</p>
 				<p style="text-align: justify; text-indent: 2rem;">
 					Confira abaixo os dados da consulta:
@@ -55,10 +55,10 @@
 
 			<div style="font-size: smaller; border: 1px solid #e5e5e5; padding: 10px; margin-bottom: 20px;">
 				<p style="text-align: justify;">
-					<strong>Profissional:</strong> Dr. Fulano de Tal
+					<strong>Profissional:</strong> {{ prof }}
 				</p>
 				<p style="text-align: justify;">
-					<strong>Paciente:</strong> Fulano de Tal
+					<strong>Paciente:</strong> {{ patient }}
 				</p>
 			</div>
 
@@ -74,15 +74,13 @@
 
 				<tr>
 					<th>Unidade</th>
-					<th>Data</th>
 					<th>Valor</th>
 				</tr>
 				<tr style="
 				text-align: center !important;
 	">
-					<td>Nossa Senhora</td>
-					<td>01/10/2023</td>
-					<td>R$ 300,00</td>
+					<td>{{ unity }}</td>
+					<td>{{ amount }}</td>
 				</tr>
 
 			</table>
@@ -107,32 +105,16 @@
 				</caption>
 				<tr>
 					<th>Procedimento</th>
-					<th>Quantidade Solicitada</th>
+					<th>Minutos</th>
 					<th>Valor</th>
 				</tr>
-				<tr style="
-							text-align: center !important;
-				">
-					<td>Procedimento 1</td>
-					<td>1</td>
-					<td>R$ 100,00</td>
+				@each(procedure in procedures)
+				<tr style="text-align: center !important;">
+					<td>{{ procedure.name }}</td>
+					<td>{{ procedure.minutes }}</td>
+					<td>{{ procedure.price }}</td>
 				</tr>
-
-				<tr style="
-							text-align: center;
-				">
-					<td>Procedimento 1</td>
-					<td>1</td>
-					<td>R$ 100,00</td>
-				</tr>
-
-				<tr style="
-							text-align: center;
-				">
-					<td>Procedimento 1</td>
-					<td>1</td>
-					<td>R$ 100,00</td>
-				</tr>
+				@end
 			</table>
 			<div style="
 				font-size: small;

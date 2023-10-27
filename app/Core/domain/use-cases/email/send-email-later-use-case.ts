@@ -1,5 +1,4 @@
 import { SendEmailError } from "App/Core/domain/errors/send-email.err";
-import { AbstractError } from "App/Core/errors/error.interface";
 import { Env } from 'App/Core/infra/env';
 import { IEvn, ILogger, IMail } from "App/Core/infra/infra";
 import { Logger } from 'App/Core/infra/logger';
@@ -8,12 +7,12 @@ import { PromiseEither, left, right } from "App/Core/shared";
 import { inject, injectable, registry } from 'tsyringe';
 import { ISendEmailUseCase, MailParams } from "../helpers/edge";
 /**
- * Classe responsável por enviar emails.
+ * Classe responsável por enviar emails com baixa prioridade.
  * @implements {ISendEmailUseCase}
  */
 @injectable()
-@registry([{ token: SendEmailUseCase, useClass: SendEmailUseCase }])
-export class SendEmailUseCase implements ISendEmailUseCase {
+@registry([{ token: SendEmailLaterUseCase, useClass: SendEmailLaterUseCase }])
+export class SendEmailLaterUseCase implements ISendEmailUseCase {
 	/**
 	 * Construtor da classe.
 	 * @param {ILogger} logger - Instância do logger, responsável por logar mensagens.
@@ -34,7 +33,7 @@ export class SendEmailUseCase implements ISendEmailUseCase {
 	async execute({ edge, props, email, title }: MailParams): PromiseEither<SendEmailError, Message> {
 		try {
 			const from = this.env.get('SMTP_USERNAME') as string
-			await this.mail.send({
+			await this.mail.sendLater({
 				from,
 				email,
 				title,
