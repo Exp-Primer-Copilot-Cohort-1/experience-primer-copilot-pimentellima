@@ -55,14 +55,14 @@ export class ProductStockDepletionUseCase implements IProductStockDepletionUseCa
 
 			products.forEach((product) => {
 				const productData = stocksData?.find(
-					(stock) => stock._id.toString() === product._id.toString(),
+					(stock) => stock._id.toString() === product.value.toString(),
 				)
 
 				if (!productData?.stock_automatic) return
 
-				if (productsWithQuantities[product._id]) {
-					productsWithQuantities[product._id] += product.quantity
-				} else productsWithQuantities[product._id] = product.quantity
+				if (productsWithQuantities[product.value]) {
+					productsWithQuantities[product.value] += product.quantity
+				} else productsWithQuantities[product.value] = product.quantity
 			})
 		})
 

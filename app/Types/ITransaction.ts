@@ -6,7 +6,8 @@ export type Generic = {
 }
 
 export type StockProcedure = {
-	_id: string
+	value: string
+	name: string
 	quantity: number
 	price_cost: number
 	price_final: number

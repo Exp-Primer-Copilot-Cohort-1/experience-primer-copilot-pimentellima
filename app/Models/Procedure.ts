@@ -125,10 +125,15 @@ const ProcedureSchema = new Schema<IProcedureModel>(
 		],
 		products: [
 			{
-				_id: {
+				_id: false,
+				value: {
 					type: Schema.Types.ObjectId,
 					required: true,
 					ref: COLLECTION_STOCKS_NAME,
+				},
+				label: {
+					type: String,
+					required: true,
 				},
 				quantity: {
 					type: Number,
