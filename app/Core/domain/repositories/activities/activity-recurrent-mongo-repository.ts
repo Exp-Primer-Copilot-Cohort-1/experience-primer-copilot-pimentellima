@@ -40,6 +40,7 @@ export class ActivityRecurrentMongoRepository
 			.populate(COLLECTIONS_REFS.CLIENTS, PROJECTION_CLIENT)
 			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
 			.populate(COLLECTIONS_REFS.PROCEDURES, PROJECTION_DEFAULT)
+			.populate(COLLECTIONS_REFS.HEALTH_INSURANCES, PROJECTION_DEFAULT)
 			.sort({ date: -1 })
 
 		return right(activities)
