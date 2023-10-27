@@ -211,7 +211,7 @@ const ActivitySchema = new Schema<IActivityModel>(
 					type: String,
 				},
 			},
-			default: {},
+			default: null,
 		},
 		client: {
 			type: Schema.Types.ObjectId,

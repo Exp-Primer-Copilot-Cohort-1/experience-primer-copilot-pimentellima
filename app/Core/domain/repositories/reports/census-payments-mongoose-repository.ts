@@ -27,7 +27,7 @@ export class CensusPaymentsMongooseRepository implements CensusPaymentsManagerCo
 			{
 				$match: {
 					...match,
-					payment: { $exists: true, $ne: null },
+					'payment.amount': { $exists: true, $ne: null },
 				},
 			},
 			{
