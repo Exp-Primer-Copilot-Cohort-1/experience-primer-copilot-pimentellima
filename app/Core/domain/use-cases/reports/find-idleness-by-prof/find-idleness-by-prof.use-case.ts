@@ -1,10 +1,12 @@
 import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
+import { CensusDaysMongooseRepository } from 'App/Core/domain/repositories'
 import { CensusDaysManagerContract } from 'App/Core/domain/repositories/interface'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import { ICensusIdlenessByProf } from 'App/Types/ICensus'
-import { DaysTradesIntervalDatesParams } from './day-trades-interval-dates'
+import { inject, injectable, registry } from 'tsyringe'
+import { DayTradesIntervalDatesByProfUseCase, DaysTradesIntervalDatesParams } from './day-trades-interval-dates'
 
 type FinIdlenessIn = {
 	unity_id: string
@@ -15,9 +17,13 @@ type FinIdlenessIn = {
 
 type UseCaseFindIdlenessByProf = UseCase<FinIdlenessIn, ICensusIdlenessByProf[]>
 
+@injectable()
+@registry([{ token: FindIdlenessByProfUseCase, useClass: FindIdlenessByProfUseCase }])
 export class FindIdlenessByProfUseCase implements UseCaseFindIdlenessByProf {
 	constructor(
+		@inject(CensusDaysMongooseRepository)
 		private readonly count: CensusDaysManagerContract,
+		@inject(DayTradesIntervalDatesByProfUseCase)
 		private readonly hoursTrades: UseCase<
 			DaysTradesIntervalDatesParams,
 			ICensusIdlenessByProf

@@ -10,9 +10,18 @@ import { CensusDaysManagerContract } from '../interface/census-days-manager.inte
 
 import Prof from 'App/Models/Prof'
 import { ROLES } from 'App/Roles/types'
+import { inject, injectable, registry } from 'tsyringe'
+import { OptsQuery } from '../../entities/helpers/opts-query'
 import generateMatch from './generate-match-census'
 
+@injectable()
+@registry([{ token: CensusDaysMongooseRepository, useClass: CensusDaysMongooseRepository }])
 export class CensusDaysMongooseRepository implements CensusDaysManagerContract {
+
+	constructor(
+		@inject(OptsQuery) private readonly opts: OptsQuery,
+	) { }
+
 	async findActivitiesByDaysOfWeek(
 		unity_id: string,
 		date_start: string,
@@ -164,8 +173,16 @@ export class CensusDaysMongooseRepository implements CensusDaysManagerContract {
 
 		const profs = await Prof.find({
 			unity_id,
-			$or: [{ type: ROLES.ADMIN_PROF }, { type: ROLES.PROF }],
-		}).select('_id name')
+			$or: [
+				{ type: ROLES.ADMIN_PROF },
+				{ type: ROLES.PROF },
+				{
+					performs_medical_appointments: true,
+				},
+			],
+		})
+			.where(this.opts.only_prof)
+			.select('_id name')
 
 		const workedHours: ICensusWorkedHoursByProf[] = []
 

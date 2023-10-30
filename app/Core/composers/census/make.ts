@@ -1,5 +1,7 @@
-import { Controller } from 'App/Core/adapters/controller'
+import { Controller, ControllerInjection } from 'App/Core/adapters/controller'
 import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
+import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import {
 	CensusClientsMongooseRepository,
 	CensusCostMongooseRepository,
@@ -7,20 +9,15 @@ import {
 	CensusMongooseRepository,
 	CensusPaymentParticipationsMongooseRepository,
 	CensusPaymentsMongooseRepository,
-	CensusRevenuesMongooseRepository,
-	HolidaysMongoRepository,
-	HolidaysNationalsMongoRepository,
-	ProfsMongooseRepository,
+	CensusRevenuesMongooseRepository
 } from 'App/Core/domain/repositories'
 import {
-	DayTradesIntervalDatesByProfUseCase,
-	FindAllHolidaysByUnityUseCase,
 	FindIdlenessByProfUseCase,
 	FindPaymentsByHealthInsuranceUseCase,
 	PaymentsCensusByDateUseCase,
-	PopulationCensusByDateUseCase,
-	SaveHolidaysNationalsDefaultUseCase,
+	PopulationCensusByDateUseCase
 } from 'App/Core/domain/use-cases'
+import { HttpContextContract } from 'App/Types/Adonis'
 
 export const makeCensusByMonthByUnityIdComposer = (): ControllerGeneric => {
 	return new Controller(
@@ -36,7 +33,7 @@ export const makeCensusPaymentsByMonthByUnityIdComposer = (): ControllerGeneric 
 		new PaymentsCensusByDateUseCase(
 			new CensusPaymentsMongooseRepository(),
 			new CensusMongooseRepository(),
-			new CensusDaysMongooseRepository(),
+			new CensusDaysMongooseRepository(OptsQuery.build()),
 			new CensusRevenuesMongooseRepository(),
 			new CensusPaymentParticipationsMongooseRepository(),
 			new CensusCostMongooseRepository(),
@@ -49,19 +46,7 @@ export const makeCensusPaymentsByHealthInsuranceComposer = (): ControllerGeneric
 	)
 }
 
-export const makeCensusIdlenessByProfComposer = (): ControllerGeneric => {
-	return new Controller(
-		new FindIdlenessByProfUseCase(
-			new CensusDaysMongooseRepository(),
-			new DayTradesIntervalDatesByProfUseCase(
-				new ProfsMongooseRepository(),
-				new FindAllHolidaysByUnityUseCase(
-					new HolidaysMongoRepository(),
-					new SaveHolidaysNationalsDefaultUseCase(
-						new HolidaysNationalsMongoRepository(),
-					),
-				),
-			),
-		),
-	)
+export const makeCensusIdlenessByProfComposer = (ctx: HttpContextContract): ControllerGeneric => {
+	const opts = getterOptInRequest(ctx)
+	return ControllerInjection.resolve(FindIdlenessByProfUseCase, opts)
 }

@@ -1,4 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { adaptRoute } from 'App/Core/adapters'
 import {
 	makeCensusActivitiesByDaysMonthByUnityOrProfComposer,
 	makeCensusActivitiesProfByProfComposer,
@@ -114,7 +115,7 @@ class CensusController {
 	 * @returns O censo de ociosidade por profissional.
 	 */
 	async indexIdlenessByProf(ctx: HttpContextContract) {
-		return withControlRoles(ctx, makeCensusIdlenessByProfComposer)
+		return adaptRoute(makeCensusIdlenessByProfComposer(ctx), ctx)
 	}
 }
 
