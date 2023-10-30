@@ -84,6 +84,7 @@ export class SendNewAppointment implements UseCase<IActivity, Message> {
 		const hourDate = typeof hour_start === 'string' ? new Date(hour_start) : hour_start
 
 		newDate.setHours(hourDate.getHours())
+		newDate.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
 
 		const emailData = {
 			client: {
@@ -116,7 +117,7 @@ export class SendNewAppointment implements UseCase<IActivity, Message> {
 			from: {
 				name: clientData.name,
 				email: clientData.email,
-				hasNotificationByEmail: false,
+				hasNotificationByEmail: false, //* Ver se o cliente quer receber email
 			},
 		})
 
