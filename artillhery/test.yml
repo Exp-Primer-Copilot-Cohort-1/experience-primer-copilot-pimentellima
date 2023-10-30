@@ -2,25 +2,37 @@ config:
   target: "http://localhost:3333"
   phases:
     - name: "Fase Inicial Carga Leve"
-      arrivalRate: 20
-      duration: 10
+      arrivalRate: 10
+      duration: 300
+      rampTo: 30
+      maxVusers: 1000
     - name: "Fase de Carga Moderada"
-      arrivalRate: 50
-      duration: 10
+      arrivalRate: 30
+      duration: 300
+      rampTo: 50
+      maxVusers: 1000
     - name: "Fase de Carga Significativa"
+      arrivalRate: 30
+      duration: 300
+      rampTo: 100
+      maxVusers: 1000
+    - name: "Fase de Sobrecarga"
+      arrivalRate: 30
+      duration: 120
+      rampTo: 150
+      maxVusers: 1000
+    - name: "Fase Final Sobrecarga"
       arrivalRate: 75
-      duration: 10
-    # - name: "Fase Final Sobrecarga"
-    #   arrivalRate: 75
-    #   duration: 10
+      duration: 60
+      rampTo: 150
 
 before:
   flow:
     - post:
         url: "/sessions"
         json:
-          email: "murilomontinojr@hotmail.com"
-          password: "@Kingdom2012"
+          email: "nediaulogin@hotmail.com"
+          password: "123456"
         capture:
           json: $.token.token
           as: token
@@ -54,14 +66,6 @@ scenarios:
           headers:
             Authorization: "Bearer {{ token }}"
 
-  - name: "Busca de todos os pacientes por unidade"
-    weight: 2
-    flow:
-      - get:
-          url: "/clients"
-          headers:
-            Authorization: "Bearer {{ token }}"
-
   - name: "Autenticação do usuário"
     weight: 2
     flow:
@@ -70,21 +74,22 @@ scenarios:
           headers:
             Authorization: "Bearer {{ token }}"
 
-  - name: "Busca de todos os profissionais da unidade"
-    weight: 2
-    flow:
-      - get:
-          url: "/users/profs"
-          headers:
-            Authorization: "Bearer {{ token }}"
-
-  - name: "UserControllerV2.findAllUsersSecs"
-    weight: 2
-    flow:
-      - get:
-          url: "/users/secs"
-          headers:
-            Authorization: "Bearer {{ token }}"
+  # nao funciona
+  # - name: "Busca de todos os profissionais da unidade"
+  #   weight: 2
+  #   flow:
+  #     - get:
+  #         url: "/users/profs"
+  #         headers:
+  #           Authorization: "Bearer {{ token }}"
+  # nao funciona
+  # - name: "UserControllerV2.findAllUsersSecs"
+  #   weight: 2
+  #   flow:
+  #     - get:
+  #         url: "/users/secs"
+  #         headers:
+  #           Authorization: "Bearer {{ token }}"
 
   - name: "Busca de planos de saúde da unidade do usuário"
     weight: 2
@@ -131,14 +136,6 @@ scenarios:
     flow:
       - get:
           url: "/forms"
-          headers:
-            Authorization: "Bearer {{ token }}"
-
-  - name: "Busca todos os formularios inativos do usuário  autenticado"
-    weight: 2
-    flow:
-      - get:
-          url: "/forms/inactives"
           headers:
             Authorization: "Bearer {{ token }}"
 
@@ -196,14 +193,6 @@ scenarios:
           headers:
             Authorization: "Bearer {{ token }}"
 
-  # - name: "Busca todas as contas"
-  #   weight: 2
-  #   flow:
-  #     - get:
-  #         url: "/accounts"
-  #         headers:
-  #           Authorization: "Bearer {{ token }}"
-
   - name: "Busca por uma lista de transações"
     weight: 3
     flow:
@@ -225,5 +214,76 @@ scenarios:
     flow:
       - get:
           url: "/revenues"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Busca do censo por mês e unidade"
+    weight: 2
+    flow:
+      - get:
+          url: "/census"
+          headers:
+            Authorization: "Bearer {{ token }}"
+  - name: "Busca do censo de pagamentos por mês e unidade"
+    weight: 2
+    flow:
+      - get:
+          url: "/census/payments"
+          headers:
+            Authorization: "Bearer {{ token }}"
+  - name: "Busca do censo de pagamentos por plano de saúde"
+    weight: 2
+    flow:
+      - get:
+          url: "/census/health-insurances"
+          headers:
+            Authorization: "Bearer {{ token }}"
+  - name: "Busca do censo de atividades por profissional e mês"
+    weight: 2
+    flow:
+      - get:
+          url: "/census/activities-days-month"
+          headers:
+            Authorization: "Bearer {{ token }}"
+  - name: "Busca do censo de pagamentos por forma de pagamento"
+    weight: 2
+    flow:
+      - get:
+          url: "/census/payments-by-forms"
+          headers:
+            Authorization: "Bearer {{ token }}"
+  - name: "Busca do censo de atividades por profissional"
+    weight: 2
+    flow:
+      - get:
+          url: "/census/activities-prof-by-profs"
+          headers:
+            Authorization: "Bearer {{ token }}"
+  - name: "Busca do censo de pagamentos por parceiro"
+    weight: 2
+    flow:
+      - get:
+          url: "/census/payments-by-partners"
+          headers:
+            Authorization: "Bearer {{ token }}"
+  - name: "Busca do censo de pagamentos por profissional"
+    weight: 2
+    flow:
+      - get:
+          url: "/census/payments-by-profs"
+          headers:
+            Authorization: "Bearer {{ token }}"
+  - name: "Busca do censo de participação em pagamentos por profissional"
+    weight: 2
+    flow:
+      - get:
+          url: "/census/payments-participations"
+          headers:
+            Authorization: "Bearer {{ token }}"
+  - name: "Busca do censo de receitas por atividades"
+    weight: 2
+    flow:
+      - get:
+          url: "/census/revenues-activities"
           headers:
             Authorization: "Bearer {{ token }}"
