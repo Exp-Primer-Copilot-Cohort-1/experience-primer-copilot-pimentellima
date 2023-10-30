@@ -19,6 +19,8 @@ import { BasicProcedure } from "App/Types/IProcedure";
 import { inject, injectable, registry } from 'tsyringe';
 import { SendNotificationNewAppointment } from "./send-notification-new-appointment-use-case";
 import { ISendNotificationNewAppointmentUseCase } from './use-cases.interface';
+
+const TIMEZONE_BRAZIL = 3
 @injectable()
 @registry([{ token: SendNewAppointment, useClass: SendNewAppointment }])
 export class SendNewAppointment implements UseCase<IActivity, Message> {
@@ -83,8 +85,7 @@ export class SendNewAppointment implements UseCase<IActivity, Message> {
 		const newDate = typeof date === 'string' ? new Date(date) : date
 		const hourDate = typeof hour_start === 'string' ? new Date(hour_start) : hour_start
 
-		newDate.setHours(hourDate.getHours())
-		newDate.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+		newDate.setHours(hourDate.getHours() - TIMEZONE_BRAZIL)
 
 		const emailData = {
 			client: {
