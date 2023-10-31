@@ -1,11 +1,9 @@
 
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeCounts, makeFindAll } from 'App/Core/composers'
-import FinancialCategoryEntity from 'App/Core/domain/entities/financial-category/financial-category'
+import { makeCounts, makeFinancialCategoryCreateComposer, makeFinancialCategoryFindByIdComposer, makeFinancialCategoryUpdateComposer, makeFindAll } from 'App/Core/composers'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import FinancialCategory, { COLLECTION_NAME } from 'App/Models/FinancialCategory'
-import { IFinancialCategory } from 'App/Types/IFinancialCategory'
 
 // ! AVISO
 // ! refatorar para usar o padrão da nossa arquitetura
@@ -128,51 +126,19 @@ class FinancialCategoryController {
 		return adaptRoute(makeFindAll(ctx, COLLECTION_NAME), ctx)
 	}
 
-	@LogDecorator(COLLECTION_NAME, ACTION.POST)
-	async store({ request, response, auth }: HttpContextContract) {
-		const userLogged = auth.user
-		const data = request.all() as IFinancialCategory
-
-		const financialCategoryOrErr = await FinancialCategoryEntity.build({
-			...data,
-			active: true,
-			unity_id: userLogged?.unity_id.toString() as string,
+	async store(ctx: HttpContextContract) {
+		return adaptRoute(makeFinancialCategoryCreateComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
 		})
-
-		if (financialCategoryOrErr.isLeft()) {
-			return response.badRequest(financialCategoryOrErr.extract())
-		}
-
-		const financialCategory = financialCategoryOrErr.extract()
-
-		return await FinancialCategory.create(financialCategory)
 	}
 
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	async update({ params, request, response }: HttpContextContract) {
-		const data = request.all() as IFinancialCategory
-
-		const financialCategoryOrErr = await FinancialCategoryEntity.build(data)
-
-		if (financialCategoryOrErr.isLeft()) {
-			return response.badRequest(financialCategoryOrErr.extract())
-		}
-
-		const financialCategory = financialCategoryOrErr.extract()
-
-		const category = await FinancialCategory.findByIdAndUpdate(
-			params.id,
-			financialCategory,
-			{ new: true }
-		).orFail()
-
-		return category
+	async update(ctx: HttpContextContract) {
+		return adaptRoute(makeFinancialCategoryUpdateComposer(), ctx)
 	}
 
-	async show({ params }: HttpContextContract) {
-		const category = await FinancialCategory.where({ _id: params.id }).orFail()
-
-		return category
+	async show(ctx: HttpContextContract) {
+		return adaptRoute(makeFinancialCategoryFindByIdComposer(), ctx)
 	}
 
 	@LogDecorator(COLLECTION_NAME, ACTION.DELETE)
