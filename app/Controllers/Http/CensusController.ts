@@ -115,7 +115,9 @@ class CensusController {
 	 * @returns O censo de ociosidade por profissional.
 	 */
 	async indexIdlenessByProf(ctx: HttpContextContract) {
-		return adaptRoute(makeCensusIdlenessByProfComposer(ctx), ctx)
+		return adaptRoute(makeCensusIdlenessByProfComposer(ctx), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		})
 	}
 }
 

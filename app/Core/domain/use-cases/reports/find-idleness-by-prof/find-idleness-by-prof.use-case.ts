@@ -36,9 +36,8 @@ export class FindIdlenessByProfUseCase implements UseCaseFindIdlenessByProf {
 		date_end,
 		prof_id,
 	}: FinIdlenessIn): PromiseEither<AbstractError, ICensusIdlenessByProf[]> {
-		if (!unity_id) {
-			return left(new UnityNotFoundError())
-		}
+
+		if (!unity_id) return left(new UnityNotFoundError())
 
 		if (!date_start) {
 			const now = new Date()
