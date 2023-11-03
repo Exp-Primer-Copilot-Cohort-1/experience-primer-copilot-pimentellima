@@ -6,4 +6,7 @@ export interface FinancialCategoryManagerContract {
 	findAllByUnityId: (
 		unity_id: string,
 	) => PromiseEither<AbstractError, IFinancialCategory[]>
+	findById: (id: string) => PromiseEither<AbstractError, IFinancialCategory>
+	update: (id: string, data: IFinancialCategory) => PromiseEither<AbstractError, IFinancialCategory>
+	create: (data: IFinancialCategory) => PromiseEither<AbstractError, IFinancialCategory>
 }
