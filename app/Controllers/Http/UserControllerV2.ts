@@ -72,25 +72,18 @@ class UserControllerV2 {
 		const userLogged = auth.user
 		const opts = OptsQuery.build(request.qs())
 
-		switch (userLogged?.type) {
-			case ROLES.PROF:
-				return await User.find({
-					_id: userLogged?._id,
-					unity_id: userLogged?.unity_id,
-					active: opts.active,
-				}).select('-payment_participations -password')
-			default:
-				return await User.where({
-					unity_id: userLogged?.unity_id,
-					active: opts.active,
-					$or: [
-						{ type: ROLES.ADMIN_PROF },
-						{ type: ROLES.PROF },
-						{ performs_medical_appointments: true },
-					],
-				}).select('-payment_participations -password')
-		}
+		return await User.where({
+			unity_id: userLogged?.unity_id,
+			active: opts.active,
+			$or: [
+				{ type: ROLES.ADMIN_PROF },
+				{ type: ROLES.PROF },
+				{ performs_medical_appointments: true },
+			],
+		}).select('-payment_participations -password')
 	}
+
+
 
 	async findAllUsersSecs({ auth, request }: HttpContextContract) {
 		const userLogged = auth.user
