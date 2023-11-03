@@ -4,13 +4,20 @@ import { ControllerGeneric } from 'App/Core/adapters/controller/helpers'
 import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import {
 	CreateActivityAwaitUseCase,
-	FindAllActivitiesAwaitUseCase
+	FindAllActivitiesAwaitUseCase,
+	MarkedActivityAwaitUseCase
 } from 'App/Core/domain/use-cases'
 
 export const makeCreateActivityAwaitComposer = (ctx: HttpContextContract): ControllerGeneric => {
 	const opts = getterOptInRequest(ctx)
 
 	return ControllerInjection.resolve(CreateActivityAwaitUseCase, opts)
+}
+
+export const makeMarkedActivityAwaitComposer = (ctx: HttpContextContract): ControllerGeneric => {
+	const opts = getterOptInRequest(ctx)
+
+	return ControllerInjection.resolve(MarkedActivityAwaitUseCase, opts)
 }
 
 export const makeFindAllActivitiesAwaitComposer = (ctx: HttpContextContract): ControllerGeneric => {

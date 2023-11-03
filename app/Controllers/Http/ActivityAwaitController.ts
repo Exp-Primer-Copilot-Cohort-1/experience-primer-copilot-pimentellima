@@ -2,7 +2,8 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import {
 	makeCreateActivityAwaitComposer,
-	makeFindAllActivitiesAwaitComposer
+	makeFindAllActivitiesAwaitComposer,
+	makeMarkedActivityAwaitComposer
 } from 'App/Core/composers/activities-await/make'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import { COLLECTION_NAME } from 'App/Models/Activity'
@@ -41,6 +42,10 @@ class ActivityAwaitController {
 	 */
 	async index(ctx: HttpContextContract) {
 		return adaptRoute(makeFindAllActivitiesAwaitComposer(ctx), ctx)
+	}
+
+	async marked(ctx: HttpContextContract) {
+		return adaptRoute(makeMarkedActivityAwaitComposer(ctx), ctx)
 	}
 
 	/**

@@ -91,7 +91,7 @@ export interface IActivity {
 	_id?: string | ObjectId
 	is_recurrent?: boolean
 	group_id?: string | ObjectId
-	type?: STATUS_ACTIVITY.MARKED
+	type?: STATUS_ACTIVITY
 	date: Date | string
 	hour_start: string
 	hour_end: string

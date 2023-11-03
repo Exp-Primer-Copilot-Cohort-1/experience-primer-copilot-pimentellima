@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
-import { ActivityValues, IActivity } from 'App/Types/IActivity'
+import { IActivity } from 'App/Types/IActivity'
 
 export interface ActivitiesManagerContract {
 	create: (
@@ -22,7 +22,7 @@ export interface ActivitiesManagerContract {
 	find: (id: string) => PromiseEither<AbstractError, IActivity>
 	updateById: (
 		id: string,
-		values: ActivityValues,
+		values: IActivity,
 	) => PromiseEither<AbstractError, IActivity>
 	deleteById: (id: string) => PromiseEither<AbstractError, IActivity>
 }

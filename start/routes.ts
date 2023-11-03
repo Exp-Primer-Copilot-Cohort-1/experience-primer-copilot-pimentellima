@@ -237,6 +237,11 @@ Route.group(() => {
 			Route.post('await', 'ActivityAwaitController.store').as(
 				'store',
 			)
+
+			Route.put('marked', 'ActivityAwaitController.marked').as(
+				'marked',
+			)
+
 		}).as('activity-await')
 
 		Route.group(() => {

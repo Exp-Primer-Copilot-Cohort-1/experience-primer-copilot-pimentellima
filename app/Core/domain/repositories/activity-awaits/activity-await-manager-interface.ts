@@ -1,6 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
-import { IActivityAwait } from 'App/Types/IActivity'
+import { IActivity, IActivityAwait } from 'App/Types/IActivity'
 
 export interface ActivityAwaitManagerContract {
 	create: (
@@ -11,4 +11,8 @@ export interface ActivityAwaitManagerContract {
 		id: string,
 		activity: IActivityAwait,
 	) => PromiseEither<AbstractError, IActivityAwait>
+	marked: (
+		id: string,
+		activity: IActivity
+	) => PromiseEither<AbstractError, IActivity>
 }

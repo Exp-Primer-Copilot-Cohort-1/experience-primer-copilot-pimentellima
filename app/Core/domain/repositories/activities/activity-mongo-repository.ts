@@ -136,21 +136,11 @@ export class ActivityMongoRepository implements ActivitiesManagerContract {
 
 	async updateById(
 		id: string,
-		values: IActivity,
+		values: ActivityEntity,
 	): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new ActivityNotFoundError())
 
-		const activity = await Activity.findById(id, null, { ...this.session?.options })
-
-		if (!activity) return left(new ActivityNotFoundError())
-
-		const entityOrErr = await ActivityEntity.build(activity)
-
-		if (entityOrErr.isLeft()) return left(entityOrErr.extract())
-
-		const entity = entityOrErr.extract().update(values)
-
-		const updated = (await Activity.findByIdAndUpdate(id, entity, {
+		const updated = (await Activity.findByIdAndUpdate(id, values, {
 			...this.session?.options,
 			new: true,
 		})) as unknown as Document

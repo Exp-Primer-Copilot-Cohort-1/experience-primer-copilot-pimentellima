@@ -98,9 +98,8 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 		params: IActivity,
 	): PromiseEither<AbstractError, ActivityEntity> {
 		try {
-
 			const activity = new ActivityEntity()
-				.defineDate(new Date(params.date))
+				.defineDate(params.date)
 				.defineGroupId(params.group_id?.toString() as string)
 				.defineIsRecurrent(params.is_recurrent || false)
 				.defineHourStart(params.hour_start)
