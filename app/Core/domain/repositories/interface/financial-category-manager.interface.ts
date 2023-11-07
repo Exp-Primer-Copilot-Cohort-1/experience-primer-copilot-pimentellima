@@ -3,7 +3,7 @@ import { PromiseEither } from 'App/Core/shared/either'
 import { IFinancialCategory } from 'App/Types/IFinancialCategory'
 
 export interface FinancialCategoryManagerContract {
-	findAllByUnityId: (
+	findAll: (
 		unity_id: string,
 	) => PromiseEither<AbstractError, IFinancialCategory[]>
 	findById: (id: string) => PromiseEither<AbstractError, IFinancialCategory>
