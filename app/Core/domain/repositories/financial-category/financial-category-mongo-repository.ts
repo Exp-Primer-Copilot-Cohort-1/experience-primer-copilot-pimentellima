@@ -14,7 +14,7 @@ export class FinancialCategoryMongooseRepository implements FinancialCategoryMan
 		return right(financialCategory.toObject())
 	}
 
-	async findAllByUnityId(
+	async findAll(
 		unity_id: string,
 	): PromiseEither<AbstractError, IFinancialCategory[]> {
 		const data = await FinancialCategory.find({ unity_id }).orFail(new UnityNotFoundError())

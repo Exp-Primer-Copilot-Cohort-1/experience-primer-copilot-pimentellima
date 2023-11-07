@@ -25,7 +25,7 @@ export class FindAllFinancialCategoryByUnityUseCase
             return left(new UnityNotFoundError())
         }
 
-        const financialCategoryOrErr = await this.manager.findAllByUnityId(unity_id)
+        const financialCategoryOrErr = await this.manager.findAll(unity_id)
 
         return financialCategoryOrErr
     }
