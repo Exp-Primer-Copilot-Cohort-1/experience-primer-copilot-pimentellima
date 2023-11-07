@@ -17,13 +17,17 @@ type Props = ActivityValues & {
 @injectable()
 @registry([{ token: UpdateActivityByIdUseCase, useClass: UpdateActivityByIdUseCase }])
 export class UpdateActivityByIdUseCase implements UseCase<Props, IActivity> {
-
 	constructor(
-		@inject(ActivityMongoRepository) private readonly manager: ActivitiesManagerContract,
-		@inject(MarkedActivityAwaitUseCase) private readonly marked: IMarkedActivityAwaitUseCase,
-	) { } // eslint-disable-line
+		@inject(ActivityMongoRepository)
+		private readonly manager: ActivitiesManagerContract,
+		@inject(MarkedActivityAwaitUseCase)
+		private readonly marked: IMarkedActivityAwaitUseCase,
+	) {} // eslint-disable-line
 
-	public async execute({ id, ...values }: Props): PromiseEither<AbstractError, IActivity> {
+	public async execute({
+		id,
+		...values
+	}: Props): PromiseEither<AbstractError, IActivity> {
 		if (!id) return left(new IdNotProvidedError())
 
 		const activityOrErr = await this.manager.find(id)
@@ -32,7 +36,10 @@ export class UpdateActivityByIdUseCase implements UseCase<Props, IActivity> {
 
 		const activity = activityOrErr.extract()
 
-		if (activity.type === STATUS_ACTIVITY.AWAIT) {
+		if (
+			activity.type === STATUS_ACTIVITY.AWAIT ||
+			activity.type === STATUS_ACTIVITY.PENDING
+		) {
 			return await this.marked.execute({ ...values, id })
 		}
 
@@ -42,9 +49,6 @@ export class UpdateActivityByIdUseCase implements UseCase<Props, IActivity> {
 
 		const entity = entityOrErr.extract().update(values)
 
-		return await this.manager.updateById(
-			id,
-			entity,
-		)
+		return await this.manager.updateById(id, entity)
 	}
 }
