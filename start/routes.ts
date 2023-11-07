@@ -66,10 +66,11 @@ Route.group(() => {
 		Route.get('', 'ClientController.index').as('clients.index')
 
 		Route.get(':id', 'ClientController.findUserClientByID').as('clients.show')
+
 		Route.get('verify/client', 'ClientController.verifyExistenceClient').as(
 			'clients.verify',
 		)
-		Route.put('update/:id', 'ClientController.update').as('clients.update')
+		Route.put('update/:id', 'ClientController.update').as('clients.update-id')
 		Route.post('', 'ClientController.create').as('clients.store')
 		Route.put('answer/:client_id', 'ClientController.putAnswer')
 		Route.put('share-access/:client_id', 'ClientController.putProfAccess').as('clients.shareAccess')
@@ -214,7 +215,7 @@ Route.group(() => {
 
 		Route.put(':id', 'ActivityController.updateActivityById').as('activity.update')
 		Route.get('', 'ActivityController.findAllActivities').as('activity.index')
-		Route.get(':id', 'ActivityController.findActivityById').as('activity.show')
+		Route.get('show/:id', 'ActivityController.findActivityById').as('activity.show')
 
 
 		Route.group(() => {

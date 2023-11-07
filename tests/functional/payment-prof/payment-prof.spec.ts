@@ -1,5 +1,6 @@
 import { test } from '@japa/runner'
 import PaymentParticipations from 'App/Models/PaymentParticipations'
+import { expect } from 'chai'
 import { loginAndGetToken } from '../helpers/login'
 
 const paymentProf = {
@@ -41,6 +42,7 @@ test.group('PaymentProf Controller', () => {
 		const response = await client
 			.get('payment-participations')
 			.bearerToken(token.token)
+
 		response.assertStatus(200)
 	})
 
@@ -55,6 +57,7 @@ test.group('PaymentProf Controller', () => {
 
 		response.assertStatus(204 | 200)
 
-		await deleteMany()
+		const { deletedCount } = await deleteMany()
+		expect(deletedCount).to.greaterThan(0)
 	})
 })

@@ -27,17 +27,16 @@ class BirthDate extends Validate<Date> {
 	}
 
 	public static build(birthDate: string | Date): BirthDate {
-
 		const date = parse(birthDate as string, 'dd/MM/yyyy', new Date())
 		const iso = parseISO(birthDate as string)
 
-		birthDate = date.toString() !== 'Invalid Date' ? date : iso
+		const newBirthDate = date.toString() !== 'Invalid Date' ? date : iso
 
-		if (!isValidDate(birthDate)) {
+		if (!isValidDate(newBirthDate)) {
 			throw new BirthDateInvalidError()
 		}
 
-		return new BirthDate(birthDate as Date)
+		return new BirthDate(newBirthDate as Date)
 	}
 }
 
