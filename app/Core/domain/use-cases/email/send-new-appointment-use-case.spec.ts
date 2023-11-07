@@ -19,7 +19,8 @@ const makeSut = () => {
 
 	const params = {
 		client: process.env.TEST_INTEGRATION_CLIENT_ID,
-		date: new Date(),
+		date: new Date().toISOString(),
+		hour_start: '08:00',
 		prof: process.env.TEST_INTEGRATION_USER_ID,
 		procedures: [
 			{

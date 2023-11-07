@@ -181,7 +181,7 @@ export class CensusDaysMongooseRepository implements CensusDaysManagerContract {
 				},
 			],
 		})
-			.where(this.opts.only_prof)
+			.where(this.opts?.only_prof)
 			.select('_id name')
 
 		const workedHours: ICensusWorkedHoursByProf[] = []

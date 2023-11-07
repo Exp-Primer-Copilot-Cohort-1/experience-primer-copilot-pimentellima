@@ -9,6 +9,7 @@ import { beforeAll, describe, expect, it } from 'vitest'
 
 import { FindIdlenessByProfUseCase } from './find-idleness-by-prof.use-case'
 
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import {
 	FindAllHolidaysByUnityUseCase,
 	SaveHolidaysNationalsDefaultUseCase,
@@ -17,9 +18,9 @@ import { DayTradesIntervalDatesByProfUseCase } from './day-trades-interval-dates
 
 const makeSut = () => {
 	const sut = new FindIdlenessByProfUseCase(
-		new CensusDaysMongooseRepository(),
+		new CensusDaysMongooseRepository(OptsQuery.build()),
 		new DayTradesIntervalDatesByProfUseCase(
-			new ProfsMongooseRepository(),
+			new ProfsMongooseRepository(OptsQuery.build()),
 			new FindAllHolidaysByUnityUseCase(
 				new HolidaysMongoRepository(),
 				new SaveHolidaysNationalsDefaultUseCase(

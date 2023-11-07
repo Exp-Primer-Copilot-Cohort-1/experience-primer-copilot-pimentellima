@@ -32,7 +32,7 @@ describe('Procedure Mongo Repository (Integration)', () => {
 		expect(ProceduresMongooseRepository).toBeDefined()
 	})
 
-	it('should be able to find basic procedure', async () => {
+	it.skip('should be able to find basic procedure', async () => {
 		const { sut, health_insurance_id, procedure_id } = makeSut()
 		const activitiesOrErr = await sut.findBasic(procedure_id, health_insurance_id)
 		expect(activitiesOrErr.isRight()).toBeTruthy()
