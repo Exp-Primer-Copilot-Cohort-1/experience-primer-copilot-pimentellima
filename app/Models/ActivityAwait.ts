@@ -134,6 +134,10 @@ const ActivityAwaitSchema = new Schema<IActivityAwaitModel>(
 			required: true,
 			ref: 'unities',
 		},
+		score: {
+			type: Number,
+			default: 0,
+		},
 		type: {
 			type: String,
 			default: STATUS_ACTIVITY.AWAIT,

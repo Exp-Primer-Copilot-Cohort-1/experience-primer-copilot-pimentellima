@@ -55,9 +55,9 @@ export class ActivityAwaitMongoRepository implements ActivityAwaitManagerContrac
 
 		// Adiciona a pontuação de cada cliente
 		for (const activity of activities) {
-			activity.score = scoreMap[(activity.client as Generic).value] || 0
+			const doc = activity.toObject()
+			activity.score = scoreMap[(doc.client as Generic).value.toString()] || 0
 		}
-
 
 		return right(activities)
 	}

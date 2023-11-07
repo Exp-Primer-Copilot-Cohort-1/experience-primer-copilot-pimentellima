@@ -63,8 +63,6 @@ export async function generateScores(id: string): Promise<Scores> {
 		},
 	])
 
-	console.log(scores)
-
 	// Converte a pontuação em um objeto para facilitar a pesquisa
 	const scoreMap: Scores = {}
 	for (const item of scores) {
