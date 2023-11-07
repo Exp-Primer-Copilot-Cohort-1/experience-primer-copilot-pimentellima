@@ -1,6 +1,10 @@
 import { ControllerInjection } from "App/Core/adapters/controller";
 import { ControllerGeneric } from "App/Core/adapters/controller/helpers";
-import { CreatePrescriptionUseCase, FindPrescriptionsByIdUseCase, UpdatePrescriptionsByIdUseCase, UpdateStatusPrescriptionsByIdUseCase } from "App/Core/domain/use-cases";
+import { CreatePrescriptionUseCase, FindAllPrescrioptionsUseCase, FindPrescriptionsByIdUseCase, UpdatePrescriptionsByIdUseCase, UpdateStatusPrescriptionsByIdUseCase } from "App/Core/domain/use-cases";
+import { IOptsQuery } from "App/Types/IOptsQuery";
+
+export const makeFindAllPrescriptionsComposer = (opts: IOptsQuery): ControllerGeneric =>
+    ControllerInjection.resolve(FindAllPrescrioptionsUseCase, opts)
 
 export const makePrescriptionsFindByIdComposer = (): ControllerGeneric => {
     return ControllerInjection.resolve(FindPrescriptionsByIdUseCase)

@@ -18,7 +18,7 @@ export class CostCenterMongooseRepository implements CostCenterManagerContract {
             return left(new AbstractError('Não foi Possível Atualizar', 401))
         }
 
-        return right(costCenter)
+        return right(costCenter.toObject())
     }
 
 

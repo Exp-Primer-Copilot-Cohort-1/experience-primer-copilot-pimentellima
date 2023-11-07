@@ -7,11 +7,6 @@ import { MissingParamsError } from "../../errors"
 import { CostCenterManagerContract } from "../../repositories/cost-center/const-center-manager.interface"
 import { CostCenterMongooseRepository } from "../../repositories/cost-center/cost-center-mongo-repository"
 
-type TypeParams = {
-    id: string
-    data: Partial<ICostCenter>
-}
-
 @injectable()
 @registry([{ token: UpdateCostCenterByIdUseCase, useClass: UpdateCostCenterByIdUseCase }])
 export class UpdateCostCenterByIdUseCase
@@ -22,12 +17,15 @@ export class UpdateCostCenterByIdUseCase
         private readonly manager: CostCenterManagerContract
     ) { } // eslint-disable-line
 
-    public async execute(params: TypeParams
+    public async execute({ id, ...data }: Partial<ICostCenter>
     ): PromiseEither<AbstractError, ICostCenter> {
-        if (!params.id) {
-            return left(new MissingParamsError('_id is required'))
+        if (!id) {
+            return left(new MissingParamsError('_id'))
         }
-        return await this.manager.update(params.data,
-            params.id)
+        if (!data.name || !data.active) {
+            return left(new MissingParamsError('name ou active'))
+        }
+        return await this.manager.update(data,
+            id)
     }
 }
