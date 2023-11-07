@@ -1,5 +1,3 @@
-import { ClientEntity } from 'App/Core/domain/entities/clients/client'
-import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import {
 	ActivityMongoRepository,
 	ClientsMongooseRepository,
@@ -13,12 +11,11 @@ import {
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import type { IUserClient } from 'App/Types/IClient'
+import Client from 'App/Models/Client'
 import { IFormAnswer, ProfWithAccess } from 'App/Types/IFormAnswer'
+import { isBefore, isSameDay } from 'date-fns'
 import { inject, injectable, registry } from 'tsyringe'
 import { ClientNotFoundError, UserNotFoundError } from '../../errors'
-import { isBefore, isSameDay } from 'date-fns'
-import Client from 'App/Models/Client'
 
 type Props = {
 	prof_id: string
@@ -38,7 +35,7 @@ export class CreateShareAnswerUseCase implements UseCase<Props, IFormAnswer[]> {
 		private readonly profManager: ProfsManagerContract,
 		@inject(ActivityMongoRepository)
 		private readonly activitiesManager: ActivitiesManagerContract,
-	) {} // eslint-disable-line
+	) { } // eslint-disable-line
 
 	public async execute(data: Props): PromiseEither<AbstractError, IFormAnswer[]> {
 		const clientOrErr = await this.clientManager.findById(data.client_id)
@@ -97,8 +94,6 @@ export class CreateShareAnswerUseCase implements UseCase<Props, IFormAnswer[]> {
 		const formAnswersWithUpdatedAccess = await Promise.all(
 			formAnswersWithUpdatedAccessPromises,
 		)
-
-		console.log(formAnswersWithUpdatedAccess)
 
 		await Client.findByIdAndUpdate(data.client_id, {
 			$set: {
