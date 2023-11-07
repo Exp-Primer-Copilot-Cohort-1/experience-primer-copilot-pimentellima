@@ -422,7 +422,6 @@ export class ClientEntity extends Entity implements IUserClient {
 				.definePartner(data.partner || null)
 				.definePhone(data.phone)
 				.defineProfession(data.profession)
-				.defineProfsWithAccess(data.profs_with_access)
 				.defineRg(data.rg)
 				.defineSmsChecked(data.sms_checked)
 				.defineSponsor(data.sponsor)
