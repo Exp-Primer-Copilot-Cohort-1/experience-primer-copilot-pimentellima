@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import generateLogModel from 'App/Models/Log'
+import { PROJECTION_DEFAULT } from 'App/Core/domain/repositories/helpers/projections'
+import generateLogModel, { COLLECTION_REF } from 'App/Models/Log'
 
 /**
  * Controlador responsável por gerenciar os logs do sistema.
@@ -89,11 +90,12 @@ class LogController {
 		}
 
 		const Log = await generateLogModel(unity_id?.toString())
-		const logs = await Log?.find({ collection_id: id, unity_id })
 
-		if (!logs) {
-			return ctx.response.status(404).send({ error: 'Log not found' })
-		}
+		const logs = await Log
+			?.find({ collection_id: id, unity_id })
+			.populate(COLLECTION_REF.USERS, PROJECTION_DEFAULT)
+
+		if (!logs) return ctx.response.status(404).send({ error: 'Log not found' })
 
 		return logs
 	}

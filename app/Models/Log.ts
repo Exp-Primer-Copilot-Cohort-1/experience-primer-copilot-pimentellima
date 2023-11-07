@@ -1,4 +1,9 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
+import { COLLECTION_NAME as COLLECTION_NAME_USERS } from './User'
+
+export enum COLLECTION_REF {
+	USERS = 'user',
+}
 
 /**
  * Representa um registro de log de uma ação realizada por um usuário em uma coleção do banco de dados.
@@ -94,6 +99,7 @@ const LogSchema = new Schema(
 		user: {
 			type: Schema.Types.ObjectId,
 			required: true,
+			ref: COLLECTION_NAME_USERS
 		},
 		/**
 		 * O ID da unidade em que a ação foi realizada.

@@ -214,6 +214,7 @@ Route.group(() => {
 
 		Route.put(':id', 'ActivityController.updateActivityById').as('activity.update')
 		Route.get('', 'ActivityController.findAllActivities').as('activity.index')
+		Route.get(':id', 'ActivityController.findActivityById').as('activity.show')
 
 
 		Route.group(() => {
