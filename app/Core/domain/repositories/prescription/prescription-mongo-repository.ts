@@ -25,9 +25,9 @@ export class PrescriptionMongooseRepository implements PrescriptionManagerContra
         return right(prescriptions)
     }
 
-    async findById(id: string): PromiseEither<AbstractError, any> {
+    async findById(_id: string): PromiseEither<AbstractError, any> {
         const prescriptions = await Prescription.where({
-            _id: id,
+            _id: _id,
         })
             .populate('prof', { label: '$name', value: '$_id', _id: 0 })
             .orFail(new AbstractError('Não Encontrada', 404))
@@ -35,23 +35,21 @@ export class PrescriptionMongooseRepository implements PrescriptionManagerContra
         return right(prescriptions)
     }
 
-    async create({
-        _id, // eslint-disable-line @typescript-eslint/no-unused-vars
-        ...data
-    }: Partial<IPrescription>): PromiseEither<AbstractError, IPrescription> {
-        const prescription = await Prescription.create(data)
+    async create(data: IPrescription): PromiseEither<AbstractError, IPrescription> {
+        const prescription = await Prescription.create({ ...data, prof: data.prof.value })
 
         return right(prescription.toObject())
     }
 
     async update(
         id: string,
-        data: Partial<IPrescription>,
+        data: any,
     ): PromiseEither<AbstractError, any> {
         const prescription = await Prescription.findByIdAndUpdate(
             id,
             {
                 ...data,
+                prof: data.prof.value,
             },
             {
                 new: true,

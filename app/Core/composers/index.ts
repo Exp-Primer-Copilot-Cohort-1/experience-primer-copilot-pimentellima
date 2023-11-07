@@ -18,6 +18,7 @@ export * from './medical-certificate/make-medical-certificate-delete-by-id-compo
 export * from './partner/make'
 export * from './partner/make-partner-delete-by-id-composer'
 export * from './payment-participations/make'
+export * from './prescription/make'
 export * from './procedures/make'
 export * from './procedures/make-procedures-delete-by-id-composer'
 export * from './profile/make'

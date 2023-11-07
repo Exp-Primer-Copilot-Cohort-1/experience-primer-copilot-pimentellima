@@ -1,5 +1,8 @@
+import { adaptRoute } from 'App/Core/adapters'
+import { makePrescriptionsCreateComposer, makePrescriptionsFindByIdComposer, makePrescriptionsUpdateStatusComposer } from 'App/Core/composers'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import Prescription from 'App/Models/Prescription'
+import { HttpContextContract } from 'App/Types/Adonis'
 import { z } from 'zod'
 
 const prescriptionSchema = z.object({
@@ -143,21 +146,10 @@ class PrescriptionController {
 		return prescriptions
 	}
 
-	async store({ request, auth }) {
-		const userLogged = auth.user
-		const data = request.all()
-
-		prescriptionSchema.parse(data)
-
-		const prescription = await (
-			await Prescription.create({
-				...data,
-				prof: data.prof.value,
-				unity_id: userLogged.unity_id,
-			})
-		).populate('prof', { label: '$name', value: '$_id', _id: 0 })
-
-		return prescription
+	async store(ctx: HttpContextContract) {
+		return adaptRoute(makePrescriptionsCreateComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		})
 	}
 
 	async update({ params, request }) {
@@ -179,28 +171,12 @@ class PrescriptionController {
 		return prescription
 	}
 
-	async updateStatus({ params, request }) {
-		const data = request.only(['status'])
-
-		const prescription = await Prescription.findByIdAndUpdate(
-			params.id,
-			{
-				$set: { active: data.status },
-			},
-			{ new: true },
-		).populate('prof', { label: '$name', value: '$_id', _id: 0 })
-
-		return prescription
+	async updateStatus(ctx: HttpContextContract) {
+		return adaptRoute(makePrescriptionsUpdateStatusComposer(), ctx)
 	}
 
-	async show({ params }) {
-		const prescriptions = await Prescription.where({
-			_id: params.id,
-		})
-			.populate('prof', { label: '$name', value: '$_id', _id: 0 })
-			.orFail()
-
-		return prescriptions
+	async show(ctx: HttpContextContract) {
+		return adaptRoute(makePrescriptionsFindByIdComposer(), ctx)
 	}
 
 	async destroy({ params }) {
