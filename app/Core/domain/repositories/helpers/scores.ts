@@ -17,9 +17,20 @@ export async function generateScores(id: string): Promise<Scores> {
 			},
 		},
 		{
+			$lookup: {
+				from: 'clients',
+				localField: 'client',
+				foreignField: '_id',
+				as: 'client',
+			},
+		},
+		{
+			$unwind: '$client',
+		},
+		{
 			$group: {
-				_id: '$client.value',
-				label: { $first: '$client.label' },
+				_id: '$client._id',
+				label: { $first: '$client.name' },
 				total: { $sum: 1 },
 				canceled: {
 					$sum: {
@@ -51,6 +62,8 @@ export async function generateScores(id: string): Promise<Scores> {
 			},
 		},
 	])
+
+	console.log(scores)
 
 	// Converte a pontuação em um objeto para facilitar a pesquisa
 	const scoreMap: Scores = {}

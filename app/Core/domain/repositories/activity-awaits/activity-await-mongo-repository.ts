@@ -58,6 +58,7 @@ export class ActivityAwaitMongoRepository implements ActivityAwaitManagerContrac
 			activity.score = scoreMap[(activity.client as Generic).value] || 0
 		}
 
+
 		return right(activities)
 	}
 
