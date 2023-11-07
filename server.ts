@@ -60,7 +60,6 @@ const runPrimaryProcess = () => {
 	// When Worker process has died, Log the worker
 	cluster.on('exit', (worker, code, signal) => {
 		if (code !== 0 && !worker.exitedAfterDisconnect) {
-			console.log(`Worker ${worker.process.pid} died`)
 			cluster.fork()
 		}
 	})
