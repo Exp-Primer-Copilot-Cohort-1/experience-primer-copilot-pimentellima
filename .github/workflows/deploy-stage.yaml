@@ -59,7 +59,7 @@ jobs:
             - name: Install Dependencies
               run: yarn install --frozen-lockfile
 
-    testing-units:
+    testing-unit:
         name: Run Unit Test
         runs-on: ubuntu-latest
         environment: deploy
@@ -89,4 +89,68 @@ jobs:
               run: echo "${{ secrets.ENV }}" > .env
 
             - name: Run Unit Test
-              run: yarn test:unit
+              run: yarn test:ci:unit
+
+    testing-integrations:
+        name: Run Integrations Test
+        runs-on: ubuntu-latest
+        environment: deploy
+        needs: [install]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 18.17.1
+                  cache: "yarn"
+
+            - uses: actions/cache@v2
+              name: Restore node_modules
+              id: yarn-cache
+              with:
+                  path: |
+                      **/node_modules
+                      **/.eslintcache
+                      ${{ steps.yarn-cache-dir-path.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
+
+            - name: Create .env file
+              run: echo "${{ secrets.ENV }}" > .env
+
+            - name: Run Unit Test
+              run: yarn test:ci:integration
+
+    testing-e2e:
+        name: Run E2E Test
+        runs-on: ubuntu-latest
+        environment: deploy
+        needs: [install]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 18.17.1
+                  cache: "yarn"
+
+            - uses: actions/cache@v2
+              name: Restore node_modules
+              id: yarn-cache
+              with:
+                  path: |
+                      **/node_modules
+                      **/.eslintcache
+                      ${{ steps.yarn-cache-dir-path.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
+
+            - name: Create .env file
+              run: echo "${{ secrets.ENV }}" > .env
+
+            - name: Run Unit Test
+              run: yarn test:ci:e2e
