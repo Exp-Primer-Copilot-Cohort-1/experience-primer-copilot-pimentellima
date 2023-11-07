@@ -1,5 +1,5 @@
 import { adaptRoute } from 'App/Core/adapters'
-import { makePrescriptionsCreateComposer, makePrescriptionsFindByIdComposer, makePrescriptionsUpdateStatusComposer } from 'App/Core/composers'
+import { makeFindAllPrescriptionsComposer, makePrescriptionsCreateComposer, makePrescriptionsFindByIdComposer, makePrescriptionsUpdateComposer, makePrescriptionsUpdateStatusComposer } from 'App/Core/composers'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import Prescription from 'App/Models/Prescription'
 import { HttpContextContract } from 'App/Types/Adonis'
@@ -136,14 +136,11 @@ const prescriptionSchema = z.object({
  *               $ref: '#/components/schemas/Prescription'
  */
 class PrescriptionController {
-	async index({ auth, request }) {
-		const userLogged = auth.user
-		const opts = OptsQuery.build(request.qs())
-		const prescriptions = await Prescription.where({
-			unity_id: userLogged.unity_id,
-			active: opts.active,
-		}).populate('prof', { label: '$name', value: '$_id', _id: 0 })
-		return prescriptions
+	async index(ctx: HttpContextContract) {
+		const opts = new OptsQuery()
+		return adaptRoute(makeFindAllPrescriptionsComposer(opts), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		})
 	}
 
 	async store(ctx: HttpContextContract) {
@@ -152,23 +149,8 @@ class PrescriptionController {
 		})
 	}
 
-	async update({ params, request }) {
-		const data = request.all()
-
-		prescriptionSchema.parse(data)
-
-		const prescription = await Prescription.findByIdAndUpdate(
-			params.id,
-			{
-				...data,
-				prof: data.prof.value,
-			},
-			{
-				new: true,
-			},
-		).populate('prof', { label: '$name', value: '$_id', _id: 0 })
-
-		return prescription
+	async update(ctx: HttpContextContract) {
+		return adaptRoute(makePrescriptionsUpdateComposer(), ctx)
 	}
 
 	async updateStatus(ctx: HttpContextContract) {

@@ -15,7 +15,9 @@ const prescriptionSchema = z.object({
     text: z.string(),
     prof: z.object({}),
 })
-
+type In = {
+    id: string
+} & Partial<IPrescription>
 @injectable()
 @registry([{ token: UpdatePrescriptionsByIdUseCase, useClass: UpdatePrescriptionsByIdUseCase }])
 
@@ -23,16 +25,16 @@ export class UpdatePrescriptionsByIdUseCase implements UseCase<Partial<IPrescrip
     constructor(@inject(PrescriptionMongooseRepository) private readonly manager: PrescriptionManagerContract) { } // eslint-disable-line
 
     public async execute(
-        data: Partial<IPrescription>,
+        { id, ...data }: In,
     ): PromiseEither<AbstractError, any> {
-        if (!data._id) {
+        if (!id) {
             return left(new MissingParamsError('_id'))
         }
 
         prescriptionSchema.parse(data)
 
         return await this.manager.update(
-            data._id.toString(),
+            id.toString(),
             data,
         )
     }
