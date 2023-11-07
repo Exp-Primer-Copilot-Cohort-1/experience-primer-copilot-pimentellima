@@ -88,7 +88,7 @@ jobs:
             - name: Create .env file
               run: echo "${{ secrets.ENV }}" > .env
 
-            - name: Run Unit Test
+            - name: Run Test
               run: yarn test:ci:unit
 
     testing-integrations:
@@ -120,7 +120,7 @@ jobs:
             - name: Create .env file
               run: echo "${{ secrets.ENV }}" > .env
 
-            - name: Run Unit Test
+            - name: Run Test
               run: yarn test:ci:integration
 
     testing-e2e:
@@ -152,5 +152,5 @@ jobs:
             - name: Create .env file
               run: echo "${{ secrets.ENV }}" > .env
 
-            - name: Run Unit Test
+            - name: Run Test
               run: yarn test:ci:e2e
