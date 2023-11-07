@@ -41,7 +41,7 @@ jobs:
 
             - uses: actions/setup-node@v3
               with:
-                  node-version: 16.16.0
+                  node-version: 18.17.1
                   cache: "yarn"
 
             - uses: actions/cache@v2
