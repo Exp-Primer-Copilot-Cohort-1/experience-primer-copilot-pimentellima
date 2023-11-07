@@ -33,7 +33,6 @@ export interface IUserClient extends Partial<IAddress> {
 	social_name?: string
 	avatar?: string
 	form_answers?: IFormAnswer[]
-	profs_with_access?: ProfWithAccess[]
 	birth_date: string | Date
 	gender?: Genders
 	document: string

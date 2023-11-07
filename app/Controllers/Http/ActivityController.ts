@@ -11,7 +11,7 @@ import {
 	makeFindAllActivitiesPendingComposer,
 	makeFindDayActivitiesComposer,
 	makeUpdateActivityByIdComposer,
-	makeUpdateActivityStatusComposer
+	makeUpdateActivityStatusComposer,
 } from 'App/Core/composers/activities/make'
 import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
@@ -112,7 +112,6 @@ class ActivityController {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}
-
 
 	/**
 	 * Retorna as atividades de um profissional pelo seu ID.

@@ -3,8 +3,6 @@ import { ObjectId } from '@ioc:Mongoose'
 export type ProfWithAccess = {
 	id: string
 	name: string
-	start?: Date
-	end?: Date
 }
 
 export interface IFormAnswer {

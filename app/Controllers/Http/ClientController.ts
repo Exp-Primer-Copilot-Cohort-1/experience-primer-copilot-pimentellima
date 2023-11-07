@@ -4,7 +4,8 @@ import { makeCounts } from 'App/Core/composers'
 import {
 	makeClientCreateComposer,
 	makeClientFindAllComposer,
-	makeClientUpdateComposer
+	makeClientUpdateComposer,
+	makeCreateShareAnswerComposer,
 } from 'App/Core/composers/clients/make'
 import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import { PROJECTION_DEFAULT } from 'App/Core/domain/repositories/helpers/projections'
@@ -69,15 +70,19 @@ class ClientController {
 				}),
 			)
 
-			const client = await Client.findByIdAndUpdate(clientId, {
-				$push: {
-					treatment_pictures: {
-						$each: treatment_pictures,
+			const client = await Client.findByIdAndUpdate(
+				clientId,
+				{
+					$push: {
+						treatment_pictures: {
+							$each: treatment_pictures,
+						},
 					},
 				},
-			}, {
-				new: true
-			})
+				{
+					new: true,
+				},
+			)
 			console.log(client)
 			return client
 		} catch (err) {
@@ -253,38 +258,8 @@ class ClientController {
 	}
 
 	async putProfAccess(ctx: HttpContextContract) {
-		try {
-			const user = ctx.auth.user
-			if (!user) throw new Error()
-			const data = ctx.request.only(['prof'])
-			const prof_with_access = {
-				id: data.prof.value,
-				name: data.prof.label,
-			}
-			const client_id: string = ctx.params.client_id
-			const client = await Client.findById(client_id)
-			if (!client) return ctx.response.status(500)
-			client.form_answers = client.form_answers?.map((ans) => {
-				if (ans.prof.value !== user._id.toString()) return ans
-				return {
-					...ans,
-					profs_with_access: [
-						...(ans.profs_with_access || []),
-						prof_with_access,
-					],
-				}
-			})
-			client.save((error: any, client: any) => {
-				if (error) {
-					throw error
-				} else {
-					return client
-				}
-			})
-		} catch (error) {
-			console.log(error)
-			return left(new AbstractError('', 500))
-		}
+		console.log('---------')
+		return adaptRoute(makeCreateShareAnswerComposer(), ctx)
 	}
 }
 
