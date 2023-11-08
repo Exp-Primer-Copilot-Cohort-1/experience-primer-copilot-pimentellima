@@ -3,7 +3,9 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import PaymentParticipations from 'App/Models/PaymentParticipations'
 import { IPaymentProf } from 'App/Types/IPaymentProf'
+import { SessionTransactionMock } from '__mocks__'
 import { Types } from 'mongoose'
+import { OptsQuery } from '../../entities/helpers/opts-query'
 import { PaymentProfManagerContract } from '../interface/payment-prof-manager-interface'
 import { PaymentProfMongoRepository } from './payment-prof-mongo-repository'
 
@@ -29,7 +31,10 @@ const obj: IPaymentProf = {
 }
 
 const makeSut = () => {
-	const sut: PaymentProfManagerContract = new PaymentProfMongoRepository()
+	const sut: PaymentProfManagerContract = new PaymentProfMongoRepository(
+		new SessionTransactionMock(),
+		OptsQuery.build()
+	)
 	return {
 		sut,
 	}

@@ -12,6 +12,7 @@
 
 import { Ignitor } from '@adonisjs/core/build/standalone'
 import { ServerHandler } from '@ioc:Adonis/Core/TestUtils'
+import cluster from 'cluster'
 import { readFileSync } from 'fs'
 import { createServer as ServerHTTP } from 'http'
 import { createServer as ServerHTTPS } from 'https'
@@ -34,7 +35,7 @@ const createServerHTTP = (handle: ServerHandler) => {
 	return ServerHTTP(handle)
 }
 
-new Ignitor(__dirname).httpServer().start((handle) => {
+const Init = async () => await new Ignitor(__dirname).httpServer().start((handle) => {
 	try {
 		if (process.env.NODE_ENV !== 'production') throw new Error('Not production')
 
@@ -47,3 +48,28 @@ new Ignitor(__dirname).httpServer().start((handle) => {
 		return server
 	}
 })
+
+const runPrimaryProcess = () => {
+	// const cpus = os.cpus().length
+
+	console.log(`Primary ${process.pid} is running`)
+	console.log(`Forking Server with ${1} processes\n`)
+
+	for (let index = 0; index < 1; index++) cluster.fork()
+
+	// When Worker process has died, Log the worker
+	cluster.on('exit', (worker, code, signal) => {
+		if (code !== 0 && !worker.exitedAfterDisconnect) {
+			cluster.fork()
+		}
+	})
+}
+
+const runWorkerProcess = async () => {
+	// if Worker process, master is false, cluster.isWorker is true
+	// worker starts server for individual cpus
+	// the worker created above is starting server
+	await Init()
+}
+
+cluster.isPrimary ? runPrimaryProcess() : runWorkerProcess()

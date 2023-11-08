@@ -1,0 +1,124 @@
+name: Continuos Integration Deploy
+
+on: pull_request
+
+permissions: write-all
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    # code-scan:
+    #     permissions:
+    #         contents: read # for actions/checkout to fetch code
+    #         security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+    #         actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+    #     runs-on: ubuntu-latest
+    #     name: Code Scanning
+    #     steps:
+    #         - name: Checkout the code
+    #           uses: actions/checkout@v3
+
+    #         - name: nodejsscan Scan
+    #           id: njsscan
+    #           uses: ajinabraham/njsscan-action@7237412fdd36af517e2745077cedbf9d6900d711
+    #           with:
+    #               args: ". --sarif --output results.sarif || true"
+
+    #         - name: Upload njsscan report
+    #           uses: github/codeql-action/upload-sarif@v2
+    #           with:
+    #               sarif_file: results.sarif
+
+    install:
+        name: Installing Packages
+        environment: deploy
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 18.17.1
+                  cache: "yarn"
+
+            - uses: actions/cache@v2
+              name: Cached node_modules
+              id: yarn-cache
+              with:
+                  path: |
+                      **/node_modules
+                      **/.eslintcache
+                      ${{ steps.yarn-cache-dir-path.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
+
+            - name: Install Dependencies
+              run: yarn install --frozen-lockfile
+
+    testing-unit:
+        name: Run Unit Test
+        runs-on: ubuntu-latest
+        environment: deploy
+        needs: [install]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 18.17.1
+                  cache: "yarn"
+
+            - uses: actions/cache@v2
+              name: Restore node_modules
+              id: yarn-cache
+              with:
+                  path: |
+                      **/node_modules
+                      **/.eslintcache
+                      ${{ steps.yarn-cache-dir-path.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
+
+            - name: Create .env file
+              run: echo "${{ secrets.ENV }}" > .env
+
+            - name: Run Test
+              run: yarn test:ci:unit
+
+    testing-integrations:
+        name: Run Integrations Test
+        runs-on: ubuntu-latest
+        environment: deploy
+        needs: [install]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 18.17.1
+                  cache: "yarn"
+
+            - uses: actions/cache@v2
+              name: Restore node_modules
+              id: yarn-cache
+              with:
+                  path: |
+                      **/node_modules
+                      **/.eslintcache
+                      ${{ steps.yarn-cache-dir-path.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
+
+            - name: Create .env file
+              run: echo "${{ secrets.ENV }}" > .env
+
+            - name: Run Test
+              run: yarn test:ci:integration

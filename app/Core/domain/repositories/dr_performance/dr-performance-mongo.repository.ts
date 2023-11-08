@@ -1,5 +1,6 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { ISessionTransaction, SessionTransaction } from 'App/Core/infra/session-transaction'
+import { ISessionTransaction } from 'App/Core/infra/infra'
+import { SessionTransaction } from 'App/Core/infra/session-transaction'
 import { PromiseEither, right } from 'App/Core/shared'
 import BusinessFranchises from 'App/Models/BusinessFranchises'
 import Unity from 'App/Models/Unity'

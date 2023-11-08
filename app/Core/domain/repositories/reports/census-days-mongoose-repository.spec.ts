@@ -1,11 +1,12 @@
 import mongoose from 'mongoose'
 import { beforeAll, describe, expect, it } from 'vitest'
 
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { CensusDaysManagerContract } from '../interface/census-days-manager.interface'
 import { CensusDaysMongooseRepository } from './census-days-mongoose-repository'
 
 const makeSut = () => {
-	const sut: CensusDaysManagerContract = new CensusDaysMongooseRepository()
+	const sut: CensusDaysManagerContract = new CensusDaysMongooseRepository(OptsQuery.build())
 	return {
 		sut,
 	}

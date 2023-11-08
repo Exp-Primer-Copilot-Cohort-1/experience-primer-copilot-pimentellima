@@ -3,6 +3,7 @@ import { adaptRoute } from 'App/Core/adapters'
 import {
 	makeCostCenterCreateComposer,
 	makeCostCenterShowComposer,
+	makeCostCenterUpdateComposer,
 	makeCounts, makeFindAll
 } from 'App/Core/composers'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
@@ -114,11 +115,8 @@ class CostCenterController {
 	 *               $ref: '#/components/schemas/CostCenter'
 	 */
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	async update({ params, request }: HttpContextContract) {
-		const data = request.only(['name', 'active'])
-		const costCenters = await CostCenter.findByIdAndUpdate(params.id, data).orFail()
-
-		return { ...costCenters.toObject(), ...data }
+	async update(ctx: HttpContextContract) {
+		return adaptRoute(makeCostCenterUpdateComposer(), ctx)
 	}
 
 	/**

@@ -1,3 +1,5 @@
+[![Deploy](https://github.com/murilomontino/dpsystem-back/actions/workflows/deploy-stage.yaml/badge.svg)](https://github.com/murilomontino/dpsystem-back/actions/workflows/deploy-stage.yaml)
+
 # Adonis API application
 
 This is the boilerplate for creating an API server in AdonisJs, it comes pre-configured with.
@@ -17,7 +19,6 @@ adonis new yardstick --api-only
 ```
 
 or manually clone the repo and then run `npm install`.
-
 
 ### Migrations
 

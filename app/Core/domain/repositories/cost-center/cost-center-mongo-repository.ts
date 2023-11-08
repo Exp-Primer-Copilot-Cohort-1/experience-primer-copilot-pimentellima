@@ -6,33 +6,32 @@ import { injectable, registry } from 'tsyringe'
 import { CostCenterManagerContract } from './const-center-manager.interface'
 @injectable()
 @registry([{ token: CostCenterMongooseRepository, useClass: CostCenterMongooseRepository }])
-
 export class CostCenterMongooseRepository implements CostCenterManagerContract {
 
-    constructor() { } // eslint-disable-line
+	constructor() { } // eslint-disable-line
 
-    async update(data: Partial<ICostCenter>, id: string): PromiseEither<AbstractError, ICostCenter> {
-        const costCenter = await CostCenter.findByIdAndUpdate(id, data)
+	async update(data: Partial<ICostCenter>, id: string): PromiseEither<AbstractError, ICostCenter> {
+		const costCenter = await CostCenter.findByIdAndUpdate(id, data)
 
-        if (!costCenter) {
-            return left(new AbstractError('Não foi Possível Atualizar', 401))
-        }
+		if (!costCenter) {
+			return left(new AbstractError('Não foi Possível Atualizar', 401))
+		}
 
-        return right(costCenter)
-    }
+		return right(costCenter.toObject())
+	}
 
 
-    async create({ ...data
-    }: Partial<ICostCenter>): PromiseEither<AbstractError, ICostCenter> {
-        const costCenter = await CostCenter.create(data)
+	async create({ ...data
+	}: Partial<ICostCenter>): PromiseEither<AbstractError, ICostCenter> {
+		const costCenter = await CostCenter.create(data)
 
-        return right(costCenter)
-    }
+		return right(costCenter)
+	}
 
-    async findById(id: string): PromiseEither<AbstractError, ICostCenter> {
+	async findById(id: string): PromiseEither<AbstractError, ICostCenter> {
 
-        const costCenter = await CostCenter.findById(id).orFail(new AbstractError('Centro de Custos não encontrado', 404))
+		const costCenter = await CostCenter.findById(id).orFail(new AbstractError('Centro de Custos não encontrado', 404))
 
-        return right(costCenter)
-    }
+		return right(costCenter)
+	}
 }

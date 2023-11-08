@@ -7,7 +7,7 @@ test.group('User Controller V2', () => {
 		const { token } = await loginAndGetToken(client)
 		const response = await client
 			.get('secs')
-			.headers({ Authorization: `Bearer ${token.token}` })
+			.bearerToken(token.token)
 
 		response.assertStatus(200)
 	})
