@@ -13,20 +13,18 @@ import { ProfileMongooseRepository } from '../../repositories/profile/profile-mo
 @registry([{ token: UpdateProfileUseCase, useClass: UpdateProfileUseCase }])
 export class UpdateProfileUseCase implements UseCase<IProfile, any> {
 
-    constructor(
-        @inject(ProfileMongooseRepository) private readonly manager: ProfileManagerContract
-    ) { } // eslint-disable-line
+	constructor(
+		@inject(ProfileMongooseRepository) private readonly manager: ProfileManagerContract
+	) { } // eslint-disable-line
 
-    public async execute(data: IProfile): PromiseEither<AbstractError, any> {
+	public async execute(data: IProfile): PromiseEither<AbstractError, any> {
 
-        const profileOrErr = await ProfileEntity.build(data)
+		const profileOrErr = await ProfileEntity.build(data)
 
-        if (profileOrErr.isLeft()) {
-            return left(profileOrErr.extract())
-        }
+		if (profileOrErr.isLeft()) return left(profileOrErr.extract())
 
-        const profile = profileOrErr.extract()
+		const profile = profileOrErr.extract()
 
-        return await this.manager.update(data._id as string, profile)
-    }
+		return await this.manager.update(data._id as string, profile)
+	}
 }

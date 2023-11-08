@@ -4,6 +4,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { ISessionTransaction } from 'App/Core/infra/infra'
 import { SessionTransaction } from 'App/Core/infra/session-transaction'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
+import { decryptSync } from 'App/Helpers/encrypt'
 import Unity, { COLLECTIONS_REFS } from 'App/Models/Unity'
 import { IUnity } from 'App/Types/IUnity'
 import { inject, injectable, registry } from 'tsyringe'
@@ -23,11 +24,17 @@ export class UnitiesMongooseRepository implements UnitiesManagerContract {
 		return right(unities)
 	}
 	async findById(id: string): PromiseEither<AbstractError, IUnity> {
-		const unities = await Unity.findOne({ _id: id })
+		const doc = await Unity.findById(id)
 			.populate(COLLECTIONS_REFS.COORDINATOR, PROJECTION_DEFAULT)
 			.orFail(new UnityNotFoundError())
 
-		return right(unities)
+		const unity = {
+			...doc.toObject(),
+			document: decryptSync(doc.document),
+			cnaes: decryptSync(doc.cnaes as string),
+		}
+
+		return right(unity)
 	}
 	async findOne(id: string): PromiseEither<AbstractError, IUnity> {
 		const unity = await Unity.findById(id)

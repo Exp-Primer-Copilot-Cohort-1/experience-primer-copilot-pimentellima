@@ -16,7 +16,6 @@ export class ShowUnityByIdUseCase implements UseCase<Input, IUnity> {
 	constructor(@inject(UnitiesMongooseRepository) private readonly manager: UnitiesManagerContract) { }
 
 	public async execute({ id }): PromiseEither<AbstractError, IUnity> {
-
 		return await this.manager.findById(id);
 	}
 }
