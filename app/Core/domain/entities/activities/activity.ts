@@ -13,12 +13,12 @@ export class ActivityEntity extends AbstractActivity implements IActivity {
 	hour_start: string
 	hour_end: string
 	scheduled: AppointmentStatus
-	type: STATUS_ACTIVITY.MARKED
+	type: STATUS_ACTIVITY
 	started_at?: Date
 	finished_at?: Date
 	payment?: ActivityPayment
 
-	defineType(type: STATUS_ACTIVITY.MARKED): ActivityEntity {
+	defineType(type: STATUS_ACTIVITY): ActivityEntity {
 		this.type = type
 		return this
 	}
