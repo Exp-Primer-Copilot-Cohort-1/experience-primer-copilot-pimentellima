@@ -1,7 +1,6 @@
 import { MedicalCertificateManagerContract } from 'App/Core/domain/repositories/interface'
 import { left, right } from 'App/Core/shared'
 import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
-import { IPartner } from 'App/Types/IPartner'
 import { describe, expect, it, vi } from 'vitest'
 import {
 	CreateMedicalCertificateUseCase,
@@ -22,8 +21,8 @@ const medicalCertificate: Partial<IMedicalCertificate> = {
 
 
 const MedicalCertificateManager: MedicalCertificateManagerContract = {
-	create: vi.fn(async (partner) => {
-		return right(partner as IPartner) as any
+	create: vi.fn(async (medicalCertificate) => {
+		return right(medicalCertificate as IMedicalCertificate) as any
 	}),
 	deleteById: vi.fn(async (id) => {
 		return right(id) as any
@@ -31,8 +30,8 @@ const MedicalCertificateManager: MedicalCertificateManagerContract = {
 	findByName: vi.fn(async (id) => {
 		return right(id) as any
 	}),
-	update: vi.fn(async (_id, partner) => {
-		return right(partner) as any
+	update: vi.fn(async (_id, medicalCertificate) => {
+		return right(medicalCertificate) as any
 	}),
 	findById: vi.fn(async (_id) => {
 		return right(_id) as any
@@ -65,7 +64,7 @@ const makeSutUpdate = () => {
 
 describe('Use cases ref Medical Certificate (Unit)', () => {
 
-	describe('Create partner Use Case', () => {
+	describe('Create Medical Certificate Use Case', () => {
 
 		it('should create Medical Certificate', async () => {
 			const { sut } = makeSutCreate()
