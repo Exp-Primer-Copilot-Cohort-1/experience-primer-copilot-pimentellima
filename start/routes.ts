@@ -60,6 +60,9 @@ Route.post('sessions/logout', 'SessionController.logout')
 
 Route.post('users/redefine-password', 'UserControllerV2.redefinePassword')
 Route.group(() => {
+	Route.get('shared-answers', 'SharedAnswerController.getSharedAnswers')
+	Route.post('shared-answers', 'SharedAnswerController.createShareAnswer')
+
 	Route.post('users', 'UserController.store')
 
 	Route.group(() => {
@@ -73,7 +76,6 @@ Route.group(() => {
 		Route.put('update/:id', 'ClientController.update').as('clients.update-id')
 		Route.post('', 'ClientController.create').as('clients.store')
 		Route.put('answer/:client_id', 'ClientController.putAnswer')
-		Route.put('share-access/:client_id', 'ClientController.putProfAccess').as('clients.shareAccess')
 		Route.get('answer/:id', 'ClientController.getAnswers')
 		Route.post('/many', 'ClientController.createMany').as('clients.storeMany')
 	}).prefix('clients')
