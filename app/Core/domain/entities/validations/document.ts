@@ -20,7 +20,6 @@ class Document extends Validate<string> {
 	}
 
 	public validate(document: string, force: boolean): this {
-
 		if (process.env.NODE_ENV === 'test' && !force) {
 			return this
 		}

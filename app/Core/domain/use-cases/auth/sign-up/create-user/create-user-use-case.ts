@@ -23,6 +23,7 @@ export class CreateUserUseCase implements UseCase<IAdminUser, IAdminUser> {
 
 	@EmitEventDecorator('new:user')
 	public async execute(data: IAdminUser): PromiseEither<AbstractError, IAdminUser> {
+
 		if (!data.unity_id) return left(new UnityNotFoundError())
 
 		const adminOrErr = await AdminUser.build(data)
