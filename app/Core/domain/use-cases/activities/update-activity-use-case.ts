@@ -22,7 +22,7 @@ export class UpdateActivityByIdUseCase implements UseCase<Props, IActivity> {
 		private readonly manager: ActivitiesManagerContract,
 		@inject(MarkedActivityAwaitUseCase)
 		private readonly marked: IMarkedActivityAwaitUseCase,
-	) {} // eslint-disable-line
+	) { } // eslint-disable-line
 
 	public async execute({
 		id,
