@@ -23,7 +23,7 @@ export class UnitiesMongooseRepository implements UnitiesManagerContract {
 		return right(unities)
 	}
 	async findById(id: string): PromiseEither<AbstractError, IUnity> {
-		const unities = await Unity.findById(id)
+		const unities = await Unity.findOne({ _id: id })
 			.populate(COLLECTIONS_REFS.COORDINATOR, PROJECTION_DEFAULT)
 			.orFail(new UnityNotFoundError())
 
