@@ -10,20 +10,17 @@ import { CostCenterMongooseRepository } from '../../repositories/cost-center/cos
 @injectable()
 @registry([{ token: CreateCostCenterUseCase, useClass: CreateCostCenterUseCase }])
 export class CreateCostCenterUseCase
-    implements UseCase<Partial<ICostCenter>, ICostCenter>
+	implements UseCase<Partial<ICostCenter>, ICostCenter>
 {
-    constructor(
-        @inject(CostCenterMongooseRepository) private readonly manager: CostCenterManagerContract
-    ) { }
+	constructor(
+		@inject(CostCenterMongooseRepository) private readonly manager: CostCenterManagerContract
+	) { }
 
-    public async execute(
-        costCenter: Partial<ICostCenter>,
-    ): PromiseEither<AbstractError, ICostCenter> {
-        const costCenterOrErr =
-            await this.manager.create(
-                costCenter,
-            )
-
-        return costCenterOrErr
-    }
+	public async execute(
+		costCenter: Partial<ICostCenter>,
+	): PromiseEither<AbstractError, ICostCenter> {
+		return await this.manager.create(
+			costCenter,
+		)
+	}
 }

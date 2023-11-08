@@ -52,7 +52,7 @@ export abstract class AbstractActivity extends Entity implements IAbstractActivi
 	}
 
 	public defineClient(client: string | Generic): this {
-		this.client = typeof client === 'string' ? client : client.value
+		this.client = typeof client === 'string' ? client.toString() : client.value.toString()
 		return this
 	}
 
@@ -62,7 +62,7 @@ export abstract class AbstractActivity extends Entity implements IAbstractActivi
 	}
 
 	public defineProf(prof: string | Generic): this {
-		this.prof = typeof prof === 'string' ? prof : prof.value
+		this.prof = typeof prof === 'string' ? prof.toString() : prof.value.toString()
 		return this
 	}
 

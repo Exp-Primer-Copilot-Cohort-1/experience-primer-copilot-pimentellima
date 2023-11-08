@@ -21,8 +21,7 @@ export class CostCenterMongooseRepository implements CostCenterManagerContract {
 	}
 
 
-	async create({ ...data
-	}: Partial<ICostCenter>): PromiseEither<AbstractError, ICostCenter> {
+	async create(data: Partial<ICostCenter>): PromiseEither<AbstractError, ICostCenter> {
 		const costCenter = await CostCenter.create(data)
 
 		return right(costCenter)
