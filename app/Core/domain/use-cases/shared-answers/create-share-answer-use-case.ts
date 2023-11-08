@@ -1,5 +1,4 @@
-import { ClientEntity } from 'App/Core/domain/entities/clients/client'
-import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
+import { Mongoose, Types } from 'mongoose';
 import {
 	ActivityMongoRepository,
 	ClientsMongooseRepository,
@@ -13,19 +12,20 @@ import {
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
-import type { IUserClient } from 'App/Types/IClient'
+import Client from 'App/Models/Client'
 import { IFormAnswer, ProfWithAccess } from 'App/Types/IFormAnswer'
+import { isBefore, isSameDay } from 'date-fns'
 import { inject, injectable, registry } from 'tsyringe'
 import { ClientNotFoundError, UserNotFoundError } from '../../errors'
-import { isBefore, isSameDay } from 'date-fns'
-import Client from 'App/Models/Client'
+import SharedAnswer from 'App/Models/SharedAnswer'
 
 type Props = {
-	prof_id: string
-	profs_with_access_id: string
+	shared_by: string
+	shared_with: string
 	client_id: string
 	start: Date
 	end: Date
+	unity_id: string
 }
 
 @injectable()
@@ -44,13 +44,12 @@ export class CreateShareAnswerUseCase implements UseCase<Props, IFormAnswer[]> {
 		const clientOrErr = await this.clientManager.findById(data.client_id)
 		if (clientOrErr.isLeft()) return left(new ClientNotFoundError())
 
-		const profOrErr = await this.profManager.findById(data.prof_id)
+		const profOrErr = await this.profManager.findById(data.shared_by)
 		if (!profOrErr) return left(new UserNotFoundError())
 
 		const client = clientOrErr.extract()
 		const formAnswers = client.form_answers
 		if (!formAnswers) return left(new AbstractError('', 500))
-
 		const formAnswersWithUpdatedAccessPromises: Promise<IFormAnswer>[] =
 			formAnswers.map(async (formAnswer) => {
 				return new Promise(async (resolve, reject) => {
@@ -71,19 +70,13 @@ export class CreateShareAnswerUseCase implements UseCase<Props, IFormAnswer[]> {
 					}
 
 					const profsWithAccess = formAnswer.profs_with_access || []
-					if (
-						profsWithAccess
-							.map((prof) => prof.id)
-							.includes(data.profs_with_access_id)
-					)
+					if (profsWithAccess.map((prof) => prof.id).includes(data.shared_with))
 						return resolve(formAnswer)
 
-					const profData = await this.profManager.findById(
-						data.profs_with_access_id,
-					)
+					const profData = await this.profManager.findById(data.shared_with)
 					if (profData.isLeft()) reject()
 					const newProfWithAccess: ProfWithAccess = {
-						id: data.profs_with_access_id,
+						id: data.shared_with,
 						name: profData.extract().name,
 					}
 
@@ -98,7 +91,14 @@ export class CreateShareAnswerUseCase implements UseCase<Props, IFormAnswer[]> {
 			formAnswersWithUpdatedAccessPromises,
 		)
 
-		console.log(formAnswersWithUpdatedAccess)
+		await SharedAnswer.create({
+			shared_by: new Types.ObjectId(data.shared_by),
+			shared_with: new Types.ObjectId(data.shared_with),
+			client: new Types.ObjectId(data.client_id),
+			start: data.start,
+			end: data.end,
+			unity_id: new Types.ObjectId(data.unity_id),
+		})
 
 		await Client.findByIdAndUpdate(data.client_id, {
 			$set: {

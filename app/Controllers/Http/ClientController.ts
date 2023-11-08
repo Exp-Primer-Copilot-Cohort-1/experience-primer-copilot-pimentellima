@@ -5,7 +5,6 @@ import {
 	makeClientCreateComposer,
 	makeClientFindAllComposer,
 	makeClientUpdateComposer,
-	makeCreateShareAnswerComposer,
 } from 'App/Core/composers/clients/make'
 import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import { PROJECTION_DEFAULT } from 'App/Core/domain/repositories/helpers/projections'
@@ -257,10 +256,7 @@ class ClientController {
 		}
 	}
 
-	async putProfAccess(ctx: HttpContextContract) {
-		console.log('---------')
-		return adaptRoute(makeCreateShareAnswerComposer(), ctx)
-	}
+
 }
 
 export default ClientController
