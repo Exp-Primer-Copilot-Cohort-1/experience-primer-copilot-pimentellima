@@ -280,10 +280,12 @@ UnitySchema.index(
 )
 
 UnitySchema.pre('save', async function (next) {
-	if (this.isNew) {
-		this.document =
-			this.document && (await encrypt(this.document?.replace(/\D/g, '')))
-		this.cnaes = this.cnaes && (await encrypt(this.cnaes))
+	if (this.isModified('document')) {
+		this.document = await encrypt(this.document?.replace(/\D/g, ''))
+	}
+
+	if (this.cnaes && this.isModified('cnaes')) {
+		this.cnaes = await encrypt(this.cnaes)
 	}
 
 	next()
@@ -304,20 +306,5 @@ UnitySchema.post('find', async function (docs) {
 		}
 	}
 })
-
-UnitySchema.post('findOne', async function (doc) {
-	try {
-		if (doc?.document) {
-			doc.document = await decrypt(doc.document)
-		}
-
-		if (doc?.cnaes) {
-			doc.cnaes = await decrypt(doc.cnaes)
-		}
-	} catch (error) {
-
-	}
-})
-
 
 export default Mongoose.model<IUnity>(COLLECTION_NAME, UnitySchema)
