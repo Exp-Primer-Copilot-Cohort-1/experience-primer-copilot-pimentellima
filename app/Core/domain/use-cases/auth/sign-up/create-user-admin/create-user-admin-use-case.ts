@@ -8,7 +8,7 @@ import { UseCase } from 'App/Core/interfaces/use-case.interface'
 import { PromiseEither, left } from 'App/Core/shared'
 import type { IAdminUser } from 'App/Types/IAdminUser'
 import type { IUnity } from 'App/Types/IUnity'
-import { inject, injectable, registry } from 'tsyringe'
+import { delay, inject, injectable, registry } from 'tsyringe'
 import {
 	CreateFranchiseDrPerformanceUseCase,
 	INewDrPerformanceUseCase
@@ -20,19 +20,18 @@ import { CreateUserUseCase } from '../create-user/create-user-use-case'
 export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {
 	constructor(
 		@inject(CreateUserUseCase) private readonly createUser: UseCase<IAdminUser, IAdminUser>,
-		@inject(CreateUnityUseCase) private readonly createUnity: UseCase<IUnity, IUnity>,
+		@inject(delay(() => CreateUnityUseCase)) private readonly createUnity: UseCase<IUnity, IUnity>,
 		@inject(CreateFranchiseDrPerformanceUseCase) private readonly createDrPerformance: INewDrPerformanceUseCase,
 		@inject(SessionTransaction) private readonly session: ISessionTransaction,
-		@inject(EventEmitter) private readonly event: IEventEmitter
+		@inject(EventEmitter) private readonly event: IEventEmitter,
 	) { } // eslint-disable-line
 
 	public async execute(data: IAdminUser): PromiseEither<AbstractError, IAdminUser> {
 		try {
-			this.session.startSession()
+			await this.session.startSession()
 
 			const unityOrErr = await this.createUnity.execute(
 				data as IUnity,
-				this.session,
 			)
 
 			if (unityOrErr.isLeft()) throw unityOrErr.extract() // error
