@@ -290,7 +290,6 @@ UserSchema.pre('save', async function (next) {
 		this.password = await Hash.make(this.password)
 	}
 	if (this.isNew) {
-		this.password = await Hash.make(this.password)
 		this.document = await encrypt(this.document.replace(/\D/g, ''))
 	}
 	next()
