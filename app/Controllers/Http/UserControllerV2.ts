@@ -83,8 +83,6 @@ class UserControllerV2 {
 		}).select('-payment_participations -password')
 	}
 
-
-
 	async findAllUsersSecs({ auth, request }: HttpContextContract) {
 		const userLogged = auth.user
 		const opts = OptsQuery.build(request.qs())

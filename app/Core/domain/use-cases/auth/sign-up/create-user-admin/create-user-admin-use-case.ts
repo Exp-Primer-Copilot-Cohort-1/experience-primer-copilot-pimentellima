@@ -13,13 +13,13 @@ import {
 	CreateFranchiseDrPerformanceUseCase,
 	INewDrPerformanceUseCase
 } from '../create-user-dr-performance/create-user-dr-performance-use-case'
-import { CreateUserUseCase } from '../create-user/create-user-use-case'
+import { CreateUserSimplifiedUseCase } from '../create-user-simplyfield/create-user-simplyfield-use-case'
 
 @injectable()
 @registry([{ token: CreateUserAdminUseCase, useClass: CreateUserAdminUseCase }])
 export class CreateUserAdminUseCase implements UseCase<IAdminUser, IAdminUser> {
 	constructor(
-		@inject(CreateUserUseCase) private readonly createUser: UseCase<IAdminUser, IAdminUser>,
+		@inject(CreateUserSimplifiedUseCase) private readonly createUser: UseCase<IAdminUser, IAdminUser>,
 		@inject(delay(() => CreateUnityUseCase)) private readonly createUnity: UseCase<IUnity, IUnity>,
 		@inject(CreateFranchiseDrPerformanceUseCase) private readonly createDrPerformance: INewDrPerformanceUseCase,
 		@inject(SessionTransaction) private readonly session: ISessionTransaction,

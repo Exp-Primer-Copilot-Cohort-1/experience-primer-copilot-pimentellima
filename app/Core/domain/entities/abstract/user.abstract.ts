@@ -59,8 +59,8 @@ export abstract class AbstractUser extends Entity {
 		return this
 	}
 
-	public defineAvatar(avatar: string): this {
-		this.avatar = avatar
+	public defineAvatar(avatar?: string): this {
+		this.avatar = avatar || ''
 		return this
 	}
 
