@@ -60,7 +60,7 @@ const makeSutUpdate = () => {
 	return { sut, }
 }
 
-describe('Use cases ref categories (Only)', () => {
+describe('Use cases ref financial category (Unit)', () => {
 	describe('Create financial category Use Case', () => {
 		it('should create category', async () => {
 			const { sut } = makeSutCreate()

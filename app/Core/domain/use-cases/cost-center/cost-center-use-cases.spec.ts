@@ -46,7 +46,7 @@ const makeSutUpdate = () => {
 	return { sut, }
 }
 
-describe('Use cases ref cost center (Only)', () => {
+describe('Use cases ref cost center (Unit)', () => {
 	describe('Create cost center Use Case', () => {
 		it('should create category', async () => {
 			const { sut } = makeSutCreate()
