@@ -84,7 +84,7 @@
 		"@adonisjs/view": "^6.2.0",
 		"@google-cloud/storage": "^7.2.0",
 		"adonis5-swagger": "^1.4.1",
-		"axios": "^1.5.1",
+		"axios": "^1.6.0",
 		"class-validator": "^0.14.0",
 		"cpf-cnpj-validator": "^1.0.3",
 		"date-fns": "^2.30.0",
