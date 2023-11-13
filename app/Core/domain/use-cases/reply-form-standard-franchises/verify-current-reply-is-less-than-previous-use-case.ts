@@ -7,7 +7,8 @@ import { FormNotTypeProvider } from 'App/Core/domain/errors/form-not-type-provid
 import { QuestionNotFound } from 'App/Core/domain/errors/question-not-found'
 import { RFormSFManagerContract } from 'App/Core/domain/repositories/interface/reply-form-standard-franchise-manager.interface'
 import { RFormSFMongooseManager } from 'App/Core/domain/repositories/reply-form-standard-franchise/reply-form-standard-franchise-mongoose-repository'
-import { EventEmitter, IEventEmitter } from 'App/Core/infra/event-emitter'
+import { EventEmitter } from 'App/Core/infra/event-emitter'
+import { IEventEmitter } from 'App/Core/infra/infra'
 import { TypeForms } from 'App/Types/IBusinessFranchises'
 import { inject, injectable, registry } from 'tsyringe'
 type In = { group_id: string, type: TypeForms }
