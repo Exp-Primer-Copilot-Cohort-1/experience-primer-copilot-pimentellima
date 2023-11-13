@@ -70,7 +70,7 @@ const CategorySchema = new Schema<ICategoryModel>(
 	},
 )
 
-CategorySchema.index({ unity_id: 1 }, { unique: true })
+CategorySchema.index({ unity_id: 1, name: 1 }, { unique: true })
 CategorySchema.index({ prof: 1 }, { unique: false })
 
 export default Mongoose.model<ICategoryModel>(COLLECTION_NAME, CategorySchema)
