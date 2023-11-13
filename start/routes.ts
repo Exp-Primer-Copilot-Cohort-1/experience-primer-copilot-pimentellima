@@ -63,7 +63,6 @@ Route.group(() => {
 	Route.get('shared-answers', 'SharedAnswerController.getSharedAnswers')
 	Route.post('shared-answers', 'SharedAnswerController.createShareAnswer')
 
-	Route.post('users', 'UserController.store')
 
 	Route.group(() => {
 		Route.get('', 'ClientController.index').as('clients.index')
@@ -515,5 +514,7 @@ Route.group(() => {
 		Route.post('activation/:id', 'SendEmailController.resend').as('emails.resend')
 	}).prefix('emails')
 		.middleware('throttle:resend_email')
+
+	Route.post('users', 'UserController.store')
 
 }).middleware(['auth', 'role', 'statusPermission', 'successNoContent',])

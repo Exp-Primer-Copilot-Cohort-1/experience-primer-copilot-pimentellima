@@ -24,13 +24,13 @@ export class CreateUserUseCase implements UseCase<IAdminUser, IAdminUser> {
 	@EmitEventDecorator('new:user')
 	public async execute(data: IAdminUser): PromiseEither<AbstractError, IAdminUser> {
 
-		if (!data.unity_id) return left(new UnityNotFoundError())
-
 		const adminOrErr = await AdminUser.build(data)
 
 		if (adminOrErr.isLeft()) return left(adminOrErr.extract())
 
 		const admin = adminOrErr.extract()
+
+		if (!admin.unity_id) return left(new UnityNotFoundError())
 
 		const passwordOrErr = await this.createPasswordUseCase.execute({
 			password: admin.password,
