@@ -26,7 +26,7 @@ class UserController {
 	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	public async store(ctx: HttpContextContract) {
 		return adaptRoute(makeCreateUserComposer(), ctx, {
-			unity_id: ctx.auth.user?.unity_id,
+			unity_id: ctx.auth.user?.unity_id.toString(),
 		})
 	}
 
