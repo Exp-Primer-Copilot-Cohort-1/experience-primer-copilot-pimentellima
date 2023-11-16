@@ -8,32 +8,38 @@ import { MedicalCertificateManagerContract } from 'App/Core/domain/repositories/
 import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
 import { inject, injectable, registry } from 'tsyringe'
 
-
 @injectable()
-@registry([{ token: UpdateMedicalCertificateByIdUseCase, useClass: UpdateMedicalCertificateByIdUseCase }])
+@registry([
+	{
+		token: UpdateMedicalCertificateByIdUseCase,
+		useClass: UpdateMedicalCertificateByIdUseCase,
+	},
+])
 export class UpdateMedicalCertificateByIdUseCase
 	implements UseCase<Partial<IMedicalCertificate>, IMedicalCertificate>
 {
 	constructor(
-		@inject(MedicalCertificateMongooseRepository) private readonly manager: MedicalCertificateManagerContract
-	) { } // eslint-disable-line
+		@inject(MedicalCertificateMongooseRepository)
+		private readonly manager: MedicalCertificateManagerContract,
+	) {} // eslint-disable-line
 
-	public async execute(
-		medicalCertificate: Partial<IMedicalCertificate>,
-	): PromiseEither<AbstractError, IMedicalCertificate> {
-		if (!medicalCertificate?._id) {
-			return left(new MissingParamsError('_id is required'))
-		}
-		const medicalCertificateOrErr =
-			await this.manager.update(
-				medicalCertificate._id.toString(),
+	public async execute({
+		_id,
+		prof,
+		...medicalCertificate
+	}: Partial<IMedicalCertificate>): PromiseEither<AbstractError, IMedicalCertificate> {
+		try {
+			if (!_id) {
+				return left(new MissingParamsError('_id is required'))
+			}
+			return await this.manager.update(
+				_id.toString(),
 				medicalCertificate,
 			)
 
-		if (medicalCertificateOrErr.isLeft()) {
-			return left(medicalCertificateOrErr.extract())
+			
+		} catch (e) {
+			console.log(e)
 		}
-
-		return medicalCertificateOrErr
 	}
 }
