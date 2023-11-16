@@ -6,11 +6,18 @@ import {
 	ProfsCountsUseCase,
 	ProfsFindAllUseCase
 } from 'App/Core/domain/use-cases'
+import { SendInvitationEmailUseCase } from 'App/Core/domain/use-cases/email/send-invitation-email-use-case'
 
 export const makeFindAllProfsComposers = (ctx: HttpContextContract): ControllerGeneric => {
 	const opts = getterOptInRequest(ctx)
 
 	return ControllerInjection.resolve(ProfsFindAllUseCase, opts)
+}
+
+export const makeSendIndicationComposer = (ctx: HttpContextContract): ControllerGeneric => {
+	const opts = getterOptInRequest(ctx)
+
+	return ControllerInjection.resolve(SendInvitationEmailUseCase, opts)
 }
 
 
