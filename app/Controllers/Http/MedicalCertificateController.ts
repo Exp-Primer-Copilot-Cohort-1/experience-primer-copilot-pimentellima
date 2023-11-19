@@ -4,10 +4,12 @@ import {
 	makeCounts,
 	makeMedicalCertificateCreateComposer,
 	makeMedicalCertificateDeleteByIdComposer,
+	makeMedicalCertificateFindAllComposer,
 	makeMedicalCertificateFindByNameComposer,
 	makeMedicalCertificateShowByIdComposer,
 	makeMedicalCertificateUpdateByIdComposer,
 } from 'App/Core/composers'
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import MedicalCertificate, { COLLECTION_NAME } from 'App/Models/MedicalCertificate'
 
@@ -24,9 +26,12 @@ class MedicalCertificateController {
 	 * @param ctx O contexto da requisição.
 	 * @returns Uma lista de atestados médicos.
 	 */
+
+
 	async index(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id
-		return adaptRoute(makeMedicalCertificateFindByNameComposer(), ctx, { unity_id })
+		const opts = OptsQuery.build(ctx.request.qs())
+		return adaptRoute(makeMedicalCertificateFindAllComposer(opts), ctx, { unity_id })
 	}
 
 	/**
