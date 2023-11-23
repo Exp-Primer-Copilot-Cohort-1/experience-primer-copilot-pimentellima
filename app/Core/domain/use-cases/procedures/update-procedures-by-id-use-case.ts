@@ -23,7 +23,6 @@ export class UpdateProceduresByIdUseCase
 		profs,
 		...procedure
 	}: IProcedure): PromiseEither<AbstractError, IProcedure> {
-		console.log(procedure)
 		try {
 			if (!_id) return left(new IdNotProvidedError())
 
