@@ -22,9 +22,7 @@ export class UpdateCostCenterByIdUseCase
         if (!id) {
             return left(new MissingParamsError('_id'))
         }
-        if (!data.name || !data.active) {
-            return left(new MissingParamsError('name ou active'))
-        }
+
         return await this.manager.update(data,
             id)
     }
