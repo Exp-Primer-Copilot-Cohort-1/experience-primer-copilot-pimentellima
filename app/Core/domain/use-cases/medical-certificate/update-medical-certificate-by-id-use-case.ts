@@ -24,16 +24,16 @@ export class UpdateMedicalCertificateByIdUseCase
 	) {} // eslint-disable-line
 
 	public async execute({
-		_id,
+		id,
 		prof,
 		...medicalCertificate
 	}: Partial<IMedicalCertificate>): PromiseEither<AbstractError, IMedicalCertificate> {
 		try {
-			if (!_id) {
-				return left(new MissingParamsError('_id is required'))
+			if (!id) {
+				return left(new MissingParamsError('id is required'))
 			}
 			return await this.manager.update(
-				_id.toString(),
+				id.toString(),
 				medicalCertificate,
 			)
 

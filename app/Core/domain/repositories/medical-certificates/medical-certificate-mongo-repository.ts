@@ -2,14 +2,23 @@ import { UnityNotFoundError } from 'App/Core/domain/errors/unity-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared'
 import MedicalCertificate from 'App/Models/MedicalCertificate'
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { IMedicalCertificate } from 'App/Types/IMedicalCertificate'
 import { MedicalCertificateManagerContract } from '../interface'
+import { inject, injectable, registry } from 'tsyringe'
+
+
+@injectable()
+@registry([
+	{ token: MedicalCertificateMongooseRepository, useClass: MedicalCertificateMongooseRepository },
+])
 
 export class MedicalCertificateMongooseRepository
 	// eslint-disable-next-line prettier/prettier
 	implements MedicalCertificateManagerContract {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
-	constructor() { }
+	constructor(@inject(OptsQuery) private readonly opts: OptsQuery) {}
+
 	updateMedicalCertificateById: (id: string, data: Partial<IMedicalCertificate>) => PromiseEither<AbstractError, IMedicalCertificate>
 
 	async updateMedicalCertificateActive(
@@ -29,6 +38,15 @@ export class MedicalCertificateMongooseRepository
 		}
 
 		return right(medicalCertificate as unknown as IMedicalCertificate)
+	}
+
+	async findAll(unity_id: string): PromiseEither<AbstractError, any> {
+		const prescriptions = await MedicalCertificate.where({
+			unity_id: unity_id,
+			active: this.opts.active,
+		})
+			.populate('prof', { label: '$name', value: '$_id', _id: 0 })
+		return right(prescriptions)
 	}
 
 	async findByName(

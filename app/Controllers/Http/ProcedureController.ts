@@ -8,6 +8,7 @@ import {
 } from 'App/Core/composers/procedures/make'
 import { makeProceduresDeleteByIdComposer } from 'App/Core/composers/procedures/make-procedures-delete-by-id-composer'
 import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
+import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { PROJECTION_HEALTH_INSURANCE } from 'App/Core/domain/repositories/helpers/projections'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import Procedure, { COLLECTIONS_REFS, COLLECTION_NAME } from 'App/Models/Procedure'
@@ -43,7 +44,7 @@ class ProcedureController {
 	 */
 	async index(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id
-		const opts = getterOptInRequest(ctx)
+		const opts = OptsQuery.build(ctx.request.qs())
 		return adaptRoute(makeProceduresFindAllComposer(opts), ctx, { unity_id })
 	}
 

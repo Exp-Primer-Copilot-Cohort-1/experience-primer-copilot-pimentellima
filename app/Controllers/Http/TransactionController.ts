@@ -64,7 +64,7 @@ class TransactionsController {
 
 		const transactions = await Transaction.find({
 			unity_id: userLogged?.unity_id,
-			active: true,
+			active: request.qs().active ?? true,
 			date: {
 				$gte: date_start,
 				$lte: date_end,
@@ -143,15 +143,19 @@ class TransactionsController {
 		if (!userLogged) throw Error()
 		const data = request.all() as ITransaction
 
-		const transactionOrErr = await TransactionEntity.build({
+		/* const transactionOrErr = await TransactionEntity.build({
 			...data,
 			unity_id: userLogged.unity_id.toString(),
 			amount: data.amount,
-		})
+		}) */
 
 		const transaction = await Transaction.updateMany(
-			{ group_by: params.id },
-			transactionOrErr.extract(),
+			{ $or: [{ _id: params.id }, { group_by: params.id }] },
+			{
+				...data,
+				unity_id: userLogged.unity_id.toString(),
+				amount: data.amount,
+			},
 			{
 				new: true,
 			},

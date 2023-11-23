@@ -31,7 +31,6 @@ export class ProceduresMongooseRepository implements ProceduresManagerContract {
 	}
 
 	async findAll(unity_id: string): PromiseEither<AbstractError, IProcedure[]> {
-
 		const procedures = await Procedure.find({
 			unity_id: unity_id,
 			active: this.opts.active
