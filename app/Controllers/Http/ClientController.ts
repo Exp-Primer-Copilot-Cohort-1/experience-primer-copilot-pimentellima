@@ -82,7 +82,6 @@ class ClientController {
 					new: true,
 				},
 			)
-			console.log(client)
 			return client
 		} catch (err) {
 			console.log(err)
