@@ -10,19 +10,19 @@ import { inject, injectable, registry } from 'tsyringe'
 
 @injectable()
 @registry([{ token: UpdatePartnersByIdUseCase, useClass: UpdatePartnersByIdUseCase }])
-
 export class UpdatePartnersByIdUseCase implements UseCase<Partial<IPartner>, IPartner> {
-	constructor(@inject(PartnerMongooseRepository) private readonly manager: PartnerManagerContract) { } // eslint-disable-line
+	constructor(
+		@inject(PartnerMongooseRepository)
+		private readonly manager: PartnerManagerContract,
+	) {} // eslint-disable-line
 
-	public async execute(
-		{ _id, ...partner }: Partial<IPartner>,
-	): PromiseEither<AbstractError, IPartner> {
-		if (!_id) {
-			return left(new MissingParamsError('_id is required'))
+	public async execute({
+		id,
+		...params
+	}: Partial<IPartner> & { id: string }): PromiseEither<AbstractError, IPartner> {
+		if (!id) {
+			return left(new MissingParamsError('id is required'))
 		}
-		return await this.manager.update(
-			_id.toString(),
-			partner,
-		)
+		return await this.manager.update(id, params)
 	}
 }
