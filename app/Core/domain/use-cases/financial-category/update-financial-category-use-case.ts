@@ -22,16 +22,16 @@ export class UpdateFinancialCategoryByIdUseCase implements UseCase<IFinancialCat
     public async execute(
         { id, ...data }: In,
     ): PromiseEither<AbstractError, IFinancialCategory> {
-        const financialCategoryOrErr = await FinancialCategoryEntity.build(data)
+        /* const financialCategoryOrErr = await FinancialCategoryEntity.build(data) */
         if (!id) {
             return left(new MissingParamsError('_id'))
         }
-        if (financialCategoryOrErr.isLeft()) {
+/*         if (financialCategoryOrErr.isLeft()) {
             return left(financialCategoryOrErr.extract())
         }
 
-        const financialCategory = financialCategoryOrErr.extract()
+        const financialCategory = financialCategoryOrErr.extract() */
 
-        return await this.manager.update(id, financialCategory)
+        return await this.manager.update(id, data)
     }
 }

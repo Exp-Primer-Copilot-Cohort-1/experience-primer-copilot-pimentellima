@@ -2,7 +2,7 @@ import { ObjectId } from '@ioc:Mongoose';
 import { Generic } from './ITransaction';
 
 export interface IMedicalCertificate {
-	_id?: ObjectId | string;
+	id?: ObjectId | string;
 	name: string;
 	description: string;
 	prof: Generic;

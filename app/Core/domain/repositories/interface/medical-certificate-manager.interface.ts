@@ -7,6 +7,9 @@ export interface MedicalCertificateManagerContract {
 		name: string,
 		unity_id: string,
 	) => PromiseEither<AbstractError, IMedicalCertificate[]>
+	findAll: (
+		unity_id: string,
+	) => PromiseEither<AbstractError, IMedicalCertificate[]>
 	findById: (id: string) => PromiseEither<AbstractError, IMedicalCertificate>
 	deleteById: (
 		id: string,

@@ -27,12 +27,11 @@ export class UpdatePrescriptionsByIdUseCase implements UseCase<Partial<IPrescrip
     public async execute(
         { id, ...data }: In,
     ): PromiseEither<AbstractError, any> {
+
         if (!id) {
             return left(new MissingParamsError('_id'))
         }
-
-        prescriptionSchema.parse(data)
-
+        
         return await this.manager.update(
             id.toString(),
             data,

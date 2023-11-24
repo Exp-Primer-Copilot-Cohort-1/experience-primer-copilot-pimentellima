@@ -7,14 +7,12 @@ import { IUser as IProf } from 'App/Types/IUser'
 import { inject, injectable, registry } from 'tsyringe'
 import { ICount } from '../helpers/count'
 import { ProfsManagerContract } from './profs-manage.interface'
+import { ROLES } from 'App/Roles/types'
 
 @injectable()
 @registry([{ token: ProfsMongooseRepository, useClass: ProfsMongooseRepository }])
 export class ProfsMongooseRepository implements ProfsManagerContract {
-
-	constructor(
-		@inject(OptsQuery) private readonly opts: OptsQuery
-	) { } // eslint-disable-line
+	constructor(@inject(OptsQuery) private readonly opts: OptsQuery) {} // eslint-disable-line
 
 	async findById(id: string): PromiseEither<AbstractError, IProf> {
 		const prof = await Prof.findOne({
@@ -27,19 +25,24 @@ export class ProfsMongooseRepository implements ProfsManagerContract {
 	}
 
 	async findAll(): PromiseEither<AbstractError, IProf[]> {
-
-		const prof = await Prof.find({
-			unity_id: this.opts.unity_id,
-			type: ['prof'],
-		})
-			.where(this.opts.only_prof)
-			.skip(this.opts.skip)
-			.limit(this.opts.limit)
-			.sort(this.opts.sort)
-			.select('-payment_participations -password')
-			.exec()
-
-		return right(prof)
+		try {
+			const profOfErr = await Prof.where({
+				unity_id: this.opts.unity_id,
+				active: this.opts.active,
+				$or: [
+					{ type: ROLES.ADMIN_PROF },
+					{ type: ROLES.PROF },
+				],
+			})
+				.skip(this.opts.skip)
+				.limit(this.opts.limit)
+				.sort(this.opts.sort)
+				.select('-payment_participations -password')
+				.exec()
+			return right(profOfErr)
+		} catch (e) {
+			return left(new AbstractError('Erro', 500))
+		}
 	}
 
 	async getCount(): PromiseEither<AbstractError, ICount> {

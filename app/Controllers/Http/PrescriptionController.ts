@@ -137,7 +137,7 @@ const prescriptionSchema = z.object({
  */
 class PrescriptionController {
 	async index(ctx: HttpContextContract) {
-		const opts = new OptsQuery()
+		const opts = OptsQuery.build(ctx.request.qs())
 		return adaptRoute(makeFindAllPrescriptionsComposer(opts), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})

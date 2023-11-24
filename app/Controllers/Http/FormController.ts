@@ -6,15 +6,17 @@ import Form from 'App/Models/Form'
 
 class FormController {
 	async findAllForms(ctx: HttpContextContract) {
+		const opts = ctx.request.qs()
+		const active = opts.active === 'false' ? false : true
 		try {
 			const user = ctx.auth.user
 			if (!user) throw new Error()
 			const forms = await Form.find({
 				$or: [
-					{ 'prof.value': user?._id, active: true },
+					{ 'prof.value': user?._id, active },
 					{
 						unity_id: user?.unity_id,
-						active: true,
+						active,
 						'profs_with_access.value': user._id,
 					},
 				],
