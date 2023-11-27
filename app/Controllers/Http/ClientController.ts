@@ -9,85 +9,18 @@ import {
 import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import { PROJECTION_DEFAULT } from 'App/Core/domain/repositories/helpers/projections'
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { baseGCSUrl, bucket } from 'App/Core/infra/gcs'
 import { left } from 'App/Core/shared'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import Client, { COLLECTIONS_REFS, COLLECTION_NAME } from 'App/Models/Client'
-import { IUserClient, TreatmentPicture } from 'App/Types/IClient'
+import { IUserClient } from 'App/Types/IClient'
 import { IFormAnswer } from 'Types/IFormAnswer'
-import crypto from 'crypto'
 
-function generateHash() {
-	const randomValue = Math.random().toString(36).substring(2, 15)
-	const hash = crypto.createHash('sha256').update(randomValue).digest('hex')
-	return hash
-}
+
 
 // ! AVISO
 // ! refatorar para usar o padrão da nossa arquitetura
 class ClientController {
-	async putTreatmentPictures({ request, auth }: HttpContextContract) {
-		const clientId = request.params().client_id
-
-		try {
-			const promises: Promise<string>[] = []
-			request.multipart.onFile('files', {}, async (file) => {
-				const promise = new Promise<string>((resolve, reject) => {
-					const hash = generateHash()
-					const filePath = clientId + '/' + hash
-					const publicUrl = baseGCSUrl + '/' + filePath
-					const bucketFile = bucket.file(filePath)
-
-					file.pipe(
-						bucketFile.createWriteStream({
-							metadata: { contentType: file.headers['content-type'] },
-						}),
-					)
-						.on('finish', async () => {
-							resolve(publicUrl)
-						})
-						.on('error', (err) => {
-							reject(err)
-						})
-				})
-				promises.push(promise)
-			})
-
-			await request.multipart.process()
-
-			const imagesUrls = await Promise.all(promises)
-			const { descriptions, date }: { descriptions: string[]; date: string } =
-				request.only(['descriptions', 'date', 'clientId'])
-			const dateObj = new Date(date)
-			const descriptionsArr: string[] = new Array(imagesUrls.length).fill('')
-			descriptions?.forEach((d, index) => (descriptionsArr[index] = d))
-			const treatment_pictures: TreatmentPicture[] = imagesUrls.map(
-				(image_url, index) => ({
-					description: descriptionsArr[index],
-					image_url,
-					date: dateObj,
-				}),
-			)
-
-			const client = await Client.findByIdAndUpdate(
-				clientId,
-				{
-					$push: {
-						treatment_pictures: {
-							$each: treatment_pictures,
-						},
-					},
-				},
-				{
-					new: true,
-				},
-			)
-			return client
-		} catch (err) {
-			console.log(err)
-			return err
-		}
-	}
+	
 
 	async verifyExistenceClient({ request, auth, response }: HttpContextContract) {
 		const { name, birth_date } = request.all()
