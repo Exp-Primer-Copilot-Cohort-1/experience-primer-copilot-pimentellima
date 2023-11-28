@@ -14,7 +14,7 @@ export class TransactionsMongooseRepository implements TransactionsManagerContra
 		@inject(SessionTransaction) private readonly session: ISessionTransaction
 	) { } // eslint-disable-line
 
-	public async create({
+	async create({
 		_id, // eslint-disable-line @typescript-eslint/no-unused-vars
 		...transaction
 	}: Partial<ITransaction>): PromiseEither<AbstractError, ITransaction> {
@@ -23,5 +23,22 @@ export class TransactionsMongooseRepository implements TransactionsManagerContra
 		})
 
 		return right(created[0].toObject())
+	}
+
+
+	async update(
+		id: string,
+		data: Partial<ITransaction>
+	): PromiseEither<AbstractError, Count> {
+
+		const transaction = await Transactions.updateMany(
+			{ $or: [{ _id: id }, { group_by: id }] },
+			data,
+			{
+				new: true,
+			},
+		).orFail()
+
+		return right(transaction.modifiedCount)
 	}
 }

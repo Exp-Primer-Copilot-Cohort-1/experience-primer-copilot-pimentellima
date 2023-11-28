@@ -1,10 +1,9 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeCreateTransactionComposer } from 'App/Core/composers'
-import { TransactionEntity } from 'App/Core/domain/entities/transaction/TransactionEntity'
+import { makeCreateTransactionComposer, makeUpdateTransactionComposer } from 'App/Core/composers'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
+import LogTransactionDecorator from 'App/Decorators/LogTransaction'
 import Transaction, { COLLECTION_NAME } from 'App/Models/Transactions'
-import { ITransaction } from 'App/Types/ITransaction'
 
 /**
  * Controller responsável por gerenciar as transações.
@@ -101,7 +100,7 @@ class TransactionsController {
 	 *             schema:
 	 *               $ref: '#/components/schemas/Transaction'
 	 */
-	@LogDecorator(COLLECTION_NAME, ACTION.POST)
+	@LogTransactionDecorator(COLLECTION_NAME, ACTION.POST)
 	async store(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id
 		return adaptRoute(makeCreateTransactionComposer(), ctx, { unity_id })
@@ -137,31 +136,10 @@ class TransactionsController {
 	 *             schema:
 	 *               $ref: '#/components/schemas/Transaction'
 	 */
-	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	async update({ params, request, auth }: HttpContextContract) {
-		const userLogged = auth.user
-		if (!userLogged) throw Error()
-		const data = request.all() as ITransaction
-
-		/* const transactionOrErr = await TransactionEntity.build({
-			...data,
-			unity_id: userLogged.unity_id.toString(),
-			amount: data.amount,
-		}) */
-
-		const transaction = await Transaction.updateMany(
-			{ $or: [{ _id: params.id }, { group_by: params.id }] },
-			{
-				...data,
-				unity_id: userLogged.unity_id.toString(),
-				amount: data.amount,
-			},
-			{
-				new: true,
-			},
-		).orFail()
-
-		return transaction
+	@LogTransactionDecorator(COLLECTION_NAME, ACTION.PUT)
+	async update(ctx: HttpContextContract) {
+		const unity_id = ctx.auth.user?.unity_id
+		return adaptRoute(makeUpdateTransactionComposer(), ctx, { unity_id })
 	}
 
 	/**

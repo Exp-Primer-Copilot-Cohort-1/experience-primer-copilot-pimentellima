@@ -7,4 +7,9 @@ export interface TransactionsManagerContract {
 		transaction: ITransaction,
 		unity_id: string,
 	) => PromiseEither<AbstractError, ITransaction>
+
+	update: (
+		id: string,
+		transaction: ITransaction,
+	) => PromiseEither<AbstractError, Count>
 }

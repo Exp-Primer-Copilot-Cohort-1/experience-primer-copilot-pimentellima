@@ -10,3 +10,5 @@ type Message = {
 type Hours = number
 
 type Year = number
+
+type Count = number

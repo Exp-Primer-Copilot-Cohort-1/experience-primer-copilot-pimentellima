@@ -1,40 +1,12 @@
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import deepCompare from 'App/Core/helpers/deep-compare'
-import collections, { COLLECTIONS_NAMES } from 'App/Models'
+import { COLLECTIONS_NAMES } from 'App/Models'
 import generateCollectionLog from 'App/Models/Log'
+import { HttpContextContract } from 'App/Types/Adonis'
+import { actionCompare, getCollectionId, getOriginalDoc } from './helpers'
 
 export enum ACTION {
 	PUT = 'put',
 	DELETE = 'delete',
 	POST = 'post',
-}
-
-function actionCompare(action: ACTION, original = {}, modified = {}) {
-	switch (action) {
-		case ACTION.POST:
-			return ['Criado', '']
-		case ACTION.PUT:
-			return deepCompare(original, modified)
-		case ACTION.DELETE:
-			return ['Deletado', '']
-	}
-}
-
-async function getOriginalDoc(
-	action: ACTION,
-	_id: string,
-	collectionName: COLLECTIONS_NAMES,
-) {
-	const collection = collections[collectionName]
-	if (action === ACTION.PUT) {
-		return (await collection.findById?.(_id))?.toObject()
-	}
-
-	return {}
-}
-
-function getCollectionId(body: any, _id: string) {
-	return body?.participation_id?.toString() || body?._id?.toString() || _id?.toString()
 }
 
 export default function LogDecorator(collectionName: COLLECTIONS_NAMES, action: ACTION) {
