@@ -23,28 +23,25 @@ export class UpdateUserUseCase
 		...data
 	}: In): PromiseEither<AbstractError, IUser> {
 
-		const user = await User.findById(id).orFail()
+		const userLoggerType = userLogged?.type
 		const isEquals = id === userLogged?._id.toString()
 
-		switch (userLogged?.type) {
-			case ROLES.PROF:
-				if (isEquals) {
-					await user.updateOne(data)
-					await user.save()
-				}
-				break
-			case ROLES.SEC:
-				if (isEquals) {
-					await user.updateOne(data)
-					await user.save()
-				}
-				break
-			default:
-				await user.updateOne(data)
-				await user.save()
-				break
+		if (
+			(ROLES.PROF === userLoggerType || ROLES.SEC === userLoggerType)
+			&& isEquals
+		) {
+			const user = await User
+				.findByIdAndUpdate(id, data, { new: true })
+				.orFail()
+
+			return right(user.toObject())
 		}
 
-		return right(user)
+
+		const user = await User
+			.findByIdAndUpdate(id, data, { new: true })
+			.orFail()
+
+		return right(user.toObject())
 	}
 }
