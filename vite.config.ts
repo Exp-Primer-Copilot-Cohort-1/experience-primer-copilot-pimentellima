@@ -40,7 +40,7 @@ export default defineConfig({
 			'**/.docker/**',
 			'**/tests/functional/**',
 		],
-		include: ['app/Core/**/*.spec.ts'],
+		include: ['app/Core/**/*.spec.ts', 'app/Decorators/**/*.spec.ts'],
 		watch: false,
 
 	},
