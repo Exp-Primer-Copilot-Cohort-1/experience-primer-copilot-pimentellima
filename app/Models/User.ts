@@ -275,7 +275,12 @@ const UserSchema = new Schema<IUser>(
 		performs_medical_appointments: {
 			type: Boolean,
 			default: false,
-		}
+		},
+		board: String,
+		occupation_code: String,
+		profession: String,
+		record: String,
+		specialty: String,
 	},
 	{
 		timestamps: {

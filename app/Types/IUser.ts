@@ -23,6 +23,11 @@ export interface IUser extends Omit<IDaysOffice, 'unity_id'> {
 	updated_at: Date
 	schedule_obs: string
 	show_lack: boolean
+	specialty: string
+	board: string
+	record: string
+	profession: string
+	occupation_code: string
 	rememberMeToken?: string
 	performs_medical_appointments?: boolean
 	permissions?: string[]
@@ -41,9 +46,11 @@ export interface IProfile {
 	unity_id: ObjectId | string
 	performs_medical_appointments?: boolean
 	gender?: Genders | Generic
-	record: string,
-	profession: string,
-	occupation_code: string,
+	specialty: string
+	board: string
+	record: string
+	profession: string
+	occupation_code: string
 	show_lack: boolean
 	type?: ROLES
 }

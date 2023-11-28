@@ -7,6 +7,7 @@ import {
 	CreateUserAdminUseCase,
 	CreateUserUseCase,
 	SignInUseCase,
+	UpdateUserUseCase,
 } from 'App/Core/domain/use-cases'
 import container from 'App/Core/shared/container'
 
@@ -26,4 +27,8 @@ export const makeCreateAdminComposer = (): ControllerGeneric => {
 
 export const makeActivationUserComposer = (): ControllerGeneric => {
 	return ControllerInjection.resolve(ActivationUserUseCase)
+}
+
+export const makeUpdateUserComposer = (): ControllerGeneric => {
+	return ControllerInjection.resolve(UpdateUserUseCase)
 }

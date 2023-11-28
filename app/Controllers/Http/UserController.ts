@@ -1,10 +1,9 @@
 import { adaptRoute } from 'App/Core/adapters'
-import { makeCreateAdminComposer, makeCreateUserComposer } from 'App/Core/composers'
+import { makeCreateAdminComposer, makeCreateUserComposer, makeUpdateUserComposer } from 'App/Core/composers'
 import User, { COLLECTION_NAME } from 'App/Models/User'
 // const Mail = use('Mail');
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
-import { ROLES } from 'App/Roles/types'
 
 class UserController {
 	public async index({ auth }: HttpContextContract) {
@@ -35,32 +34,13 @@ class UserController {
 	}
 
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	public async update({ params, request, auth }: HttpContextContract) {
-		const userLogged = auth.user
-		const data = request.all()
-		const user = await User.findById(params.id).orFail()
-		const isEquals = params.id === userLogged?._id.toString()
+	public async update(ctx: HttpContextContract) {
+		const userLogged = ctx.auth.user
 
-		switch (userLogged?.type) {
-			case ROLES.PROF:
-				if (isEquals) {
-					await user.updateOne(data)
-					await user.save()
-				}
-				break
-			case ROLES.SEC:
-				if (isEquals) {
-					await user.updateOne(data)
-					await user.save()
-				}
-				break
-			default:
-				await user.updateOne(data)
-				await user.save()
-				break
-		}
-
-		return user
+		return adaptRoute(makeUpdateUserComposer(), ctx, {
+			id: ctx.params.id,
+			userLogged,
+		})
 	}
 
 	public async show({ params }: HttpContextContract) {

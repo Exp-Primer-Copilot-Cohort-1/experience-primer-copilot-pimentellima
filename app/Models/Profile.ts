@@ -48,15 +48,11 @@ const ProfileSchema = new Schema<IProfile>(
 			type: Boolean,
 			default: false,
 		},
-		record: {
-			type: String,
-		},
-		profession: {
-			type: String,
-		},
-		occupation_code: {
-			type: String,
-		},
+		board: String,
+		occupation_code: String,
+		profession: String,
+		record: String,
+		specialty: String,
 		phone: {
 			type: String,
 		},

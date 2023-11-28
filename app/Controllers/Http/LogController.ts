@@ -82,6 +82,7 @@ class LogController {
 	 *         $ref: '#/components/responses/NotFound'
 	 */
 	async show(ctx: HttpContextContract) {
+		console.log('chega aki')
 		const unity_id = ctx.auth.user?.unity_id
 		const { id } = ctx.params
 

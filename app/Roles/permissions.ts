@@ -52,13 +52,13 @@ const PERMISSIONS_LOGS: Permission = {
 	name: 'logs',
 	permissions: {
 		'logs.index': {
-			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.FRANCHISEE_ADMIN],
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.FRANCHISEE_ADMIN, ROLES.SUPERADMIN],
 			permissions: [TYPE_PERMISSIONS.VIEW_ALL],
 			screens: [],
 		},
 		'logs.show': {
-			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.FRANCHISEE_ADMIN],
-			permissions: [TYPE_PERMISSIONS.VIEW],
+			roles: [ROLES.ADMIN, ROLES.ADMIN_PROF, ROLES.FRANCHISEE_ADMIN, ROLES.SUPERADMIN],
+			permissions: [TYPE_PERMISSIONS.VIEW, TYPE_PERMISSIONS.VIEW_ALL],
 			screens: [],
 		},
 	},
