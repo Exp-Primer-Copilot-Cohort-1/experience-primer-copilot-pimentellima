@@ -57,11 +57,12 @@ export class CategoriesMongooseRepository implements CategoriesManagerContract {
 
 		return right(category.toObject())
 	}
+
 	async update(
 		data: Partial<ICategory>,
 		id: string,
 	): PromiseEither<AbstractError, ICategory> {
-		const categories = await Category.findByIdAndUpdate(id, data).orFail()
+		const categories = await Category.findByIdAndUpdate(id, data, { new: true }).orFail()
 
 		return right(categories.toObject())
 	}

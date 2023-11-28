@@ -126,6 +126,7 @@ class FinancialCategoryController {
 		return adaptRoute(makeFindAll(ctx, COLLECTION_NAME), ctx)
 	}
 
+	@LogDecorator(COLLECTION_NAME, ACTION.POST)
 	async store(ctx: HttpContextContract) {
 		return adaptRoute(makeFinancialCategoryCreateComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,

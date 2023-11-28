@@ -11,7 +11,9 @@ import { inject, injectable, registry } from 'tsyringe'
 export class UpdateCategoriesByIdUseCase
 	implements UseCase<Partial<ICategory>, ICategory>
 {
-	constructor(@inject(CategoriesMongooseRepository) private readonly manager: CategoriesManagerContract) { } // eslint-disable-line
+	constructor(
+		@inject(CategoriesMongooseRepository
+		) private readonly manager: CategoriesManagerContract) { } // eslint-disable-line
 
 	public async execute(
 		{ _id, ...data }: Partial<ICategory>,

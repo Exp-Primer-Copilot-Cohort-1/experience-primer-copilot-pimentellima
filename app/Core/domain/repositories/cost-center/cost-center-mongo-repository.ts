@@ -1,5 +1,5 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
-import { PromiseEither, left, right } from 'App/Core/shared/either'
+import { PromiseEither, right } from 'App/Core/shared/either'
 import CostCenter from 'App/Models/CostCenter'
 import { ICostCenter } from 'App/Types/ICostCenter'
 import { injectable, registry } from 'tsyringe'
@@ -11,20 +11,21 @@ export class CostCenterMongooseRepository implements CostCenterManagerContract {
 	constructor() { } // eslint-disable-line
 
 	async update(data: Partial<ICostCenter>, id: string): PromiseEither<AbstractError, ICostCenter> {
-		const costCenter = await CostCenter.findByIdAndUpdate(id, data)
+		const costCenter = await CostCenter.findByIdAndUpdate(id, data, { new: true })
+			.orFail(new AbstractError('Centro de Custos não encontrado', 404))
 
-		if (!costCenter) {
-			return left(new AbstractError('Não foi Possível Atualizar', 401))
-		}
 
 		return right(costCenter.toObject())
 	}
 
 
-	async create(data: Partial<ICostCenter>): PromiseEither<AbstractError, ICostCenter> {
+	async create({
+		_id,
+		...data
+	}: Partial<ICostCenter>): PromiseEither<AbstractError, ICostCenter> {
 		const costCenter = await CostCenter.create(data)
 
-		return right(costCenter)
+		return right(costCenter.toObject())
 	}
 
 	async findById(id: string): PromiseEither<AbstractError, ICostCenter> {
