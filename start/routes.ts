@@ -25,9 +25,8 @@ Route.group(() => {
 }).prefix('file')
 
 Route.group(() => {
-	Route.put('/profile-picture', 'FileController.uploadProfilePicture')
-	Route.post('/treatment-picture', 'FileController.createClientPicture')
-	Route.get('/treatment-picture', 'FileController.downloadClientPictures')
+	Route.put('profile-picture', 'FileController.uploadProfilePicture')
+	Route.post('treatment-picture/:client_id', 'FileController.putTreatmentPictures')
 }).prefix('file').middleware(['auth'])
 
 Route.get('/', async () => {

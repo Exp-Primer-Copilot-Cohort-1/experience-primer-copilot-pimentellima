@@ -1,6 +1,8 @@
 import Drive from '@ioc:Adonis/Core/Drive'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { bucket } from 'App/Core/infra/gcs'
+import { baseGCSUrl, bucket } from 'App/Core/infra/gcs'
+import Client from 'App/Models/Client'
+import { TreatmentPicture } from 'App/Types/IClient'
 import crypto from 'crypto'
 
 const path = require('path')
@@ -11,7 +13,76 @@ function generateHashedFileName() {
 	return hash
 }
 
+function generateHash() {
+	const randomValue = Math.random().toString(36).substring(2, 15)
+	const hash = crypto.createHash('sha256').update(randomValue).digest('hex')
+	return hash
+}
+
 class FileController {
+	async putTreatmentPictures({ request, auth }: HttpContextContract) {
+		const clientId = request.params().client_id
+
+		try {
+			const promises: Promise<string>[] = []
+			request.multipart.onFile('files', {}, async (file) => {
+				const promise = new Promise<string>((resolve, reject) => {
+					const hash = generateHash()
+					const filePath = clientId + '/' + hash
+					const publicUrl = baseGCSUrl + '/' + filePath
+					const bucketFile = bucket.file(filePath)
+
+					file.pipe(
+						bucketFile.createWriteStream({
+							metadata: { contentType: file.headers['content-type'] },
+						}),
+					)
+						.on('finish', async () => {
+							resolve(publicUrl)
+						})
+						.on('error', (err) => {
+							reject(err)
+						})
+				})
+				promises.push(promise)
+			})
+
+			await request.multipart.process()
+
+			const imagesUrls = await Promise.all(promises)
+			const { descriptions, date }: { descriptions: string[]; date: string } =
+				request.only(['descriptions', 'date', 'clientId'])
+			const dateObj = new Date(date)
+			const descriptionsArr: string[] = new Array(imagesUrls.length).fill('')
+			descriptions?.forEach((d, index) => (descriptionsArr[index] = d))
+			const treatment_pictures: TreatmentPicture[] = imagesUrls.map(
+				(image_url, index) => ({
+					description: descriptionsArr[index],
+					image_url,
+					date: dateObj,
+				}),
+			)
+
+			const client = await Client.findByIdAndUpdate(
+				clientId,
+				{
+					$push: {
+						treatment_pictures: {
+							$each: treatment_pictures,
+						},
+					},
+				},
+				{
+					new: true,
+				},
+			)
+			return client
+		} catch (err) {
+			console.log(err)
+			return err
+		}
+	}
+
 	async createClientPicture({ request, auth }: HttpContextContract) {
 		const { user } = auth
 
