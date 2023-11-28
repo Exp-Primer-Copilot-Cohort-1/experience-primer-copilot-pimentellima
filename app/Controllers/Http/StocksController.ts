@@ -1,6 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeCounts, makeFindAll } from 'App/Core/composers'
+import { makeCounts, makeCreateStockComposer, makeFindAll, makeUpdateStockComposer } from 'App/Core/composers'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import Stock, { COLLECTION_NAME } from 'App/Models/Stock'
 import { isBefore, isSameDay } from 'date-fns'
@@ -56,22 +56,12 @@ class StocksController {
 	}
 
 	@LogDecorator(COLLECTION_NAME, ACTION.POST)
-	async store({ request, auth }) {
-		const userLogged = auth.user
-		const data = request.all()
-
-		const parsedData = stockSchema.parse(data)
-
-		const stocks = await Stock.create({
-			...parsedData,
-			active: true,
-			unity_id: userLogged.unity_id,
+	async store(ctx: HttpContextContract) {
+		return adaptRoute(makeCreateStockComposer(), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
 		})
-
-		return stocks
 	}
 
-	@LogDecorator(COLLECTION_NAME, ACTION.DELETE)
 	async destroy({ params }) {
 		await Stock.findByIdAndDelete({ _id: params.id }).orFail()
 	}
@@ -90,15 +80,8 @@ class StocksController {
 	}
 
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
-	async update({ params, request }) {
-		const data = request.all()
-
-		const parsedData = stockSchema.parse(data)
-
-		const stock = await Stock.findByIdAndUpdate(params.id, parsedData, {
-			new: true,
-		}).orFail()
-		return stock
+	async update(ctx: HttpContextContract) {
+		return adaptRoute(makeUpdateStockComposer(), ctx)
 	}
 
 	async counts(ctx: HttpContextContract) {
