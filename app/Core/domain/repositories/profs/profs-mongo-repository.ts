@@ -39,6 +39,7 @@ export class ProfsMongooseRepository implements ProfsManagerContract {
 				.sort(this.opts.sort)
 				.select('-payment_participations -password')
 				.exec()
+
 			return right(profOfErr)
 		} catch (e) {
 			return left(new AbstractError('Erro', 500))

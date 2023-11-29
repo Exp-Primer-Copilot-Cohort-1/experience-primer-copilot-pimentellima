@@ -92,7 +92,9 @@ export class PaymentProfMongoRepository implements PaymentProfManagerContract {
 		@inject(OptsQuery) private readonly opts: OptsQuery,
 	) { } // eslint-disable-line
 
-	private async createDefaultParticipation({ health_insurance_id, prof_id, unity_id, procedure_id }): PromiseEither<AbstractError, IPaymentProf> {
+	private async createDefaultParticipation(
+		{ health_insurance_id, prof_id, unity_id, procedure_id }
+	): PromiseEither<AbstractError, ParticipationPrice> {
 		const defaultParticipationOrErr = await this.createOrUpdatePaymentProf({
 			abs: 0,
 			active: true,
@@ -112,9 +114,19 @@ export class PaymentProfMongoRepository implements PaymentProfManagerContract {
 				value: procedure_id,
 			}
 		})
+		if (defaultParticipationOrErr.isLeft()) return left(defaultParticipationOrErr.extract())
 
+		const defaultParticipation = defaultParticipationOrErr.extract()
 
-		return defaultParticipationOrErr
+		return right({
+			_id: defaultParticipation._id,
+			abs: defaultParticipation.abs,
+			participation_id: defaultParticipation.participation_id,
+			percent: defaultParticipation.percent,
+			active: defaultParticipation.active,
+			isNew: true,
+			date_start: new Date(),
+		})
 	}
 
 	async createOrUpdatePaymentProf(
@@ -159,7 +171,7 @@ export class PaymentProfMongoRepository implements PaymentProfManagerContract {
 		return right({
 			...participation,
 			_id: doc._id.toString(),
-			payment_participations_id: doc._id.toString(),
+			participation_id: doc._id.toString(),
 		})
 	}
 
@@ -219,21 +231,11 @@ export class PaymentProfMongoRepository implements PaymentProfManagerContract {
 		const data = await PaymentParticipations.aggregate(pipeline)
 
 		if (!data?.length) {
-			const defaultParticipationOrErr = await this.createDefaultParticipation({
+			return await this.createDefaultParticipation({
 				health_insurance_id,
 				prof_id,
 				unity_id,
 				procedure_id
-			})
-
-			if (defaultParticipationOrErr.isLeft()) return left(defaultParticipationOrErr.extract())
-
-			return right({
-				_id: defaultParticipationOrErr.extract()._id,
-				abs: defaultParticipationOrErr.extract().abs,
-				percent: defaultParticipationOrErr.extract().percent,
-				active: defaultParticipationOrErr.extract().active,
-				date_start: new Date(),
 			})
 		}
 
