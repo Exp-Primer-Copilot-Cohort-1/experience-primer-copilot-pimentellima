@@ -58,6 +58,7 @@ Route.group(() => {
 Route.post('sessions/logout', 'SessionController.logout')
 
 Route.post('users/redefine-password', 'UserControllerV2.redefinePassword')
+Route.post('users/send-indication', 'UserControllerV2.sendIndication')
 Route.group(() => {
 	Route.get('shared-answers', 'SharedAnswerController.getSharedAnswers')
 	Route.post('shared-answers', 'SharedAnswerController.createShareAnswer')

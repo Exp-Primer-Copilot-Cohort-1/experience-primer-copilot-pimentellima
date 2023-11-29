@@ -1,12 +1,12 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeFindAllProfsComposers } from 'App/Core/composers'
+import { makeFindAllProfsComposers, makeSendIndicationComposer } from 'App/Core/composers'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { UserNotFoundError } from 'App/Core/domain/errors'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { Cache } from 'App/Core/infra/cache'
 import { left, right } from 'App/Core/shared'
-import { decrypt } from 'App/Helpers/encrypt'
+import { decrypt, encrypt } from 'App/Helpers/encrypt'
 import User from 'App/Models/User'
 import { ROLES } from 'App/Roles/types'
 
@@ -27,6 +27,10 @@ const fetchUserByType = async (type, unityId, active = true) =>
 class UserControllerV2 {
 	async findAllUsersProfs(ctx: HttpContextContract) {
 		return adaptRoute(makeFindAllProfsComposers(ctx), ctx)
+	}
+
+	async sendIndication(ctx: HttpContextContract) {
+		return adaptRoute(makeSendIndicationComposer(ctx), ctx)
 	}
 
 	async redefinePassword(ctx: HttpContextContract) {
