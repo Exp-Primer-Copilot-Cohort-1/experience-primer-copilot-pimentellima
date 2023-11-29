@@ -23,11 +23,14 @@ export interface IPaymentProf {
 
 export interface ParticipationPrice {
 	_id?: string | ObjectId
+	value?: number
 	abs: number
 	percent: number
 	active: boolean
 	date_start: Date
 	date_end?: Date
+	isNew?: boolean
+	participation_id?: string | ObjectId
 }
 
 export interface IPaymentParticipations {

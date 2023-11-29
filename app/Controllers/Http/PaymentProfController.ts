@@ -8,6 +8,7 @@ import {
 } from 'App/Core/composers'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
+import LogPaymentParticipationDecorator from 'App/Decorators/LogPaymentsParticipation'
 import { COLLECTION_NAME } from 'App/Models/PaymentParticipations'
 
 /**
@@ -84,7 +85,7 @@ class PaymentProfController {
 	 *             schema:
 	 *               $ref: '#/components/schemas/PaymentProf'
 	 */
-	@LogDecorator(COLLECTION_NAME, ACTION.POST)
+	@LogPaymentParticipationDecorator(COLLECTION_NAME)
 	async createOrUpdatePaymentProf(ctx: HttpContextContract) {
 		return adaptRoute(makeCreatePaymentParticipationsComposer(), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
