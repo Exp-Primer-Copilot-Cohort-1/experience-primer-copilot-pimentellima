@@ -7,7 +7,6 @@ import {
 	makeProceduresUpdateByIdComposer
 } from 'App/Core/composers/procedures/make'
 import { makeProceduresDeleteByIdComposer } from 'App/Core/composers/procedures/make-procedures-delete-by-id-composer'
-import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { PROJECTION_HEALTH_INSURANCE } from 'App/Core/domain/repositories/helpers/projections'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
@@ -304,6 +303,16 @@ class ProcedureController {
 
 	async counts(ctx: HttpContextContract) {
 		return adaptRoute(makeCounts(ctx, COLLECTION_NAME), ctx)
+	}
+
+	async status(ctx: HttpContextContract) {
+		await Procedure.findByIdAndUpdate(ctx.params.id, {
+			$set: {
+				active: ctx.request.body().active,
+			},
+		})
+
+		return ctx.response.ok({ message: 'Status atualizado com sucesso' })
 	}
 }
 

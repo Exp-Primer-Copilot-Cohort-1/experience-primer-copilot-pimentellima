@@ -148,7 +148,7 @@ Route.group(() => {
 		Route.get('', 'ProcedureController.index').as('procedures.index')
 		Route.get(':id', 'ProcedureController.show').as('procedures.show')
 		Route.put(':_id', 'ProcedureController.update').as('procedures.update')
-		Route.delete(':id', 'ProcedureController.destroy').as('procedures.destroy')
+		Route.patch(':id', 'ProcedureController.status').as('procedures.status')
 		Route.post('', 'ProcedureController.store').as('procedures.store')
 		Route.post(':id/products', 'ProcedureController.addProduct').as(
 			'procedures.addProduct',
