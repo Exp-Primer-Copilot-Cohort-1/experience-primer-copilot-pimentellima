@@ -165,6 +165,17 @@ class FinancialCategoryController {
 	async counts(ctx: HttpContextContract) {
 		return adaptRoute(makeCounts(ctx, COLLECTION_NAME), ctx)
 	}
+
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
+	async status(ctx: HttpContextContract) {
+		await FinancialCategory.findByIdAndUpdate(ctx.params.id, {
+			$set: {
+				active: ctx.request.body().active,
+			},
+		})
+
+		return ctx.response.ok({ message: 'Status atualizado com sucesso' })
+	}
 }
 
 export default FinancialCategoryController

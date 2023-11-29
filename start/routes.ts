@@ -372,9 +372,15 @@ Route.group(() => {
 		Route.put('/:id', 'FinancialCategoryController.update').as(
 			'financial-categories.update',
 		)
+
+		Route.patch('/:id', 'FinancialCategoryController.status').as(
+			'financial-categories.status',
+		)
+
 		Route.delete('/:id', 'FinancialCategoryController.destroy').as(
 			'financial-categories.destroy',
 		)
+
 		Route.post('', 'FinancialCategoryController.store').as(
 			'financial-categories.store',
 		)
