@@ -16,6 +16,8 @@ export class ProfileEntity extends Entity implements IProfile {
 	phone: string
 	celphone: string
 	unity_id: string
+	board: string
+	specialty: string
 	performs_medical_appointments?: boolean
 	gender: Genders
 	record: string
@@ -93,6 +95,16 @@ export class ProfileEntity extends Entity implements IProfile {
 		return this
 	}
 
+	defineSpecialty(specialty: string): this {
+		this.specialty = specialty
+		return this
+	}
+
+	defineBoard(board: string): this {
+		this.board = board
+		return this
+	}
+
 	defineShowLack(show_lack: boolean): this {
 		this.show_lack = show_lack
 		return this
@@ -109,6 +121,8 @@ export class ProfileEntity extends Entity implements IProfile {
 				.defineActive(params.active)
 				.defineAvatar(params.avatar)
 				.definePhone(params.phone)
+				.defineSpecialty(params.specialty)
+				.defineBoard(params.board)
 				.defineCelphone(params.celphone)
 				.defineUnityId(params.unity_id.toString())
 				.definePerformsMedicalAppointments(params.performs_medical_appointments, params.type)
