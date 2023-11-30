@@ -43,11 +43,23 @@ Server.middleware.register([
 | Route.get('dashboard', 'UserController.dashboard').middleware('auth')
 |
 */
-Server.middleware.registerNamed({
+
+const config = {
 	auth: 'App/Middleware/Auth',
 	role: 'App/Middleware/Role',
 	statusPermission: 'App/Middleware/PermissionStatus',
 	successNoContent: 'App/Middleware/SuccessNoContent',
 	cache: 'App/Middleware/Cache',
 	throttle: () => import('@adonisjs/limiter/build/throttle'),
-})
+}
+
+Server.middleware.registerNamed(config)
+
+export enum KeysCache {
+	AUTH = 'auth',
+	ROLE = 'role',
+	STATUS_PERMISSION = 'statusPermission',
+	SUCCESS_NO_CONTENT = 'successNoContent',
+	CACHE = 'cache',
+	THROTTLE = 'throttle',
+}

@@ -19,6 +19,7 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+import { KeysCache } from './kernel'
 
 Route.group(() => {
 	Route.get('/client-model', 'FileController.downloadClientModel')
@@ -27,7 +28,11 @@ Route.group(() => {
 Route.group(() => {
 	Route.put('profile-picture', 'FileController.uploadProfilePicture')
 	Route.post('treatment-picture/:client_id', 'FileController.putTreatmentPictures')
-}).prefix('file').middleware(['auth'])
+}).prefix('file').middleware(
+	[
+		KeysCache.AUTH
+	]
+)
 
 Route.get('/', async () => {
 	return { hello: 'world' }
@@ -53,7 +58,11 @@ Route.group(() => {
 	Route.get('sessions/user', 'SessionController.getUser')
 	Route.post('sessions/refresh', 'SessionController.refreshToken')
 	Route.get('sessions/check', 'SessionController.checkToken')
-}).middleware('auth')
+}).middleware(
+	[
+		KeysCache.AUTH
+	]
+)
 
 Route.post('sessions/logout', 'SessionController.logout')
 
@@ -523,4 +532,10 @@ Route.group(() => {
 
 	Route.post('users', 'UserController.store')
 
-}).middleware(['auth', 'role', 'statusPermission', 'successNoContent',])
+}).middleware([
+	KeysCache.AUTH,
+	KeysCache.ROLE,
+	KeysCache.STATUS_PERMISSION,
+	KeysCache.CACHE,
+	KeysCache.SUCCESS_NO_CONTENT,
+])
