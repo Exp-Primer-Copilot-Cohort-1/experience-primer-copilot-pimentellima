@@ -128,7 +128,7 @@ class FileController {
 					const fileName = generateHashedFileName()
 					const publicUrl = `http://storage.googleapis.com/${bucket.name}/${fileName}`
 
-					const bucketFile = bucket.file(fileName)
+					const bucketFile = bucket.file(fileName)/*  */
 
 					file.pipe(
 						bucketFile.createWriteStream({
@@ -136,13 +136,16 @@ class FileController {
 						}),
 					).on('finish', async () => {
 						if (user?.avatar) {
-							const oldFilename = user?.avatar.split('/').pop()
+
+							/* const oldFilename = user?.avatar.split('/').pop()
 							if (!oldFilename) return
 							const oldBucketFile = bucket.file(oldFilename)
 							const isExist = await oldBucketFile.exists()
 							if (isExist) {
+								console.log(1)
 								await oldBucketFile.delete()
-							}
+								console.log(2)
+							} */
 						}
 
 						resolve(publicUrl)
