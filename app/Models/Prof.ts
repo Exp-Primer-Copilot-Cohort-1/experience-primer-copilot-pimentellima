@@ -106,6 +106,7 @@ const ProfSchema = new Schema<IUser>(
 		document: {
 			type: String,
 			required: true,
+			immutable: true,
 		},
 		unity_id: {
 			type: Mongoose.Schema.Types.ObjectId,
