@@ -536,6 +536,5 @@ Route.group(() => {
 	KeysCache.AUTH,
 	KeysCache.ROLE,
 	KeysCache.STATUS_PERMISSION,
-	KeysCache.CACHE,
 	KeysCache.SUCCESS_NO_CONTENT,
 ])
