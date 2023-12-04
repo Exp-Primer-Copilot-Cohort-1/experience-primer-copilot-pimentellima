@@ -389,15 +389,6 @@ ClientSchema.index(
 		rg: 1,
 		unity_id: 1,
 		document: 1,
-	},
-	{
-		unique: true,
-		partialFilterExpression: {
-			$or: [
-				{ rg: { $exists: true, $ne: null, $ne: "" } },
-				{ document: { $exists: true, $ne: null, $ne: "" } },
-			],
-		},
 	}
 );
 
