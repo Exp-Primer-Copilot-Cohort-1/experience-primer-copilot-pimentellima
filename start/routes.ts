@@ -534,6 +534,7 @@ Route.group(() => {
 
 }).middleware([
 	KeysCache.AUTH,
+	KeysCache.CACHE,
 	KeysCache.ROLE,
 	KeysCache.STATUS_PERMISSION,
 	KeysCache.SUCCESS_NO_CONTENT,

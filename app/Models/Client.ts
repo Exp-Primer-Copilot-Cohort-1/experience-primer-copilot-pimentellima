@@ -394,8 +394,8 @@ ClientSchema.index(
 		unique: true,
 		partialFilterExpression: {
 			$or: [
-				{ rg: { $exists: true } },
-				{ document: { $exists: true } },
+				{ rg: { $exists: true, $ne: null, $ne: "" } },
+				{ document: { $exists: true, $ne: null, $ne: "" } },
 			],
 		},
 	}

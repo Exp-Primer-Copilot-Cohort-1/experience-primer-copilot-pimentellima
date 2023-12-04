@@ -9,18 +9,21 @@ import { IUser } from 'App/Types/IUser'
 const getter = [Methods.GET]
 const setter = [Methods.POST, Methods.PUT, Methods.PATCH, Methods.DELETE]
 
-const methods = [...getter, ...setter]
+const METHODS = [...getter, ...setter]
 
-const makeSuperKey = (url: string, user: IUser) => {
+const makeSuperKey = (name_route: string, user: IUser) => {
 	const isOnlyProf = user.type === ROLES.PROF || ROLES.CLIENT
 
-	if (isOnlyProf) return `${user._id}:${url}`
+	if (isOnlyProf) return `${name_route}:${user._id}`
 
-	return `${user.unity_id}:${url}:`
+	return `${name_route}:${user.unity_id}`
 }
 
 const makeKey = (...params: Record<string, any>[]) => {
-	return params.map((param) => JSON.stringify(param)).join(':')
+	return params.map((param) => {
+		const keys = Object.keys(param)
+		return keys.map((key) => `${key}:${param[key]}`).join(':')
+	}).join(':')
 }
 
 const blacklist = [
@@ -35,41 +38,44 @@ const blacklist = [
 	'attendance', // TODO: attendance é real time, não deve ser cacheado
 ]
 
-const isProd = process.env.NODE_ENV === 'production'
-
 export default class CacheMiddleware {
-	public async handle({ request, response, auth }: HttpContextContract, next) {
-
-		if (!isProd) return await next()
+	public async handle({ request, response, auth, routeKey, route }: HttpContextContract, next) {
 
 		const method = request.method() as Methods
-		const URL = request.url()
+		const name = route?.name?.split('.')[0] || routeKey
+
 		const user = auth.user
 
-		const isUrlBlacklisted = blacklist.some((url) => URL.includes(url))
-		if (!user) return await next()
-		if (!methods.includes(method) || isUrlBlacklisted) return await next()
+		const isUrlBlacklisted = blacklist.some((url) => name.includes(url))
 
-		const superKey = makeSuperKey(URL, user)
+		if (!user) return await next()
+		if (!METHODS.includes(method) || isUrlBlacklisted) return await next()
+
+		const superKey = makeSuperKey(name, user)
 		const key = makeKey({ superKey }, request.qs(), request.params())
 
 		const originalResponse = response.response
 
 		if (getter.includes(method)) {
 			const cached = await Cache.get(key)
-			logger.emit(colorize(0, URL, Methods.CACHE))
+			logger.emit(colorize(0, name, Methods.CACHE))
 			if (cached) return response.send(cached)
 		}
 
-		originalResponse.on('finish', async () => {
+		originalResponse.on('close', async () => {
 			const statusCode = response.getStatus()
-
 			if (statusCode >= 400) return
 
-			if (setter.includes(method)) return await Cache.flushKey(superKey)
+			if (setter.includes(method)) {
+				return await Cache.flushKey(name)
+			}
+
 
 			const body = response.getBody()
-			if (getter.includes(method)) return await Cache.set(key, body)
+
+			if (getter.includes(method)) {
+				return await Cache.set(key, body)
+			}
 
 		})
 

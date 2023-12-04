@@ -10,7 +10,7 @@ export class Cache implements CacheContract {
 
 	async set(key: string, value: Object, seconds: number = Cache.time) {
 		const stringified = JSON.stringify(value)
-		return Redis.set(key, stringified, 'EX', seconds)
+		return await Redis.set(key, stringified, 'EX', seconds)
 	}
 
 	async get(key: string): Promise<Object | null> {
@@ -19,16 +19,24 @@ export class Cache implements CacheContract {
 		return JSON.parse(value)
 	}
 
-	delete(key: string) {
-		return Redis.del(key)
+	async delete(key: string) {
+		return await Redis.del(key)
 	}
 
-	flushKey(key: string) {
-		return Redis.del([`${key}*`])
+	async flushKey(startingKey: string) {
+		const k = await Redis.keys('*', async (err, keys) => {
+			if (err) return console.log(err)
+			const filtered = keys?.filter((key) => key.startsWith(`superKey:${startingKey}`)) as string[]
+			if (!filtered.length) return 0
+			const deleted = await Redis.del(...filtered)
+			return deleted
+		})
+
+		return k.length
 	}
 
-	flush() {
-		return Redis.flushdb()
+	async flush() {
+		return await Redis.flushdb()
 	}
 
 }
