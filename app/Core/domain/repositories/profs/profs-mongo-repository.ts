@@ -30,7 +30,6 @@ export class ProfsMongooseRepository implements ProfsManagerContract {
 				unity_id: this.opts.unity_id,
 				active: this.opts.active,
 				$or: [
-					{ type: ROLES.ADMIN_PROF },
 					{ type: ROLES.PROF },
 				],
 			})
