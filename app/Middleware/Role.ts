@@ -42,9 +42,11 @@ export default class Role {
 		}
 
 		const hasRole = routePermissions.roles?.includes(type as ROLES)
-		const hasPermission = routePermissions.permissions?.some((permission) =>
-			permissions?.includes(permission)
-		)
+		const hasPermission = routePermissions.permissions?.some((permission) => {
+			const p = createPermission(name, permission)
+			return permissions?.includes(p)
+		})
+
 		const hasBlackListPermission = routePermissions.permissions?.some(
 			(permission) => {
 				const p = createPermission(name, permission)
