@@ -80,6 +80,8 @@ Route.group(() => {
 		Route.post('/many', 'ClientController.createMany').as('clients.storeMany')
 	}).prefix('clients')
 
+	Route.put('users/profile-picture', 'UserControllerV2.updateUserPicture')
+
 	Route.group(() => {
 		Route.get(
 			'profs/medical',
