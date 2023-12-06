@@ -39,7 +39,7 @@ export class ProductStockDepletionUseCase implements IProductStockDepletionUseCa
 
 		const proceduresData = await Procedure.find({
 			_id: {
-				$in: activity.procedures.map((p) => (p._id as Generic).value),
+				$in: activity.procedures?.map((p) => (p._id as Generic).value),
 			},
 		})
 
@@ -114,7 +114,7 @@ export class ProductStockDepletionUseCase implements IProductStockDepletionUseCa
 		const stocksData = await Stock.find()
 		const proceduresData = await Procedure.find({
 			_id: {
-				$in: extractedActivity.procedures.map((p) => p.info.value),
+				$in: extractedActivity.procedures?.map((p) => p.info.value),
 			},
 		})
 		const productsWithQuantities = new Object()

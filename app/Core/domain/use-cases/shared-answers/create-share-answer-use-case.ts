@@ -1,23 +1,23 @@
-import { Mongoose, Types } from 'mongoose';
 import {
 	ActivityMongoRepository,
 	ClientsMongooseRepository,
 	ProfsMongooseRepository,
-} from 'App/Core/domain/repositories'
+} from 'App/Core/domain/repositories';
 import {
 	ActivitiesManagerContract,
 	ClientManagerContract,
 	ProfsManagerContract,
-} from 'App/Core/domain/repositories/interface'
-import { AbstractError } from 'App/Core/errors/error.interface'
-import { UseCase } from 'App/Core/interfaces/use-case.interface'
-import { PromiseEither, left, right } from 'App/Core/shared'
-import Client from 'App/Models/Client'
-import { IFormAnswer, ProfWithAccess } from 'App/Types/IFormAnswer'
-import { isBefore, isSameDay } from 'date-fns'
-import { inject, injectable, registry } from 'tsyringe'
-import { ClientNotFoundError, UserNotFoundError } from '../../errors'
-import SharedAnswer from 'App/Models/SharedAnswer'
+} from 'App/Core/domain/repositories/interface';
+import { AbstractError } from 'App/Core/errors/error.interface';
+import { UseCase } from 'App/Core/interfaces/use-case.interface';
+import { PromiseEither, left, right } from 'App/Core/shared';
+import Client from 'App/Models/Client';
+import SharedAnswer from 'App/Models/SharedAnswer';
+import { IFormAnswer, ProfWithAccess } from 'App/Types/IFormAnswer';
+import { isBefore, isSameDay } from 'date-fns';
+import { Types } from 'mongoose';
+import { inject, injectable, registry } from 'tsyringe';
+import { ClientNotFoundError, UserNotFoundError } from '../../errors';
 
 type Props = {
 	shared_by: string
@@ -38,7 +38,7 @@ export class CreateShareAnswerUseCase implements UseCase<Props, IFormAnswer[]> {
 		private readonly profManager: ProfsManagerContract,
 		@inject(ActivityMongoRepository)
 		private readonly activitiesManager: ActivitiesManagerContract,
-	) {} // eslint-disable-line
+	) { } // eslint-disable-line
 
 	public async execute(data: Props): PromiseEither<AbstractError, IFormAnswer[]> {
 		const clientOrErr = await this.clientManager.findById(data.client_id)
@@ -51,7 +51,7 @@ export class CreateShareAnswerUseCase implements UseCase<Props, IFormAnswer[]> {
 		const formAnswers = client.form_answers
 		if (!formAnswers) return left(new AbstractError('', 500))
 		const formAnswersWithUpdatedAccessPromises: Promise<IFormAnswer>[] =
-			formAnswers.map(async (formAnswer) => {
+			formAnswers?.map(async (formAnswer) => {
 				return new Promise(async (resolve, reject) => {
 					if (data.start && data.end) {
 						const startDate = new Date(data.start)
@@ -70,7 +70,7 @@ export class CreateShareAnswerUseCase implements UseCase<Props, IFormAnswer[]> {
 					}
 
 					const profsWithAccess = formAnswer.profs_with_access || []
-					if (profsWithAccess.map((prof) => prof.id).includes(data.shared_with))
+					if (profsWithAccess?.map((prof) => prof.id).includes(data.shared_with))
 						return resolve(formAnswer)
 
 					const profData = await this.profManager.findById(data.shared_with)

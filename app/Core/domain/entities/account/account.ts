@@ -5,7 +5,6 @@ import { PromiseEither, left, right } from 'App/Core/shared'
 import { IAccount } from 'App/Types/IAccount'
 import { Generic } from 'App/Types/ITransaction'
 import { Entity } from '../abstract/entity.abstract'
-
 /**
  * Classe que representa uma conta.
  */

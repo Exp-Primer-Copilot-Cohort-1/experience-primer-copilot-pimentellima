@@ -78,7 +78,7 @@ export class SendNewAppointment implements UseCase<IActivity, Message> {
 		const clientData = clientDataOrError.extract()
 		const profData = profDataOrError.extract()
 		const unityData = unityDataOrError.extract()
-		const proceduresData = proceduresDataOrError.map(
+		const proceduresData = proceduresDataOrError?.map(
 			(procedure) => procedure.extract() as BasicProcedure
 		)
 

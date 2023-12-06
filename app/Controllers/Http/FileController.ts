@@ -55,7 +55,7 @@ class FileController {
 			const dateObj = new Date(date)
 			const descriptionsArr: string[] = new Array(imagesUrls.length).fill('')
 			descriptions?.forEach((d, index) => (descriptionsArr[index] = d))
-			const treatment_pictures: TreatmentPicture[] = imagesUrls.map(
+			const treatment_pictures: TreatmentPicture[] = imagesUrls?.map(
 				(image_url, index) => ({
 					description: descriptionsArr[index],
 					image_url,

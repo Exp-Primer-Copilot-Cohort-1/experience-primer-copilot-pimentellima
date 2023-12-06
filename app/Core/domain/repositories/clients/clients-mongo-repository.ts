@@ -75,6 +75,6 @@ export class ClientsMongooseRepository implements ClientManagerContract {
 				PROJECTION_DEFAULT,
 			)
 
-		return right(clients.map((client) => client.toObject()) || [])
+		return right(clients?.map((client) => client.toObject()) || [])
 	}
 }

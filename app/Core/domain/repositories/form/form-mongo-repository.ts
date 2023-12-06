@@ -27,7 +27,7 @@ export class FormMongoRepository implements FormManagerContract {
 
 		const data = await Form.find({ unity_id })
 		const forms = await Promise.all(
-			data.map(async (item) => {
+			data?.map(async (item) => {
 				const formOrErr = await FormEntity.build(item.toObject())
 
 				if (formOrErr.isLeft()) {
@@ -66,7 +66,7 @@ export class FormMongoRepository implements FormManagerContract {
 
 		const data = await Form.find({ unity_id, prof_id })
 		const forms = await Promise.all(
-			data.map(async (item) => {
+			data?.map(async (item) => {
 				const formOrErr = await FormEntity.build(item.toObject())
 				if (formOrErr.isLeft()) {
 					return {} as FormEntity
@@ -86,7 +86,7 @@ export class FormMongoRepository implements FormManagerContract {
 
 		const data = await Form.find({ unity_id, category_id })
 		const forms = await Promise.all(
-			data.map(async (item) => {
+			data?.map(async (item) => {
 				const formOrErr = await FormEntity.build(item.toObject())
 				if (formOrErr.isLeft()) {
 					return {} as FormEntity

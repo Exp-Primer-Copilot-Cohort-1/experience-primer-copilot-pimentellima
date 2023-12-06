@@ -24,7 +24,7 @@ export class FormInMemoryRepository implements FormManagerContract {
 
 		const data = this.forms.filter((form) => form.unity_id === unity_id);
 		const forms = await Promise.all(
-			data.map(async (item) => {
+			data?.map(async (item) => {
 				const formOrErr = await FormEntity.build(item);
 				if (formOrErr.isLeft()) {
 					return {} as FormEntity;
@@ -64,7 +64,7 @@ export class FormInMemoryRepository implements FormManagerContract {
 			(form) => form.unity_id === unity_id && form.prof_id === prof_id
 		);
 		const forms = await Promise.all(
-			data.map(async (item) => {
+			data?.map(async (item) => {
 				const formOrErr = await FormEntity.build(item);
 				if (formOrErr.isLeft()) {
 					return {} as FormEntity;
@@ -85,7 +85,7 @@ export class FormInMemoryRepository implements FormManagerContract {
 			(form) => form.unity_id === unity_id && form.category_id === category_id
 		);
 		const forms = await Promise.all(
-			data.map(async (item) => {
+			data?.map(async (item) => {
 				const formOrErr = await FormEntity.build(item);
 				if (formOrErr.isLeft()) {
 					return {} as FormEntity;

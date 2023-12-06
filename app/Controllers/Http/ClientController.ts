@@ -20,7 +20,7 @@ import { IFormAnswer } from 'Types/IFormAnswer'
 // ! AVISO
 // ! refatorar para usar o padrão da nossa arquitetura
 class ClientController {
-	
+
 
 	async verifyExistenceClient({ request, auth, response }: HttpContextContract) {
 		const { name, birth_date } = request.all()
@@ -53,7 +53,7 @@ class ClientController {
 		const unity_id = auth.user?.unity_id
 
 		const users = await Promise.all(
-			data.map(async (clientData) => {
+			data?.map(async (clientData) => {
 				const { name, birth_date, email, celphone } = clientData
 				if (!name || !celphone) {
 					return response.status(400).json({

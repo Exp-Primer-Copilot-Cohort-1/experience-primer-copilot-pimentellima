@@ -69,7 +69,7 @@ export class SendNotificationNewAppointment implements ISendNotificationNewAppoi
 					currency: 'BRL'
 				})
 				.format(procedures.reduce((acc, cur) => acc + cur.price, 0)),
-			procedures: procedures.map(makeTrProcedure),
+			procedures: procedures?.map(makeTrProcedure),
 			prof: prof.name,
 			unity: unity.name,
 		}
