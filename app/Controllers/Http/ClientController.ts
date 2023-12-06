@@ -5,6 +5,8 @@ import {
 	makeClientCreateComposer,
 	makeClientFindAllComposer,
 	makeClientUpdateComposer,
+	makePutTreatmentPicturesComposer,
+	makeUpdateClientPictureComposer,
 } from 'App/Core/composers/clients/make'
 import getterOptInRequest from 'App/Core/domain/entities/helpers/getter-opt-in-request'
 import { PROJECTION_DEFAULT } from 'App/Core/domain/repositories/helpers/projections'
@@ -15,12 +17,20 @@ import Client, { COLLECTIONS_REFS, COLLECTION_NAME } from 'App/Models/Client'
 import { IUserClient } from 'App/Types/IClient'
 import { IFormAnswer } from 'Types/IFormAnswer'
 
-
-
 // ! AVISO
 // ! refatorar para usar o padrão da nossa arquitetura
 class ClientController {
-	
+	async putTreatmentPictures(ctx: HttpContextContract) {
+		return adaptRoute(makePutTreatmentPicturesComposer(), ctx, {
+			request: ctx.request,
+		})
+	}
+
+	async updateClientPicture(ctx: HttpContextContract) {
+		return adaptRoute(makeUpdateClientPictureComposer(), ctx, {
+			request: ctx.request,
+		})
+	}
 
 	async verifyExistenceClient({ request, auth, response }: HttpContextContract) {
 		const { name, birth_date } = request.all()
@@ -187,8 +197,6 @@ class ClientController {
 			return left(new AbstractError('', 500))
 		}
 	}
-
-
 }
 
 export default ClientController

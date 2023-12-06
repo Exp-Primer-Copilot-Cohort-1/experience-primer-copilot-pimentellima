@@ -4,7 +4,7 @@ import { ClientNotFoundError } from 'App/Core/domain/errors/clients-not-found'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Client, { COLLECTIONS_REFS } from 'App/Models/Client'
-import { IUserClient } from 'App/Types/IClient'
+import { IUserClient, TreatmentPicture } from 'App/Types/IClient'
 import { inject, injectable, registry } from 'tsyringe'
 import { ICount } from '../helpers/count'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
@@ -14,9 +14,7 @@ import { ClientManagerContract } from './client-manager.interface'
 @registry([{ token: ClientsMongooseRepository, useClass: ClientsMongooseRepository }])
 export class ClientsMongooseRepository implements ClientManagerContract {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
-	constructor(
-		@inject(OptsQuery) private readonly opts: OptsQuery
-	) { }
+	constructor(@inject(OptsQuery) private readonly opts: OptsQuery) {}
 
 	async getCount(unity_id: string): PromiseEither<AbstractError, ICount> {
 		const count = await Client.countDocuments({ unity_id })
@@ -24,6 +22,48 @@ export class ClientsMongooseRepository implements ClientManagerContract {
 			.exec()
 
 		return right({ count })
+	}
+
+	async pushTreatmentPictures(
+		client_id: string,
+		treatment_pictures: TreatmentPicture[],
+	): PromiseEither<AbstractError, IUserClient> {
+		const client = await Client.findByIdAndUpdate(
+			client_id,
+			{
+				$push: {
+					treatment_pictures: {
+						$each: treatment_pictures,
+					},
+				},
+			},
+			{ new: true },
+		)
+
+		if (!client) {
+			return left(new ClientNotFoundError())
+		}
+
+		return right(client.toObject())
+	}
+
+	async updateProfilePicture(
+		client_id: string,
+		picture_url: string,
+	): PromiseEither<AbstractError, IUserClient> {
+		const client = await Client.findByIdAndUpdate(
+			client_id,
+			{
+				$set: { avatar: picture_url },
+			},
+			{ new: true },
+		)
+
+		if (!client) {
+			return left(new ClientNotFoundError())
+		}
+
+		return right(client.toObject())
 	}
 
 	async create(
@@ -70,10 +110,7 @@ export class ClientsMongooseRepository implements ClientManagerContract {
 			.sort(this.opts.sort)
 			.skip(this.opts.skip)
 			.limit(this.opts.limit)
-			.populate(
-				COLLECTIONS_REFS.PARTNERS,
-				PROJECTION_DEFAULT,
-			)
+			.populate(COLLECTIONS_REFS.PARTNERS, PROJECTION_DEFAULT)
 
 		return right(clients.map((client) => client.toObject()) || [])
 	}
