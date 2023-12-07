@@ -13,4 +13,8 @@ export interface UnitiesManagerContract {
 		id: string,
 		data: Partial<IUnity>,
 	) => PromiseEither<AbstractError, IUnity>
+	updateUnityPicture: (
+		id: string,
+		picture_url: string,
+	) => PromiseEither<AbstractError, IUnity>
 }

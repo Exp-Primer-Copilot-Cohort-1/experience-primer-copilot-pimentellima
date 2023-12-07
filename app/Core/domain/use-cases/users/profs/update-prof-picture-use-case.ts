@@ -22,9 +22,9 @@ export class UpdateProfPictureUseCase implements UseCase<In, IProf> {
 	) {}
 
 	public async execute({ prof_id, request }: In): PromiseEither<AbstractError, IProf> {
-		const clientOrErr = await this.manager.findById(prof_id)
-		if (clientOrErr.isLeft()) return left(clientOrErr.extract())
-		const { avatar } = clientOrErr.extract()
+		const profOrErr = await this.manager.findById(prof_id)
+		if (profOrErr.isLeft()) return left(profOrErr.extract())
+		const { avatar } = profOrErr.extract()
 		const oldFilename = avatar?.split('/').pop()
 
 		try {

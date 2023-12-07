@@ -14,7 +14,7 @@ export class ProfileUnityEntity extends Entity implements IProfileUnity {
 	active: boolean
 	street: string
 	address_number: string
-	avatar: string
+	avatar?: string
 	cep: string
 	city: string
 	cnaes: string
@@ -62,7 +62,7 @@ export class ProfileUnityEntity extends Entity implements IProfileUnity {
 		return this
 	}
 
-	defineAvatar(avatar = ''): this {
+	defineAvatar(avatar: string | undefined): this {
 		this.avatar = avatar
 		return this
 	}

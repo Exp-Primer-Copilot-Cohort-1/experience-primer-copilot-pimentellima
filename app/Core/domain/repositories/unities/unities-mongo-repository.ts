@@ -15,8 +15,8 @@ import { UnitiesManagerContract } from '../interface/unities-manager.interface'
 export class UnitiesMongooseRepository implements UnitiesManagerContract {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, prettier/prettier
 	constructor(
-		@inject(SessionTransaction) private readonly session: ISessionTransaction
-	) { } // eslint-disable-line
+		@inject(SessionTransaction) private readonly session: ISessionTransaction,
+	) {} // eslint-disable-line
 
 	async findAll(): PromiseEither<AbstractError, IUnity[]> {
 		const unities = await Unity.find()
@@ -76,5 +76,24 @@ export class UnitiesMongooseRepository implements UnitiesManagerContract {
 		if (unityCreated?.length === 0) return left(new UnityCreatedError())
 
 		return right(unityCreated[0])
+	}
+
+	async updateUnityPicture(
+		unity_id: string,
+		picture_url: string,
+	): PromiseEither<AbstractError, IUnity> {
+		const unity = await Unity.findByIdAndUpdate(
+			unity_id,
+			{
+				$set: { avatar: picture_url },
+			},
+			{ new: true },
+		)
+
+		if (!unity) {
+			return left(new UnityNotFoundError())
+		}
+
+		return right(unity.toObject())
 	}
 }

@@ -1,6 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeUnityFindAllByNameComposer, makeUnityShowByIdComposer, makeUnityUpdateByIdComposer } from 'App/Core/composers/users/unities/make'
+import { makeUnityFindAllByNameComposer, makeUnityShowByIdComposer, makeUnityUpdateByIdComposer, makeUpdateUnityPictureComposer } from 'App/Core/composers/users/unities/make'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
 import Unity, { COLLECTION_NAME } from 'App/Models/Unity'
 
@@ -31,6 +31,7 @@ class UnityController {
 	public async index(ctx: HttpContextContract) {
 		return adaptRoute(makeUnityFindAllByNameComposer(), ctx)
 	}
+	
 
 	/**
 	 * @swagger
@@ -65,6 +66,15 @@ class UnityController {
 	 *                     message:
 	 *                       type: string
 	 */
+
+	async updateUnityPicture(ctx: HttpContextContract) {
+		const unity_id: string = ctx.auth.user?.unity_id as string
+		return adaptRoute(makeUpdateUnityPictureComposer(), ctx, {
+			request: ctx.request,
+			unity_id
+		})
+	
+	}
 	public async findByName({ params, response }: HttpContextContract) {
 		const { email } = params
 

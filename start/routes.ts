@@ -459,6 +459,7 @@ Route.group(() => {
 		Route.get('', 'UnityController.index').as('unities.index')
 		Route.get('/:id', 'UnityController.show').as('unities.show')
 		Route.put('/:id', 'UnityController.update').as('unities.update')
+		Route.put('/update/unity-picture', 'UnityController.updateUnityPicture').as('unities.updateProfilePicture')
 	}).prefix('unities')
 
 	Route.group(() => {
@@ -528,7 +529,7 @@ Route.group(() => {
 	Route.post('users', 'UserController.store')
 }).middleware([
 	KeysCache.AUTH,
-	KeysCache.CACHE,
+	// KeysCache.CACHE,
 	KeysCache.ROLE,
 	KeysCache.STATUS_PERMISSION,
 	KeysCache.SUCCESS_NO_CONTENT,
