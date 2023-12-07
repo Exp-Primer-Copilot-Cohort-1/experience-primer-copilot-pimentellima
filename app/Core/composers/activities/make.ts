@@ -9,6 +9,7 @@ import {
 	FindActivityByIdUseCase,
 	FindAllActivitiesPendingUseCase,
 	FindAllActivitiesUseCase,
+	FindAllActivityNotPayments,
 	FindDayActivitiesUseCase,
 	UpdateActivityByIdUseCase,
 	UpdateActivityPaymentUseCase,
@@ -48,6 +49,10 @@ export const makeFindActivitiesByProfIdComposer = (): ControllerGeneric => {
 
 export const makeFindAllActivitiesComposer = (opts: IOptsQuery): ControllerGeneric => {
 	return ControllerInjection.resolve(FindAllActivitiesUseCase, opts)
+}
+
+export const makeFindAllActivitiesNotPaymentComposer = (opts: IOptsQuery): ControllerGeneric => {
+	return ControllerInjection.resolve(FindAllActivityNotPayments, opts)
 }
 
 export const makeFindAllActivitiesPendingComposer = (opts: IOptsQuery): ControllerGeneric => {

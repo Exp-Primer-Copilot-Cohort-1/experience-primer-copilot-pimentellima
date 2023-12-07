@@ -8,6 +8,7 @@ import {
 	makeFindActivityByClientIdComposer,
 	makeFindActivityByIdComposer,
 	makeFindAllActivitiesComposer,
+	makeFindAllActivitiesNotPaymentComposer,
 	makeFindAllActivitiesPendingComposer,
 	makeFindDayActivitiesComposer,
 	makeUpdateActivityByIdComposer,
@@ -63,6 +64,13 @@ class ActivityController {
 	async findAllActivities(ctx: HttpContextContract) {
 		const opts = getterOptInRequest(ctx)
 		return adaptRoute(makeFindAllActivitiesComposer(opts), ctx, {
+			unity_id: ctx.auth.user?.unity_id,
+		})
+	}
+
+	async findAllActivitiesNotPayments(ctx: HttpContextContract) {
+		const opts = getterOptInRequest(ctx)
+		return adaptRoute(makeFindAllActivitiesNotPaymentComposer(opts), ctx, {
 			unity_id: ctx.auth.user?.unity_id,
 		})
 	}

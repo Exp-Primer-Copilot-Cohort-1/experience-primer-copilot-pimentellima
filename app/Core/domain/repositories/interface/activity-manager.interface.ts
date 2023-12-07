@@ -11,6 +11,10 @@ export interface ActivitiesManagerContract {
 		unity_id: string,
 		...args: unknown[]
 	) => PromiseEither<AbstractError, IActivity[]>
+	findAllNotPayment: (
+		unity_id: string,
+		...args: unknown[]
+	) => PromiseEither<AbstractError, IActivity[]>
 	findByProf: (
 		unity_id: string,
 		prof_id: string,

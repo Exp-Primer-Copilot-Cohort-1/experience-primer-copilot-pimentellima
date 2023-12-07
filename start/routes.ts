@@ -271,6 +271,11 @@ Route.group(() => {
 		Route.delete(':id', 'ActivityController.deleteActivityById').as(
 			'activities.destroy',
 		)
+
+		Route.get('not-payments', 'ActivityController.findAllActivitiesNotPayments').as(
+			'activities.notPayment',
+		)
+
 	}).prefix('activities')
 
 	Route.group(() => {

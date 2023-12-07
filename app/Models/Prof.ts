@@ -207,6 +207,10 @@ const ProfSchema = new Schema<IUser>(
 		receive_email_in_the_new_appointment: {
 			type: Boolean,
 			default: false,
+		},
+		performs_medical_appointments: {
+			type: Boolean,
+			default: false,
 		}
 	},
 	{

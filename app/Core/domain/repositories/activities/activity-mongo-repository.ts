@@ -10,6 +10,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { ISessionTransaction } from 'App/Core/infra/infra'
 import { SessionTransaction } from 'App/Core/infra/session-transaction'
 import { PromiseEither, left, right } from 'App/Core/shared'
+import { AppointmentStatus, PaymentStatus } from 'App/Helpers'
 import Activity, { COLLECTIONS_REFS } from 'App/Models/Activity'
 import { STATUS_ACTIVITY, type IActivity } from 'App/Types/IActivity'
 import { inject, injectable, registry } from 'tsyringe'
@@ -23,6 +24,23 @@ export class ActivityMongoRepository implements ActivitiesManagerContract {
 		@inject(OptsQuery) private readonly opts: OptsQuery,
 		@inject(SessionTransaction) private readonly session: ISessionTransaction,
 	) { } // eslint-disable-line
+	async findAllNotPayment(unity_id: string): PromiseEither<AbstractError, IActivity[]> {
+		if (!unity_id) return left(new UnityNotFoundError())
+
+		const activities = await Activity.find({
+			unity_id,
+			type: STATUS_ACTIVITY.MARKED,
+			status: { $ne: PaymentStatus.PAID },
+			scheduled: AppointmentStatus.COMPLETED,
+		})
+			.populate(COLLECTIONS_REFS.CLIENTS, PROJECTION_CLIENT)
+			.populate(COLLECTIONS_REFS.PROFS, PROJECTION_DEFAULT)
+			.populate(COLLECTIONS_REFS.PROCEDURES, PROJECTION_DEFAULT)
+			.populate(COLLECTIONS_REFS.HEALTH_INSURANCES, PROJECTION_DEFAULT)
+			.sort({ date: -1 })
+
+		return right(activities)
+	}
 
 	async findAll(unity_id: string): PromiseEither<AbstractError, IActivity[]> {
 		if (!unity_id) return left(new UnityNotFoundError())

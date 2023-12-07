@@ -50,6 +50,8 @@ export class ProfsMongooseRepository implements ProfsManagerContract {
 				active: this.opts.active,
 				$or: [
 					{ type: ROLES.PROF },
+					{ type: ROLES.ADMIN_PROF },
+					{ performs_medical_appointments: true },
 				],
 			})
 				.skip(this.opts.skip)
