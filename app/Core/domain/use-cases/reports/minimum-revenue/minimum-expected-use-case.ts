@@ -38,7 +38,7 @@ export class MinimumDesirableUseCase implements UseCase<Range, IBilling> {
 		const profs = profsOrErr.extract()
 
 		const minimum_desirable_by_profs = await Promise.all(
-			profs.map(async (prof) => {
+			profs?.map(async (prof) => {
 
 				if (!prof.value) return 0
 

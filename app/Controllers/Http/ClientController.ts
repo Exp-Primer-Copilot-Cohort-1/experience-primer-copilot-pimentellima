@@ -63,7 +63,7 @@ class ClientController {
 		const unity_id = auth.user?.unity_id
 
 		const users = await Promise.all(
-			data.map(async (clientData) => {
+			data?.map(async (clientData) => {
 				const { name, birth_date, email, celphone } = clientData
 				if (!name || !celphone) {
 					return response.status(400).json({

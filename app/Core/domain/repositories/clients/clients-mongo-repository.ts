@@ -112,6 +112,6 @@ export class ClientsMongooseRepository implements ClientManagerContract {
 			.limit(this.opts.limit)
 			.populate(COLLECTIONS_REFS.PARTNERS, PROJECTION_DEFAULT)
 
-		return right(clients.map((client) => client.toObject()) || [])
+		return right(clients?.map((client) => client.toObject()) || [])
 	}
 }

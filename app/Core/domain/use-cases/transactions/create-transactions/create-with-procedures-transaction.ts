@@ -53,7 +53,7 @@ export class CreateWithProceduresTransactionUseCase
 		if (!procedures?.length) return left(new ProcedureNotFoundError())
 
 		const proceduresTransactions: IProcedureTransaction[] = await Promise.all(
-			procedures.map(async (procedure) => {
+			procedures?.map(async (procedure) => {
 				const procedureDocOrErr = await this.proceduresManager.findById(
 					procedure._id as string,
 				)

@@ -1,3 +1,4 @@
+import AccountEntity from 'App/Core/domain/entities/account/account'
 import { IdNotProvidedError } from 'App/Core/domain/errors/id-not-provided'
 import { AccountMongoRepository } from 'App/Core/domain/repositories'
 import { AccountManagerContract } from 'App/Core/domain/repositories/account/account-manager.interface'
@@ -20,9 +21,15 @@ export class UpdateAccountByIdUseCase implements UseCase<TypeParams, IAccount> {
 
 	public async execute({
 		id,
-		...account
+		...data
 	}: TypeParams): PromiseEither<AbstractError, IAccount> {
 		if (!id) return left(new IdNotProvidedError())
+
+		const entityOrErr = await AccountEntity.build(data)
+
+		if (entityOrErr.isLeft()) return left(entityOrErr.extract())
+
+		const account = entityOrErr.extract()
 
 		return await this.manager.update(account, id)
 	}

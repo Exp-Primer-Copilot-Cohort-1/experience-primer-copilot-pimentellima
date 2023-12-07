@@ -32,7 +32,7 @@ const makeReply = (
 		created_at = faker.date.past(),
 	} = {} as OptionsQuestion) => {
 	return {
-		questions: ids.map((id) => makeQuestion(
+		questions: ids?.map((id) => makeQuestion(
 			id,
 			faker.lorem.sentence(),
 			min,

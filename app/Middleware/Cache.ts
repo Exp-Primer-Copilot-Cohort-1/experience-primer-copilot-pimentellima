@@ -20,9 +20,9 @@ const makeSuperKey = (name_route: string, user: IUser) => {
 }
 
 const makeKey = (...params: Record<string, any>[]) => {
-	return params.map((param) => {
+	return params?.map((param) => {
 		const keys = Object.keys(param)
-		return keys.map((key) => `${key}:${param[key]}`).join(':')
+		return keys?.map((key) => `${key}:${param[key]}`).join(':')
 	}).join(':')
 }
 
@@ -36,6 +36,7 @@ const blacklist = [
 	'users', // TODO: users é real time, não deve ser cacheado
 	'secs', // TODO: secs é real time, não deve ser cacheado
 	'attendance', // TODO: attendance é real time, não deve ser cacheado
+	'business-franchises'
 ]
 
 export default class CacheMiddleware {

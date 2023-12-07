@@ -65,7 +65,7 @@ export class AdminMongooseRepository implements AdminManagerContract {
 		})
 
 		const entities = await Promise.all(
-			users.map(async (user) => {
+			users?.map(async (user) => {
 				const adminOrErr = await AdminEntity.build(user as any)
 
 				if (adminOrErr.isLeft()) {

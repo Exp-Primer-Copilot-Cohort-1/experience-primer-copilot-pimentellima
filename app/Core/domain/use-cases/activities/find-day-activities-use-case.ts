@@ -47,7 +47,7 @@ export class FindDayActivitiesUseCase implements UseCase<In, IActivity[]> {
 		const activities: (IActivity & { isFirstFromClient: boolean })[] = []
 
 		await Promise.all(
-			dayActivities.map(async (activity) => {
+			dayActivities?.map(async (activity) => {
 				const activityObject = (activity as any).toObject() as IActivity
 				const clientId = (activityObject.client as Client).value
 				if (clients[clientId] === 1) {

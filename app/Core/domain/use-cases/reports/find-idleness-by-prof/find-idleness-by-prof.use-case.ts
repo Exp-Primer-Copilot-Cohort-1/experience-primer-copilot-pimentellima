@@ -63,7 +63,7 @@ export class FindIdlenessByProfUseCase implements UseCaseFindIdlenessByProf {
 		const hoursWorked = hoursWorkedOrErr.extract()
 
 		const idleness = await Promise.all(
-			hoursWorked.map(async ({ value, count, label }) => {
+			hoursWorked?.map(async ({ value, count, label }) => {
 				const hoursIdleness = await this.hoursTrades.execute({
 					id: value,
 					unity_id,

@@ -46,7 +46,7 @@ export class AnswerInMemoryRepository implements AnswerManagerContract {
 
 		const data = this.answers.filter((ans) => ans.unity_id === unity_id)
 		const answers = await Promise.all(
-			data.map(async (item) => {
+			data?.map(async (item) => {
 				const answerOrErr = await AnswerEntity.build(item)
 				if (answerOrErr.isLeft()) {
 					return {} as AnswerEntity
@@ -68,7 +68,7 @@ export class AnswerInMemoryRepository implements AnswerManagerContract {
 			(ans) => ans.unity_id === unity_id && ans.form_id === form_id,
 		)
 		const answers = await Promise.all(
-			data.map(async (item) => {
+			data?.map(async (item) => {
 				const answerOrErr = await AnswerEntity.build(item)
 				if (answerOrErr.isLeft()) {
 					return {} as AnswerEntity

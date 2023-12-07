@@ -35,7 +35,7 @@ export class HealthInsuranceEntity extends Entity implements IHealthInsurance {
 	}
 
 	defineProfs(profs: string[] | Generic[] = []): HealthInsuranceEntity {
-		this.profs = profs.map((prof: string | Generic) =>
+		this.profs = profs?.map((prof: string | Generic) =>
 			typeof prof === 'string' ? prof : prof.value,
 		)
 		return this

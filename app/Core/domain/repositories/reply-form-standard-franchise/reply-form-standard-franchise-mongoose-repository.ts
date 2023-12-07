@@ -16,7 +16,7 @@ export class RFormSFMongooseManager implements RFormSFManagerContract {
 	): PromiseEither<AbstractError, IReplyFormStandardFranchises[]> {
 		const docs = await ReplyFormStandardFranchises.find({ group_id, type })
 
-		return right(docs.map(doc => doc.toObject()))
+		return right(docs?.map(doc => doc.toObject()))
 	}
 
 	async create(item: IReplyFormStandardFranchises): PromiseEither<AbstractError, IReplyFormStandardFranchises> {

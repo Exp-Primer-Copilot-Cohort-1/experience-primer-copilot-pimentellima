@@ -64,7 +64,7 @@ export class AnswerMongoRepository implements AnswerManagerContract {
 
 		const data = await Answer.find({ unity_id })
 		const answers = await Promise.all(
-			data.map(async (item) => {
+			data?.map(async (item) => {
 				const answerOrErr = await AnswerEntity.build(item.toObject())
 				if (answerOrErr.isLeft()) {
 					return {} as AnswerEntity
@@ -84,7 +84,7 @@ export class AnswerMongoRepository implements AnswerManagerContract {
 
 		const data = await Answer.find({ unity_id, client_id })
 		const answers = await Promise.all(
-			data.map(async (item) => {
+			data?.map(async (item) => {
 				const answerOrErr = await AnswerEntity.build(item.toObject())
 				if (answerOrErr.isLeft()) {
 					return {} as AnswerEntity
@@ -104,7 +104,7 @@ export class AnswerMongoRepository implements AnswerManagerContract {
 
 		const data = await Answer.find({ unity_id, form_id })
 		const answers = await Promise.all(
-			data.map(async (item) => {
+			data?.map(async (item) => {
 				const answerOrErr = await AnswerEntity.build(item.toObject())
 				if (answerOrErr.isLeft()) {
 					return {} as AnswerEntity

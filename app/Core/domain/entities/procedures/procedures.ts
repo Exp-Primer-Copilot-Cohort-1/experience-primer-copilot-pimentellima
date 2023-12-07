@@ -44,7 +44,7 @@ export class ProcedureEntity extends Entity implements IProcedure {
 	}
 
 	defineProfs(profs: string[] | Generic[]): this {
-		this.profs = profs.map(
+		this.profs = profs?.map(
 			(prof: string | Generic) => (typeof prof === 'string' ? prof : prof.value),
 		)
 		return this
