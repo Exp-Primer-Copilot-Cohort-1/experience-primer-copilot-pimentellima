@@ -529,7 +529,7 @@ Route.group(() => {
 	Route.post('users', 'UserController.store')
 }).middleware([
 	KeysCache.AUTH,
-	// KeysCache.CACHE,
+	KeysCache.CACHE,
 	KeysCache.ROLE,
 	KeysCache.STATUS_PERMISSION,
 	KeysCache.SUCCESS_NO_CONTENT,
