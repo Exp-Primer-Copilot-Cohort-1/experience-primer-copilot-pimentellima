@@ -57,8 +57,15 @@ Route.post('sessions/logout', 'SessionController.logout')
 Route.post('users/redefine-password', 'UserControllerV2.redefinePassword')
 Route.post('users/send-indication', 'UserControllerV2.sendIndication')
 Route.group(() => {
-	Route.get('shared-answers', 'SharedAnswerController.getSharedAnswers')
-	Route.post('shared-answers', 'SharedAnswerController.createShareAnswer')
+
+	Route.group(() => {
+		Route.get('', 'SharedAnswerController.getSharedAnswers').as(
+			'shared-answers.index',
+		)
+		Route.post('', 'SharedAnswerController.createShareAnswer').as(
+			'shared-answers.store',
+		)
+	}).prefix('shared-answers')
 
 	Route.group(() => {
 		Route.get('', 'ClientController.index').as('clients.index')
@@ -80,7 +87,9 @@ Route.group(() => {
 		Route.post('/many', 'ClientController.createMany').as('clients.storeMany')
 	}).prefix('clients')
 
-	Route.put('users/profile-picture', 'UserControllerV2.updateUserPicture')
+	Route.put('users/profile-picture', 'UserControllerV2.updateUserPicture').as(
+		'users.updatePicture',
+	)
 
 	Route.group(() => {
 		Route.get(
@@ -183,12 +192,12 @@ Route.group(() => {
 	}).prefix('partners')
 
 	Route.group(() => {
-		Route.get('', 'FormController.findAllForms')
-		Route.get('single/:id', 'FormController.findFormById')
-		Route.get('inactives', 'FormController.findAllInactiveForms')
-		Route.post('', 'FormController.createNewForm')
-		Route.put(':id', 'FormController.updateForm')
-		Route.put('status/:id', 'FormController.updateFormStatus')
+		Route.get('', 'FormController.findAllForms').as('forms.index')
+		Route.get('single/:id', 'FormController.findFormById').as('forms.show')
+		Route.get('inactives', 'FormController.findAllInactiveForms').as('forms.inactives')
+		Route.post('', 'FormController.createNewForm').as('forms.store')
+		Route.put(':id', 'FormController.updateForm').as('forms.update')
+		Route.put('status/:id', 'FormController.updateFormStatus').as('forms.status')
 	}).prefix('forms')
 
 	Route.group(() => {
@@ -206,9 +215,9 @@ Route.group(() => {
 	}).prefix('answers')
 
 	Route.group(() => {
-		Route.get(':id', 'UnityController.show')
+		Route.get(':id', 'UnityController.show').as('unity.show')
 		// Route.delete('unity/:id', 'UnityController.destroy')
-		Route.put(':_id', 'UnityController.update')
+		Route.put(':_id', 'UnityController.update').as('unity.update')
 	}).prefix('unity')
 
 	Route.group(() => {
@@ -252,24 +261,24 @@ Route.group(() => {
 		}).as('recurrent')
 
 		Route.get('prof/:prof_id', 'ActivityController.findActivitiesByProfId').as(
-			'activity.byProfId',
+			'activities.byProfId',
 		)
 		Route.get('client/:client_id', 'ActivityController.findActivitiesByClientId').as(
-			'activity.byClientId',
+			'activities.byClientId',
 		)
-		Route.post('', 'ActivityController.createActivity').as('activity.store')
+		Route.post('', 'ActivityController.createActivity').as('activities.store')
 
 		Route.delete(':id', 'ActivityController.deleteActivityById').as(
-			'activity.destroy',
+			'activities.destroy',
 		)
 	}).prefix('activities')
 
 	Route.group(() => {
-		Route.get('', 'ProcedureController.index').as('procedure.index')
-		Route.get(':id', 'ProcedureController.show').as('procedure.show')
-		Route.put(':_id', 'ProcedureController.update').as('procedure.update')
-		Route.delete(':id', 'ProcedureController.destroy').as('procedure.destroy')
-		Route.post('', 'ProcedureController.store').as('procedure.store')
+		Route.get('', 'ProcedureController.index').as('procedures.index')
+		Route.get(':id', 'ProcedureController.show').as('procedures.show')
+		Route.put(':_id', 'ProcedureController.update').as('procedures.update')
+		Route.delete(':id', 'ProcedureController.destroy').as('procedures.destroy')
+		Route.post('', 'ProcedureController.store').as('procedures.store')
 	}).prefix('procedure')
 
 	Route.group(() => {
@@ -529,7 +538,7 @@ Route.group(() => {
 	Route.post('users', 'UserController.store')
 }).middleware([
 	KeysCache.AUTH,
-	// KeysCache.CACHE,
+	KeysCache.CACHE,
 	KeysCache.ROLE,
 	KeysCache.STATUS_PERMISSION,
 	KeysCache.SUCCESS_NO_CONTENT,
