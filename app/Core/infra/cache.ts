@@ -24,9 +24,7 @@ export class Cache implements CacheContract {
 	}
 
 	async flushKey(startingKey: string) {
-		const pattern = `superKey:${startingKey}*`;
-
-		const k = await Redis.keys(pattern, async (err, keys) => {
+		const k = await Redis.keys(startingKey, async (err, keys) => {
 			if (err) return console.log(err)
 			if (!keys?.length) return 0
 			const deleted = await Redis.del(...keys)

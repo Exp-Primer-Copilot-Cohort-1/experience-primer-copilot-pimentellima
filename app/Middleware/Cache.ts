@@ -38,7 +38,7 @@ const blacklist = [
 	'attendance', // TODO: attendance é real time, não deve ser cacheado
 	'business-franchises',
 	'unities',
-	'profile'
+	'profile' // TODO: dados muito simples, não deve ser cacheado
 ]
 
 export default class CacheMiddleware {
@@ -65,12 +65,14 @@ export default class CacheMiddleware {
 			if (cached) return response.send(cached)
 		}
 
+		const pattern = `superKey:${superKey}*`;
+
 		originalResponse.on('close', async () => {
 			const statusCode = response.getStatus()
 			if (statusCode >= 400) return
 
 			if (setter.includes(method)) {
-				return await Cache.flushKey(name)
+				return await Cache.flushKey(pattern)
 			}
 
 
