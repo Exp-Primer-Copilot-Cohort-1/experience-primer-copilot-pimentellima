@@ -25,14 +25,6 @@ Route.group(() => {
 	Route.get('/client-model', 'FileController.downloadClientModel')
 }).prefix('file')
 
-Route.group(() => {
-	Route.put('profile-picture', 'FileController.uploadProfilePicture')
-	Route.post('treatment-picture/:client_id', 'FileController.putTreatmentPictures')
-}).prefix('file').middleware(
-	[
-		KeysCache.AUTH
-	]
-)
 
 Route.get('/', async () => {
 	return { hello: 'world' }
@@ -58,11 +50,7 @@ Route.group(() => {
 	Route.get('sessions/user', 'SessionController.getUser')
 	Route.post('sessions/refresh', 'SessionController.refreshToken')
 	Route.get('sessions/check', 'SessionController.checkToken')
-}).middleware(
-	[
-		KeysCache.AUTH
-	]
-)
+}).middleware([KeysCache.AUTH])
 
 Route.post('sessions/logout', 'SessionController.logout')
 
@@ -72,9 +60,13 @@ Route.group(() => {
 	Route.get('shared-answers', 'SharedAnswerController.getSharedAnswers')
 	Route.post('shared-answers', 'SharedAnswerController.createShareAnswer')
 
-
 	Route.group(() => {
 		Route.get('', 'ClientController.index').as('clients.index')
+		Route.put('client-picture/:client_id', 'ClientController.updateClientPicture')
+		Route.put(
+			'treatment-picture/:client_id',
+			'ClientController.putTreatmentPictures',
+		)
 
 		Route.get(':id', 'ClientController.findUserClientByID').as('clients.show')
 
@@ -87,6 +79,8 @@ Route.group(() => {
 		Route.get('answer/:id', 'ClientController.getAnswers')
 		Route.post('/many', 'ClientController.createMany').as('clients.storeMany')
 	}).prefix('clients')
+
+	Route.put('users/profile-picture', 'UserControllerV2.updateUserPicture')
 
 	Route.group(() => {
 		Route.get(
@@ -218,7 +212,6 @@ Route.group(() => {
 	}).prefix('unity')
 
 	Route.group(() => {
-
 		Route.get('/day/:prof_id', 'ActivityController.findDayActivities').as(
 			'activity.day',
 		)
@@ -226,7 +219,6 @@ Route.group(() => {
 		Route.put(':id', 'ActivityController.updateActivityById').as('activity.update')
 		Route.get('', 'ActivityController.findAllActivities').as('activity.index')
 		Route.get('show/:id', 'ActivityController.findActivityById').as('activity.show')
-
 
 		Route.group(() => {
 			Route.put('status/:id', 'ActivityController.updateStatus').as(
@@ -242,18 +234,11 @@ Route.group(() => {
 		}).as('attendance')
 
 		Route.group(() => {
-			Route.get('await', 'ActivityAwaitController.index').as(
-				'index',
-			)
+			Route.get('await', 'ActivityAwaitController.index').as('index')
 
-			Route.post('await', 'ActivityAwaitController.store').as(
-				'store',
-			)
+			Route.post('await', 'ActivityAwaitController.store').as('store')
 
-			Route.put('marked', 'ActivityAwaitController.marked').as(
-				'marked',
-			)
-
+			Route.put('marked', 'ActivityAwaitController.marked').as('marked')
 		}).as('activity-await')
 
 		Route.group(() => {
@@ -474,6 +459,7 @@ Route.group(() => {
 		Route.get('', 'UnityController.index').as('unities.index')
 		Route.get('/:id', 'UnityController.show').as('unities.show')
 		Route.put('/:id', 'UnityController.update').as('unities.update')
+		Route.put('/update/unity-picture', 'UnityController.updateUnityPicture').as('unities.updateProfilePicture')
 	}).prefix('unities')
 
 	Route.group(() => {
@@ -486,20 +472,21 @@ Route.group(() => {
 	}).prefix('business-franchises')
 
 	Route.group(() => {
-		Route.get('issues', 'StandardFormFranchisesController.index').as('business-franchises.issues')
-		Route.get('issues/:type', 'StandardFormFranchisesController.show').as('business-franchises.issues.show')
-		Route.get(
-			'is-a-franchise',
-			'BusinessFranchisesController.isAFranchise',
-		).as('business-franchises.isAFranchise')
-		Route.get(
-			'form/:activity',
-			'ReplyStandardFormController.show',
-		).as('business-franchises.form-standard')
-		Route.post(
-			'form',
-			'ReplyStandardFormController.store',
-		).as('business-franchises.form-standard.store')
+		Route.get('issues', 'StandardFormFranchisesController.index').as(
+			'business-franchises.issues',
+		)
+		Route.get('issues/:type', 'StandardFormFranchisesController.show').as(
+			'business-franchises.issues.show',
+		)
+		Route.get('is-a-franchise', 'BusinessFranchisesController.isAFranchise').as(
+			'business-franchises.isAFranchise',
+		)
+		Route.get('form/:activity', 'ReplyStandardFormController.show').as(
+			'business-franchises.form-standard',
+		)
+		Route.post('form', 'ReplyStandardFormController.store').as(
+			'business-franchises.form-standard.store',
+		)
 	}).prefix('franchises')
 
 	Route.group(() => {
@@ -515,11 +502,19 @@ Route.group(() => {
 		Route.get('clients', 'ClientController.counts').as('client.counts')
 		Route.get('categories', 'CategoryController.counts').as('categories.counts')
 		Route.get('cost-centers', 'CostCenterController.counts').as('cost-centers.counts')
-		Route.get('financial-categories', 'FinancialCategoryController.counts').as('financial-categories.counts')
-		Route.get('health-insurances', 'HealthInsuranceController.counts').as('health-insurances.counts')
-		Route.get('medical-certificates', 'MedicalCertificateController.counts').as('medical-certificates.counts')
+		Route.get('financial-categories', 'FinancialCategoryController.counts').as(
+			'financial-categories.counts',
+		)
+		Route.get('health-insurances', 'HealthInsuranceController.counts').as(
+			'health-insurances.counts',
+		)
+		Route.get('medical-certificates', 'MedicalCertificateController.counts').as(
+			'medical-certificates.counts',
+		)
 		Route.get('partners', 'PartnerController.counts').as('partners.counts')
-		Route.get('payments-participations', 'PaymentProfController.counts').as('payments-participations.counts')
+		Route.get('payments-participations', 'PaymentProfController.counts').as(
+			'payments-participations.counts',
+		)
 		Route.get('stocks', 'StocksController.counts').as('stocks.counts')
 		Route.get('profs', 'ProfsController.counts').as('profs.counts')
 		Route.get('secs', 'SecsController.counts').as('secs.counts')
@@ -527,11 +522,11 @@ Route.group(() => {
 
 	Route.group(() => {
 		Route.post('activation/:id', 'SendEmailController.resend').as('emails.resend')
-	}).prefix('emails')
+	})
+		.prefix('emails')
 		.middleware('throttle:resend_email')
 
 	Route.post('users', 'UserController.store')
-
 }).middleware([
 	KeysCache.AUTH,
 	// KeysCache.CACHE,

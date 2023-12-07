@@ -14,6 +14,25 @@ import { ProfsManagerContract } from './profs-manage.interface'
 export class ProfsMongooseRepository implements ProfsManagerContract {
 	constructor(@inject(OptsQuery) private readonly opts: OptsQuery) { } // eslint-disable-line
 
+	async updateProfilePicture(
+		prof_id: string,
+		picture_url: string,
+	): PromiseEither<AbstractError, IProf> {
+		const prof = await Prof.findByIdAndUpdate(
+			prof_id,
+			{
+				$set: { avatar: picture_url },
+			},
+			{ new: true },
+		)
+
+		if (!prof) {
+			return left(new UserNotFoundError())
+		}
+
+		return right(prof)
+	}
+
 	async findById(id: string): PromiseEither<AbstractError, IProf> {
 		const prof = await Prof.findOne({
 			_id: id,

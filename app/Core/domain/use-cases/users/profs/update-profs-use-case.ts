@@ -4,9 +4,10 @@ import { AbstractError } from "App/Core/errors/error.interface";
 import { UseCase } from "App/Core/interfaces/use-case.interface";
 import { PromiseEither } from "App/Core/shared";
 import { IProf } from "App/Types/IProf";
+import { IUser } from "App/Types/IUser";
 import { inject, injectable, registry } from "tsyringe";
 
-type In = IProf & { id: string }
+type In = IUser & { id: string }
 
 @injectable()
 @registry([{ token: UpdateUsers, useClass: UpdateUsers }])
@@ -19,8 +20,9 @@ export class UpdateUsers
 
 	public async execute({
 		id,
+		avatar,
 		...data
 	}: In): PromiseEither<AbstractError, IProf> {
-		return await this.manager.update(id, data)
+		return await this.manager.update(id, data as any)
 	}
 }

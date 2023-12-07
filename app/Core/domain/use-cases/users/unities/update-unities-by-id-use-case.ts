@@ -8,13 +8,18 @@ import { PromiseEither, left } from 'App/Core/shared'
 import { IUnity } from 'App/Types/IUnity'
 import { inject, injectable, registry } from 'tsyringe'
 
-
 @injectable()
 @registry([{ token: UpdateUnitiesByIdUseCase, useClass: UpdateUnitiesByIdUseCase }])
 export class UpdateUnitiesByIdUseCase implements UseCase<Partial<IUnity>, IUnity> {
-	constructor(@inject(UnitiesMongooseRepository) private readonly manager: UnitiesManagerContract) { }
+	constructor(
+		@inject(UnitiesMongooseRepository)
+		private readonly manager: UnitiesManagerContract,
+	) {}
 
-	public async execute(data: IUnity): PromiseEither<AbstractError, IUnity> {
+	public async execute({
+		avatar,
+		...data
+	}: IUnity): PromiseEither<AbstractError, IUnity> {
 		if (!data?._id) {
 			return left(new UnityNotFoundError())
 		}

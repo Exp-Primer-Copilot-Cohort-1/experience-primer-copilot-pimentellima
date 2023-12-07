@@ -1,12 +1,16 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
-import { makeFindAllProfsComposers, makeSendIndicationComposer } from 'App/Core/composers'
+import {
+	makeFindAllProfsComposers,
+	makeSendIndicationComposer,
+	makeUpdateProfPictureComposer,
+} from 'App/Core/composers'
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { UserNotFoundError } from 'App/Core/domain/errors'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { Cache } from 'App/Core/infra/cache'
 import { left, right } from 'App/Core/shared'
-import { decrypt, encrypt } from 'App/Helpers/encrypt'
+import { decrypt } from 'App/Helpers/encrypt'
 import User from 'App/Models/User'
 import { ROLES } from 'App/Roles/types'
 
@@ -25,6 +29,14 @@ const fetchUserByType = async (type, unityId, active = true) =>
 	}).select('-payment_participations -password')
 
 class UserControllerV2 {
+	async updateUserPicture(ctx: HttpContextContract) {
+		const prof_id = ctx.auth.user?._id
+		return adaptRoute(makeUpdateProfPictureComposer(), ctx, {
+			request: ctx.request,
+			prof_id
+		})
+	}
+
 	async findAllUsersProfs(ctx: HttpContextContract) {
 		return adaptRoute(makeFindAllProfsComposers(ctx), ctx)
 	}

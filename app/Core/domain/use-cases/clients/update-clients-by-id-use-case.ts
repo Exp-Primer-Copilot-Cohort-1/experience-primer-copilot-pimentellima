@@ -21,6 +21,7 @@ export class UpdateClientsByIdUseCase implements UseCase<In, IUserClient> {
 
 	public async execute({
 		id,
+		avatar,
 		...data
 	}: In): PromiseEither<AbstractError, IUserClient> {
 		const clientEntity = await ClientEntity.build(data)

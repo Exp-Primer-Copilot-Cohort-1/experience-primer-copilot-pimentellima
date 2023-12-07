@@ -7,6 +7,7 @@ import {
 	ProfsFindAllUseCase
 } from 'App/Core/domain/use-cases'
 import { SendInvitationEmailUseCase } from 'App/Core/domain/use-cases/email/send-invitation-email-use-case'
+import { UpdateProfPictureUseCase } from 'App/Core/domain/use-cases/users/profs/update-prof-picture-use-case'
 
 export const makeFindAllProfsComposers = (ctx: HttpContextContract): ControllerGeneric => {
 	const opts = getterOptInRequest(ctx)
@@ -25,4 +26,8 @@ export const makeCountsProfsComposers = (ctx: HttpContextContract): ControllerGe
 	const opts = getterOptInRequest(ctx)
 
 	return ControllerInjection.resolve(ProfsCountsUseCase, opts)
+}
+
+export const makeUpdateProfPictureComposer = (): ControllerGeneric => {
+	return ControllerInjection.resolve(UpdateProfPictureUseCase)
 }

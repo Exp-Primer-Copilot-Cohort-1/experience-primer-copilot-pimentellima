@@ -9,4 +9,5 @@ export interface ProfsManagerContract {
 	findAll: () => PromiseEither<AbstractError, IUser[]>
 	getCount: () => PromiseEither<AbstractError, ICount>
 	update: (id: string, data: IProf) => PromiseEither<AbstractError, IProf>
+	updateProfilePicture: (id: string, picture_url: string) => PromiseEither<AbstractError, IProf>
 }
