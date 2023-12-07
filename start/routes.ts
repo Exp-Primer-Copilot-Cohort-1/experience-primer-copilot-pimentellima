@@ -274,11 +274,11 @@ Route.group(() => {
 	}).prefix('activities')
 
 	Route.group(() => {
-		Route.get('', 'ProcedureController.index').as('procedures.index')
-		Route.get(':id', 'ProcedureController.show').as('procedures.show')
-		Route.put(':_id', 'ProcedureController.update').as('procedures.update')
-		Route.delete(':id', 'ProcedureController.destroy').as('procedures.destroy')
-		Route.post('', 'ProcedureController.store').as('procedures.store')
+		Route.get('', 'ProcedureController.index').as('procedure.index')
+		Route.get(':id', 'ProcedureController.show').as('procedure.show')
+		Route.put(':_id', 'ProcedureController.update').as('procedure.update')
+		Route.delete(':id', 'ProcedureController.destroy').as('procedure.destroy')
+		Route.post('', 'ProcedureController.store').as('procedure.store')
 	}).prefix('procedure')
 
 	Route.group(() => {
