@@ -17,6 +17,32 @@ export class ProceduresMongooseRepository implements ProceduresManagerContract {
 		@inject(OptsQuery) private readonly opts: OptsQuery
 	) { }
 
+	async addProduct(id: string, product: any): PromiseEither<AbstractError, IProcedure> {
+		const doc = await Procedure.findByIdAndUpdate(id, {
+			$push: {
+				products: product,
+			},
+		}, {
+			new: true
+		})
+			.orFail(new ProcedureNotFoundError())
+
+		return right(doc.toObject())
+	}
+
+	async removeProduct(id: string, product: string): PromiseEither<AbstractError, IProcedure> {
+		const doc = await Procedure.findByIdAndUpdate(id, {
+			$pull: {
+				products: product,
+			},
+		}, {
+			new: true
+		})
+			.orFail(new ProcedureNotFoundError())
+
+		return right(doc.toObject())
+	}
+
 	async findBasic(
 		id: string,
 		health_insurance_id: string

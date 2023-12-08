@@ -2,8 +2,10 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { adaptRoute } from 'App/Core/adapters'
 import { makeCounts } from 'App/Core/composers'
 import {
+	makeProceduresAddProductComposer,
 	makeProceduresCreateComposer,
 	makeProceduresFindAllComposer,
+	makeProceduresRemoveProductComposer,
 	makeProceduresUpdateByIdComposer
 } from 'App/Core/composers/procedures/make'
 import { makeProceduresDeleteByIdComposer } from 'App/Core/composers/procedures/make-procedures-delete-by-id-composer'
@@ -186,12 +188,9 @@ class ProcedureController {
 	 */
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async addProduct(ctx: HttpContextContract) {
-		await Procedure.findByIdAndUpdate(ctx.params.id, {
-			$push: {
-				products: ctx.request.body(),
-			},
+		return adaptRoute(makeProceduresAddProductComposer(), ctx, {
+			product: ctx.request.body(),
 		})
-		return ctx.response.ok({ message: 'Produto adicionado com sucesso' })
 	}
 
 	/**
@@ -231,12 +230,9 @@ class ProcedureController {
 	 */
 	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
 	async removeProduct(ctx: HttpContextContract) {
-		await Procedure.findByIdAndUpdate(ctx.params.id, {
-			$pull: {
-				products: ctx.request.body(),
-			},
+		return adaptRoute(makeProceduresRemoveProductComposer(), ctx, {
+			product: ctx.request.body(),
 		})
-		return ctx.response.ok({ message: 'Produto removido com sucesso' })
 	}
 
 

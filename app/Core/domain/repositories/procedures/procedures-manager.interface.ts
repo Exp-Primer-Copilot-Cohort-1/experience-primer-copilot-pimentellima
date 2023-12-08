@@ -1,6 +1,7 @@
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither } from 'App/Core/shared/either'
 import { BasicProcedure, IProcedure } from 'App/Types/IProcedure'
+import { StockProcedure } from 'App/Types/ITransaction'
 
 export interface ProceduresManagerContract {
 	findByName: (
@@ -19,4 +20,12 @@ export interface ProceduresManagerContract {
 		id: string,
 		health_insurance_id: string
 	): PromiseEither<AbstractError, BasicProcedure>
+	addProduct(
+		id: string,
+		product: StockProcedure
+	): PromiseEither<AbstractError, IProcedure>
+	removeProduct(
+		id: string,
+		product: StockProcedure
+	): PromiseEither<AbstractError, IProcedure>
 }
