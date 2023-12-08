@@ -40,7 +40,8 @@ const blacklist = [
 	'business-franchises', // TODO: dados muito simples, não deve ser cacheado
 	'unities', // TODO: unities é real time, não deve ser cacheado
 	'profile', // TODO: dados muito simples, não deve ser cacheado
-	'shared-answers' // TODO: real time, não deve ser cacheado
+	'shared-answers', // TODO: real time, não deve ser cacheado
+	'logs'   // TODO: real time, não deve ser cacheado
 ]
 
 export default class CacheMiddleware {
