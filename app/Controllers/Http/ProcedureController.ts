@@ -12,7 +12,9 @@ import { makeProceduresDeleteByIdComposer } from 'App/Core/composers/procedures/
 import { OptsQuery } from 'App/Core/domain/entities/helpers/opts-query'
 import { PROJECTION_HEALTH_INSURANCE } from 'App/Core/domain/repositories/helpers/projections'
 import LogDecorator, { ACTION } from 'App/Decorators/Log'
+import LogStock from 'App/Decorators/LogStock'
 import Procedure, { COLLECTIONS_REFS, COLLECTION_NAME } from 'App/Models/Procedure'
+import { IOptsQuery } from 'App/Types/IOptsQuery'
 
 /**
  * Controlador responsável por gerenciar as rotas relacionadas a procedimentos.
@@ -45,7 +47,7 @@ class ProcedureController {
 	 */
 	async index(ctx: HttpContextContract) {
 		const unity_id = ctx.auth.user?.unity_id
-		const opts = OptsQuery.build(ctx.request.qs())
+		const opts = OptsQuery.build(ctx.request.qs() as IOptsQuery)
 		return adaptRoute(makeProceduresFindAllComposer(opts), ctx, { unity_id })
 	}
 
@@ -186,7 +188,7 @@ class ProcedureController {
 	 *                 message:
 	 *                   type: string
 	 */
-	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
+	@LogStock(ACTION.PUT)
 	async addProduct(ctx: HttpContextContract) {
 		return adaptRoute(makeProceduresAddProductComposer(), ctx, {
 			product: ctx.request.body(),
@@ -228,10 +230,10 @@ class ProcedureController {
 	 *                 message:
 	 *                   type: string
 	 */
-	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
+	@LogStock(ACTION.DELETE)
 	async removeProduct(ctx: HttpContextContract) {
 		return adaptRoute(makeProceduresRemoveProductComposer(), ctx, {
-			product: ctx.request.body(),
+			...ctx.params.product_id,
 		})
 	}
 

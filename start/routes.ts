@@ -166,7 +166,7 @@ Route.group(() => {
 		Route.post(':id/products', 'ProcedureController.addProduct').as(
 			'procedures.addProduct',
 		)
-		Route.delete(':id/products', 'ProcedureController.removeProduct').as(
+		Route.put(':id/products/:product_id', 'ProcedureController.removeProduct').as(
 			'procedures.removeProduct',
 		)
 		Route.get(

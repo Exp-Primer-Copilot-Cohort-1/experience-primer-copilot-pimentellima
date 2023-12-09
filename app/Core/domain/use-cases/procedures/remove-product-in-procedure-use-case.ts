@@ -7,8 +7,11 @@ import { ProceduresManagerContract } from 'App/Core/domain/repositories/interfac
 import { IProcedure } from 'App/Types/IProcedure'
 import { inject, injectable, registry } from 'tsyringe'
 import { IdNotProvidedError } from '../../errors'
-import { ManagerStockProps } from './add-product-in-procedure-use-case'
 
+export type ManagerStockProps = {
+	id: string
+	product_id: string
+}
 @injectable()
 @registry([{ token: RemoveProductInProcedureUseCase, useClass: RemoveProductInProcedureUseCase }])
 export class RemoveProductInProcedureUseCase implements UseCase<ManagerStockProps, IProcedure> {
@@ -20,11 +23,11 @@ export class RemoveProductInProcedureUseCase implements UseCase<ManagerStockProp
 	public async execute(
 		{
 			id,
-			product
+			product_id
 		}: ManagerStockProps,
 	): PromiseEither<AbstractError, IProcedure> {
 		if (!id) return left(new IdNotProvidedError())
 
-		return await this.manager.removeProduct(id, product)
+		return await this.manager.removeProduct(id, product_id)
 	}
 }

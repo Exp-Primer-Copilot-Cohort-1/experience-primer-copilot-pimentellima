@@ -4,6 +4,7 @@ import { AbstractError } from 'App/Core/errors/error.interface'
 import { PromiseEither, left, right } from 'App/Core/shared/either'
 import Procedure, { COLLECTIONS_REFS } from 'App/Models/Procedure'
 import { BasicProcedure, IProcedure } from 'App/Types/IProcedure'
+import { StockProcedure } from 'App/Types/ITransaction'
 import { inject, injectable, registry } from 'tsyringe'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
 import { makePipelineBasicProcedure } from './pipelines'
@@ -17,7 +18,7 @@ export class ProceduresMongooseRepository implements ProceduresManagerContract {
 		@inject(OptsQuery) private readonly opts: OptsQuery
 	) { }
 
-	async addProduct(id: string, product: any): PromiseEither<AbstractError, IProcedure> {
+	async addProduct(id: string, product: StockProcedure): PromiseEither<AbstractError, IProcedure> {
 		const doc = await Procedure.findByIdAndUpdate(id, {
 			$push: {
 				products: product,
@@ -30,10 +31,13 @@ export class ProceduresMongooseRepository implements ProceduresManagerContract {
 		return right(doc.toObject())
 	}
 
-	async removeProduct(id: string, product: string): PromiseEither<AbstractError, IProcedure> {
+	async removeProduct(id: string, product_id: string): PromiseEither<AbstractError, IProcedure> {
+
 		const doc = await Procedure.findByIdAndUpdate(id, {
 			$pull: {
-				products: product,
+				products: {
+					value: product_id
+				},
 			},
 		}, {
 			new: true

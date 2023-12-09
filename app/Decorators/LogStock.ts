@@ -1,15 +1,13 @@
-import { COLLECTIONS_NAMES } from 'App/Models'
 import generateCollectionLog from 'App/Models/Log'
+import { COLLECTION_NAME } from 'App/Models/Procedure'
 import { HttpContextContract } from 'App/Types/Adonis'
-import { actionCompare, getCollectionId, getOriginalDoc } from './helpers'
+import { StockProcedure } from 'App/Types/ITransaction'
+import { ACTION, getCollectionId } from './helpers'
 
-export enum ACTION {
-	PUT = 'put',
-	DELETE = 'delete',
-	POST = 'post',
-}
 
-export default function LogDecorator(collectionName: COLLECTIONS_NAMES, action: ACTION) {
+export default function LogStock(
+	type: ACTION = ACTION.PUT,
+) {
 	return (
 		_target,
 		_propertyKey: string,
@@ -24,9 +22,10 @@ export default function LogDecorator(collectionName: COLLECTIONS_NAMES, action: 
 			const { request, response } = ctx
 
 			const _id = request.params().id || request.params()._id
-			const docOriginal = await getOriginalDoc(action, _id, collectionName)
 
 			const r = await originalMethod.apply(this, args)
+
+			const stock = ctx.request.body() as StockProcedure
 
 			const unity_id = ctx.auth.user?.unity_id
 			const user = ctx.auth.user?._id
@@ -39,20 +38,52 @@ export default function LogDecorator(collectionName: COLLECTIONS_NAMES, action: 
 
 			if (status >= 400) return r
 
+
 			try {
-				const [original, modified] = actionCompare(action, docOriginal, body)
 				const collection_id = getCollectionId(body, _id)
-				await Log?.create({
-					action,
-					collection_name: collectionName,
-					date,
-					modified,
-					ip,
-					original,
-					user,
-					collection_id,
-					unity_id,
-				})
+
+				switch (type) {
+					case ACTION.PUT:
+						await Log?.create({
+							action: type,
+							collection_name: COLLECTION_NAME,
+							date,
+							original: {
+								value: 0,
+								label: '',
+								quantity: 0,
+								price_cost: 0,
+								price_final: 0
+							},
+							modified: stock,
+							ip,
+							user,
+							collection_id,
+							unity_id,
+						})
+						break
+					case ACTION.DELETE:
+						await Log?.create({
+							action: type,
+							collection_name: COLLECTION_NAME,
+							date,
+							modified: {
+								value: 0,
+								label: 'REMOVIDO',
+								quantity: 0,
+								price_cost: 0,
+								price_final: 0
+							},
+							original: stock,
+							ip,
+							user,
+							collection_id,
+							unity_id,
+						})
+						break
+				}
+
+
 			} catch (error) {
 				console.log(error)
 			}

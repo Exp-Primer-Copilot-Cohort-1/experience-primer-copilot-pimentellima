@@ -35,6 +35,8 @@ export default function LogTransactionDecorator(collectionName: COLLECTIONS_NAME
 		descriptor.value = async function (...args: [HttpContextContract]) {
 			const date = new Date().toLocaleString() // Pega a data atual
 			const ctx = args[0]
+			const ip = ctx.request?.ip() || ctx.request?.header('x-forwarded-for') || ctx.request?.header('x-real-ip')
+
 			const { request, response } = ctx
 
 
@@ -69,6 +71,7 @@ export default function LogTransactionDecorator(collectionName: COLLECTIONS_NAME
 					date,
 					modified,
 					original,
+					ip,
 					user,
 					collection_id: docModified.group_by?.toString(),
 					unity_id,

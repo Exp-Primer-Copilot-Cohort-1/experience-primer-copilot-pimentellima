@@ -30,13 +30,14 @@ export default function LogPaymentParticipationDecorator(collectionName: COLLECT
 		descriptor.value = async function (...args: [HttpContextContract]) {
 			const date = new Date().toLocaleString() // Pega a data atual
 			const ctx = args[0]
+			const ip = ctx.request?.ip() || ctx.request?.header('x-forwarded-for') || ctx.request?.header('x-real-ip')
 			const { request, response } = ctx
 
 			const unity_id = ctx.auth.user?.unity_id
 			const user = ctx.auth.user?._id
 
 			const Log = await generateCollectionLog(unity_id?.toString() as string)
-			ctx.request.ip()
+
 			const body = request.body() as IPaymentParticipations
 			const params = {
 				unity_id: unity_id?.toString() as string,
@@ -67,6 +68,7 @@ export default function LogPaymentParticipationDecorator(collectionName: COLLECT
 					modified,
 					original,
 					user,
+					ip,
 					collection_id: docOriginal.participation_id?.toString(),
 					unity_id,
 				})

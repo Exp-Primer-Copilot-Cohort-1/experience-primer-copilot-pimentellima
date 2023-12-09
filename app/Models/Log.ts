@@ -35,6 +35,9 @@ export enum COLLECTION_REF {
  *         user:
  *           type: string
  *           description: O ID do usuário que realizou a ação.
+ *         ip:
+ *           type: string
+ *           description: O IP do usuário que realizou a ação.
  *         unity_id:
  *           type: string
  *           description: O ID da unidade em que a ação foi realizada.
@@ -78,6 +81,9 @@ const LogSchema = new Schema(
 			type: String,
 			required: true,
 			enum: ['post', 'put', 'delete'],
+		},
+		ip: {
+			type: String,
 		},
 		/**
 		 * O objeto original antes da ação ser realizada.

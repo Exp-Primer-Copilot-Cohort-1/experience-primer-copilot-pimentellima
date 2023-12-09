@@ -26,6 +26,6 @@ export interface ProceduresManagerContract {
 	): PromiseEither<AbstractError, IProcedure>
 	removeProduct(
 		id: string,
-		product: StockProcedure
+		product_id: string
 	): PromiseEither<AbstractError, IProcedure>
 }
