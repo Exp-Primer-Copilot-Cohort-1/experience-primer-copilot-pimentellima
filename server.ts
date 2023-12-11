@@ -25,8 +25,8 @@ install({ handleUncaughtExceptions: false })
 
 const createServerHTTPS = (handle: ServerHandler) => {
 
-	const privateKey = readFileSync(join(process.env.CERTS + '/fullchain.pem'), 'utf8')
-	const certificate = readFileSync(join(process.env.CERTS + '/privkey.pem'), 'utf8')
+	const privateKey = readFileSync(join(process.env.CERTS as string, 'fullchain.pem'), 'utf8')
+	const certificate = readFileSync(join(process.env.CERTS as string, 'privkey.pem'), 'utf8')
 	const credentials = { key: privateKey, cert: certificate }
 
 	return ServerHTTPS(credentials, handle)
