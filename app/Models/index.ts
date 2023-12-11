@@ -6,6 +6,7 @@ import CostCenter, { COLLECTION_NAME as COLLECTION_NAME_COST_CENTER } from './Co
 import FinancialCategory, {
 	COLLECTION_NAME as COLLECTION_NAME_FINANCIAL_CATEGORY,
 } from './FinancialCategory'
+import Forms, { COLLECTION_NAME as COLLECTION_NAME_FORMS } from './Form'
 import HealthInsurance, {
 	COLLECTION_NAME as COLLECTION_NAME_HEALTH_INSURANCE,
 } from './HealthInsurance'
@@ -48,6 +49,7 @@ const COLLECTIONS = {
 	[COLLECTION_NAME_TRANSACTIONS]: Transactions,
 	[COLLECTION_NAME_UNITY]: Unity,
 	[COLLECTION_NAME_USER]: User,
+	[COLLECTION_NAME_FORMS]: Forms
 }
 
 export enum COLLECTIONS_KEYS {
@@ -68,6 +70,7 @@ export enum COLLECTIONS_KEYS {
 	Transactions = COLLECTION_NAME_TRANSACTIONS,
 	Unity = COLLECTION_NAME_UNITY,
 	User = COLLECTION_NAME_USER,
+	Forms = COLLECTION_NAME_FORMS
 }
 
 export type COLLECTIONS_NAMES = keyof typeof COLLECTIONS

@@ -1,8 +1,10 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { AbstractError } from 'App/Core/errors/error.interface'
 import { left } from 'App/Core/shared'
+import LogDecorator from 'App/Decorators/Log'
+import { ACTION } from 'App/Decorators/helpers'
 
-import Form from 'App/Models/Form'
+import Form, { COLLECTION_NAME } from 'App/Models/Form'
 
 class FormController {
 	async findAllForms(ctx: HttpContextContract) {
@@ -89,6 +91,17 @@ class FormController {
 			new: true,
 		})
 		return form
+	}
+
+	@LogDecorator(COLLECTION_NAME, ACTION.PUT)
+	async status(ctx: HttpContextContract) {
+		await Form.findByIdAndUpdate(ctx.params.id, {
+			$set: {
+				active: ctx.request.body().active,
+			},
+		}).orFail()
+
+		return ctx.response.ok({ message: 'Status atualizado com sucesso' })
 	}
 }
 

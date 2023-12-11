@@ -1,6 +1,8 @@
 import Mongoose, { Schema } from '@ioc:Mongoose'
 import { IForm } from 'App/Types/IForm'
 
+export const COLLECTION_NAME = 'forms'
+
 const FormSchema = new Schema<IForm>(
 	{
 		name: {
@@ -49,4 +51,4 @@ const FormSchema = new Schema<IForm>(
 
 FormSchema.index({ unity_id: 1 }, { unique: false })
 
-export default Mongoose.model<IForm>('forms', FormSchema)
+export default Mongoose.model<IForm>(COLLECTION_NAME, FormSchema)

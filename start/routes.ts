@@ -193,11 +193,15 @@ Route.group(() => {
 
 	Route.group(() => {
 		Route.get('', 'FormController.findAllForms').as('forms.index')
+		Route.patch('/:id', 'FormController.status').as(
+			'forms.toggleStatus',
+		)
 		Route.get('single/:id', 'FormController.findFormById').as('forms.show')
 		Route.get('inactives', 'FormController.findAllInactiveForms').as('forms.inactives')
 		Route.post('', 'FormController.createNewForm').as('forms.store')
 		Route.put(':id', 'FormController.updateForm').as('forms.update')
 		Route.put('status/:id', 'FormController.updateFormStatus').as('forms.status')
+
 	}).prefix('forms')
 
 	Route.group(() => {

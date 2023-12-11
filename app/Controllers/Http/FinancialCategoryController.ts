@@ -138,20 +138,6 @@ class FinancialCategoryController {
 		return adaptRoute(makeFinancialCategoryUpdateComposer(), ctx)
 	}
 
-	async updateStatus({ params, request }) {
-		const data = request.only(['status'])
-
-		const category = await FinancialCategory.findByIdAndUpdate(
-			params.id,
-			{
-				$set: { active: data.status },
-			},
-			{ new: true },
-		)
-
-		return category
-	}
-
 	async show(ctx: HttpContextContract) {
 		return adaptRoute(makeFinancialCategoryFindByIdComposer(), ctx)
 	}

@@ -14,6 +14,7 @@ const origins = isProd ? [
 	"https://dpsystem.netlify.app"
 ] : '*'
 
+const regex = /^https:\/\/(?:[a-zA-Z0-9-]+\.)?dpsystem\.netlify\.app$/
 
 const corsConfig: CorsConfig = {
 	/*
