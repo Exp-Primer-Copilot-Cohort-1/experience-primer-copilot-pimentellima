@@ -29,6 +29,8 @@ const createServerHTTPS = (handle: ServerHandler) => {
 	const certificate = readFileSync(join(process.env.CERTS as string, 'privkey.pem'), 'utf8')
 	const credentials = { key: privateKey, cert: certificate }
 
+	console.log('credentials', credentials)
+
 	return ServerHTTPS(credentials, handle)
 }
 
