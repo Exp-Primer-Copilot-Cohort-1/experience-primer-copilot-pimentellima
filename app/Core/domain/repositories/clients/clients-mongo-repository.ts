@@ -9,6 +9,7 @@ import { inject, injectable, registry } from 'tsyringe'
 import { ICount } from '../helpers/count'
 import { PROJECTION_DEFAULT } from '../helpers/projections'
 import { ClientManagerContract } from './client-manager.interface'
+import { IFormAnswer } from 'App/Types/IFormAnswer'
 
 @injectable()
 @registry([{ token: ClientsMongooseRepository, useClass: ClientsMongooseRepository }])
@@ -77,6 +78,18 @@ export class ClientsMongooseRepository implements ClientManagerContract {
 		})
 
 		return right(doc.toObject())
+	}
+
+	async pushFormAnswer(
+		client_id: string,
+		form_answer: IFormAnswer,
+	): PromiseEither<AbstractError, IUserClient> {
+		const client = await Client.findByIdAndUpdate(client_id, {
+			$push: { form_answers: form_answer },
+		})
+
+		if (!client) return left(new AbstractError('Não foi possível atualizar', 500))
+		return right(client.toObject())
 	}
 
 	async updateById(

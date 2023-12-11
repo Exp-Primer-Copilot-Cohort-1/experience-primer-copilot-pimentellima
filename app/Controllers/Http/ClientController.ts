@@ -5,6 +5,8 @@ import {
 	makeClientCreateComposer,
 	makeClientFindAllComposer,
 	makeClientUpdateComposer,
+	makeGetFormAnswersComposer,
+	makePutFormAnswerComposer,
 	makePutTreatmentPicturesComposer,
 	makeUpdateClientPictureComposer,
 } from 'App/Core/composers/clients/make'
@@ -136,66 +138,15 @@ class ClientController {
 	}
 
 	async getAnswers(ctx: HttpContextContract) {
-		try {
-			const clientId = ctx.params.id
-			const user = ctx.auth.user
-			if (!user) throw new Error()
-			const client = await Client.findById(clientId)
-			if (!client)
-				return ctx.response
-					.status(404)
-					.json({ message: 'Cliente não encontrado' })
-			const answers = client.form_answers?.filter((ans) => {
-				if (ans.prof.value === user._id.toString()) {
-					return true
-				}
-				if (
-					ans.profs_with_access?.map((p) => p.id)?.includes(user._id.toString())
-				) {
-					return true
-				} else return false
-			})
-			return answers
-		} catch (err) {
-			console.log(err)
-			return ctx.response.status(500)
-		}
+		const prof_id = ctx.auth.user?._id
+		return adaptRoute(makeGetFormAnswersComposer(), ctx, {
+			prof_id: prof_id?.toString(),
+			client_id: ctx.params.id
+		})
 	}
 
 	async putAnswer(ctx: HttpContextContract) {
-		try {
-			const user = ctx.auth.user
-			if (!user) throw new Error()
-			const data = ctx.request.only([
-				'field_answers',
-				'form',
-				'activity_id',
-				'prof',
-			])
-			const client_id = ctx.params.client_id
-			const prof: { value: string; label: string } = data.prof
-			const form = data.form
-			const activity_id = data.activity_id
-			const field_answers: { question: string; answer: string }[] =
-				data.field_answers
-
-			const form_answer: IFormAnswer = {
-				form,
-				field_answers,
-				activity_id,
-				prof,
-			}
-
-			const client = await Client.findByIdAndUpdate(client_id, {
-				$push: { form_answers: form_answer },
-			})
-
-			if (!client) return ctx.response.status(500)
-			return client
-		} catch (error) {
-			console.log(error)
-			return left(new AbstractError('', 500))
-		}
+		return adaptRoute(makePutFormAnswerComposer(), ctx)
 	}
 }
 
