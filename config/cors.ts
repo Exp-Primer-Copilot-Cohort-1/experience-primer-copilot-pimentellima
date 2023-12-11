@@ -10,11 +10,13 @@ import Env from '@ioc:Adonis/Core/Env'
 
 const isProd = Env.get('NODE_ENV') === 'production'
 
+const dpsystem = /^https:\/\/(?:[a-zA-Z0-9-]+\.)?dpsystem\.netlify\.app$/
+
 const origins = isProd ? [
-	"https://dpsystem.netlify.app"
+	"https://dpsystem.netlify.app",
+	dpsystem
 ] : '*'
 
-const regex = /^https:\/\/(?:[a-zA-Z0-9-]+\.)?dpsystem\.netlify\.app$/
 
 const corsConfig: CorsConfig = {
 	/*
