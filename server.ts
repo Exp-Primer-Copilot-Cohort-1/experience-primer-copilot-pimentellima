@@ -24,12 +24,9 @@ import { install } from 'source-map-support'
 install({ handleUncaughtExceptions: false })
 
 const createServerHTTPS = (handle: ServerHandler) => {
-
-	const privateKey = readFileSync(join(process.env.CERTS as string, 'fullchain.pem'), 'utf8')
-	const certificate = readFileSync(join(process.env.CERTS as string, 'privkey.pem'), 'utf8')
+	const privateKey = readFileSync(join(__dirname + '/certs/server.key'), 'utf8')
+	const certificate = readFileSync(join(__dirname + '/certs/server.crt'), 'utf8')
 	const credentials = { key: privateKey, cert: certificate }
-
-	console.log('credentials', credentials)
 
 	return ServerHTTPS(credentials, handle)
 }
